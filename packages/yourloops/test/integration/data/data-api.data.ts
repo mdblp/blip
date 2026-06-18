@@ -423,6 +423,36 @@ export const devicesHistory: DeviceHistory[] = [
   }
 ]
 
+export const historyWithTargetChanges: ParametersChange[] = [
+  {
+    changeDate: '2022-10-30T08:00:00.000Z',
+    parameters: [
+      {
+        name: DblParameter.TargetGlucoseLevel,
+        value: '120.0',
+        previousValue: '100.0',
+        unit: Unit.MilligramPerDeciliter,
+        level: 1,
+        effectiveDate: '2022-10-30T08:00:00.000Z',
+        changeType: ChangeType.Updated
+      },
+    ]
+  },
+  {
+    changeDate: '2022-10-29T08:00:00.000Z',
+    parameters: [
+      {
+        name: DblParameter.TargetGlucoseLevel,
+        value: '100.0',
+        unit: Unit.MilligramPerDeciliter,
+        level: 1,
+        effectiveDate: '2022-10-29T08:00:00.000Z',
+        changeType: ChangeType.Added
+      },
+    ]
+  },
+]
+
 export const reservoirChanges = [
   {
     epoch: 1668335091000,

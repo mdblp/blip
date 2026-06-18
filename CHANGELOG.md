@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.10.0-beta - 2026-04-15
 ### Added
+- YLP-3853 Display target value on Daily Glucose chart
 - YLP-3892 Accept data sharing request from external partners
 - YLP-3893 Data sharing management with external partners
 - YLP-3904 As an HCP or a patient, I would like to be able to download the IFU corresponding to the system used, directly from Yourloops

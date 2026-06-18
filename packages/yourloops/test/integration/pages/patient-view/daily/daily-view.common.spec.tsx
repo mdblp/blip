@@ -27,6 +27,8 @@
 
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import {
+  checkGlucoseChartYAxis,
+  checkGlucoseChartYAxisAtDate,
   checkSMBGDailyStatsWidgetsTooltips,
   checkTimeChangeIndicator,
   checkTimeInRangeDefaultStats
@@ -59,6 +61,7 @@ import {
 import {
   getCompleteDailyViewData,
   getCompleteDailyViewDataDblg2,
+  getTargetValueChangesData,
   getTimezoneChangeData
 } from '../../../mock/complete-daily-view-data'
 import { t } from '../../../../../lib/language'
@@ -67,6 +70,18 @@ import { DeviceSystem } from 'medical-domain'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+
+/**
+ * @see https://github.com/testing-library/react-testing-library/issues/651
+ * @description SVGElement.getBBox is not implemented in JSDOM yet.
+ */
+Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
+  writable: true,
+  value: jest.fn().mockReturnValue({
+    x: 0,
+    y: 0
+  })
+});
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -267,6 +282,31 @@ describe('Daily view for anyone', () => {
       })
 
       await checkTimeInRangeDefaultStats()
+    })
+  })
+
+  describe('with glycemic target defined', () => {
+    it('should display the target on the Glucose chart', async () => {
+      mockDataAPI(getTargetValueChangesData())
+
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
+
+      await checkGlucoseChartYAxis()
+    })
+
+    it('should display the target defined at the required date', async () => {
+      mockDataAPI(getTargetValueChangesData())
+
+      const date = '2022-10-29T12:00:00Z'
+      const routeAtDate = `${AppUserRoute.Daily}?date=${new Date(date).toISOString()}`
+
+      await act(async () => {
+        renderPage(routeAtDate)
+      })
+
+      await checkGlucoseChartYAxisAtDate()
     })
   })
 })

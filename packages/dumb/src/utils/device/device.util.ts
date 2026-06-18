@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,13 +24,68 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ChangeType, ParameterConfig, ParametersChange } from 'medical-domain'
+
+import MedicalDataService, {
+  ChangeType,
+  DblParameter,
+  DeviceSystem,
+  ParameterConfig,
+  ParametersChange
+} from 'medical-domain'
+import { Device } from '../../models/device.model'
+
+export const isDBLG1 = (deviceName: string): boolean => {
+  return deviceName.toUpperCase() === DeviceSystem.Dblg1
+}
+
+export const isDBLG2 = (deviceName: string): boolean => {
+  return deviceName.toUpperCase() === DeviceSystem.Dblg2
+}
+
+export const isDeviceVersionHigherOrEqual = (device: Device, majorVersion: number, minorVersion: number): boolean => {
+  if (device.majorVersion < majorVersion) {
+    return false
+  }
+  return device.majorVersion > majorVersion || device.minorVersion >= minorVersion
+}
+
+// A version looks like "1.12.9.149-DBLG1-INS-DEXG6-COMMERCIAL"
+const getDeviceMajorVersion = (deviceVersion: string): number => {
+  return +deviceVersion.split('.')[0]
+}
+
+// A version looks like "1.12.9.149-DBLG1-INS-DEXG6-COMMERCIAL"
+const getDeviceMinorVersion = (deviceVersion: string): number => {
+  return +deviceVersion.split('.')[1]
+}
+
+export const buildDevice = (medicalData: MedicalDataService | null): Device | null => {
+  if (!medicalData?.medicalData?.pumpSettings) {
+    return null
+  }
+  const pumpSettings = medicalData.medicalData.pumpSettings
+  if (pumpSettings.length === 0) {
+    return null
+  }
+  const pumpSetting = pumpSettings[0]
+  if (!pumpSetting.payload?.device) {
+    return null
+  }
+  const pumpSettingDevice = pumpSetting.payload.device
+  const name = pumpSettingDevice.name
+  const softwareVersion = pumpSettingDevice.swVersion
+  return {
+    name,
+    majorVersion: getDeviceMajorVersion(softwareVersion),
+    minorVersion: getDeviceMinorVersion(softwareVersion)
+  }
+}
 
 /**
  * Builds parameters at a given date from the current parameters and the history of changes.
  */
 export const getParametersAtDate = (
- currentParameters: ParameterConfig[],
+  currentParameters: ParameterConfig[],
   history: ParametersChange[],
   targetDate: Date
 ): ParameterConfig[] => {
@@ -70,15 +125,21 @@ export const getParametersAtDate = (
               parametersMap.set(param.name, {
                 ...param,
                 value: param.previousValue,
-                ...(param?.previousUnit !== undefined ? { unit: param.previousUnit } : {})
+                ...(param?.previousUnit === undefined ? {} : { unit: param.previousUnit })
               })
             }
             break
         }
       })
-
     }
   }
 
   return Array.from(parametersMap.values())
+}
+
+export const getTargetValueAtDate = (currentParameters: ParameterConfig[], history: ParametersChange[], targetDate: Date) => {
+  const parameters = getParametersAtDate(currentParameters, history, targetDate)
+  const targetParameter = parameters.find((parameter) => parameter.name === DblParameter.TargetGlucoseLevel)
+
+  return targetParameter?.value
 }
