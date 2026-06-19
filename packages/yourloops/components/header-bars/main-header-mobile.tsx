@@ -136,7 +136,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             padding: `0 ${theme.spacing(2)}`
           }}>
           <Banner />
-          <Link to="/">
+          <Link to="/" data-testid="main-header-logo-link">
             <Avatar
               id="header-main-logo"
               aria-label={t('alt-img-logo')}
