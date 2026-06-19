@@ -38,7 +38,7 @@ import {
 } from 'medical-domain'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Draggable from 'react-draggable'
+import Draggable, { DraggableProps } from 'react-draggable'
 import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { getAlarmEventIcon, getAlarmEventTitle } from '../../../utils/alarm-event/alarm-event.util'
 import { useTranslation } from 'react-i18next'
@@ -131,7 +131,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
   }
 
   return (
-    <Draggable>
+    <Draggable {...({} as DraggableProps)}>
       <Popover
         anchorEl={anchorElement}
         anchorOrigin={{
