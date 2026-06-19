@@ -38,7 +38,6 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import { useNavigate } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import Typography from '@mui/material/Typography'
@@ -67,7 +66,8 @@ const classes = makeStyles()((theme) => ({
   typography: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    color: 'var(--text-color-primary)'
   }
 }))
 
@@ -146,25 +146,16 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   return (
     <>
-      {isMobile
-        ? <IconButton
-          color="inherit"
-          aria-label={t('open-team-selection-menu')}
-          onClick={openMenu}>
-          {selectedTeamIcon}
-        </IconButton>
-        : <Button
-          color="inherit"
-          aria-label={t('open-team-selection-menu')}
-          data-testid="team-scope-menu-button"
-          data-stonlyid="team-scope-menu-button"
-          startIcon={selectedTeamIcon}
-          endIcon={<ArrowDropDownIcon />}
-          onClick={openMenu}
-        >
-          <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }}>{selectedTeamName}</Typography>
-        </Button>
-      }
+      <Button
+        color="inherit"
+        aria-label={t('open-team-selection-menu')}
+        data-testid="team-scope-menu-button"
+        startIcon={isMobile ? undefined : selectedTeamIcon}
+        endIcon={<ArrowDropDownIcon />}
+        onClick={openMenu}
+      >
+        <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }}>{selectedTeamName}</Typography>
+      </Button>
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
         <Box className={menu} data-testid="team-scope-menu">

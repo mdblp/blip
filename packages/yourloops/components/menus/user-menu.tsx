@@ -35,6 +35,7 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -136,8 +137,11 @@ function UserMenu(): JSX.Element {
     <>
       <Box>
         {isMobile
-          ? <IconButton color="inherit" onClick={openMenu}>
-            {getRoleIcon()}
+          ? <IconButton
+            color="inherit"
+            data-testid="user-menu-button"
+            onClick={openMenu}>
+            <AccountCircleIcon />
           </IconButton>
           : <Button
             color="inherit"
