@@ -68,9 +68,7 @@ const defaultConfig: AppConfig = {
   IDLE_TIMEOUT_MS: 1800000,
   EATING_SHORTLY_ENABLED: false,
   METRICS_CLICKODROME_ENABLED: true,
-  DATE_OF_BIRTH_HIDDEN: false,
-  MY_DIABBY_PARTNER_ID: 'MyDiabbyClientId456789',
-  GLOOKO_XT_PARTNER_ID: 'GlooKoXtClientId789456'
+  DATE_OF_BIRTH_HIDDEN: false
 }
 const appConfig = _.assign({}, defaultConfig)
 if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {

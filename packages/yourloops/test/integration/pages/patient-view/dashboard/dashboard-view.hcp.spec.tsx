@@ -74,8 +74,8 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { testDataAccessRequestModalNotVisible } from '../../../use-cases/data-sharing'
 import { mockErrorApi } from '../../../mock/error.api.mock'
+import { checkDataAccessRequestModalNotVisible } from '../../../assert/data-sharing.assert'
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -192,7 +192,7 @@ describe('Dashboard view for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationTwoWeeksOldData(false)
+    await testDashboardDataVisualisationTwoWeeksOldData()
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
@@ -253,7 +253,6 @@ describe('Dashboard view for HCP', () => {
   it('should not display the Data Consent modal even if the parameters are set', async () => {
     const glookoXtPartnerId = 'partnerId'
 
-    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue(glookoXtPartnerId)
     const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com' }
     const appStateJson = encodeURIComponent(JSON.stringify(appState))
 
@@ -261,6 +260,6 @@ describe('Dashboard view for HCP', () => {
       renderPage(`/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}?appStateJson=${appStateJson}`)
     })
 
-    testDataAccessRequestModalNotVisible()
+    checkDataAccessRequestModalNotVisible()
   })
 })

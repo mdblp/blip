@@ -67,7 +67,7 @@ export const DataSharingSection: FC = () => {
       .finally(() => {
         setRefreshInProgress(false)
       })
-  }, [t, userId, alert])
+  }, [t, alert])
 
   useEffect(() => {
     fetchExternalConsents()

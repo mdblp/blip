@@ -348,6 +348,7 @@
   "error-hyperglycemia": "Hyperglycemia limit must be between hypoglycemia limit and severe hyperglycemia limit",
   "error-hypoglycemia": "Hypoglycemia limit must be between severe hypoglycemia limit and hyperglycemia limit",
   "error-occurred": "An error occurred, please try again later.",
+  "error-partner-not-recognized": "The partner could not be identified. Please contact support for assistance.",
   "error-patient-already-in-team": "This patient is already sharing data with the team.",
   "error-patient-already-invited": "This patient has already been invited and hasn't confirmed yet.",
   "error-severe-hyperglycemia": "Severe hyperglycemia limit must be between hyperglycemia limit and the max CGM limit",

@@ -26,18 +26,17 @@
  */
 
 import { PartnerName } from './models/enum/partner-name.enum'
-import { ConfigService } from '../config/config.service'
+import { ExternalConsentsApi } from './external-consents.api'
 
-export const getPartnerNameById = (partnerId: string): PartnerName | null => {
-  const glookoXtPartnerId = ConfigService.getGlookoXtPartnerId()
-  const myDiabbyPartnerId = ConfigService.getMyDiabbyPartnerId()
-
-  switch (partnerId) {
-    case glookoXtPartnerId:
-      return PartnerName.GlookoXT
-    case myDiabbyPartnerId:
-      return PartnerName.MyDiabby
-    default:
-      return null
+export const validatePartner = async (partnerId: string, callbackUrl: string): Promise<PartnerName | null> => {
+  const details = await ExternalConsentsApi.getPartnerDetails(partnerId)
+  if (!details || details.authorizedCallbackUrls.length === 0) {
+    return null
   }
+  if (details.authorizedCallbackUrls.includes(callbackUrl)) {
+      return details.name
+  }
+
+  return null
+
 }

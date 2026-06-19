@@ -18,8 +18,6 @@ export IDLE_TIMEOUT_MS=1800000
 export EATING_SHORTLY_ENABLED=true
 export METRICS_CLICKODROME_ENABLED=true
 export DATE_OF_BIRTH_HIDDEN=false
-export MY_DIABBY_PARTNER_ID='MyDiabbyClientId456789'
-export GLOOKO_XT_PARTNER_ID='glookoXtPartnerId'
 
 # External services:
 # URL to HELP system
