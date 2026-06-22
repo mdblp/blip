@@ -209,17 +209,15 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               )
             ) :
             (
-              <>
-                <Button
-                  variant="text"
-                  startIcon={<ArrowBackIcon />}
-                  onClick={goBack}
-                  className={arrowBack}
-                  data-testid="back-button"
-                >
-                  {t('back')}
-                </Button>
-              </>
+              <Button
+                variant="text"
+                startIcon={<ArrowBackIcon />}
+                onClick={goBack}
+                className={arrowBack}
+                data-testid="back-button"
+              >
+                {t('back')}
+              </Button>
             )}
         </Box>
       </Toolbar>
