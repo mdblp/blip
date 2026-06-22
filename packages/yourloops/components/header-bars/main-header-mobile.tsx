@@ -113,6 +113,9 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     navigate(`${AppUserRoute.Teams}/${teamId}`)
   }
 
+  console.log('user:', user)
+  console.log('isrole1:', user?.isUserCaregiver?.())
+
   return (
     <AppBar
       data-testid="app-main-header-mobile"
@@ -178,9 +181,9 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             margin: theme.spacing(1)
           }}
         >
-          {pathname.endsWith('patients') ? (
+          {pathname.endsWith('/patients') ? (
+              user?.isUserCaregiver() ? null : (
               <>
-                {!user?.isUserCaregiver() && (
                   <Box
                     className={teamMenu}
                     data-testid="team-selection-tab"
@@ -188,32 +191,35 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
                         {user.isUserPatient() && <TeamSettingsMenu />}
                         {user.isUserHcp() && <TeamScopeMenu />}
                   </Box>
-                )}
-                {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
-                  <Button
-                    aria-label={t('header-tab-care-team-settings')}
-                    value={HcpNavigationTab.CareTeam}
-                    onClick={goToCareTeamSettings}
-                    variant="outlined"
-                    className={settingsButton}
-                    sx={{ color: 'var(--text-color-primary)' }}
-                    data-testid="main-header-hcp-care-team-settings-button"
-                  >
-                    <CareTeamSettingsIcon />
-                  </Button>
-                )}
+
+                  {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
+                    <Button
+                      aria-label={t('header-tab-care-team-settings')}
+                      value={HcpNavigationTab.CareTeam}
+                      onClick={goToCareTeamSettings}
+                      variant="outlined"
+                      className={settingsButton}
+                      sx={{ color: 'var(--text-color-primary)' }}
+                      data-testid="main-header-hcp-care-team-settings-button"
+                    >
+                      <CareTeamSettingsIcon />
+                    </Button>
+                  )}
               </>
+              )
             ) :
             (
-              <Button
-                variant="text"
-                startIcon={<ArrowBackIcon />}
-                onClick={goBack}
-                className={arrowBack}
-                data-testid="back-button"
-              >
-                {t('back')}
-              </Button>
+              <>
+                <Button
+                  variant="text"
+                  startIcon={<ArrowBackIcon />}
+                  onClick={goBack}
+                  className={arrowBack}
+                  data-testid="back-button"
+                >
+                  {t('back')}
+                </Button>
+              </>
             )}
         </Box>
       </Toolbar>

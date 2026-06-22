@@ -29,7 +29,6 @@ import { type BoundFunctions, fireEvent, type queries, screen, within } from '@t
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
 interface TeamMenuInfo {
   selectedTeamName?: string
@@ -113,9 +112,13 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
 }
 
 export const checkCaregiverHeaderMobile = async (fullName: string) => {
-  const header = within(await screen.findByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
   expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
+
+  //Go to notification tab and go back using the back button
+  await userEvent.click(header.getByTestId("notification-icon"))
+  await userEvent.click(header.getByTestId("back-button"))
 
   await checkUserMenu(header, fullName)
   checkHeader(header)
