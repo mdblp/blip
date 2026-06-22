@@ -162,7 +162,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               color="error"
             >
               <IconButton
-                color = "inherit"
+                color="inherit"
                 id={"header-notification-link"}
                 onClick={goToNotifications}
                 data-testid="notification-icon">
@@ -183,13 +183,13 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
         >
           {pathname.endsWith('/patients') ? (
               user?.isUserCaregiver() ? null : (
-              <>
+                <>
                   <Box
                     className={teamMenu}
                     data-testid="team-selection-tab"
                   >
-                        {user.isUserPatient() && <TeamSettingsMenu />}
-                        {user.isUserHcp() && <TeamScopeMenu />}
+                    {user.isUserPatient() && <TeamSettingsMenu />}
+                    {user.isUserHcp() && <TeamScopeMenu />}
                   </Box>
 
                   {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
@@ -205,7 +205,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
                       <CareTeamSettingsIcon />
                     </Button>
                   )}
-              </>
+                </>
               )
             ) :
             (
