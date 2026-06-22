@@ -49,9 +49,9 @@ import {
 import { MobileAppInfoTable } from '../../../../components/device/mobile-app-info-table'
 import Box from '@mui/material/Box'
 import { DownloadDocumentButton } from '../../../../components/buttons/download-document-button'
-import { usePatient } from '../../../../lib/patient/patient.provider'
 import { getIfuDocumentName } from '../../../../lib/medical-files/medical-files.utils'
 import Tooltip from '@mui/material/Tooltip'
+import { useAuth } from '../../../../lib/auth'
 
 interface CurrentParametersSectionProps {
   pumpSettings: PumpSettings
@@ -68,8 +68,8 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   const { classes } = useStyles()
   const { t, i18n } = useTranslation()
   const { device, pump, cgm, parameters, mobileApplication } = pumpSettings.payload
-  const { patient } = usePatient()
-  const bgUnit = patient?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const { user } = useAuth()
+  const bgUnit = user?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const lang = i18n.language
   const ifuDocumentName = getIfuDocumentName(pumpSettings, bgUnit, lang)
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
