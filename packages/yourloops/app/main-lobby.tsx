@@ -74,6 +74,7 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
   const trainingPath = route === AppRoute.Training
   const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route as AppRoute)
+
   if (routeIsPublic && !isCurrentRouteAlwaysAccessible && isAuthenticated) {
     return '/'
   }
