@@ -26,7 +26,7 @@
  */
 
 import { checkCaregiverHeader, checkPatientHeader } from './header.assert'
-import { checkCaregiverHeaderMobile} from './header-mobile.assert'
+import { checkCaregiverHeaderMobile } from './header-mobile.assert'
 import { screen, within } from '@testing-library/react'
 import { checkFooterForCaregiver, checkFooterForPatient } from './footer.assert'
 
