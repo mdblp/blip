@@ -32,7 +32,7 @@ import {
   checkPatientHeader,
   type HeaderInfo
 } from '../assert/header.assert'
-import { checkBannerLanguageChangeMobile, checkHcpHeaderMobile } from '../assert/header-mobile.assert'
+import { checkBannerLanguageChangeMobile, checkHcpHeaderMobile, checkCaregiverHeaderMobile } from '../assert/header-mobile.assert'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
 import { checkPatientNavBarAsHcp, checkPatientNavBarAsHcpInPrivateTeam } from '../assert/patient-nav-bar.assert'
 
@@ -58,6 +58,10 @@ export const testAppMainLayoutForHcpMobile = async (appMainLayoutParams: AppMain
 export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
   checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
+}
+
+export const testAppMainLayoutForCaregiverMobile = async (appMainLayoutParams: AppMainLayoutParams) => {
+  await checkCaregiverHeaderMobile(appMainLayoutParams.loggedInUserFullName)
 }
 
 export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {

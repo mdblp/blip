@@ -113,6 +113,36 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     navigate(`${AppUserRoute.Teams}/${teamId}`)
   }
 
+  const teamSelectionAndSettings = () => {
+    if (user?.isUserCaregiver()) return null
+
+    return (
+      <>
+        <Box
+          className={teamMenu}
+          data-testid="team-selection-tab"
+        >
+          {user.isUserPatient() && <TeamSettingsMenu />}
+          {user.isUserHcp() && <TeamScopeMenu />}
+        </Box>
+
+        {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
+          <Button
+            aria-label={t('header-tab-care-team-settings')}
+            value={HcpNavigationTab.CareTeam}
+            onClick={goToCareTeamSettings}
+            variant="outlined"
+            className={settingsButton}
+            sx={{ color: 'var(--text-color-primary)' }}
+            data-testid="main-header-hcp-care-team-settings-button"
+          >
+            <CareTeamSettingsIcon />
+          </Button>
+        )}
+      </>
+    )
+  };
+
   return (
     <AppBar
       data-testid="app-main-header-mobile"
@@ -159,7 +189,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               color="error"
             >
               <IconButton
-                color = "inherit"
+                color="inherit"
                 id={"header-notification-link"}
                 onClick={goToNotifications}
                 data-testid="notification-icon">
@@ -178,31 +208,8 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             margin: theme.spacing(1)
           }}
         >
-          {pathname.endsWith('patients') ? (
-              <>
-                {!user?.isUserCaregiver() && (
-                  <Box
-                    className={teamMenu}
-                    data-testid="team-selection-tab"
-                  >
-                        {user.isUserPatient() && <TeamSettingsMenu />}
-                        {user.isUserHcp() && <TeamScopeMenu />}
-                  </Box>
-                )}
-                {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
-                  <Button
-                    aria-label={t('header-tab-care-team-settings')}
-                    value={HcpNavigationTab.CareTeam}
-                    onClick={goToCareTeamSettings}
-                    variant="outlined"
-                    className={settingsButton}
-                    sx={{ color: 'var(--text-color-primary)' }}
-                    data-testid="main-header-hcp-care-team-settings-button"
-                  >
-                    <CareTeamSettingsIcon />
-                  </Button>
-                )}
-              </>
+          {pathname.endsWith('/patients') ? (
+              teamSelectionAndSettings()
             ) :
             (
               <Button
