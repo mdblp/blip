@@ -127,7 +127,7 @@ const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): 
     }
     case PdfSettingsDataType.Pump: {
       const pumpData = data as PumpConfig
-      return `- ${pumpData.name}`
+      return `- ${pumpData.product}`
     }
   }
 }
