@@ -92,22 +92,35 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
   const header = within(await screen.findByTestId('app-main-header-mobile'))
 
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
-    expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument();
+    expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
   } else {
     expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
   }
 
-  expect(header.queryByTestId('back-button')).not.toBeInTheDocument();
+  expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
 
   //Go to notification tab and go back using the back button
   await userEvent.click(header.getByTestId("notification-icon"))
-  expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument();
+  expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument()
   await userEvent.click(header.getByTestId("back-button"))
 
   expect(header.queryByTestId('team-selection-tab')).toBeVisible()
 
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)
   await checkUserMenu(header, headerInfo.loggedInUserFullName)
+  checkHeader(header)
+}
+
+export const checkCaregiverHeaderMobile = async (fullName: string) => {
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
+  expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
+
+  //Go to notification tab and go back using the back button
+  await userEvent.click(header.getByTestId("notification-icon"))
+  await userEvent.click(header.getByTestId("back-button"))
+
+  await checkUserMenu(header, fullName)
   checkHeader(header)
 }
 
