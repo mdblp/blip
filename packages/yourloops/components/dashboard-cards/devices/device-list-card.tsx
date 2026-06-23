@@ -34,8 +34,8 @@ import { PumpSettings, Unit } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { useTheme } from '@mui/material/styles'
 import { DownloadDocumentButton } from '../../buttons/download-document-button'
-import { usePatient } from '../../../lib/patient/patient.provider'
 import { getIfuDocumentName } from '../../../lib/medical-files/medical-files.utils'
+import { useAuth } from '../../../lib/auth'
 
 interface DeviceListCardProps {
   pumpSettings: PumpSettings
@@ -52,8 +52,8 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
   const { pumpSettings } = props
   const { classes } = useStyles()
   const theme = useTheme()
-  const { patient } = usePatient()
-  const bgUnit = patient?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const { user } = useAuth()
+  const bgUnit = user?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const ifuDocumentName = pumpSettings ? getIfuDocumentName(pumpSettings, bgUnit, i18n.language) : null
 
   const deviceData = {
@@ -67,7 +67,7 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
     },
     pump: {
       label: t('Pump'),
-      value: pumpSettings?.payload.pump.manufacturer ? `${pumpSettings.payload.pump.manufacturer} ${pumpSettings.payload.pump.name}` : ''
+      value: pumpSettings?.payload.pump.manufacturer ? `${pumpSettings.payload.pump.manufacturer} ${pumpSettings.payload.pump.product}` : ''
     }
   }
 

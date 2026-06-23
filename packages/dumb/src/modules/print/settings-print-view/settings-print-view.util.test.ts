@@ -193,7 +193,7 @@ describe('Settings print view util', () => {
         expirationDate: '2035-04-12T15:53:54Z',
         manufacturer: PumpManufacturer.Vicentra,
         product: 'Kaleido',
-        name: 'Kaleido',
+        name: 'PUMP33049489',
         serialNumber: '123456',
         swVersion: 'beta'
       }
