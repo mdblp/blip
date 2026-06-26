@@ -113,7 +113,7 @@ const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
       className={appBar}
       position="fixed"
       ref={appBarRefCallback}
-      sx = {{ borderBottom: `1px solid ${theme.palette.divider}`}}
+      sx = {{ borderBottom: `1px solid ${theme.palette.divider}` }}
     >
       <Toolbar className={toolbar}>
         <Box

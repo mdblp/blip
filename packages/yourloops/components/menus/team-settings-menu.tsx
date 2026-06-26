@@ -34,7 +34,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -90,7 +89,6 @@ function TeamSettingsMenu(): JSX.Element {
   const navigate = useNavigate()
   const alert = useAlert()
   const { user } = useAuth()
-  const theme = useTheme()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
