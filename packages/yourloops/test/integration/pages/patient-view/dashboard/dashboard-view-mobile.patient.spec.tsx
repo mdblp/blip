@@ -26,22 +26,29 @@
  */
 
 import { act } from 'react'
-import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
-import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
-import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockDataAPI, oneDayDashboardData } from '../../../mock/data.api.mock'
 import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForCaregiverMobile
-} from '../../../use-cases/app-main-layout-visualisation'
+  mockDataAPI,
+  oneDayDashboardData,
+} from '../../../mock/data.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
+import TeamAPI from '../../../../../lib/team/team.api'
+import {
+  anotherTeam,
+  buildTeamOne,
+  buildTeamTwo,
+  mySecondTeamId,
+  mySecondTeamName
+} from '../../../mock/team.api.mock'
+import { patient1Info } from '../../../data/patient.api.data'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
+import { type AppMainLayoutParams, testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
-import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { mockExternalConsentsApi } from '../../../mock/external-consents.api.mock'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -61,22 +68,25 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+describe('Dashboard view for patient', () => {
+  const patientDashboardRoute = AppUserRoute.Dashboard
+  const firstName = patient1Info.profile.firstName
+  const lastName = patient1Info.profile.lastName
 
   beforeEach(() => {
-    mockAuth0Hook(UserRole.Caregiver)
-    mockDblCommunicationApi()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
+    mockPatientLogin(patient1Info)
+    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
+    mockChatAPI()
+    mockErrorApi()
+    mockAnalyticsApi()
+    mockExternalConsentsApi()
+    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
+    jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
     mockScreenWidth(400)
   })
 
-  it('In mobile version, should render correct components', async () => {
+  it('should display correct components when patient is in some medical teams', async () => {
     mockDataAPI(oneDayDashboardData)
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
@@ -87,7 +97,15 @@ describe('Dashboard view for caregiver', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForCaregiverMobile(appMainLayoutParams)
+    await testAppMainLayoutForPatientMobile(appMainLayoutParams)
+  })
+
+  it('should be able to join a team', async () => {
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testJoinTeam()
   })
 
 })

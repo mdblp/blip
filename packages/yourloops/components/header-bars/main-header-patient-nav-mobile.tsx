@@ -35,6 +35,7 @@ import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { useStyles } from './main-header-style';
 
 interface MainHeaderPatientNavMobileProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
@@ -51,6 +52,7 @@ const classes = makeStyles()((theme) => ({
 export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavMobileProps> = (props) => {
   const { onClickPrint, setMainHeaderHeight } = props
   const { classes: { arrowBack } } = classes()
+  const { classes: { appBar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const navigate = useNavigate()
   const theme = useTheme()
@@ -67,13 +69,12 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
   return (
     <Box
       ref={appBarRefCallback}
+      className={appBar}
+      data-testid="bottom-part-main-header"
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
-        position: 'fixed',
-        zIndex: theme.zIndex.drawer + 1,
         borderBottom: `1px solid ${theme.palette.divider}`,
-        backgroundColor: theme.palette.common.white,
         width: '100%',
         padding: `${theme.spacing(1)} 0`
       }}>

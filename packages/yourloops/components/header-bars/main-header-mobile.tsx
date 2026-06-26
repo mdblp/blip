@@ -103,6 +103,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
@@ -237,7 +238,6 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             </Box>
           )
         }
-
       </Toolbar>
     </AppBar>
   )
