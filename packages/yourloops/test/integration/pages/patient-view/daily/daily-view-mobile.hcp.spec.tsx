@@ -25,23 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockDataAPI, oneDayDashboardData } from '../../../mock/data.api.mock'
-import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForCaregiverMobile
-} from '../../../use-cases/app-main-layout-visualisation'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { patient2Id } from '../../../data/patient.api.data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -61,33 +59,40 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+describe('Daily view for HCP', () => {
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
+
+  const dailyRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Daily}`
 
   beforeEach(() => {
-    mockAuth0Hook(UserRole.Caregiver)
-    mockDblCommunicationApi()
+    mockWindowResizer()
+    mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
+    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
+    mockPatientApiForHcp()
+    mockChatAPI()
+    mockDblCommunicationApi()
+    mockAnalyticsApi()
     mockScreenWidth(400)
   })
 
-  it('In mobile version, should render correct components', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
+  })
+
+  it('should display the button to download a report', async () => {
+    mockDataAPI()
 
     await act(async () => {
-      renderPage(patientDashboardRoute)
+      renderPage(dailyRoute)
     })
 
-    await testAppMainLayoutForCaregiverMobile(appMainLayoutParams)
+    expect(await screen.findByTestId('download-report-mobile', {}, { timeout: 3000 })).toBeVisible()
   })
+
 
 })
