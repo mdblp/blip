@@ -32,7 +32,6 @@ import { useNavigate } from 'react-router-dom'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
-import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'
