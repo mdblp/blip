@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.10.0-rc2 - 2026-06-23
+## 3.10.0 - 2026-06-25
 ### Added
 - YLP-3853 Display target value on Daily Glucose chart
 - YLP-3892 Accept data sharing request from external partners
