@@ -91,7 +91,6 @@ function TeamSettingsMenu(): JSX.Element {
   const alert = useAlert()
   const { user } = useAuth()
   const theme = useTheme()
-  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const patientIdForWhichDataHasBeenFetched = useRef(null)
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -175,7 +174,7 @@ function TeamSettingsMenu(): JSX.Element {
         >
           <GroupOutlinedIcon />
         </Badge>
-        {!isMobile && <ArrowDropDownIcon />}
+        <ArrowDropDownIcon />
       </Button>
 
       <MenuLayout
