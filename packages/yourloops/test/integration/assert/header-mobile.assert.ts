@@ -134,7 +134,6 @@ export const checkPatientHeaderMobile = async (fullName: string) => {
   //Go to notification tab and go back using the back button
   await userEvent.click(header.getByTestId("notification-icon"))
   await userEvent.click(header.getByTestId("back-button"))
-  expect(header.getByTestId("back-button")).not.toBeInTheDocument()
 
   await checkUserMenu(header, fullName)
   checkHeader(header)

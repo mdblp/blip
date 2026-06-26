@@ -26,29 +26,49 @@
  */
 
 import React, { Dispatch, type FunctionComponent, type MouseEventHandler, SetStateAction } from 'react'
+import Button from '@mui/material/Button'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { makeStyles } from 'tss-react/mui'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { useStyles } from './main-header-style';
+import { useAuth } from '../../lib/auth'
 
 interface MainHeaderPatientNavMobileProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
 }
 
+const classes = makeStyles()((theme) => ({
+  arrowBack: {
+    paddingLeft: theme.spacing(2),
+    fontSize: '16px'
+  }
+}))
+
 export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavMobileProps> = (props) => {
   const { onClickPrint, setMainHeaderHeight } = props
+  const { classes: { arrowBack } } = classes()
   const { classes: { appBar } } = useStyles()
+  const { t } = useTranslation('yourloops')
+  const navigate = useNavigate()
   const theme = useTheme()
+  const { user } = useAuth()
 
+  const goBack = (): void => {
+    navigate('/')
+  }
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
     }
   }
 
-  return (
+  if (user?.isUserPatient()) return (
     <Box
       ref={appBarRefCallback}
       className={appBar}
@@ -67,6 +87,43 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
         sx={{ color: 'var(--primary-color-main)' }}>
         <CloudDownloadIcon />
       </IconButton>
+    </Box>
+  )
+
+  return (
+    <Box
+      ref={appBarRefCallback}
+      className={appBar}
+      data-testid="bottom-part-main-header"
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        width: '100%',
+        padding: `${theme.spacing(1)} 0`
+      }}>
+      <Button
+        variant="text"
+        startIcon={<ArrowBackIcon />}
+        onClick={goBack}
+        className={arrowBack}
+        data-testid="back-button"
+      >
+        {t('back')}
+      </Button>
+      <Box
+        sx={{
+          display: "flex",
+          padding: `0 ${theme.spacing(2)}`
+        }}>
+        <IconButton
+          color="inherit"
+          data-testid="download-report-mobile"
+          onClick={onClickPrint}
+          sx={{ color: 'var(--primary-color-main)' }}>
+          <CloudDownloadIcon />
+        </IconButton>
+      </Box>
     </Box>
   )
 }
