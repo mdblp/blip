@@ -25,11 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, memo } from 'react'
+import React, { type FunctionComponent, memo, useState } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
+import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
 import { type PatientView } from '../../enum/patient-view.enum'
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles'
 
 interface PatientNavBarProps {
   currentPatientView: PatientView
@@ -46,8 +49,14 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
     currentPatientView,
     currentPatient,
     onChangePatientView,
-    onClickPrint,
+    onClickPrint
   } = props
+
+  const theme = useTheme()
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
 
   return (
     <Box
@@ -57,12 +66,25 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
         flexDirection: "column",
         marginBottom: 3
       }}>
-      <PatientNavBarTabs
-        currentPatient={currentPatient}
-        currentPatientView={currentPatientView}
-        onChangePatientView={onChangePatientView}
-        onClickPrint={onClickPrint}
-      />
+      {
+        isMobile && (
+          <Box sx={{ minHeight: mainHeaderHeight }}>
+            <MainHeaderPatientNavMobile
+              onClickPrint={onClickPrint}
+              setMainHeaderHeight={setMainHeaderHeight}
+            />
+          </Box>
+        )
+      }
+      <Box
+      >
+        <PatientNavBarTabs
+          currentPatient={currentPatient}
+          currentPatientView={currentPatientView}
+          onChangePatientView={onChangePatientView}
+          onClickPrint={onClickPrint}
+        />
+      </Box>
     </Box>
   )
 }

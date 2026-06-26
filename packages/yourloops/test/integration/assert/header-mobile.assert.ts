@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,6 @@
  */
 
 import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
@@ -37,7 +36,7 @@ interface TeamMenuInfo {
   availableTeams: Team[]
 }
 
-export interface HeaderInfo {
+export interface HeaderInfoMobile {
   loggedInUserFullName: string
   teamMenuInfo: TeamMenuInfo
 }
@@ -47,24 +46,13 @@ const checkHeader = (header: BoundFunctions<typeof queries>) => {
   expect(header.getByLabelText('Go to notifications list')).toBeVisible()
 }
 
-const getIconTestIdByRole = (role: UserRole): string => {
-  switch (role) {
-    case UserRole.Caregiver:
-      return 'caregiver-icon'
-    case UserRole.Hcp:
-      return 'hcp-icon'
-    case UserRole.Patient:
-      return 'patient-icon'
-  }
-}
+const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: string) => {
+  const buttonUserMenuTestId = 'user-menu-button'
 
-const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: string, role: UserRole) => {
-  const iconTestId = getIconTestIdByRole(role)
+  expect(header.getByTestId(buttonUserMenuTestId)).toBeVisible()
+  expect(header.queryByText(userName)).not.toBeInTheDocument()
 
-  expect(header.getByTestId(iconTestId)).toBeVisible()
-  expect(header.getByText(userName)).toBeVisible()
-
-  await userEvent.click(header.getByText(userName))
+  await userEvent.click(header.getByTestId(buttonUserMenuTestId))
 
   const userMenu = within(screen.getByTestId('user-menu'))
   expect(userMenu.getByText('User account')).toBeVisible()
@@ -80,7 +68,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMe
   const teamScopeMenuText = teamMenuInfo.isSelectedTeamPrivate ? 'My private practice' : teamMenuInfo.selectedTeamName
 
   expect(header.getByLabelText('Open team selection menu')).toBeVisible()
-  expect(header.getByTestId(teamScopeMenuIcon)).toBeVisible()
+  expect(header.queryByTestId(teamScopeMenuIcon)).not.toBeInTheDocument()
   expect(header.getByText(teamScopeMenuText)).toBeVisible()
 
   await userEvent.click(header.getByText(teamScopeMenuText))
@@ -100,46 +88,66 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMe
   expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()
 }
 
-export const checkHcpHeader = async (headerInfo: HeaderInfo) => {
-  const header = within(await screen.findByTestId('app-main-header'))
+export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
 
-  expect(header.getByText('Patients')).toBeVisible()
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
-    expect(header.queryByText('Care team settings')).not.toBeInTheDocument()
+    expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
   } else {
-    expect(header.getByText('Care team settings')).toBeVisible()
+    expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
   }
 
+  expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
+
+  //Go to notification tab and go back using the back button
+  await userEvent.click(header.getByTestId("notification-icon"))
+  expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument()
+  await userEvent.click(header.getByTestId("back-button"))
+
+  expect(header.queryByTestId('team-selection-tab')).toBeVisible()
+
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)
-  await checkUserMenu(header, headerInfo.loggedInUserFullName, UserRole.Hcp)
+  await checkUserMenu(header, headerInfo.loggedInUserFullName)
   checkHeader(header)
 }
 
-export const checkCaregiverHeader = async (fullName: string) => {
-  const header = within(await screen.findByTestId('app-main-header'))
+export const checkCaregiverHeaderMobile = async (fullName: string) => {
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
+  expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
 
-  await checkUserMenu(header, fullName, UserRole.Caregiver)
+  //Go to notification tab and go back using the back button
+  await userEvent.click(header.getByTestId("notification-icon"))
+  await userEvent.click(header.getByTestId("back-button"))
+
+  await checkUserMenu(header, fullName)
   checkHeader(header)
 }
 
-export const checkPatientHeader = async (fullName: string) => {
+export const checkPatientHeaderMobile = async (fullName: string) => {
   const header = within(await screen.findByTestId('app-main-header-mobile', {}, { timeout: 3000 }))
+  const bottomPartHeader = within(await screen.findByTestId('bottom-part-main-header', {}, { timeout: 3000 }))
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
-  await checkUserMenu(header, fullName, UserRole.Patient)
+  expect(bottomPartHeader.getByTestId("download-report-mobile")).toBeVisible()
+
+  //Go to notification tab and go back using the back button
+  await userEvent.click(header.getByTestId("notification-icon"))
+  await userEvent.click(header.getByTestId("back-button"))
+
+  await checkUserMenu(header, fullName)
   checkHeader(header)
 }
 
 export const changeTeamScope = async (currentTeamName: string, wantedTeamName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(screen.getByTestId('app-main-header-mobile'))
   await userEvent.click(header.getByText(currentTeamName))
 
   const teamScopeMenu = within(screen.getByTestId('team-scope-menu'))
   await userEvent.click(teamScopeMenu.getByText(wantedTeamName))
 }
 
-export const checkBannerLanguageChange = async () => {
+export const checkBannerLanguageChangeMobile = async () => {
   expect(await screen.getByTestId('dbl-banner-alert')).toHaveTextContent('This is a <b>critical banner message</b> for all users.')
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))

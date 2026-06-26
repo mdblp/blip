@@ -25,29 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FC, SetStateAction } from 'react'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { MainHeaderMobileMemoized } from './main-header-mobile'
-import { MainHeaderDesktopMemoized } from './main-header-desktop'
-
-interface MainHeaderProps {
-  setMainHeaderHeight: Dispatch<SetStateAction<number>>
+export enum BottomHeaderPatientView {
+  Daily = 'daily',
+  Dashboard = 'dashboard',
+  Devices = 'devices',
+  PatientProfile = 'patient-profile',
+  Trends = 'trends'
 }
-
-const MainHeader: FC<MainHeaderProps> = (props) => {
-  const { setMainHeaderHeight } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  return (
-    <>
-      {isMobile
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
-      }
-    </>
-  )
-}
-
-export const MainHeaderMemoized = React.memo(MainHeader)

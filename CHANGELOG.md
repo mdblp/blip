@@ -13,6 +13,8 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-3858 Allowing HCP to add an 11-digit phone number.
 - YLP-3859 Adapt Bolus chart Y scale to the boluses size
+- YLP-3939 Adapting the main header to mobile format for HCP
+- YLP-3941 Adapting the main header to mobile format for Caregiver
 
 ### Engineering
 - YLP-3885 Daily components migration (data elements only)
