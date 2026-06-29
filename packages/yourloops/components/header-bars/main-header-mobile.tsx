@@ -52,7 +52,7 @@ import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
 import IconButton from '@mui/material/IconButton'
-import { useStyles } from './main-header-style';
+import { useStyles } from './main-header-style'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { BottomHeaderPatientView } from './bottom-header-patient-view.enum'
 
@@ -122,8 +122,10 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     navigate(`${AppUserRoute.Teams}/${teamId}`)
   }
 
-  const goBack = (): void => {
-    navigate('/')
+  const targetUrl = user?.isUserPatient() ? '/dashboard' : '/'
+
+  const goHome = () => {
+    navigate(targetUrl)
   }
 
   const teamSelectionAndSettings = () => {
@@ -178,7 +180,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             padding: `${theme.spacing(1)} ${theme.spacing(2)}`
           }}>
           <Banner />
-          <Link to="/" data-testid="main-header-logo-link">
+          <Link to={targetUrl} data-testid="main-header-logo-link">
             <Avatar
               id="header-main-logo"
               aria-label={t('alt-img-logo')}
@@ -229,7 +231,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               <Button
                 variant="text"
                 startIcon={<ArrowBackIcon />}
-                onClick={goBack}
+                onClick={goHome}
                 className={arrowBack}
                 data-testid="back-button"
               >
