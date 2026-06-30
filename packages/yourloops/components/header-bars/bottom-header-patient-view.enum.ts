@@ -25,16 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles } from 'tss-react/mui';
-
-export const useStyles = makeStyles()((theme) => ({
-  toolbar: {
-    padding: 0,
-  },
-  appBar: {
-    position: 'fixed',
-    zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: theme.palette.common.white,
-    color: 'var(--text-color-primary)'
-  },
-}));
+export enum BottomHeaderPatientView {
+  Daily = 'daily',
+  Dashboard = 'dashboard',
+  Devices = 'devices',
+  PatientProfile = 'patient-profile',
+  Trends = 'trends'
+}

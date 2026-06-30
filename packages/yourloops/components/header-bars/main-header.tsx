@@ -28,7 +28,6 @@
 import React, { Dispatch, type FC, SetStateAction } from 'react'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useAuth } from '../../lib/auth'
 import { MainHeaderMobileMemoized } from './main-header-mobile'
 import { MainHeaderDesktopMemoized } from './main-header-desktop'
 
@@ -38,13 +37,12 @@ interface MainHeaderProps {
 
 const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { user } = useAuth()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
-      {isMobile && (user.isUserHcp() || user.isUserCaregiver())
+      {isMobile
         ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
         : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
       }

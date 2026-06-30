@@ -25,23 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
-import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
-import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { act } from '@testing-library/react'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
-import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockDataAPI, oneDayDashboardData } from '../../../mock/data.api.mock'
-import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForCaregiverMobile
-} from '../../../use-cases/app-main-layout-visualisation'
+import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
+import { patient2Info } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
-import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -61,33 +52,26 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
-
+describe('Daily view for patient', () => {
   beforeEach(() => {
-    mockAuth0Hook(UserRole.Caregiver)
-    mockDblCommunicationApi()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
-    mockScreenWidth(400)
+    mockWindowResizer()
+    mockPatientLogin(patient2Info)
+    mockScreenWidth(400);
   })
 
-  it('In mobile version, should render correct components', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
+  })
+
+  it('should render correct layout', async () => {
+    mockDataAPI()
 
     await act(async () => {
-      renderPage(patientDashboardRoute)
+      renderPage(AppUserRoute.Daily)
     })
 
-    await testAppMainLayoutForCaregiverMobile(appMainLayoutParams)
+    await checkPatientLayoutMobile(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
   })
 
 })

@@ -124,6 +124,21 @@ export const checkCaregiverHeaderMobile = async (fullName: string) => {
   checkHeader(header)
 }
 
+export const checkPatientHeaderMobile = async (fullName: string) => {
+  const header = within(await screen.findByTestId('app-main-header-mobile', {}, { timeout: 3000 }))
+  const bottomPartHeader = within(await screen.findByTestId('bottom-part-main-header', {}, { timeout: 3000 }))
+  expect(header.getByLabelText('Open team menu')).toBeVisible()
+
+  expect(bottomPartHeader.getByTestId("download-report-mobile")).toBeVisible()
+
+  //Go to notification tab and go back using the back button
+  await userEvent.click(header.getByTestId("notification-icon"))
+  await userEvent.click(header.getByTestId("back-button"))
+
+  await checkUserMenu(header, fullName)
+  checkHeader(header)
+}
+
 export const changeTeamScope = async (currentTeamName: string, wantedTeamName: string) => {
   const header = within(screen.getByTestId('app-main-header-mobile'))
   await userEvent.click(header.getByText(currentTeamName))

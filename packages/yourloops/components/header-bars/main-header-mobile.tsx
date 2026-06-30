@@ -51,9 +51,10 @@ import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import IconButton from '@mui/material/IconButton'
-import { useStyles } from './main-header-style';
+import { useStyles } from './main-header-style'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { BottomHeaderPatientView } from './bottom-header-patient-view.enum'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -81,12 +82,19 @@ const classes = makeStyles()((theme) => ({
     fontSize: theme.typography.htmlFontSize,
     paddingLeft: theme.spacing(4),
     opacity: 1
+  },
+  bottomPart: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 2,
+    width: '100%',
+    margin: theme.spacing(1)
   }
 }))
 
 const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, teamMenu, arrowBack, settingsButton } } = classes()
+  const { classes: { mobileLogo, teamMenu, arrowBack, bottomPart, settingsButton } } = classes()
   const { classes: { appBar, toolbar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
@@ -95,15 +103,16 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
     }
   }
 
-  const goBack = (): void => {
-    navigate('/')
-  }
+  const isMatchingPatientView = Object.values(BottomHeaderPatientView).some(viewValue =>
+    pathname.includes(viewValue)
+  )
 
   const goToNotifications = (): void => {
     navigate(AppUserRoute.Notifications)
@@ -113,8 +122,14 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     navigate(`${AppUserRoute.Teams}/${teamId}`)
   }
 
+  const targetUrl = user?.isUserPatient() ? '/dashboard' : '/'
+
+  const goHome = () => {
+    navigate(targetUrl)
+  }
+
   const teamSelectionAndSettings = () => {
-    if (user?.isUserCaregiver()) return null
+    if (!user?.isUserHcp()) return null
 
     return (
       <>
@@ -122,11 +137,10 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
           className={teamMenu}
           data-testid="team-selection-tab"
         >
-          {user.isUserPatient() && <TeamSettingsMenu />}
-          {user.isUserHcp() && <TeamScopeMenu />}
+          <TeamScopeMenu />
         </Box>
 
-        {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
+        {!TeamUtils.isPrivate(teamId) && (
           <Button
             aria-label={t('header-tab-care-team-settings')}
             value={HcpNavigationTab.CareTeam}
@@ -141,7 +155,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
         )}
       </>
     )
-  };
+  }
 
   return (
     <AppBar
@@ -163,10 +177,10 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             alignItems: 'center',
             width: '100%',
             minHeight: "64px",
-            padding: `0 ${theme.spacing(2)}`
+            padding: `${theme.spacing(1)} ${theme.spacing(2)}`
           }}>
           <Banner />
-          <Link to="/" data-testid="main-header-logo-link">
+          <Link to={targetUrl} data-testid="main-header-logo-link">
             <Avatar
               id="header-main-logo"
               aria-label={t('alt-img-logo')}
@@ -196,33 +210,36 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
                 <NotificationsNoneIcon />
               </IconButton>
             </Badge>
+            {user.isUserPatient() && <TeamSettingsMenu />}
             <UserMenu />
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            width: '100%',
-            margin: theme.spacing(1)
-          }}
-        >
-          {pathname.endsWith('/patients') ? (
-              teamSelectionAndSettings()
-            ) :
-            (
+        {pathname.endsWith('/patients') &&
+          (
+            <Box
+              className={bottomPart}
+            >
+              {teamSelectionAndSettings()}
+            </Box>
+          )
+        }
+        {(!pathname.includes('/patients') && !isMatchingPatientView) &&
+          (
+            <Box
+              className={bottomPart}
+            >
               <Button
                 variant="text"
                 startIcon={<ArrowBackIcon />}
-                onClick={goBack}
+                onClick={goHome}
                 className={arrowBack}
                 data-testid="back-button"
               >
                 {t('back')}
               </Button>
-            )}
-        </Box>
+            </Box>
+          )
+        }
       </Toolbar>
     </AppBar>
   )
