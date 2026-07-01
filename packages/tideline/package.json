@@ -18,7 +18,7 @@
     "test-debug": "TZ=UTC NODE_ENV='test' DEBUG_UNIT_TEST='true' karma --single-run=false --log-level debug start --auto-watch"
   },
   "dependencies": {
-    "crossfilter2": "^1.4.8",
+    "crossfilter2": "1.4.8",
     "d3": "^7.9.0",
     "events": "^3.2.0",
     "util": "^0.12.3"
