@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,15 +72,16 @@ describe('Main lobby', () => {
       testGetRedirectUrl('/login', user, false, undefined)
     })
 
-    it("should return default route when user is logged in and route is '/login'", () => {
+    it("should return undefined when user is logged in and route is '/login'", () => {
       const user = {
         hasToAcceptNewConsent: () => false,
         hasToRenewConsent: () => false,
         isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => false
+        hasToDisplayTrainingInfoPage: () => false,
+        hasToDisplayDblCommunicationPage: () => false
       } as User
 
-      testGetRedirectUrl('/login', user, true, '/')
+      testGetRedirectUrl('/login', user, true, undefined)
     })
 
     it("should return login route when user is not logged in and route is '/'", () => {
