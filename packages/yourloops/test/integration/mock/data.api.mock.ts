@@ -287,8 +287,8 @@ const PumpSettingsMock = (date, time) => {
       },
       pump: {
         manufacturer: 'VICENTRA',
-        product: "testPump",
-        name: 'Kaleido',
+        product: "Kaleido",
+        name: 'PUMP33049489',
         serialNumber: '123456',
         swVersion: 'beta'
       },
@@ -669,8 +669,8 @@ export const pumpSettingsData: Data = {
           ],
           pump: {
             manufacturer: PumpManufacturer.Vicentra,
-            product: "testPump",
-            name: 'Kaleido',
+            product: "Kaleido",
+            name: 'PUMP33049489',
             serialNumber: '123456',
             swVersion: 'beta'
           },
@@ -888,8 +888,8 @@ export const pumpSettingsDblg2: Data = {
           ],
           pump: {
             manufacturer: PumpManufacturer.Vicentra,
-            product: "testPump",
-            name: 'Kaleido',
+            product: "Kaleido",
+            name: 'PUMP33049489',
             swVersion: 'beta',
             serialNumber: '123456'
           },
@@ -1112,8 +1112,8 @@ export const pumpSettingsDblg2G7: Data = {
           ],
           pump: {
             manufacturer: PumpManufacturer.Vicentra,
-            product: "testPump",
-            name: 'Kaleido',
+            product: "Kaleido",
+            name: 'PUMP33049489',
             swVersion: 'beta',
             serialNumber: '123456'
           },
@@ -1318,8 +1318,8 @@ export const pumpSettingsDblg1Mobigo: Data = {
           ],
           pump: {
             manufacturer: PumpManufacturer.Vicentra,
-            product: "testPump",
-            name: 'Kaleido',
+            product: "Kaleido",
+            name: 'PUMP33049489',
             serialNumber: '123456',
             swVersion: 'beta'
           },
@@ -1517,8 +1517,8 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
           ],
           pump: {
             manufacturer: PumpManufacturer.Vicentra,
-            product: "testPump",
-            name: 'Kaleido',
+            product: "Kaleido",
+            name: 'PUMP33049489',
             serialNumber: '123456',
             swVersion: 'beta'
           },
@@ -1666,7 +1666,8 @@ export const smallDataSet: Data = {
           },
           "pump": {
             "manufacturer": PumpManufacturer.Vicentra,
-            "name": "Kaleido",
+            "name": "Pump011254",
+            "product": "Kaleido",
             "serialNumber": "123456",
             "swVersion": "beta"
           },

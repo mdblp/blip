@@ -39,12 +39,4 @@ export class ConfigService {
   static getDateOfBirthHidden(): boolean {
     return appConfig.DATE_OF_BIRTH_HIDDEN
   }
-
-  static getMyDiabbyPartnerId(): string {
-    return appConfig.MY_DIABBY_PARTNER_ID
-  }
-
-  static getGlookoXtPartnerId(): string {
-    return appConfig.GLOOKO_XT_PARTNER_ID
-  }
 }

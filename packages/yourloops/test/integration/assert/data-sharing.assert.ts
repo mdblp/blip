@@ -27,6 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getTranslation } from '../../utils/i18n'
 
 export const checkUserAccountMenuNotVisible = (): void => {
   expect(screen.queryByTestId('user-account-menu')).not.toBeInTheDocument()
@@ -106,6 +107,11 @@ export const checkRevokeConsentError = async (): Promise<void> => {
 
 export const checkDataAccessRequestModalNotVisible = (): void => {
   expect(screen.queryByTestId('data-access-request-dialog')).not.toBeInTheDocument()
+}
+
+export const checkPartnerNotRecognizedAlert = async (): Promise<void> => {
+  const alert = await screen.findByTestId('alert-snackbar')
+  expect(alert).toHaveTextContent(getTranslation('error-partner-not-recognized'))
 }
 
 export const checkGlookoXtDataAccessRequestModalVisible = (): void => {

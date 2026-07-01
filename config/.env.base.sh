@@ -41,9 +41,7 @@ export STONLY_WID='disabled'
 export COOKIE_BANNER_CLIENT_ID='disabled'
 # Environement for CloudFront config:
 export TARGET_ENVIRONMENT='dev'
-# External partners
-export MY_DIABBY_PARTNER_ID='MyDiabbyClientId456789'
-export GLOOKO_XT_PARTNER_ID='glookoXtPartnerId'
+
 
 # Auth0 configuration (yourloops-front-dev app)
 export AUTH0_DOMAIN="mockauth0.itg.your-loops.dev"

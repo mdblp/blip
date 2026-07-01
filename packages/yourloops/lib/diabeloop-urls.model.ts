@@ -37,7 +37,7 @@ class DiabeloopExternalUrls {
 
 export const diabeloopExternalUrls = new DiabeloopExternalUrls()
 export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail, AppRoute.VerifyEmailResult, AppRoute.SignupInformation]
-export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling]
+export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling, AppRoute.Login]
 export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [
   AppRoute.RenewConsent,
   AppRoute.NewConsent,

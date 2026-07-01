@@ -27,10 +27,22 @@
 
 import HttpService from '../http/http.service'
 import { ExternalConsent } from './models/external-consent.model'
+import { PartnerDetails } from './models/partner-details.model'
 
 const EXTERNAL_CONSENTS_URL = '/health-bridge/patient-consents'
+const PARTNER_DETAILS_URL = '/health-bridge/partners'
 
 export class ExternalConsentsApi {
+
+  static async getPartnerDetails(partnerId: string): Promise<PartnerDetails> {
+    try {
+      const { data } = await HttpService.get<PartnerDetails>({ url: `${PARTNER_DETAILS_URL}/${partnerId}` })
+      return data
+    } catch (err) {
+      return null
+    }
+  }
+
   static async getConsents(): Promise<ExternalConsent[]> {
     const { data } = await HttpService.get<ExternalConsent[]>({ url: EXTERNAL_CONSENTS_URL })
     return data
