@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -41,6 +41,7 @@ import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { checkPatientNavBarAsCaregiverMobile } from '../../../assert/patient-nav-bar.assert'
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -70,5 +71,7 @@ describe('Daily view for caregiver', () => {
     })
 
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsCaregiverMobile()
   })
 })

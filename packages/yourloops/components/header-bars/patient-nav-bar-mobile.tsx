@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, memo } from 'react'
+import React, { type FunctionComponent, memo, useState } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
+import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
+import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
 import { type PatientView } from '../../enum/patient-view.enum'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { PatientNavBarTabs } from './patient-nav-bar-tabs'
-import { useTheme } from '@mui/material/styles'
-import { PatientNavBarMobileMemoized } from './patient-nav-bar-mobile'
 
 interface PatientNavBarProps {
   currentPatientView: PatientView
@@ -44,7 +42,7 @@ interface PatientNavBarProps {
   onClickTrends?: () => void
 }
 
-const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
+const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
     currentPatientView,
     currentPatient,
@@ -52,37 +50,25 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
     onClickPrint
   } = props
 
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
 
   return (
-    <Box
-      data-testid="patient-nav-bar"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        marginBottom: 3
-      }}>
-
-      {isMobile
-        ?
-          <PatientNavBarMobileMemoized
-            currentPatient={currentPatient}
-            currentPatientView={currentPatientView}
-            onChangePatientView={onChangePatientView}
-          />
-        :
-        <Box>
-          <PatientNavBarTabs
-            currentPatient={currentPatient}
-            currentPatientView={currentPatientView}
-            onChangePatientView={onChangePatientView}
-            onClickPrint={onClickPrint}
-          />
-        </Box>
-      }
-    </Box>
+    <>
+      <Box sx={{ minHeight: mainHeaderHeight }}>
+        <MainHeaderPatientNavMobile
+          onClickPrint={onClickPrint}
+          setMainHeaderHeight={setMainHeaderHeight}
+        />
+      </Box>
+      <Box>
+        <PatientNavBarTabsMobile
+          currentPatient={currentPatient}
+          currentPatientView={currentPatientView}
+          onChangePatientView={onChangePatientView}
+        />
+      </Box>
+    </>
   )
 }
 
-export const PatientNavBarMemoized = memo(PatientNavBar)
+export const PatientNavBarMobileMemoized = memo(PatientNavBarMobile)

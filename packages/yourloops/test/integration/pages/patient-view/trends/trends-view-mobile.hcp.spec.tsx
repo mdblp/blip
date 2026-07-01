@@ -25,17 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { checkPatientNavBarAsHcpMobile } from '../../../assert/patient-nav-bar.assert'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { patient2Id } from '../../../data/patient.api.data'
+import {
+  type AppMainLayoutHcpMobileParams,
+  testAppMainLayoutForHcpMobile
+} from '../../../use-cases/app-main-layout-visualisation'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
@@ -68,9 +73,26 @@ describe('Trends view for HCP', () => {
   it('should render correct layout', async () => {
     mockDataAPI(getMinimalTrendViewData())
 
+    const appMainLayoutParams: AppMainLayoutHcpMobileParams = {
+      footerHasLanguageSelector: false,
+      headerInfoMobile: {
+        loggedInUserFullName: `${lastName} ${firstName}`,
+        homePageBoolean : false,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+
     await act(async () => {
       renderPage(`/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`)
     })
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsHcpMobile()
+    await testAppMainLayoutForHcpMobile(appMainLayoutParams)
   })
 })

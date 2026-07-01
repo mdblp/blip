@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -40,6 +40,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { patient2Id } from '../../../data/patient.api.data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { checkPatientNavBarAsHcpMobile } from '../../../assert/patient-nav-bar.assert'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
@@ -76,6 +77,8 @@ describe('Daily view for HCP', () => {
     })
 
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsHcpMobile()
   })
 
 

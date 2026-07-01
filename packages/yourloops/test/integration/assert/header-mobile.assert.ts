@@ -39,6 +39,7 @@ interface TeamMenuInfo {
 export interface HeaderInfoMobile {
   loggedInUserFullName: string
   teamMenuInfo: TeamMenuInfo
+  homePageBoolean: boolean
 }
 
 const checkHeader = (header: BoundFunctions<typeof queries>) => {
@@ -93,11 +94,15 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
 
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
     expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
-  } else {
-    expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
   }
-
-  expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
+  else if (headerInfo.homePageBoolean) {
+    expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
+    expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
+    expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument()
+  }
+  else {
+    expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
+  }
 
   //Go to notification tab and go back using the back button
   await userEvent.click(header.getByTestId('notification-icon'))

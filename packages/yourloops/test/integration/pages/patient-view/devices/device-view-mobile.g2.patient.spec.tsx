@@ -25,47 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
-import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { act } from '@testing-library/react'
+import { mockDataAPI, pumpSettingsDblg2 } from '../../../mock/data.api.mock'
+import { patient2Info } from '../../../data/patient.api.data'
 import { renderPage } from '../../../utils/render'
-import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { testAppMainLayoutForCaregiverMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
-import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import mediaQuery from 'css-mediaquery'
 
-describe('Devices view for Caregiver', () => {
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+function mockScreenWidth(width: number): void {
+  globalThis.matchMedia = (query: string): MediaQueryList => ({
+    matches: mediaQuery.match(query, { width }),
+    media: query,
+    onchange: null,
+    addListener: () => {
+    },
+    removeListener: () => {
+    },
+    addEventListener: () => {
+    },
+    removeEventListener: () => {
+    },
+    dispatchEvent: () => true
+  });
+}
 
-  const devicesRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
+describe('Device view for G2 Patient', () => {
+  const firstName = patient2Info.profile.firstName
+  const lastName = patient2Info.profile.lastName
+
+  const deviceRoute = AppUserRoute.Devices
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Caregiver)
-    mockDblCommunicationApi()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
-    mockDataAPI(pumpSettingsData)
+    mockPatientLogin(patient2Info)
+    mockDataAPI(pumpSettingsDblg2)
     mockAnalyticsApi()
-    mockMobileScreen()
+    mockScreenWidth(400)
   })
 
   it('should render correct layout', async () => {
-    renderPage(devicesRoute)
-    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
-    await testAppMainLayoutForCaregiverMobile({ loggedInUserFullName: `${lastName} ${firstName}` })
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testAppMainLayoutForPatientMobile({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
 })
