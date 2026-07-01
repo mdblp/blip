@@ -3,6 +3,8 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.11.0-beta - UNRELEASED
+### Changed
+- YLP-3939 Adapting the main header to mobile format for HCP
 
 ## 3.10.0 - 2026-06-25
 ### Added
@@ -15,7 +17,6 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-3858 Allowing HCP to add an 11-digit phone number.
 - YLP-3859 Adapt Bolus chart Y scale to the boluses size
-- YLP-3939 Adapting the main header to mobile format for HCP
 
 ### Engineering
 - YLP-3885 Daily components migration (data elements only)
