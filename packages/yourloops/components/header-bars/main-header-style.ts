@@ -25,31 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FC, SetStateAction } from 'react'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useAuth } from '../../lib/auth'
-import { MainHeaderMobileMemoized } from './main-header-mobile'
-import { MainHeaderDesktopMemoized } from './main-header-desktop'
+import { makeStyles } from 'tss-react/mui';
 
-interface MainHeaderProps {
-  setMainHeaderHeight: Dispatch<SetStateAction<number>>
-}
-
-const MainHeader: FC<MainHeaderProps> = (props) => {
-  const { setMainHeaderHeight } = props
-  const { user } = useAuth()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  return (
-    <>
-      {isMobile && user.isUserHcp()
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
-      }
-    </>
-  )
-}
-
-export const MainHeaderMemoized = React.memo(MainHeader)
+export const useStyles = makeStyles()((theme) => ({
+  toolbar: {
+    padding: 0,
+  },
+  appBar: {
+    position: 'fixed',
+    zIndex: theme.zIndex.drawer + 1,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.common.white,
+    color: 'var(--text-color-primary)'
+  },
+}));
