@@ -96,6 +96,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const privatePracticeIcon = <PersonIcon data-testid="private-practice-icon" />
   const medicalTeamIcon = <GroupsOutlinedIcon data-testid="medical-team-icon" />
   const selectedTeamIcon = isSelectedTeamPrivate ? privatePracticeIcon : medicalTeamIcon
+  const menuClass = isMobile ? menuItemMobile : undefined
+  const dividerClass = isMobile ? divider : undefined
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
@@ -156,7 +158,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
             onClick={() => {
               onSelectTeam(privateTeam.id)
             }}
-            className={isMobile ? menuItemMobile : undefined}>
+            className={menuClass}>
             <ListItemIcon>
               {privatePracticeIcon}
             </ListItemIcon>
@@ -167,7 +169,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
           {hasMedicalTeams &&
             <>
-              <Box className={isMobile ? divider: undefined}>
+              <Box className={dividerClass}>
                 <Divider variant="middle" />
               </Box>
 
@@ -181,7 +183,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
                   onClick={() => {
                     onSelectTeam(team.id)
                   }}
-                  className={isMobile ? menuItemMobile : undefined}>
+                  className={menuClass}>
                   <ListItemIcon>
                     {medicalTeamIcon}
                   </ListItemIcon>
@@ -194,13 +196,13 @@ export const TeamScopeMenu: FunctionComponent = () => {
           }
 
           <Box className={divider}>
-            <Divider variant="middle" className={isMobile ? divider: undefined}/>
+            <Divider variant="middle" className={dividerClass} />
           </Box>
 
           <MenuItem
             onClick={onCreateTeam}
             data-testid="team-scope-menu-new-care-team-button"
-            className={isMobile ? menuItemMobile : undefined}>
+            className={menuClass}>
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
