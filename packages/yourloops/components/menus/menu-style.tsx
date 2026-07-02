@@ -37,8 +37,12 @@ export const useMenuStyles = makeStyles()((theme) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1)
   },
-  divider: {
+  dividerMobile: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
+  },
+  dividerDesktop: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   }
 }));

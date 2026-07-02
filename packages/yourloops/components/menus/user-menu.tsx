@@ -74,7 +74,7 @@ function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
   const { classes: { typography } } = classes()
-  const { classes: { divider, menu, menuItemMobile } } = useMenuStyles()
+  const { classes: { dividerDesktop, dividerMobile, menu, menuItemMobile } } = useMenuStyles()
   const navigate = useNavigate()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -184,7 +184,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <Box sx={{ marginY: 2 }} className={isMobile ? divider: undefined} >
+          <Box className={isMobile ? dividerMobile : dividerDesktop}>
             <Divider variant="middle" />
           </Box>
 

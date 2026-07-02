@@ -73,7 +73,7 @@ const MENU_MAX_WIDTH_PX = 250
 export const TeamScopeMenu: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes: { sectionTitle, typography } } = classes()
-  const { classes: { divider, menu, menuItemMobile } } = useMenuStyles()
+  const { classes: { dividerDesktop, dividerMobile, menu, menuItemMobile } } = useMenuStyles()
   const { getMedicalTeams, getPrivateTeam, createTeam, getTeam } = useTeam()
 
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
@@ -97,7 +97,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const medicalTeamIcon = <GroupsOutlinedIcon data-testid="medical-team-icon" />
   const selectedTeamIcon = isSelectedTeamPrivate ? privatePracticeIcon : medicalTeamIcon
   const menuClass = isMobile ? menuItemMobile : undefined
-  const dividerClass = isMobile ? divider : undefined
+  const dividerClass = isMobile ? dividerMobile : dividerDesktop
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
@@ -169,7 +169,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
           {hasMedicalTeams &&
             <>
-              <Box sx={{ marginY: 2 }} className={dividerClass}>
+              <Box className={dividerClass}>
                 <Divider variant="middle" />
               </Box>
 
@@ -195,7 +195,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
             </>
           }
 
-          <Box sx={{ marginY: 2 }} className={dividerClass}>
+          <Box className={dividerClass}>
             <Divider variant="middle" />
           </Box>
 
