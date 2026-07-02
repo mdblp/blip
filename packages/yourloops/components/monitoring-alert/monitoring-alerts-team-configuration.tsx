@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,7 +72,6 @@ export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigura
       <MonitoringAlertsContentConfiguration
         bgUnit={userBgUnit}
         displayInReadonly={displayInReadonly}
-        displayDefaultValues
         monitoringValuesDisplayed={monitoringValuesDisplayed}
         setMonitoringValuesDisplayed={setMonitoringValuesDisplayed}
       />
