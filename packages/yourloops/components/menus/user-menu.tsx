@@ -35,6 +35,7 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -57,16 +58,13 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { getUserName } from '../../lib/auth/user.util'
+import { useMenuStyles } from './menu-style';
 
-const classes = makeStyles()((theme) => ({
+const classes = makeStyles()(() => ({
   typography: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
-  },
-  menu: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1)
   }
 }))
 
@@ -75,15 +73,17 @@ const MENU_MAX_WIDTH_PX = 250
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { classes: { menu, typography } } = classes()
+  const { classes: { typography } } = classes()
+  const { classes: { dividerDesktop, dividerMobile, menu, menuItemMobile } } = useMenuStyles()
   const navigate = useNavigate()
   const theme = useTheme()
-  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [tooltipText, setTooltipText] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const opened = !!anchorEl
   const { firstName, fullName, lastName } = user
   const userName = getUserName(firstName, lastName, fullName)
+  const menuClass = isMobile ? menuItemMobile : undefined
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
@@ -136,8 +136,11 @@ function UserMenu(): JSX.Element {
     <>
       <Box>
         {isMobile
-          ? <IconButton color="inherit" onClick={openMenu}>
-            {getRoleIcon()}
+          ? <IconButton
+            color="inherit"
+            data-testid="user-menu-button"
+            onClick={openMenu}>
+            <AccountCircleIcon />
           </IconButton>
           : <Button
             color="inherit"
@@ -163,7 +166,7 @@ function UserMenu(): JSX.Element {
         onClose={closeMenu}
       >
         <Box className={menu} data-testid="user-menu">
-          <MenuItem onClick={onClickSettings} data-testid="user-menu-settings-item">
+          <MenuItem onClick={onClickSettings} data-testid="user-menu-settings-item" className={menuClass}>
             <ListItemIcon>
               <PermContactCalendarIcon />
             </ListItemIcon>
@@ -172,7 +175,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <MenuItem onClick={onClickSupport} data-testid="user-menu-contact-support-item">
+          <MenuItem onClick={onClickSupport} data-testid="user-menu-contact-support-item" className={menuClass}>
             <ListItemIcon>
               <ContactSupportIcon />
             </ListItemIcon>
@@ -181,11 +184,11 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <Box sx={{ marginY: 2 }}>
+          <Box className={isMobile ? dividerMobile : dividerDesktop}>
             <Divider variant="middle" />
           </Box>
 
-          <MenuItem onClick={onClickLogout} data-testid="user-menu-logout-item">
+          <MenuItem onClick={onClickLogout} data-testid="user-menu-logout-item" className={menuClass}>
             <ListItemIcon>
               <CancelIcon />
             </ListItemIcon>
