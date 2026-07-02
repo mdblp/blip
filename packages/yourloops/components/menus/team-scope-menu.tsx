@@ -167,7 +167,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
           {hasMedicalTeams &&
             <>
-              <Box sx={{ marginY: 2 }} className={isMobile ? divider: undefined}>
+              <Box className={isMobile ? divider: undefined}>
                 <Divider variant="middle" />
               </Box>
 
@@ -193,7 +193,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
             </>
           }
 
-          <Box sx={{ marginY: 2 }} className={divider}>
+          <Box className={divider}>
             <Divider variant="middle" className={isMobile ? divider: undefined}/>
           </Box>
 

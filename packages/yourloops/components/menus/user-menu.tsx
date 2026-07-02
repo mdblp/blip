@@ -183,7 +183,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <Box sx={{ marginY: 2 }} className={isMobile ? divider: undefined} >
+          <Box className={isMobile ? divider: undefined} >
             <Divider variant="middle" />
           </Box>
 

@@ -39,6 +39,7 @@ export const useMenuStyles = makeStyles()((theme) => ({
   },
   divider: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
+    marginY: 2
   }
 }));
