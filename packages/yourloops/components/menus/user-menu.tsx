@@ -58,16 +58,13 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { getUserName } from '../../lib/auth/user.util'
+import { useMenuStyles } from './menu-style';
 
-const classes = makeStyles()((theme) => ({
+const classes = makeStyles()(() => ({
   typography: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
-  },
-  menu: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1)
   }
 }))
 
@@ -76,10 +73,11 @@ const MENU_MAX_WIDTH_PX = 250
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { classes: { menu, typography } } = classes()
+  const { classes: { typography } } = classes()
+  const { classes: { divider, menu, menuItemMobile } } = useMenuStyles()
   const navigate = useNavigate()
   const theme = useTheme()
-  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [tooltipText, setTooltipText] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const opened = !!anchorEl
@@ -167,7 +165,7 @@ function UserMenu(): JSX.Element {
         onClose={closeMenu}
       >
         <Box className={menu} data-testid="user-menu">
-          <MenuItem onClick={onClickSettings} data-testid="user-menu-settings-item">
+          <MenuItem onClick={onClickSettings} data-testid="user-menu-settings-item" className={isMobile ? menuItemMobile : undefined}>
             <ListItemIcon>
               <PermContactCalendarIcon />
             </ListItemIcon>
@@ -176,7 +174,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <MenuItem onClick={onClickSupport} data-testid="user-menu-contact-support-item">
+          <MenuItem onClick={onClickSupport} data-testid="user-menu-contact-support-item" className={isMobile ? menuItemMobile : undefined}>
             <ListItemIcon>
               <ContactSupportIcon />
             </ListItemIcon>
@@ -185,11 +183,11 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <Box sx={{ marginY: 2 }}>
+          <Box sx={{ marginY: 2 }} className={isMobile ? divider: undefined} >
             <Divider variant="middle" />
           </Box>
 
-          <MenuItem onClick={onClickLogout} data-testid="user-menu-logout-item">
+          <MenuItem onClick={onClickLogout} data-testid="user-menu-logout-item" className={isMobile ? menuItemMobile : undefined}>
             <ListItemIcon>
               <CancelIcon />
             </ListItemIcon>

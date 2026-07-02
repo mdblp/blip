@@ -52,15 +52,12 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
 import { TeamCreateDialog } from '../team/team-create-dialog'
+import { useMenuStyles } from './menu-style';
 
 const classes = makeStyles()((theme) => ({
   sectionTitle: {
     fontWeight: 'bold',
     paddingLeft: theme.spacing(2),
-    paddingBottom: theme.spacing(1)
-  },
-  menu: {
-    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1)
   },
   typography: {
@@ -75,13 +72,8 @@ const MENU_MAX_WIDTH_PX = 250
 
 export const TeamScopeMenu: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const {
-    classes: {
-      sectionTitle,
-      menu,
-      typography
-    }
-  } = classes()
+  const { classes: { sectionTitle, typography } } = classes()
+  const { classes: { divider, menu, menuItemMobile } } = useMenuStyles()
   const { getMedicalTeams, getPrivateTeam, createTeam, getTeam } = useTeam()
 
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
@@ -92,7 +84,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const isMenuOpen = !!anchorEl
   const theme = useTheme()
-  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const privateTeam = getPrivateTeam()
   const sortedMedicalTeams = TeamUtils.sortTeamsByName(getMedicalTeams())
@@ -163,7 +155,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
             data-testid="team-scope-menu-team-private-option"
             onClick={() => {
               onSelectTeam(privateTeam.id)
-            }}>
+            }}
+            className={isMobile ? menuItemMobile : undefined}>
             <ListItemIcon>
               {privatePracticeIcon}
             </ListItemIcon>
@@ -174,7 +167,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
           {hasMedicalTeams &&
             <>
-              <Box sx={{ marginY: 2 }}>
+              <Box sx={{ marginY: 2 }} className={isMobile ? divider: undefined}>
                 <Divider variant="middle" />
               </Box>
 
@@ -187,7 +180,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
                   data-testid={`team-scope-menu-team-${TeamUtils.formatTeamNameForTestId(team.name)}-option`}
                   onClick={() => {
                     onSelectTeam(team.id)
-                  }}>
+                  }}
+                  className={isMobile ? menuItemMobile : undefined}>
                   <ListItemIcon>
                     {medicalTeamIcon}
                   </ListItemIcon>
@@ -199,11 +193,14 @@ export const TeamScopeMenu: FunctionComponent = () => {
             </>
           }
 
-          <Box sx={{ marginY: 2 }}>
-            <Divider variant="middle" />
+          <Box sx={{ marginY: 2 }} className={divider}>
+            <Divider variant="middle" className={isMobile ? divider: undefined}/>
           </Box>
 
-          <MenuItem onClick={onCreateTeam} data-testid="team-scope-menu-new-care-team-button">
+          <MenuItem
+            onClick={onCreateTeam}
+            data-testid="team-scope-menu-new-care-team-button"
+            className={isMobile ? menuItemMobile : undefined}>
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>

@@ -100,9 +100,9 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
   expect(header.queryByTestId('back-button')).not.toBeInTheDocument();
 
   //Go to notification tab and go back using the back button
-  await userEvent.click(header.getByTestId("notification-icon"))
+  await userEvent.click(header.getByTestId('notification-icon'))
   expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument();
-  await userEvent.click(header.getByTestId("back-button"))
+  await userEvent.click(header.getByTestId('back-button'))
 
   expect(header.queryByTestId('team-selection-tab')).toBeVisible()
 
