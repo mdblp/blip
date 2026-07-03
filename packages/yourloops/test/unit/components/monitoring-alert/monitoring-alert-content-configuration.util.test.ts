@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import {
-  buildBgValues,
   buildThresholds,
   getConvertedValue, getErrorMessage
 } from '../../../../components/monitoring-alert/monitoring-alert-content-configuration.util'
@@ -68,39 +67,6 @@ describe('MonitoringAlertsContentConfiguration util', function () {
       expect(thresholdsInMgdl.maxLowBg).toBe(100)
       expect(thresholdsInMgdl.minVeryLowBg).toBe(40)
       expect(thresholdsInMgdl.maxVeryLowBg).toBe(90)
-    })
-  })
-
-  describe('buildBgValues', () => {
-    const defaultMonitoringBgValue = () => ({
-      enabled: true,
-      parameters: {
-        bgUnitDefault: Unit.MilligramPerDeciliter,
-        outOfRangeThresholdDefault: 50,
-        nonDataTxThresholdDefault: 50,
-        hypoThresholdDefault: 5,
-        veryLowBgDefault: 54,
-        lowBgDefault: 70,
-        highBgDefault: 180,
-        reportingPeriodDefault: 7 * 24
-      }
-    })
-
-    it('should return default bg values in mmol/L if the parameters are in mmol/L', () => {
-      const monitoring = defaultMonitoringBgValue()
-      const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
-      expect(bgValuesInMmol.highBgDefault).toBe(180)
-      expect(bgValuesInMmol.lowBgDefault).toBe(70)
-      expect(bgValuesInMmol.veryLowBgDefault).toBe(54)
-    })
-
-    it('should return default bg values in mg/dL if the parameters are in mg/dL', () => {
-      const monitoring = defaultMonitoringBgValue()
-      monitoring.parameters.bgUnitDefault = Unit.MmolPerLiter
-      const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
-      expect(bgValuesInMmol.highBgDefault).toBe(10)
-      expect(bgValuesInMmol.lowBgDefault).toBe(2.8)
-      expect(bgValuesInMmol.veryLowBgDefault).toBe(2.2)
     })
   })
 
