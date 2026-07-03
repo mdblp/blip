@@ -25,31 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FC, SetStateAction } from 'react'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useAuth } from '../../lib/auth'
-import { MainHeaderMobileMemoized } from './main-header-mobile'
-import { MainHeaderDesktopMemoized } from './main-header-desktop'
+import { makeStyles } from 'tss-react/mui';
 
-interface MainHeaderProps {
-  setMainHeaderHeight: Dispatch<SetStateAction<number>>
-}
-
-const MainHeader: FC<MainHeaderProps> = (props) => {
-  const { setMainHeaderHeight } = props
-  const { user } = useAuth()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  return (
-    <>
-      {isMobile && user.isUserHcp()
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
-      }
-    </>
-  )
-}
-
-export const MainHeaderMemoized = React.memo(MainHeader)
+export const useMenuStyles = makeStyles()((theme) => ({
+  menu: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
+  },
+  menuItemMobile: {
+    minHeight: 'auto',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
+  },
+  dividerMobile: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  dividerDesktop: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  }
+}));
