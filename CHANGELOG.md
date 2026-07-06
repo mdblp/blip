@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.11.0-beta - 2026-07-01
+### Changed
+- YLP-3939 Adapting the main header to mobile format for HCP
+
 ### Engineering
 - YLP-3864 SBOM generation in pipeline
 
