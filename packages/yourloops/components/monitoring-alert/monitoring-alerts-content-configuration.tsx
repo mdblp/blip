@@ -142,8 +142,6 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
         const parsedValue = match ? Number.parseFloat(match[1].replace(',', '.')) : Number.NaN
 
         updateValues({ [key]: { value: parsedValue, error: false } })
-
-        // updateValues({ [key]: { value: Number.parseFloat(value), error: false } })
       }
     }
   }
