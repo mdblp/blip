@@ -143,29 +143,29 @@ describe('MonitoringAlertsContentConfiguration util', function () {
       expect(labels).toContain('100%')
     })
 
-    it('should mark the matching default value with the "(default)" suffix', () => {
+    it('should mark the matching default value with the "default-value" i18n key', () => {
       const labels = getPercentageLabels(25)
 
-      expect(labels).toContain('25% (default)')
+      expect(labels).toContain('default-value')
       expect(labels).not.toContain('25%')
     })
 
     it('should mark the first item as default when defaultValue is 5', () => {
       const labels = getPercentageLabels(5)
 
-      expect(labels[0]).toBe('5% (default)')
+      expect(labels[0]).toBe('default-value')
     })
 
     it('should mark the last item as default when defaultValue is 100', () => {
       const labels = getPercentageLabels(100)
 
-      expect(labels[19]).toBe('100% (default)')
+      expect(labels[19]).toBe('default-value')
     })
 
-    it('should return no "(default)" label when defaultValue is outside the 5–100 range', () => {
+    it('should return no "default-value" label when defaultValue is outside the 5–100 range', () => {
       const labels = getPercentageLabels(0)
 
-      expect(labels.every(label => !label.includes('(default)'))).toBe(true)
+      expect(labels.every(label => label !== 'default-value')).toBe(true)
     })
 
     it('should return labels in ascending order', () => {

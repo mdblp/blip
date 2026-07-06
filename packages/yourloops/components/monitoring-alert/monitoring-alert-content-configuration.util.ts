@@ -34,8 +34,9 @@ import { DEFAULT_THRESHOLDS_IN_MGDL } from './monitoring-alert.default'
 
 const t = i18next.t.bind(i18next)
 
-export const PERCENTAGES = [...new Array(21)]
-  .map((_each, index) => `${index * 5}%`).slice(1, 21)
+const PERCENTAGE_VALUES_ARRAY = Array.from({ length: 20 }, (_, index) => (index + 1) * 5)
+
+export const PERCENTAGES = PERCENTAGE_VALUES_ARRAY.map(value => `${value}%`)
 
 export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
@@ -74,7 +75,8 @@ export const getConvertedValue = (value: number, currentUnit: BgUnit, requiredUn
 
 
 export const getPercentageLabels = (defaultValue: number): string[] => {
-  const percentageValues = [...new Array(21)].map((_each, index) => index * 5).slice(1, 21)
+  // const percentageValues = PERCENTAGE_VALUES_ARRAY.slice(1, 21)
+  const percentageValues = PERCENTAGE_VALUES_ARRAY
 
   return percentageValues.map((value: number) => getPercentageLabel(value, defaultValue))
 }
