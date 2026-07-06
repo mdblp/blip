@@ -39,6 +39,7 @@ export interface BasicDropdownProps {
   disabled?: boolean
   values: string[]
   error?: boolean
+  ariaLabel?: string
   onSelect: (value: string) => void
 }
 
@@ -56,7 +57,7 @@ const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
 
 function BasicDropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, value, disabled, values, id, error } = props
+  const { onSelect, value, disabled, values, id, error, ariaLabel } = props
   const { t } = useTranslation('yourloops')
   const { classes } = styles()
 
@@ -92,6 +93,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     <Select
       disabled={disabled}
       id={`basic-dropdown-${id}-selector`}
+      aria-label={ariaLabel}
       data-testid={`basic-dropdown-${id}-selector`}
       value={value}
       className={classes.select}

@@ -55,6 +55,7 @@ export const DropdownWithLabel: FC<DropdownWithLabelProps> = (props) => {
           <BasicDropdown
             disabled={isReadonly}
             id={id}
+            ariaLabel={label}
             value={value}
             values={values}
             error={error}

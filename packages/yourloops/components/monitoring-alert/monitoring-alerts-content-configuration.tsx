@@ -64,6 +64,9 @@ const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
 const TIME_SPENT_HYPERGLYCEMIA_THRESHOLD_PERCENT = 25
 const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
+// Extract the first numeric value (integer or decimal) from a string
+const NUMERIC_VALUE_REGEX = /(\d+(?:[.,]\d+)?)/
+
 export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentConfigurationProps> = (
   {
     bgUnit,
@@ -134,8 +137,13 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
       defaultValue: getPercentageLabel(monitoringValuesDisplayed[key].value, thresholdPercent),
       values: sliceEnd ? values.slice(0, sliceEnd) : values,
       error: monitoringValuesDisplayed[key].error,
-      onSelect: (value: string) => {
-        updateValues({ [key]: { value: Number.parseFloat(value), error: false } })
+      onSelect: (label: string) => {
+        const match = new RegExp(NUMERIC_VALUE_REGEX).exec(label)
+        const parsedValue = match ? Number.parseFloat(match[1].replace(',', '.')) : Number.NaN
+
+        updateValues({ [key]: { value: parsedValue, error: false } })
+
+        // updateValues({ [key]: { value: Number.parseFloat(value), error: false } })
       }
     }
   }
