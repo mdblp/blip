@@ -66,8 +66,6 @@ export const TeamSelectionAndSettings = () => {
     navigate(`${AppUserRoute.Teams}/${teamId}`)
   }
 
-  if (user?.isUserCaregiver()) return null
-
   return (
     <>
       <Box

@@ -48,6 +48,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import IconButton from '@mui/material/IconButton'
 import { useStyles } from './main-header-style'
 import { TeamSelectionAndSettings } from './team-selection-and-settings'
+import { useAuth } from '../../lib/auth'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -74,6 +75,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const theme = useTheme()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
@@ -155,9 +157,9 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             margin: theme.spacing(1)
           }}
         >
-          {pathname.endsWith('/patients') ? (
-              <TeamSelectionAndSettings />
-            ) :
+          {pathname.endsWith('/patients') ?
+            !user?.isUserCaregiver() && <TeamSelectionAndSettings />
+            :
             (
               <Button
                 variant="text"
