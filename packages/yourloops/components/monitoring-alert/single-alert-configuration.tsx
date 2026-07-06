@@ -49,7 +49,7 @@ interface SingleAlertConfigurationProps {
 export interface TextFieldParams {
   label: string
   dataTestId: string
-  errorMessage: string
+  errorMessage?: string
   value: number
   minValue: number
   maxValue: number
@@ -93,7 +93,10 @@ export const SingleAlertConfiguration: FC<SingleAlertConfigurationProps> = (prop
         {
           hasTextFields && (
             <Box sx={{ width: '100%' }}>
-              <MonitoringAlertSubtitle label={textFieldsSubtitle} />
+              {
+                textFieldsSubtitle &&
+                <MonitoringAlertSubtitle label={textFieldsSubtitle} />
+              }
               <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginRight: 3 }}>
                 <TextNumberValueWithLabel
                   dataTestId={textFieldParams.dataTestId}
@@ -131,7 +134,7 @@ export const SingleAlertConfiguration: FC<SingleAlertConfigurationProps> = (prop
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: hasTextFields ? 'end' : 'start'
+            alignItems: hasTextFields ? 'flex-end' : 'flex-start'
           }}
         >
           <DropdownWithLabel

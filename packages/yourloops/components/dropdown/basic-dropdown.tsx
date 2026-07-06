@@ -69,6 +69,20 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     }
   }
 
+  const getSanitizedLabel = (label: string): string => {
+    return label
+      // Replace non-alphanumeric characters with hyphens
+      .replace(/[^a-zA-Z0-9-]/g, '-')
+      // Collapse repeated hyphens
+      .replace(/-+/g, '-')
+      // Trim edge hyphens
+      .replace(/^-|-$/g, '')
+  }
+
+  const getId = (label: string): string => {
+    return `basic-dropdown-${id}-menuitem-${getSanitizedLabel(label)}`
+  }
+
   const handleSelectChange = (event: SelectChangeEvent<unknown>): void => {
     const value = event.target.value as string
     onSelect(value)
@@ -87,7 +101,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       classes={error ? { select: classes.error } : undefined}
     >
       {values.map(item => (
-        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item} data-testid={`basic-dropdown-${id}-menuitem-${item}`}>
+        <MenuItem id={getId(item)} key={item} value={item} data-testid={getId(item)}>
           {t(item)}
         </MenuItem>
       ))}

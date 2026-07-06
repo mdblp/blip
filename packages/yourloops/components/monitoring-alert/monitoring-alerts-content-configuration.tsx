@@ -198,7 +198,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
       <SingleAlertConfiguration
         title={t('data-not-transmitted')}
         icon={<NoDataIcon />}
-        dataTestId=""
+        dataTestId="data-not-transmitted"
         isReadonly={displayInReadonly}
         dropdownSubTitle={t('event-trigger-threshold')}
         dropdownParams={noDataPercentageDropdown}

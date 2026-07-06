@@ -36,7 +36,7 @@ interface TextNumberValueWithLabelProps {
   dataTestId: string
   label: string
   unit: string
-  errorMessage: string
+  errorMessage?: string
   isReadonly: boolean
   value: number
   minValue: number
