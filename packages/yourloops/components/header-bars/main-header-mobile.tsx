@@ -40,20 +40,14 @@ import Toolbar from '@mui/material/Toolbar'
 
 import config from '../../lib/config/config'
 import { useNotification } from '../../lib/notifications/notification.hook'
-import { useAuth } from '../../lib/auth'
-import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
-import { TeamScopeMenu } from '../menus/team-scope-menu'
-import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
-import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
-import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import IconButton from '@mui/material/IconButton'
-import { useStyles } from './main-header-style';
+import { useStyles } from './main-header-style'
+import { TeamSelectionAndSettings } from './team-selection-and-settings'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -70,31 +64,18 @@ const classes = makeStyles()((theme) => ({
     '& img': {
       objectFit: 'contain'
     }
-  },
-  settingsButton: {
-    padding: `${theme.spacing(1)} ${theme.spacing(3)}`,
-    borderColor: 'var(--text-color-primary)'
-  },
-  teamMenu: {
-    fontWeight: 'bold',
-    textTransform: 'none',
-    fontSize: theme.typography.htmlFontSize,
-    paddingLeft: theme.spacing(4),
-    opacity: 1
   }
 }))
 
 const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, teamMenu, arrowBack, settingsButton } } = classes()
+  const { classes: { mobileLogo, arrowBack } } = classes()
   const { classes: { appBar, toolbar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
-  const { user } = useAuth()
   const theme = useTheme()
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
@@ -108,40 +89,6 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const goToNotifications = (): void => {
     navigate(AppUserRoute.Notifications)
   }
-
-  const goToCareTeamSettings = (): void => {
-    navigate(`${AppUserRoute.Teams}/${teamId}`)
-  }
-
-  const teamSelectionAndSettings = () => {
-    if (user?.isUserCaregiver()) return null
-
-    return (
-      <>
-        <Box
-          className={teamMenu}
-          data-testid="team-selection-tab"
-        >
-          {user.isUserPatient() && <TeamSettingsMenu />}
-          {user.isUserHcp() && <TeamScopeMenu />}
-        </Box>
-
-        {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
-          <Button
-            aria-label={t('header-tab-care-team-settings')}
-            value={HcpNavigationTab.CareTeam}
-            onClick={goToCareTeamSettings}
-            variant="outlined"
-            className={settingsButton}
-            sx={{ color: 'var(--text-color-primary)' }}
-            data-testid="main-header-hcp-care-team-settings-button"
-          >
-            <CareTeamSettingsIcon />
-          </Button>
-        )}
-      </>
-    )
-  };
 
   return (
     <AppBar
@@ -209,7 +156,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
           }}
         >
           {pathname.endsWith('/patients') ? (
-              teamSelectionAndSettings()
+              <TeamSelectionAndSettings />
             ) :
             (
               <Button
