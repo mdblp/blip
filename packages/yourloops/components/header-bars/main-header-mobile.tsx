@@ -51,6 +51,8 @@ import { useStyles } from './main-header-style'
 import { TeamSelectionAndSettings } from './team-selection-and-settings'
 import { useAuth } from '../../lib/auth'
 import { BottomHeaderPatientView } from './bottom-header-patient-view.enum'
+import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
+import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -87,6 +89,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
@@ -101,8 +104,22 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     navigate(AppUserRoute.Notifications)
   }
 
-  const targetUrl = user?.isUserPatient() ? '/dashboard' : '/'
+  let targetUrl = '/';
 
+  switch (true) {
+    case user?.isUserPatient():
+      targetUrl = '/dashboard';
+      break;
+    case user?.isUserCaregiver():
+      targetUrl = `/teams/${PRIVATE_TEAM_ID}/patients`
+      break;
+    case user?.isUserHcp():
+      targetUrl = TeamUtils.isPrivate(teamId) ? `/teams/${PRIVATE_TEAM_ID}/patients` : `/teams/${teamId}/patients`;
+      break;
+    default:
+      targetUrl = '/';
+  }
+  
   const goHome = () => {
     navigate(targetUrl)
   }
