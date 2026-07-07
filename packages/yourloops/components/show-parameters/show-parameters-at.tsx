@@ -32,7 +32,7 @@ import { Button } from "@mui/material"
 import SettingsIcon from '@mui/icons-material/Settings';
 import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
-import Draggable from 'react-draggable'
+import Draggable, { DraggableProps } from 'react-draggable'
 import type { ParameterConfig, ParametersChange } from 'medical-domain'
 import { formatNumberForLang } from '../../lib/language'
 import { formatParameterValue, sortParameterList } from '../device/utils/device.utils'
@@ -83,7 +83,7 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
           </Button>
 
           {open &&
-            <Draggable>
+            <Draggable {...({} as DraggableProps)}>
               <Popover
                 data-testid={`show-parameters-at-popover`}
                 open={true}

@@ -7,6 +7,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3939 Adapting the main header to mobile format for HCP
 - YLP-3941 Adapting the main header to mobile format for Caregiver
 
+### Engineering
+- YLP-3864 SBOM generation in pipeline
+
 ## 3.10.0 - 2026-06-25
 ### Added
 - YLP-3853 Display target value on Daily Glucose chart
