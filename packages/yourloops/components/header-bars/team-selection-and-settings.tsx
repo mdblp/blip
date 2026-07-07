@@ -72,11 +72,10 @@ export const TeamSelectionAndSettings = () => {
         className={teamMenu}
         data-testid="team-selection-tab"
       >
-        {user.isUserPatient() && <TeamSettingsMenu />}
-        {user.isUserHcp() && <TeamScopeMenu />}
+        <TeamScopeMenu />
       </Box>
 
-      {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
+      {!TeamUtils.isPrivate(teamId) && (
         <Button
           aria-label={t('header-tab-care-team-settings')}
           value={HcpNavigationTab.CareTeam}

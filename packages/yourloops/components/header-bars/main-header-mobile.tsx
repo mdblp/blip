@@ -169,7 +169,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             <Box
               className={bottomPart}
             >
-              !user?.isUserHcp() && <TeamSelectionAndSettings />
+              {user?.isUserHcp() && <TeamSelectionAndSettings />}
             </Box>
           )
         }
