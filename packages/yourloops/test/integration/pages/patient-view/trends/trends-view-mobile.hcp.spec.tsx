@@ -25,29 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
-import { renderPage } from '../../../utils/render'
-import {
-  mockDataAPI,
-  oneDayDashboardData,
-} from '../../../mock/data.api.mock'
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
-import TeamAPI from '../../../../../lib/team/team.api'
-import {
-  anotherTeam,
-  buildTeamOne,
-  buildTeamTwo,
-  mySecondTeamId,
-  mySecondTeamName
-} from '../../../mock/team.api.mock'
-import { patient1Info } from '../../../data/patient.api.data'
+import { act } from '@testing-library/react'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { patient2Id } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { mockErrorApi } from '../../../mock/error.api.mock'
-import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { mockExternalConsentsApi } from '../../../mock/external-consents.api.mock'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -67,36 +60,34 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for patient', () => {
-  const patientDashboardRoute = AppUserRoute.Dashboard
-  const firstName = patient1Info.profile.firstName
-  const lastName = patient1Info.profile.lastName
+describe('Trends view for HCP', () => {
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
 
   beforeEach(() => {
-    mockPatientLogin(patient1Info)
-    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
+    mockWindowResizer()
+    mockAuth0Hook()
+    mockDblCommunicationApi()
+    mockNotificationAPI()
+    mockDirectShareApi()
+    mockTeamAPI()
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockPatientApiForHcp()
     mockChatAPI()
-    mockErrorApi()
-    mockAnalyticsApi()
-    mockExternalConsentsApi()
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
-    jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
     mockScreenWidth(400)
   })
 
-  it('should display correct components when patient is in some medical teams', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testAppMainLayoutForPatientMobile(appMainLayoutParams)
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
+  it('should render correct layout', async () => {
+    mockDataAPI(getMinimalTrendViewData())
+
+    await act(async () => {
+      renderPage(`/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`)
+    })
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+  })
 })

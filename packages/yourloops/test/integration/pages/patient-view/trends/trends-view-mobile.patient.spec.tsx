@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientView {
-  Daily = 'daily',
-  Dashboard = 'dashboard',
-  Devices = 'devices',
-  PatientProfile = 'patientProfile',
-  Trends = 'trends'
-}
+import { act } from '@testing-library/react'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
+import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
+import { patient2Info } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 
+describe('Trends view for patient', () => {
+  beforeEach(() => {
+    mockWindowResizer()
+    mockPatientLogin(patient2Info)
+  })
 
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
+  })
+
+  it('should render correct layout', async () => {
+    mockDataAPI(getMinimalTrendViewData())
+
+    await act(async () => {
+      renderPage(AppUserRoute.Trends)
+    })
+
+    await checkPatientLayoutMobile(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
+  })
+})

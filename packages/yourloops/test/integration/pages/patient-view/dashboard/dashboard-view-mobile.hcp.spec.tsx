@@ -26,29 +26,28 @@
  */
 
 import { act } from 'react'
-import { renderPage } from '../../../utils/render'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
   mockDataAPI,
   oneDayDashboardData,
 } from '../../../mock/data.api.mock'
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
-import TeamAPI from '../../../../../lib/team/team.api'
-import {
-  anotherTeam,
-  buildTeamOne,
-  buildTeamTwo,
-  mySecondTeamId,
-  mySecondTeamName
-} from '../../../mock/team.api.mock'
-import { patient1Info } from '../../../data/patient.api.data'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { patient1Id } from '../../../data/patient.api.data'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { Unit } from 'medical-domain'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { type Settings } from '../../../../../lib/auth/models/settings.model'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { mockExternalConsentsApi } from '../../../mock/external-consents.api.mock'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 import mediaQuery from 'css-mediaquery';
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 
 function mockScreenWidth(width: number): void {
   globalThis.matchMedia = (query: string): MediaQueryList => ({
@@ -67,36 +66,36 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for patient', () => {
-  const patientDashboardRoute = AppUserRoute.Dashboard
-  const firstName = patient1Info.profile.firstName
-  const lastName = patient1Info.profile.lastName
+describe('Dashboard view for HCP', () => {
+  const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
+  const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
 
   beforeEach(() => {
-    mockPatientLogin(patient1Info)
-    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
+    mockAuth0Hook()
+    mockDblCommunicationApi()
+    mockNotificationAPI()
+    mockDirectShareApi()
+    mockTeamAPI()
+    mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mgdlSettings })
+    mockPatientApiForHcp()
     mockChatAPI()
-    mockErrorApi()
+    mockMedicalFilesAPI(myThirdTeamId, myThirdTeamName)
+    mockDataAPI()
     mockAnalyticsApi()
-    mockExternalConsentsApi()
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
-    jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
+    mockErrorApi()
     mockScreenWidth(400)
   })
 
-  it('should display correct components when patient is in some medical teams', async () => {
+  it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForPatientMobile(appMainLayoutParams)
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 
 })

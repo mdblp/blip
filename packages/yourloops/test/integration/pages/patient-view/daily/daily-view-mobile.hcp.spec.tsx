@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -40,6 +40,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { patient2Id } from '../../../data/patient.api.data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -91,7 +92,7 @@ describe('Daily view for HCP', () => {
       renderPage(dailyRoute)
     })
 
-    expect(await screen.findByTestId('download-report-mobile', {}, { timeout: 3000 })).toBeVisible()
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 
 

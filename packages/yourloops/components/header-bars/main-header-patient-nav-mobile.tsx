@@ -33,10 +33,9 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { useStyles } from './main-header-style';
+import { useStyles } from './main-header-style'
 import { useAuth } from '../../lib/auth'
+import { DownloadReportButton } from './download-report_button'
 
 interface MainHeaderPatientNavMobileProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
@@ -68,63 +67,52 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
     }
   }
 
-  if (user?.isUserPatient()) return (
-    <Box
-      ref={appBarRefCallback}
-      className={appBar}
-      data-testid="bottom-part-main-header"
-      sx={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        width: '100%',
-        padding: `${theme.spacing(1)} ${theme.spacing(2)}`
-      }}>
-      <IconButton
-        color="inherit"
-        data-testid="download-report-mobile"
-        onClick={onClickPrint}
-        sx={{ color: 'var(--primary-color-main)' }}>
-        <CloudDownloadIcon />
-      </IconButton>
-    </Box>
-  )
-
   return (
-    <Box
-      ref={appBarRefCallback}
-      className={appBar}
-      data-testid="bottom-part-main-header"
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        width: '100%',
-        padding: `${theme.spacing(1)} 0`
-      }}>
-      <Button
-        variant="text"
-        startIcon={<ArrowBackIcon />}
-        onClick={goBack}
-        className={arrowBack}
-        data-testid="back-button"
-      >
-        {t('back')}
-      </Button>
+
+    user?.isUserPatient() ? (
       <Box
+        ref={appBarRefCallback}
+        className={appBar}
+        data-testid="bottom-part-main-header"
         sx={{
-          display: "flex",
-          padding: `0 ${theme.spacing(2)}`
+          display: 'flex',
+          justifyContent: 'flex-end',
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          width: '100%',
+          padding: `${theme.spacing(1)} ${theme.spacing(2)}`
         }}>
-        <IconButton
-          color="inherit"
-          data-testid="download-report-mobile"
-          onClick={onClickPrint}
-          sx={{ color: 'var(--primary-color-main)' }}>
-          <CloudDownloadIcon />
-        </IconButton>
+        <DownloadReportButton onClickPrint={onClickPrint} />
       </Box>
-    </Box>
+    ) : (
+      <Box
+        ref={appBarRefCallback}
+        className={appBar}
+        data-testid="bottom-part-main-header"
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          width: '100%',
+          padding: `${theme.spacing(1)} 0`
+        }}>
+        <Button
+          variant="text"
+          startIcon={<ArrowBackIcon />}
+          onClick={goBack}
+          className={arrowBack}
+          data-testid="back-button"
+        >
+          {t('back')}
+        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            padding: `0 ${theme.spacing(2)}`
+          }}>
+          <DownloadReportButton onClickPrint={onClickPrint} />
+        </Box>
+      </Box>
+    )
   )
 }
 

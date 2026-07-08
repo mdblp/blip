@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientView {
-  Daily = 'daily',
-  Dashboard = 'dashboard',
-  Devices = 'devices',
-  PatientProfile = 'patientProfile',
-  Trends = 'trends'
+import React, { type MouseEventHandler } from 'react';
+import { IconButton, IconButtonProps } from '@mui/material'
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
+
+interface DownloadReportButtonProps extends IconButtonProps {
+  onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
+export const DownloadReportButton: React.FC<DownloadReportButtonProps> = ( props ) => {
+  const { onClickPrint } = props
 
+  return (
+    <IconButton
+      color="inherit"
+      data-testid="download-report-mobile"
+      onClick={onClickPrint}
+      sx={{ color: 'var(--primary-color-main)' }}
+    >
+      <CloudDownloadIcon />
+    </IconButton>
+  );
+};

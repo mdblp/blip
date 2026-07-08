@@ -50,10 +50,10 @@ import IconButton from '@mui/material/IconButton'
 import { useStyles } from './main-header-style'
 import { TeamSelectionAndSettings } from './team-selection-and-settings'
 import { useAuth } from '../../lib/auth'
-import { BottomHeaderPatientView } from './bottom-header-patient-view.enum'
+import { PatientView } from '../../enum/patient-view.enum'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
-
+import TeamUtils from '../../lib/team/team.util'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
 }
@@ -96,7 +96,15 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     }
   }
 
-  const isMatchingPatientView = Object.values(BottomHeaderPatientView).some(viewValue =>
+  const PATIENT_VIEW_URL_MAPPING: Record<PatientView, string> = {
+    [PatientView.Daily]: 'daily',
+    [PatientView.Dashboard]: 'dashboard',
+    [PatientView.Devices]: 'devices',
+    [PatientView.PatientProfile]: 'patient-profile',
+    [PatientView.Trends]: 'trends',
+  }
+
+  const isMatchingPatientView = Object.values(PATIENT_VIEW_URL_MAPPING).some(viewValue =>
     pathname.includes(viewValue)
   )
 
@@ -106,20 +114,22 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
 
   let targetUrl = '/';
 
-  switch (true) {
-    case user?.isUserPatient():
-      targetUrl = '/dashboard';
+  const userRole = user?.role
+
+  switch (userRole) {
+    case UserRole?.Patient:
+      targetUrl = AppUserRoute.Dashboard;
       break;
-    case user?.isUserCaregiver():
-      targetUrl = `/teams/${PRIVATE_TEAM_ID}/patients`
+    case UserRole?.Caregiver:
+      targetUrl = AppUserRoute.PrivatePatientsList
       break;
-    case user?.isUserHcp():
-      targetUrl = TeamUtils.isPrivate(teamId) ? `/teams/${PRIVATE_TEAM_ID}/patients` : `/teams/${teamId}/patients`;
+    case UserRole?.Hcp:
+      targetUrl = TeamUtils.isPrivate(teamId) ? AppUserRoute.PrivatePatientsList : `/teams/${teamId}/patients`
       break;
     default:
-      targetUrl = '/';
+      targetUrl = '/'
   }
-  
+
   const goHome = () => {
     navigate(targetUrl)
   }
@@ -181,7 +191,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             <UserMenu />
           </Box>
         </Box>
-        {pathname.endsWith('/patients') &&
+        {pathname.endsWith(AppUserRoute.Patients) &&
           (
             <Box
               className={bottomPart}
@@ -190,7 +200,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             </Box>
           )
         }
-        {(!pathname.includes('/patients') && !isMatchingPatientView) &&
+        {(!pathname.includes(AppUserRoute.Patients) && !isMatchingPatientView) &&
           (
             <Box
               className={bottomPart}

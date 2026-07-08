@@ -25,29 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
-import { renderPage } from '../../../utils/render'
-import {
-  mockDataAPI,
-  oneDayDashboardData,
-} from '../../../mock/data.api.mock'
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
-import TeamAPI from '../../../../../lib/team/team.api'
-import {
-  anotherTeam,
-  buildTeamOne,
-  buildTeamTwo,
-  mySecondTeamId,
-  mySecondTeamName
-} from '../../../mock/team.api.mock'
+import { act } from '@testing-library/react'
 import { patient1Info } from '../../../data/patient.api.data'
-import { mockChatAPI } from '../../../mock/chat.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { mockExternalConsentsApi } from '../../../mock/external-consents.api.mock'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -67,36 +53,24 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for patient', () => {
-  const patientDashboardRoute = AppUserRoute.Dashboard
+describe('Device view for G1 Patient', () => {
   const firstName = patient1Info.profile.firstName
   const lastName = patient1Info.profile.lastName
 
+  const deviceRoute = AppUserRoute.Devices
+
   beforeEach(() => {
+    mockWindowResizer()
     mockPatientLogin(patient1Info)
-    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
-    mockChatAPI()
-    mockErrorApi()
+    mockDataAPI(pumpSettingsData)
     mockAnalyticsApi()
-    mockExternalConsentsApi()
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
-    jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
     mockScreenWidth(400)
   })
 
-  it('should display correct components when patient is in some medical teams', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
-
+  it('should render correct layout', async () => {
     await act(async () => {
-      renderPage(patientDashboardRoute)
+      renderPage(deviceRoute)
     })
-
-    await testAppMainLayoutForPatientMobile(appMainLayoutParams)
+    await testAppMainLayoutForPatientMobile({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
-
 })

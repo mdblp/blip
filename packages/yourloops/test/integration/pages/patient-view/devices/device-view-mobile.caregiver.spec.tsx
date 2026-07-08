@@ -25,29 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { patient1Id } from '../../../data/patient.api.data'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
-import {
-  mockDataAPI,
-  oneDayDashboardData,
-} from '../../../mock/data.api.mock'
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
-import TeamAPI from '../../../../../lib/team/team.api'
-import {
-  anotherTeam,
-  buildTeamOne,
-  buildTeamTwo,
-  mySecondTeamId,
-  mySecondTeamName
-} from '../../../mock/team.api.mock'
-import { patient1Info } from '../../../data/patient.api.data'
-import { mockChatAPI } from '../../../mock/chat.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { mockErrorApi } from '../../../mock/error.api.mock'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { mockExternalConsentsApi } from '../../../mock/external-consents.api.mock'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
@@ -67,36 +59,28 @@ function mockScreenWidth(width: number): void {
   });
 }
 
-describe('Dashboard view for patient', () => {
-  const patientDashboardRoute = AppUserRoute.Dashboard
-  const firstName = patient1Info.profile.firstName
-  const lastName = patient1Info.profile.lastName
+describe('Devices view for Caregiver', () => {
+  const firstName = 'Caregiver firstName'
+  const lastName = 'Caregiver lastName'
+
+  const devicesRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
-    mockPatientLogin(patient1Info)
-    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
-    mockChatAPI()
-    mockErrorApi()
+    mockWindowResizer()
+    mockAuth0Hook(UserRole.Caregiver)
+    mockDblCommunicationApi()
+    mockNotificationAPI()
+    mockDirectShareApi()
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockPatientApiForCaregivers()
+    mockDataAPI(pumpSettingsData)
     mockAnalyticsApi()
-    mockExternalConsentsApi()
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
-    jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
     mockScreenWidth(400)
   })
 
-  it('should display correct components when patient is in some medical teams', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testAppMainLayoutForPatientMobile(appMainLayoutParams)
+  it('should render correct layout', async () => {
+    renderPage(devicesRoute)
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 
 })
