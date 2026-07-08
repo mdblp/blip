@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -89,6 +89,11 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
     {
       name: PatientListColumns.System,
       checked: updatedColumnsModel[PatientListColumns.System]
+    },
+    {
+      name: PatientListColumns.Clinicians,
+      checked: updatedColumnsModel[PatientListColumns.Clinicians],
+      hcpOnly: true
     },
     {
       name: PatientListColumns.MonitoringAlerts,

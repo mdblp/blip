@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,7 @@ export enum PatientListColumns {
   Actions = 'actions',
   Age = 'age',
   BelowRange = 'below-range',
+  Clinicians = 'lead-clinicians',
   DateOfBirth = 'date-of-birth',
   Flag = 'flag',
   Gender = 'gender',

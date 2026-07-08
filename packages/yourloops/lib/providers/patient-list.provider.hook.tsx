@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,6 +57,7 @@ const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.LastDataUpdate,
   PatientListColumns.Actions,
   PatientListColumns.PatientProfile,
+  PatientListColumns.Clinicians
 ]
 
 const DEFAULT_COLUMNS_CAREGIVER = [
@@ -98,7 +99,8 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.BelowRange]: getColumnPreference(PatientListColumns.BelowRange),
     [PatientListColumns.Variance]: getColumnPreference(PatientListColumns.Variance),
     [PatientListColumns.Actions]: true,
-    [PatientListColumns.PatientProfile]: getColumnPreference(PatientListColumns.PatientProfile)
+    [PatientListColumns.PatientProfile]: getColumnPreference(PatientListColumns.PatientProfile),
+    [PatientListColumns.Clinicians]: getColumnPreference(PatientListColumns.Clinicians),
   })
 
   const buildColumnsPreferencesArray = (columnsVisibilityModel: GridColumnVisibilityModel): string[] => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DiabeticType } from 'medical-domain'
-import moment from 'moment-timezone'
+import { AvatarGroup } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import Tooltip from '@mui/material/Tooltip'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { getInitials, sortClinicians } from '../../../lib/auth/user.util'
 import { LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
 
-export interface GridRowModel {
-  id: string
-  [PatientListColumns.Flag]?: Patient
-  [PatientListColumns.Patient]: Patient
-  [PatientListColumns.DateOfBirth]?: Patient
-  [PatientListColumns.Age]?: number
-  [PatientListColumns.Gender]?: string
-  [PatientListColumns.System]?: string
-  [PatientListColumns.MonitoringAlerts]?: Patient
-  [PatientListColumns.Messages]?: boolean
-  [PatientListColumns.TimeInRange]?: number
-  [PatientListColumns.GlucoseManagementIndicator]?: number
-  [PatientListColumns.BelowRange]?: number
-  [PatientListColumns.Variance]?: number
-  [PatientListColumns.LastDataUpdate]?: moment.Moment | null
-  [PatientListColumns.Actions]: Patient
-  [PatientListColumns.PatientProfile]: DiabeticType,
-  [PatientListColumns.Clinicians]: LeadClinician[],
+interface LeadCliniciansCellProps {
+  clinicians: LeadClinician[]
 }
 
-export interface PendingGridRowModel {
-  id: string
-  isInviteAvailable: boolean
-  [PendingPatientListColumns.Actions]: Patient
-  [PendingPatientListColumns.Date]: string
-  [PendingPatientListColumns.Email]: string
-  [PendingPatientListColumns.InviteSentBy]: string
+export const LeadCliniciansCell: FC<LeadCliniciansCellProps> = (props) => {
+  const { clinicians } = props
+  const { t } = useTranslation()
+
+  const hasClinicians = clinicians && clinicians.length > 0
+  const sortedClinicians = sortClinicians(clinicians)
+
+  return (
+    hasClinicians
+      ? <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', justifyItems: 'center' }}>
+        <AvatarGroup>
+          {sortedClinicians.map((clinician: LeadClinician) => {
+            const clinicianName = clinician.name
+
+            return (
+              <Tooltip title={clinicianName} key={clinicianName}>
+                <Avatar
+                  alt={clinicianName}
+                  sx={{ width: 24, height: 24, fontSize: 12, bgcolor: 'var(--text-color-secondary)' }}
+                >
+                  {getInitials(clinicianName)}
+                </Avatar>
+              </Tooltip>
+            )
+          })
+          }
+        </AvatarGroup>
+      </Box>
+      : t('N/A')
+  )
 }

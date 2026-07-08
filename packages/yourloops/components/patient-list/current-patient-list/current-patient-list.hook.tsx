@@ -25,13 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Patient } from '../../../lib/patient/models/patient.model'
+import { Skeleton } from '@mui/material'
+import Box from '@mui/material/Box'
 import { type GridColDef, type GridRenderCellParams, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
-import { useTranslation } from 'react-i18next'
-import { type GridRowModel } from '../models/grid-row.model'
-import { PatientListColumns } from '../models/enums/patient-list.enum'
-import PatientUtils from '../../../lib/patient/patient.util'
+import { formatBirthdate } from 'dumb'
+import { DiabeticType } from 'medical-domain'
+import moment from 'moment-timezone'
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../lib/auth'
+
+import { getUserName } from '../../../lib/auth/user.util'
+import { LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import PatientUtils from '../../../lib/patient/patient.util'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
+import { ActionsCell } from '../custom-cells/actions-cell'
+import { FlagIconCell } from '../custom-cells/flag-icon-cell'
+import { LeadCliniciansCell } from '../custom-cells/lead-clinicians-cell'
+import { MessageCell } from '../custom-cells/message-cell'
+import { MonitoringAlertsCell } from '../custom-cells/monitoring-alerts-cell'
+import { MonitoringAlertsSkeletonCell } from '../custom-cells/monitoring-alerts-skeleton-cell'
+import { PatientListColumns } from '../models/enums/patient-list.enum'
+import { type GridRowModel } from '../models/grid-row.model'
+import { usePatientListStyles } from '../patient-list.styles'
 import {
   sortByDateOfBirth,
   sortByFlag,
@@ -39,23 +58,6 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../utils/sort-comparators.util'
-
-import { getUserName } from '../../../lib/auth/user.util'
-import Box from '@mui/material/Box'
-import { formatBirthdate } from 'dumb'
-import { usePatientListStyles } from '../patient-list.styles'
-import { useNavigate } from 'react-router-dom'
-import { Skeleton } from '@mui/material'
-import { useAuth } from '../../../lib/auth'
-import { DiabeticType } from 'medical-domain'
-import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
-import moment from 'moment-timezone'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
-import { FlagIconCell } from '../custom-cells/flag-icon-cell'
-import { MonitoringAlertsSkeletonCell } from '../custom-cells/monitoring-alerts-skeleton-cell'
-import { MonitoringAlertsCell } from '../custom-cells/monitoring-alerts-cell'
-import { MessageCell } from '../custom-cells/message-cell'
-import { ActionsCell } from '../custom-cells/actions-cell'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -103,7 +105,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.BelowRange]: patient.glycemiaIndicators?.hypoglycemia,
         [PatientListColumns.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
         [PatientListColumns.Actions]: patient,
-        [PatientListColumns.PatientProfile]: patient.diabeticProfile?.type ?? DiabeticType.DT1DT2
+        [PatientListColumns.PatientProfile]: patient.diabeticProfile?.type ?? DiabeticType.DT1DT2,
+        [PatientListColumns.Clinicians]: patient.leadClinicians
       }
     })
   }, [noDataLabel, sortedPatients])
@@ -148,8 +151,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         align: 'left',
         renderCell: (params: GridRenderCellParams<GridRowModel, DiabeticType>) => {
           return <PatientDiabeticProfileChip
-                  patientDiabeticType={params.value}
-                  sx={{ ml: '0 !important' }} /> // override default margin-left
+            patientDiabeticType={params.value}
+            sx={{ ml: '0 !important' }} /> // override default margin-left
         }
       },
       {
@@ -172,6 +175,18 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         field: PatientListColumns.System,
         headerName: t('system')
+      },
+      {
+        field: PatientListColumns.Clinicians,
+        headerName: t('lead-clinicians'),
+        align: 'left',
+        width: 130,
+        sortable: false,
+        renderCell: (params: GridRenderCellParams<GridRowModel, LeadClinician[]>) => {
+          const clinicians = params.value
+
+          return <LeadCliniciansCell clinicians={clinicians} />
+        }
       },
       {
         field: PatientListColumns.MonitoringAlerts,
@@ -215,7 +230,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
-        headerName:t('column-header-glucose-management'),
+        headerName: t('column-header-glucose-management'),
         description: t('glucose-management-indicator'),
         headerAlign: 'left',
         align: 'left',
@@ -280,16 +295,16 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           const value = params.value
           let dateToDisplay = noDataLabel
           if (value !== null) {
-              const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-              const date = moment.tz(value, browserTimezone)
-              if (date.isValid()) {
-                dateToDisplay = date.format('lll')
-              }
+            const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+            const date = moment.tz(value, browserTimezone)
+            if (date.isValid()) {
+              dateToDisplay = date.format('lll')
+            }
           }
           return dateToDisplay ?? <Skeleton data-testid="last-data-update-cell-skeleton"
-                                    variant="rounded"
-                                    width={150}
-                                    height={SKELETON_HEIGHT_PX} />
+                                            variant="rounded"
+                                            width={150}
+                                            height={SKELETON_HEIGHT_PX} />
         }
       },
       {

@@ -42,7 +42,7 @@ import PersonRemoveIcon from '../../../../../../components/icons/mui/person-remo
 import IconActionButton from '../../../../../../components/buttons/icon-action'
 import Tooltip from '@mui/material/Tooltip'
 import { useAuth } from '../../../../../../lib/auth'
-import { getInitials, getUserName } from '../../../../../../lib/auth/user.util'
+import { getInitials, getUserName, sortClinicians } from '../../../../../../lib/auth/user.util'
 import { RemoveClinicianDialog } from './remove-clinician-dialog/remove-clinician-dialog'
 import { AddClinicianDialog } from './add-clinician-dialog/add-clinician-dialog'
 import { LeadClinician } from '../../../../../../lib/lead-clinicians/models/lead-clinician.model'
@@ -82,7 +82,7 @@ export const PatientLeadClinicians: FC<PatientLeadCliniciansProps> = (props) => 
 
   const leadCliniciansCount = leadClinicians?.length || 0
   const hasLeadClinicians = leadCliniciansCount > 0
-  const leadCliniciansSorted = hasLeadClinicians && leadClinicians.toSorted((a, b) => a.name?.localeCompare(b.name))
+  const leadCliniciansSorted = hasLeadClinicians && sortClinicians(leadClinicians)
 
   const leadClinicianIds = hasLeadClinicians ? leadClinicians.map(clinician => clinician.id) : []
 
