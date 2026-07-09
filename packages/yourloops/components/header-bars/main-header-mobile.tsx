@@ -112,23 +112,22 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
     navigate(AppUserRoute.Notifications)
   }
 
-  let targetUrl = '/';
-
   const userRole = user?.role
 
-  switch (userRole) {
-    case UserRole?.Patient:
-      targetUrl = AppUserRoute.Dashboard;
-      break;
-    case UserRole?.Caregiver:
-      targetUrl = AppUserRoute.PrivatePatientsList
-      break;
-    case UserRole?.Hcp:
-      targetUrl = TeamUtils.isPrivate(teamId) ? AppUserRoute.PrivatePatientsList : `/teams/${teamId}/patients`
-      break;
-    default:
-      targetUrl = '/'
+  const getTargetUrl = (role: UserRole | undefined): string => {
+    switch (role) {
+      case UserRole?.Patient:
+        return AppUserRoute.Dashboard
+      case UserRole?.Caregiver:
+        return AppUserRoute.PrivatePatientsList
+      case UserRole?.Hcp:
+        return TeamUtils.isPrivate(teamId) ? AppUserRoute.PrivatePatientsList : `/teams/${teamId}/patients`
+      default:
+        return '/'
+    }
   }
+
+  const targetUrl = getTargetUrl(userRole)
 
   const goHome = () => {
     navigate(targetUrl)
