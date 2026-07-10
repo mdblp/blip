@@ -87,14 +87,12 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
     })
   }
 
-  const weightValue = weight ? +weight.value : ''
-
   return (
     <InsulinStatisticsPanel
       data={data}
       totalInsulin={totalInsulin}
       estimatedTotalInsulin={roundToOneDecimal(estimatedTotalInsulin)}
-      weight={weightValue}
+      weight={weight}
     />
   )
 }

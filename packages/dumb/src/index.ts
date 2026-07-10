@@ -39,9 +39,6 @@ export { SettingsPrintView } from './modules/print/settings-print-view/settings-
 export { ChartFooter } from './components/controls/chart-footer/chart-footer'
 
 // Stats
-export {
-  AverageDailyDoseStatMemoized as AverageDailyDoseStat
-} from './components/stats/average-daily-dose/average-daily-dose-stat'
 export { AverageGlucoseMemoized as AverageGlucose } from './components/stats/average-glucose/average-glucose-stat'
 export {
   CbgStandardDeviationMemoized as CBGStandardDeviation

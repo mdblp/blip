@@ -24,17 +24,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent, memo } from 'react'
-import styles from './insulin-stat.css'
 import Box from '@mui/material/Box'
-import { t } from 'i18next'
-import { formatDecimalNumber } from '../../../utils/format/format.util'
-import { useLocation } from 'react-router-dom'
-import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 import { useTheme } from '@mui/material/styles'
+import { t } from 'i18next'
+import { ParameterConfig, Unit } from 'medical-domain'
+import React, { type FunctionComponent, memo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { roundToOneDecimal } from 'yourloops/components/statistics/statistics.util'
+import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
+import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { StatLine } from '../stat-line/stat-line'
 import { StatLineWithChip } from '../stat-line/stat-line-with-chip'
+import styles from './insulin-stat.css'
 
 interface InsulinStatistic {
   id: string
@@ -48,8 +49,9 @@ export interface InsulinStatisticsPanelProps {
   data: InsulinStatistic[]
   totalInsulin: number
   estimatedTotalInsulin: number
-  weight: number | string
+  weight?: ParameterConfig
 }
+
 
 const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (props) => {
   const {
@@ -72,11 +74,16 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
     estimatedTotalInsulinAnnotations.push(t('tooltip-empty-stat'))
   }
 
+  const weightValue = weight ? +weight.value : ''
+  const weightUnit = weight ? weight.unit : ''
+
+  const ratioDoseUnit = `${Unit.InsulinUnit}/${weightUnit}`
+
   const getDailyDosePerWeight = (): string | number => {
-    if (weight === '') {
+    if (weightValue === '') {
       return ''
     }
-    const value = totalInsulin / +weight
+    const value = totalInsulin / +weightValue
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : ''
   }
 
@@ -125,20 +132,22 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
         </Box>
       }
 
-      {isDashboardPage && <>
-        <StatLine
-          title={t('weight')}
-          value={weight}
-          units={t('kg')}
-          valueClasses={getOutputValueClasses()}
-        />
-        <StatLine
-          title={t('ratio-dose')}
-          value={getDailyDosePerWeight()}
-          units={t('U/kg')}
-          valueClasses={getOutputValueClasses()}
-        />
-      </>}
+      {isDashboardPage &&
+        <>
+          <StatLine
+            title={t('weight')}
+            value={weightValue}
+            units={weightUnit}
+            valueClasses={getOutputValueClasses()}
+          />
+          <StatLine
+            title={t('ratio-dose')}
+            value={getDailyDosePerWeight()}
+            units={ratioDoseUnit}
+            valueClasses={getOutputValueClasses()}
+          />
+        </>
+      }
     </div>
   )
 }

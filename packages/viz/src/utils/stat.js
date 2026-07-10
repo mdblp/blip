@@ -8,17 +8,6 @@ import { formatDecimalNumber } from './format'
 
 const t = i18next.t.bind(i18next)
 
-export const dailyDoseUnitOptions = [
-  {
-    label: t('kg'),
-    value: 'kg'
-  },
-  {
-    label: t('lb'),
-    value: 'lb'
-  }
-]
-
 export const statTypes = {
   barBg: 'barBg',
   noBar: 'noBar',
