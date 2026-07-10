@@ -34,6 +34,8 @@ import { CacheProvider } from '@emotion/react'
 import { GlobalStyles, TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
@@ -105,6 +107,8 @@ export const MainLobby: FC = () => {
   const { fetchingUser, isLoggedIn, logout, setAppStateJson, user } = useAuth()
   const location = useLocation()
   const queryParams = useQueryParams()
+  const themeMobile = useTheme()
+  const isMobile = useMediaQuery(themeMobile.breakpoints.down('sm'));
   const language = getCurrentLang()
 
   const currentRoute = location.pathname
@@ -143,7 +147,7 @@ export const MainLobby: FC = () => {
           <TssCacheProvider value={tssCache}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
+              <GlobalStyles styles={{ body: { backgroundColor: isMobile ? '#ffffff' : 'var(--body-background-color)' } }} />
               <SnackbarContextProvider context={DefaultSnackbarContext}>
                 <Box>
                   <Routes>
