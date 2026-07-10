@@ -35,7 +35,7 @@ import { GlobalStyles, TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
 import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
