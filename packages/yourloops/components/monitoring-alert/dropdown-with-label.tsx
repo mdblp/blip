@@ -51,7 +51,7 @@ export const DropdownWithLabel: FC<DropdownWithLabelProps> = (props) => {
       <MonitoringAlertSubtitle label={title} />
       <Box data-testid={dataTestId} sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography>{label}</Typography>
-        <Box sx={{ ml: 2 }}>
+        <Box sx={{ ml: 1 }}>
           <BasicDropdown
             disabled={isReadonly}
             id={id}
