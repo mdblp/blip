@@ -41,24 +41,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -74,7 +57,7 @@ describe('Trends view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   afterEach(() => {

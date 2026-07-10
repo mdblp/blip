@@ -39,24 +39,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../mock/mobile-screen.mock'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -72,8 +55,7 @@ describe('Caregiver home page', () => {
     mockDblCommunicationApi()
     mockErrorApi()
     mockAnalyticsApi()
-    // For testing with a mobile sized device
-    mockScreenWidth(400);
+    mockMobileScreen()
   })
 
   it('should render the patient list page with correct components', async () => {

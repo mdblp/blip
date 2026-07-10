@@ -42,24 +42,7 @@ import {
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Dashboard view for caregiver', () => {
   const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -73,7 +56,7 @@ describe('Dashboard view for caregiver', () => {
     mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   it('In mobile version, should render correct components', async () => {

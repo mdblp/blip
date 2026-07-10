@@ -33,30 +33,13 @@ import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
 import { patient2Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Daily view for patient', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
-    mockScreenWidth(400);
+    mockMobileScreen()
   })
 
   afterEach(() => {

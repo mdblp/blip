@@ -43,24 +43,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -79,7 +62,7 @@ describe('Device view for HCP', () => {
     mockPatientApiForHcp()
     mockDataAPI(pumpSettingsData)
     mockAnalyticsApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   it('should render correct layout', async () => {

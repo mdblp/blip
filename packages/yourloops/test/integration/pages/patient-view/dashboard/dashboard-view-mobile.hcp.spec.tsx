@@ -46,25 +46,8 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
-import mediaQuery from 'css-mediaquery';
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -85,7 +68,7 @@ describe('Dashboard view for HCP', () => {
     mockDataAPI()
     mockAnalyticsApi()
     mockErrorApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {

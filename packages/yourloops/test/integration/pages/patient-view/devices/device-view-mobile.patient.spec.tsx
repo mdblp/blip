@@ -34,24 +34,7 @@ import { testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-l
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Device view for G1 Patient', () => {
   const firstName = patient1Info.profile.firstName
@@ -64,7 +47,7 @@ describe('Device view for G1 Patient', () => {
     mockPatientLogin(patient1Info)
     mockDataAPI(pumpSettingsData)
     mockAnalyticsApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   it('should render correct layout', async () => {

@@ -40,24 +40,7 @@ import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -75,7 +58,7 @@ describe('Devices view for Caregiver', () => {
     mockPatientApiForCaregivers()
     mockDataAPI(pumpSettingsData)
     mockAnalyticsApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   it('should render correct layout', async () => {

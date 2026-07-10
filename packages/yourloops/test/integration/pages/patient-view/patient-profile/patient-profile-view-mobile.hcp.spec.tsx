@@ -44,24 +44,7 @@ import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -76,7 +59,7 @@ describe('Patient profile view for HCP', () => {
     mockLeadCliniciansApi()
     mockErrorApi()
     mockAnalyticsApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   const firstName = 'HCP firstName'

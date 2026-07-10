@@ -41,24 +41,7 @@ import { patient2Id } from '../../../data/patient.api.data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -77,7 +60,7 @@ describe('Daily view for HCP', () => {
     mockChatAPI()
     mockDblCommunicationApi()
     mockAnalyticsApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   afterEach(() => {
@@ -85,7 +68,7 @@ describe('Daily view for HCP', () => {
     jest.restoreAllMocks()
   })
 
-  it('should display the button to download a report', async () => {
+  it('should render correct layout', async () => {
     mockDataAPI()
 
     await act(async () => {

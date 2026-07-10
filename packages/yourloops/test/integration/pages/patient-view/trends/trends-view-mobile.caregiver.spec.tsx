@@ -43,24 +43,7 @@ import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -76,7 +59,7 @@ describe('Trends view for caregiver', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
     mockMedicalFilesAPI()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   afterEach(() => {

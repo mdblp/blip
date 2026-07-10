@@ -116,11 +116,11 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
 
   const getTargetUrl = (role: UserRole | undefined): string => {
     switch (role) {
-      case UserRole?.Patient:
+      case UserRole.Patient:
         return AppUserRoute.Dashboard
-      case UserRole?.Caregiver:
+      case UserRole.Caregiver:
         return AppUserRoute.PrivatePatientsList
-      case UserRole?.Hcp:
+      case UserRole.Hcp:
         return TeamUtils.isPrivate(teamId) ? AppUserRoute.PrivatePatientsList : `/teams/${teamId}/patients`
       default:
         return '/'

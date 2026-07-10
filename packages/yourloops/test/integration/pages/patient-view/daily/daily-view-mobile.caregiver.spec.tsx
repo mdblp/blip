@@ -40,24 +40,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -71,7 +54,7 @@ describe('Daily view for caregiver', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
     mockDblCommunicationApi()
-    mockScreenWidth(400)
+    mockMobileScreen()
   })
 
   afterEach(() => {
@@ -79,7 +62,7 @@ describe('Daily view for caregiver', () => {
     jest.restoreAllMocks()
   })
 
-  it('should display the button to download a report', async () => {
+  it('should render correct layout', async () => {
     mockDataAPI()
 
     await act(async () => {
