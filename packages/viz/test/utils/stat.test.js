@@ -13,22 +13,6 @@ describe('stat', () => {
     statTypes
   } = stat
 
-  describe('dailyDoseUnitOptions', () => {
-    it('should export the `dailyDoseUnitOptions`', () => {
-      expect(stat.dailyDoseUnitOptions).to.be.an('array').and.have.length(2)
-
-      expect(stat.dailyDoseUnitOptions[0]).to.eql({
-        label: 'kg',
-        value: 'kg'
-      })
-
-      expect(stat.dailyDoseUnitOptions[1]).to.eql({
-        label: 'lb',
-        value: 'lb'
-      })
-    })
-  })
-
   describe('statTypes', () => {
     it('should export the `statTypes`', () => {
       expect(stat.statTypes).to.eql({
