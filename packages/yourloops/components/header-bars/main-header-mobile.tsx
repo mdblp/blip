@@ -52,7 +52,6 @@ import { TeamSelectionAndSettings } from './team-selection-and-settings'
 import { useAuth } from '../../lib/auth'
 import { PatientView } from '../../enum/patient-view.enum'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import TeamUtils from '../../lib/team/team.util'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
