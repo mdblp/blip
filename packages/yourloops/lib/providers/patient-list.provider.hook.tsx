@@ -32,6 +32,8 @@ import { PatientListColumn } from '../../components/patient-list/models/enums/pa
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 import { ConfigService } from '../config/config.service'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 
 const DEFAULT_FILTERS = {
   pendingEnabled: false,
@@ -67,12 +69,15 @@ const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumn.TimeInRange,
   PatientListColumn.BelowRange,
   PatientListColumn.LastDataUpdate,
-  PatientListColumn.Actions,
+  PatientListColumn.Actions
 ]
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
   const { user, updatePreferences } = useAuth()
   const isUserHcp = user.isUserHcp()
+
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const getColumnPreference = (columnName: PatientListColumn): boolean => {
     const userPreferredColumns = user.preferences?.patientsListSortedOptionalColumns
@@ -82,6 +87,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
   }
 
   const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
+
   const [displayedColumns, setDisplayedColumns] = useState<GridColumnVisibilityModel>({
     [PatientListColumn.Flag]: true,
     [PatientListColumn.System]: getColumnPreference(PatientListColumn.System),
@@ -101,6 +107,25 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumn.Actions]: true,
     [PatientListColumn.PatientProfile]: getColumnPreference(PatientListColumn.PatientProfile),
     [PatientListColumn.Clinicians]: getColumnPreference(PatientListColumn.Clinicians),
+    ...(isMobile
+      && {
+        [PatientListColumn.Flag]: false,
+        [PatientListColumn.System]: false,
+        [PatientListColumn.Patient]: true,
+        [PatientListColumn.DateOfBirth]: false,
+        [PatientListColumn.Age]: false,
+        [PatientListColumn.Gender]: false,
+        [PatientListColumn.MonitoringAlerts]: isUserHcp ? true : false,
+        [PatientListColumn.LastDataUpdate]: false,
+        [PatientListColumn.Messages]: false,
+        [PatientListColumn.TimeInRange]: true,
+        [PatientListColumn.GlucoseManagementIndicator]: false,
+        [PatientListColumn.BelowRange]: false,
+        [PatientListColumn.Variance]: false,
+        [PatientListColumn.Actions]: false,
+        [PatientListColumn.PatientProfile]: false,
+        [PatientListColumn.Clinicians]: false
+      })// Version Mobile
   })
 
   const buildColumnsPreferencesArray = (columnsVisibilityModel: GridColumnVisibilityModel): string[] => {

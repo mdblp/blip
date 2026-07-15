@@ -39,6 +39,8 @@ import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dim
 import { PatientListColumn } from '../../models/enums/patient-list.enum'
 import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
 import AnalyticsApi, { ElementType } from '../../../../lib/analytics/analytics.api'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface PrivateTeamOrCaregiverPatientListProps {
   patients: Patient[]
@@ -61,6 +63,9 @@ export const PrivateTeamOrCaregiverPatientList: FunctionComponent<PrivateTeamOrC
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumn.Patient, sort: 'asc' }])
+
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
 
   const handleSortChange = (model: GridSortModel) => {
@@ -91,10 +96,12 @@ export const PrivateTeamOrCaregiverPatientList: FunctionComponent<PrivateTeamOrC
           columnVisibilityModel={displayedColumns}
           sortModel={sortModel}
           onSortModelChange={handleSortChange}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
+          paginationModel={isMobile ? undefined : paginationModel}
+          onPaginationModelChange={isMobile ? undefined : setPaginationModel}
           onRowClick={onRowClick}
-          pageSizeOptions={[5, 10, 25]}
+          pageSizeOptions={isMobile ? undefined : [5, 10, 25]}
+          pagination={isMobile ? undefined : true}
+          hideFooter={isMobile}
           sx={{
             borderRadius: 0,
             '& .MuiDataGrid-cell:hover': { cursor: 'pointer' }
