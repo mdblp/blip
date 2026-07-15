@@ -297,7 +297,7 @@ const PumpSettingsMock = (date, time) => {
           effectiveDate: '2020-01-17T08:00:00.000Z',
           level: 1,
           name: DblParameter.Weight,
-          unit: 'kg',
+          unit: 'lb',
           value: 72
         }
       ],

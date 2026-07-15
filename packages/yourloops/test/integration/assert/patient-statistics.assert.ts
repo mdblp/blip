@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,7 +44,7 @@ export const checkPatientStatistics = async () => {
   expect(patientStatistics.getByTestId('time-in-tight-range-chart')).toHaveTextContent('Time In Tight Range5m20%70-140mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (24-224)mg/dL100')
   expect(patientStatistics.getByTestId('average-glucose-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
-  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Total Delivered Insulin4.2UMeal bolus47.6 %2UBasal & correction bolus52.4 %2.2UEst. total insulin requirement--Weight72kgRatio0.06U/kg')
+  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Total Delivered Insulin4.2UMeal bolus47.6 %2UBasal & correction bolus52.4 %2.2UEst. total insulin requirement--Weight72lbRatio0.06U/lb')
   expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Time In Loop ModeONOFF91%1m9%7s')
   expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs55gMeal carbs30gRescue carbs25g')
 }
@@ -55,7 +55,7 @@ export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
   expect(patientStatistics.getByTestId('time-in-tight-range-chart')).toHaveTextContent('Time In Tight Range4h 48m20%70-140mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (34-214)mg/dL90')
   expect(patientStatistics.getByTestId('average-glucose-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
-  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Total Delivered Insulin4.2UMeal bolus47.6 %2UBasal & correction bolus52.4 %2.2UEst. total insulin requirement--Weight72kgRatio0.06U/kg')
+  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Total Delivered Insulin4.2UMeal bolus47.6 %2UBasal & correction bolus52.4 %2.2UEst. total insulin requirement--Weight72lbRatio0.06U/lb')
   expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs55gMeal carbs30gRescue carbs25g')
 }
 

@@ -25,50 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
-import { checkCaregiverLayoutMobile } from '../../assert/layout.assert'
-import { renderPage } from '../../utils/render'
-import { act, screen } from '@testing-library/react'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { mockUserApi } from '../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
-import PatientApi from '../../../../lib/patient/patient.api'
-import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
-import { mockErrorApi } from '../../mock/error.api.mock'
-import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
-import { mockMobileScreen } from '../../mock/mobile-screen.mock'
+import { act } from '@testing-library/react'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { patient2Id } from '../../../data/patient.api.data'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { renderPage } from '../../../utils/render'
+import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
-describe('Caregiver home page', () => {
-  const firstName = 'Eric'
-  const lastName = 'Ard'
+describe('Daily view for caregiver', () => {
+  const firstName = 'Caregiver firstName'
+  const lastName = 'Caregiver lastName'
 
   beforeEach(() => {
+    mockWindowResizer()
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
-    mockTeamAPI()
+    mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
-    mockDirectShareApi()
     mockDblCommunicationApi()
-    mockErrorApi()
-    mockAnalyticsApi()
     mockMobileScreen()
   })
 
-  it('should render the patient list page with correct components', async () => {
-    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
-
-    await act(async () => {
-      renderPage('/')
-    })
-
-    expect(await screen.findByTestId('app-main-header-mobile')).toBeVisible()
-    await checkCaregiverLayoutMobile(`${lastName} ${firstName}`)
-
-    expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
+  it('should render correct layout', async () => {
+    mockDataAPI()
+
+    await act(async () => {
+      renderPage(`/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Daily}`)
+    })
+
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+  })
 })

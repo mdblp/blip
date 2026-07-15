@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,74 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.commonDisplay {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-}
+import { act } from '@testing-library/react'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
+import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
+import { patient2Info } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
-.statFooter {
-  padding-left: 0.625em;
-  overflow: hidden;
-}
+describe('Trends view for patient', () => {
+  beforeEach(() => {
+    mockWindowResizer()
+    mockPatientLogin(patient2Info)
+    mockMobileScreen()
+  })
 
-.inputWrapper {
-  width: 100%;
-  color: var(--stat--default);
-  padding: 0.25em 0 .375em 0.625em;
-}
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
+  })
 
-.outputWrapper {
-  width: 100%;
-  color: var(--stat--default);
-}
+  it('should render correct layout', async () => {
+    mockDataAPI(getMinimalTrendViewData())
 
-.units {
-  composes: smallSize from '../../../styles/typography.css';
-  color: var(--stat--default);
-  font-weight: normal;
-}
+    await act(async () => {
+      renderPage(AppUserRoute.Trends)
+    })
 
-.stat.isOpen .chartTitleData {
-  display: inline-flex;
-}
-
-
-.inputLabel {
-  font-weight: 500;
-  color: var(--stat--default);
-}
-
-.inputValue {
-  font-weight: 500;
-  margin-right: 2px;
-}
-
-.outputValue {
-  font-weight: 500;
-  color: var(--stat--default);
-  margin-right: 2px;
-}
-
-.outputSuffix {
-  composes: smallSize from '../../../styles/typography.css';
-  color: var(--stat--default);
-}
-
-.outputValueDisabled {
-  color: var(--stat--default);
-}
-
-.outputLabel {
-  font-weight: 500;
-  color: var(--stat--default);
-}
-
-.statDisabled {
-  color: var(--stat-disabled);
-}
-
-.insulinTitle {
-  color: var(--insulin)
-}
+    await checkPatientLayoutMobile(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
+  })
+})

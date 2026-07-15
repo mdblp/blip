@@ -7,7 +7,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3790 "Lead clinicians" column in Patients list
 
 ### Changed
+- YLP-3338 Use weight unit from parameters instead of "kg"
 - YLP-3939 Adapting the main header to mobile format for HCP
+- YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver
 
 ### Engineering
