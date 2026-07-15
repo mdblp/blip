@@ -37,3 +37,13 @@ export interface PatientListContextResult {
   resetFilters: () => void
   saveColumnsPreferences: (updatedColumnsModel: GridColumnVisibilityModel) => Promise<void>
 }
+
+export interface PatientListMobileContextResult {
+  displayedColumns: GridColumnVisibilityModel
+  filters: PatientsFilters
+  hasAnyNonPendingFiltersEnabled: boolean
+  updatePatientsFilters: (filters: PatientsFilters) => void
+  updatePendingFilter: (pendingEnabled: boolean) => void
+  resetFilters: () => void
+  saveColumnsPreferences: (updatedColumnsModel: GridColumnVisibilityModel) => Promise<void>
+}
