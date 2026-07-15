@@ -34,7 +34,6 @@ export const useStyles = makeStyles()((theme) => ({
   appBar: {
     position: 'fixed',
     zIndex: theme.zIndex.drawer + 1,
-    borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.common.white,
     color: 'var(--text-color-primary)'
   },

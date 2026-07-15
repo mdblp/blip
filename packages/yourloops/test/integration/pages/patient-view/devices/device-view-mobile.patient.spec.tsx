@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,29 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FC, SetStateAction } from 'react'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { MainHeaderMobileMemoized } from './main-header-mobile'
-import { MainHeaderDesktopMemoized } from './main-header-desktop'
+import { act } from '@testing-library/react'
+import { patient1Info } from '../../../data/patient.api.data'
+import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
-interface MainHeaderProps {
-  setMainHeaderHeight: Dispatch<SetStateAction<number>>
-}
+describe('Device view for G1 Patient', () => {
+  const firstName = patient1Info.profile.firstName
+  const lastName = patient1Info.profile.lastName
 
-const MainHeader: FC<MainHeaderProps> = (props) => {
-  const { setMainHeaderHeight } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const deviceRoute = AppUserRoute.Devices
 
-  return (
-    <>
-      {isMobile
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
-      }
-    </>
-  )
-}
+  beforeEach(() => {
+    mockWindowResizer()
+    mockPatientLogin(patient1Info)
+    mockDataAPI(pumpSettingsData)
+    mockAnalyticsApi()
+    mockMobileScreen()
+  })
 
-export const MainHeaderMemoized = React.memo(MainHeader)
+  it('should render correct layout', async () => {
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testAppMainLayoutForPatientMobile({ loggedInUserFullName: `${lastName} ${firstName}` })
+  })
+})

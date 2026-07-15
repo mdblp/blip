@@ -26,14 +26,12 @@
  */
 
 import Box from '@mui/material/Box'
-import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
 import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
 import React from 'react'
-import { useAuth } from '../../lib/auth'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -56,7 +54,6 @@ const classes = makeStyles()((theme) => ({
 
 export const TeamSelectionAndSettings = () => {
 
-  const { user } = useAuth()
   const { classes: { teamMenu, settingsButton } } = classes()
   const { t } = useTranslation('yourloops')
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
@@ -72,11 +69,10 @@ export const TeamSelectionAndSettings = () => {
         className={teamMenu}
         data-testid="team-selection-tab"
       >
-        {user.isUserPatient() && <TeamSettingsMenu />}
-        {user.isUserHcp() && <TeamScopeMenu />}
+        <TeamScopeMenu />
       </Box>
 
-      {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
+      {!TeamUtils.isPrivate(teamId) && (
         <Button
           aria-label={t('header-tab-care-team-settings')}
           value={HcpNavigationTab.CareTeam}

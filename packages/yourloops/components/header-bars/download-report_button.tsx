@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,29 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FC, SetStateAction } from 'react'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { MainHeaderMobileMemoized } from './main-header-mobile'
-import { MainHeaderDesktopMemoized } from './main-header-desktop'
+import React, { type MouseEventHandler } from 'react';
+import { IconButton, IconButtonProps } from '@mui/material'
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 
-interface MainHeaderProps {
-  setMainHeaderHeight: Dispatch<SetStateAction<number>>
+interface DownloadReportButtonProps extends IconButtonProps {
+  onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
-const MainHeader: FC<MainHeaderProps> = (props) => {
-  const { setMainHeaderHeight } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+export const DownloadReportButton: React.FC<DownloadReportButtonProps> = ( props ) => {
+  const { onClickPrint } = props
 
   return (
-    <>
-      {isMobile
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
-      }
-    </>
-  )
-}
-
-export const MainHeaderMemoized = React.memo(MainHeader)
+    <IconButton
+      color="inherit"
+      data-testid="download-report-mobile"
+      onClick={onClickPrint}
+      sx={{ color: 'var(--primary-color-main)' }}
+    >
+      <CloudDownloadIcon />
+    </IconButton>
+  );
+};

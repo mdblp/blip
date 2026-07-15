@@ -25,52 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
+import {
+  mockDataAPI,
+  pumpSettingsData,
+} from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockDataAPI, oneDayDashboardData } from '../../../mock/data.api.mock'
-import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForCaregiverMobile
-} from '../../../use-cases/app-main-layout-visualisation'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
-describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+describe('Device view for HCP', () => {
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
+
+  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
-    mockAuth0Hook(UserRole.Caregiver)
+    mockWindowResizer()
+    mockAuth0Hook()
     mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
+    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
+    mockPatientApiForHcp()
+    mockDataAPI(pumpSettingsData)
+    mockAnalyticsApi()
     mockMobileScreen()
   })
 
-  it('In mobile version, should render correct components', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
-
+  it('should render correct layout', async () => {
     await act(async () => {
-      renderPage(patientDashboardRoute)
+      renderPage(deviceRoute)
     })
-
-    await testAppMainLayoutForCaregiverMobile(appMainLayoutParams)
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
-
 })
