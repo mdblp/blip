@@ -121,7 +121,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
       case UserRole.Caregiver:
         return AppUserRoute.PrivatePatientsList
       case UserRole.Hcp:
-        return TeamUtils.isPrivate(teamId) ? AppUserRoute.PrivatePatientsList : `/teams/${teamId}/patients`
+        return `/teams/${teamId}/patients`
       default:
         return '/'
     }
