@@ -29,18 +29,18 @@ import React, { type FC, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider, useTheme } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
 import { GlobalStyles, TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
-import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import { Footer } from '../components/footer/footer'
+import { FooterMobile } from '../components/footer/footer-mobile'
 import { getCurrentLang } from '../lib/language'
 import { CompleteSignUpPage } from '../pages/signup/complete-signup-page'
 import { MainLayout } from '../layout/main-layout'
@@ -96,7 +96,7 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user?.hasToDisplayTrainingInfoPage()) {
     return AppRoute.Training
   }
-  if (route !==  AppRoute.DblCommunication && user?.hasToDisplayDblCommunicationPage()) {
+  if (route !== AppRoute.DblCommunication && user?.hasToDisplayDblCommunicationPage()) {
     return AppRoute.DblCommunication
   }
   return undefined
@@ -147,13 +147,14 @@ export const MainLobby: FC = () => {
           <TssCacheProvider value={tssCache}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <GlobalStyles styles={{ body: { backgroundColor: isMobile ? '#ffffff' : 'var(--body-background-color)' } }} />
+              <GlobalStyles
+                styles={{ body: { backgroundColor: isMobile ? '#ffffff' : 'var(--body-background-color)' } }} />
               <SnackbarContextProvider context={DefaultSnackbarContext}>
                 <Box>
                   <Routes>
                     <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
                     <Route path={AppRoute.Login} element={<LoginPageLanding />} />
-                    <Route path={AppRoute.SignupInformation} element={<SignupInformationPage />}/>
+                    <Route path={AppRoute.SignupInformation} element={<SignupInformationPage />} />
                     <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
                     <Route path={AppRoute.RenewConsent} element={<ConsentPage messageKey="consent-renew-message" />} />
                     <Route path={AppRoute.NewConsent} element={<ConsentPage messageKey="consent-welcome-message" />} />
@@ -165,11 +166,11 @@ export const MainLobby: FC = () => {
                   </Routes>
                 </Box>
               </SnackbarContextProvider>
-              <Footer />
-            </ThemeProvider>
-          </TssCacheProvider>
-        </CacheProvider>
-      }
-    </React.Fragment>
-  )
-}
+              {isMobile ? <FooterMobile /> : <Footer /> }
+                </ThemeProvider>
+                </TssCacheProvider>
+                </CacheProvider>
+              }
+            </React.Fragment>
+            )
+            }
