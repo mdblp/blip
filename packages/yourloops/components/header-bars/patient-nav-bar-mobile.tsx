@@ -26,7 +26,6 @@
  */
 
 import React, { type FunctionComponent, memo, useState } from 'react'
-import { type Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
 import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
 import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
