@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,8 @@
  */
 
 import * as authHookMock from '../../../../lib/auth'
-import { act, renderHook } from '@testing-library/react'
+import { act } from 'react'
+import { renderHook } from '@testing-library/react'
 import { usePatientListProviderHook } from '../../../../lib/providers/patient-list.provider.hook'
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
@@ -158,6 +159,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.System]: true,
         [PatientListColumns.TimeInRange]: false,
         [PatientListColumns.Variance]: false,
+        [PatientListColumns.Clinicians]: false,
         [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: true,
         [PatientListColumns.LastDataUpdate]: true,
@@ -189,6 +191,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.System]: true,
         [PatientListColumns.TimeInRange]: false,
         [PatientListColumns.Variance]: false,
+        [PatientListColumns.Clinicians]: false,
         [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.LastDataUpdate]: true,
@@ -219,6 +222,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.System]: false,
         [PatientListColumns.TimeInRange]: true,
         [PatientListColumns.Variance]: false,
+        [PatientListColumns.Clinicians]: true,
         [PatientListColumns.MonitoringAlerts]: true,
         [PatientListColumns.Messages]: true,
         [PatientListColumns.LastDataUpdate]: true,
@@ -249,6 +253,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.System]: false,
         [PatientListColumns.TimeInRange]: true,
         [PatientListColumns.Variance]: false,
+        [PatientListColumns.Clinicians]: false,
         [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.LastDataUpdate]: true,
