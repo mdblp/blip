@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3939 Adapting the main header to mobile format for HCP
 - YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver
+- YLP-3945 Adapting the second level of navigation to mobile format
 
 ### Engineering
 - YLP-3864 SBOM generation in pipeline
