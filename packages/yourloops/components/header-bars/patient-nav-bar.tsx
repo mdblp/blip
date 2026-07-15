@@ -67,7 +67,6 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
       {isMobile
         ?
           <PatientNavBarMobileMemoized
-            currentPatient={currentPatient}
             currentPatientView={currentPatientView}
             onChangePatientView={onChangePatientView}
           />

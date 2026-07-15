@@ -46,7 +46,6 @@ import DeviceIconOutlined from '../icons/device-icon-outlined'
 import DailyIconOutlined from '../icons/daily-icon-outlined'
 
 interface PatientNavBarTabsProps {
-  currentPatient: Patient
   currentPatientView: PatientView
   onChangePatientView: (patientView: PatientView) => void
 }

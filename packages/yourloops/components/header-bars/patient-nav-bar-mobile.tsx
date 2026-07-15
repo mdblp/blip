@@ -34,18 +34,13 @@ import { type PatientView } from '../../enum/patient-view.enum'
 
 interface PatientNavBarProps {
   currentPatientView: PatientView
-  currentPatient: Patient
   onChangePatientView: (patientView: PatientView) => void
-  onClickDashboard?: () => void
-  onClickDaily?: () => void
   onClickPrint?: () => void
-  onClickTrends?: () => void
 }
 
 const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
     currentPatientView,
-    currentPatient,
     onChangePatientView,
     onClickPrint
   } = props
@@ -62,7 +57,6 @@ const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
       </Box>
       <Box>
         <PatientNavBarTabsMobile
-          currentPatient={currentPatient}
           currentPatientView={currentPatientView}
           onChangePatientView={onChangePatientView}
         />
