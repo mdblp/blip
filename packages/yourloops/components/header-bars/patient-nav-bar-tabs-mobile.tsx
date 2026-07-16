@@ -35,8 +35,8 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import { useParams } from 'react-router-dom'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
-import InsertChartIcon from '@mui/icons-material/InsertChart';
+import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
+import InsertChartIcon from '@mui/icons-material/InsertChart'
 import ProfileIcon from '../icons/profile-second-nav-bar-icon'
 import DeviceIcon from '../icons/device-icon'
 import DailyIcon from '../icons/daily-icon'
@@ -50,30 +50,24 @@ interface PatientNavBarTabsProps {
 }
 
 const styles = makeStyles()((theme) => {
-  const TAB_HEIGHT = theme.spacing(10)
-  return {
+  const TAB_HEIGHT = theme.spacing(9)
 
+  return {
     bottomNav: {
       position: 'fixed',
       bottom: 0,
-      left: 0,
-      right: 0,
+      width: '100%',
       zIndex: theme.zIndex.drawer + 2,
       backgroundColor: 'var(--info-color-5)',
-      minHeight: TAB_HEIGHT,
-      height: TAB_HEIGHT,
+      height: TAB_HEIGHT
     },
 
     bottomNavAction: {
       minWidth: 'auto',
-      margin: '4px 2px',
-      padding: '6px 0px',
-
       '&.Mui-selected': {
         backgroundColor: 'var(--info-color-20)',
         color: 'var(--text-color-primary)',
-        borderRadius: '16px',
-        margin: '4px'
+        borderRadius: '24px'
       }
     }
 
@@ -148,7 +142,7 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
           icon={getSelectedTab() === PatientView.PatientProfile ? (
             <ProfileIcon />
           ) : (
-            <ProfileIconOutlined/>
+            <ProfileIconOutlined />
           )}
           className={classes.bottomNavAction}
           onClick={() => {
