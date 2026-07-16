@@ -125,6 +125,8 @@ export const checkPatientListFilters = async () => {
 
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters deactivated: 7 patient(s) out of 7')
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
+  expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+
   const dataGridRowCurrent = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
 
