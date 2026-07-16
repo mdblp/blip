@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, within, waitFor} from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, within, waitFor } from '@testing-library/react'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
