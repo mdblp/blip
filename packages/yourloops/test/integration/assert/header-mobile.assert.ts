@@ -61,7 +61,6 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   expect(userMenu.getByText('Logout')).toBeVisible()
 
   await userEvent.click(userMenu.getByTestId('user-menu-settings-item'))
-  await userEvent.click(userMenu.getByTestId('user-menu-settings-item'));
   await waitFor(() => {
     expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument();
   });
