@@ -60,7 +60,7 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   expect(userMenu.getByText('Customer support')).toBeVisible()
   expect(userMenu.getByText('Logout')).toBeVisible()
 
-  await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
+  await userEvent.click(userMenu.getByText('User account'))
   expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument()
 }
 
