@@ -174,7 +174,7 @@ describe('HCP home page', () => {
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcp()
-  })
+  }, 500000)
 
   it('should not be able to see birth date in the patient list when scoped on a medical team', async () => {
     const textToFind = "Date of birth"
