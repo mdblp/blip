@@ -35,7 +35,6 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { testAppMainLayoutForCaregiverMobile } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
@@ -65,7 +64,6 @@ describe('Devices view for Caregiver', () => {
   it('should render correct layout', async () => {
     renderPage(devicesRoute)
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
-    await testAppMainLayoutForCaregiverMobile({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
 })

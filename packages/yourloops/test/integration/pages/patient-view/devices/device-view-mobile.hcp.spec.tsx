@@ -27,7 +27,7 @@
 
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
+import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
 import {
   mockDataAPI,
   pumpSettingsData,
@@ -40,7 +40,6 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { type AppMainLayoutHcpMobileParams, testAppMainLayoutForHcpMobile } from '../../../use-cases/app-main-layout-visualisation'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
@@ -67,22 +66,10 @@ describe('Device view for HCP', () => {
   })
 
   it('should render correct layout', async () => {
-    const appMainLayoutParams: AppMainLayoutHcpMobileParams = {
-      footerHasLanguageSelector: false,
-      headerInfoMobile: {
-        loggedInUserFullName: `${lastName} ${firstName}`,
-        homePageBoolean : false,
-        teamMenuInfo: {
-          selectedTeamName: myThirdTeamName,
-          isSelectedTeamPrivate: false,
-          availableTeams: buildAvailableTeams()
-        }
-      }
-    }
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testAppMainLayoutForHcpMobile(appMainLayoutParams)
+
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 })

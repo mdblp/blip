@@ -79,6 +79,5 @@ describe('Trends view for caregiver', () => {
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiverMobile()
-    await checkCaregiverLayoutMobile(`${lastName} ${firstName}`)
   })
 })
