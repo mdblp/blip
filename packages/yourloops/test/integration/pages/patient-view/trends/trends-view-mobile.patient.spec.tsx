@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,29 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FC, SetStateAction } from 'react'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { MainHeaderMobileMemoized } from './main-header-mobile'
-import { MainHeaderDesktopMemoized } from './main-header-desktop'
+import { act } from '@testing-library/react'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
+import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
+import { patient2Info } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
-interface MainHeaderProps {
-  setMainHeaderHeight: Dispatch<SetStateAction<number>>
-}
+describe('Trends view for patient', () => {
+  beforeEach(() => {
+    mockWindowResizer()
+    mockPatientLogin(patient2Info)
+    mockMobileScreen()
+  })
 
-const MainHeader: FC<MainHeaderProps> = (props) => {
-  const { setMainHeaderHeight } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
+  })
 
-  return (
-    <>
-      {isMobile
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
-      }
-    </>
-  )
-}
+  it('should render correct layout', async () => {
+    mockDataAPI(getMinimalTrendViewData())
 
-export const MainHeaderMemoized = React.memo(MainHeader)
+    await act(async () => {
+      renderPage(AppUserRoute.Trends)
+    })
+
+    await checkPatientLayoutMobile(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
+  })
+})

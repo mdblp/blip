@@ -32,3 +32,5 @@ export enum PatientView {
   PatientProfile = 'patientProfile',
   Trends = 'trends'
 }
+
+

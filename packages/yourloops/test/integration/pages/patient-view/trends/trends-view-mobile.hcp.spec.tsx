@@ -25,52 +25,52 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockDataAPI, oneDayDashboardData } from '../../../mock/data.api.mock'
-import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForCaregiverMobile
-} from '../../../use-cases/app-main-layout-visualisation'
+import { patient2Id } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
-describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+describe('Trends view for HCP', () => {
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
 
   beforeEach(() => {
-    mockAuth0Hook(UserRole.Caregiver)
+    mockWindowResizer()
+    mockAuth0Hook()
     mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
+    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
+    mockPatientApiForHcp()
+    mockChatAPI()
     mockMobileScreen()
   })
 
-  it('In mobile version, should render correct components', async () => {
-    mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testAppMainLayoutForCaregiverMobile(appMainLayoutParams)
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
+  it('should render correct layout', async () => {
+    mockDataAPI(getMinimalTrendViewData())
+
+    await act(async () => {
+      renderPage(`/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`)
+    })
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+  })
 })

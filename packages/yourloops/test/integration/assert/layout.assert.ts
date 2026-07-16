@@ -26,7 +26,7 @@
  */
 
 import { checkCaregiverHeader, checkPatientHeader } from './header.assert'
-import { checkCaregiverHeaderMobile } from './header-mobile.assert'
+import { checkCaregiverHeaderMobile, checkPatientHeaderMobile } from './header-mobile.assert'
 import { screen, within } from '@testing-library/react'
 import { checkFooterForCaregiver, checkFooterForPatient } from './footer.assert'
 
@@ -48,6 +48,10 @@ export const checkCaregiverLayoutMobile = async (fullName: string) => {
 export const checkPatientLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkPatientHeader(fullName)
   checkFooterForPatient(needFooterLanguageSelector)
+}
+
+export const checkPatientLayoutMobile = async (fullName: string) => {
+  await checkPatientHeaderMobile(fullName)
 }
 
 export const checkPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {

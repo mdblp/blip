@@ -27,50 +27,58 @@
 
 import { act } from 'react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
+import {
+  mockDataAPI,
+  oneDayDashboardData,
+} from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
+import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockDataAPI, oneDayDashboardData } from '../../../mock/data.api.mock'
-import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForCaregiverMobile
-} from '../../../use-cases/app-main-layout-visualisation'
+import { Unit } from 'medical-domain'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { type Settings } from '../../../../../lib/auth/models/settings.model'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 
-describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+describe('Dashboard view for HCP', () => {
+  const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
+  const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
 
   beforeEach(() => {
-    mockAuth0Hook(UserRole.Caregiver)
+    mockAuth0Hook()
     mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
+    mockTeamAPI()
+    mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mgdlSettings })
+    mockPatientApiForHcp()
+    mockChatAPI()
+    mockMedicalFilesAPI(myThirdTeamId, myThirdTeamName)
+    mockDataAPI()
+    mockAnalyticsApi()
+    mockErrorApi()
     mockMobileScreen()
   })
 
-  it('In mobile version, should render correct components', async () => {
+  it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     mockDataAPI(oneDayDashboardData)
-    const appMainLayoutParams: AppMainLayoutParams = {
-      footerHasLanguageSelector: false,
-      loggedInUserFullName: `${lastName} ${firstName}`
-    }
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForCaregiverMobile(appMainLayoutParams)
+    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 
 })

@@ -50,24 +50,7 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
-import mediaQuery from 'css-mediaquery';
-
-function mockScreenWidth(width: number): void {
-  globalThis.matchMedia = (query: string): MediaQueryList => ({
-    matches: mediaQuery.match(query, { width }),
-    media: query,
-    onchange: null,
-    addListener: () => {
-    },
-    removeListener: () => {
-    },
-    addEventListener: () => {
-    },
-    removeEventListener: () => {
-    },
-    dispatchEvent: () => true
-  });
-}
+import { mockMobileScreen } from '../../mock/mobile-screen.mock'
 
 describe('HCP home page, mobile version', () => {
   const firstName = 'Eric'
@@ -92,7 +75,7 @@ describe('HCP home page, mobile version', () => {
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
     // For testing with a mobile sized device
-    mockScreenWidth(400);
+    mockMobileScreen();
   })
 
   const renderHomePage = async (route: string): Promise<Router> => {
