@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, within, waitFor} from '@testing-library/react'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
@@ -60,8 +60,11 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   expect(userMenu.getByText('Customer support')).toBeVisible()
   expect(userMenu.getByText('Logout')).toBeVisible()
 
-  await userEvent.click(userMenu.getByText('User account'))
-  expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument()
+  await userEvent.click(userMenu.getByTestId('user-menu-settings-item'))
+  await userEvent.click(userMenu.getByTestId('user-menu-settings-item'));
+  await waitFor(() => {
+    expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument();
+  });
 }
 
 const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMenuInfo: TeamMenuInfo) => {
