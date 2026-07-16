@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientListTabs {
-  Current,
-  Pending
-}
+import { PatientListColumn } from '../models/enums/patient-list.enum'
 
-export enum PatientListColumn {
-  Actions = 'actions',
-  Age = 'age',
-  BelowRange = 'below-range',
-  Clinicians = 'lead-clinicians',
-  DateOfBirth = 'date-of-birth',
-  Flag = 'flag',
-  Gender = 'gender',
-  GlucoseManagementIndicator = 'glucose-management-indicator',
-  LastDataUpdate = 'last-data-update',
-  Messages = 'messages',
-  MonitoringAlerts = 'monitoring-alerts',
-  Patient = 'patient',
-  System = 'system',
-  TimeInRange = 'time-in-range',
-  Variance = 'variance',
-  PatientProfile = 'patient-profile'
-}
+export const EXCLUDED_COLUMNS_PRIVATE_TEAM_CAREGIVER = new Set([
+  PatientListColumn.PatientProfile,
+  PatientListColumn.Clinicians,
+  PatientListColumn.Messages,
+  PatientListColumn.MonitoringAlerts
+])
 
-export enum PendingPatientListColumns {
-  Actions = 'actions',
-  Date = 'date',
-  Email = 'email',
-  InviteSentBy = 'invite-sent-by',
+export const isMedicalTeamOnly = (columnName: PatientListColumn): boolean => {
+  return EXCLUDED_COLUMNS_PRIVATE_TEAM_CAREGIVER.has(columnName)
 }

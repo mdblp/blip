@@ -25,109 +25,114 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 
 import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Popover from '@mui/material/Popover'
-import Divider from '@mui/material/Divider'
-import DialogActions from '@mui/material/DialogActions'
 import CardContent from '@mui/material/CardContent'
-import { PatientListOptionToggle } from './patient-list-option-toggle'
-import { PatientListColumns } from './models/enums/patient-list.enum'
-import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import DialogActions from '@mui/material/DialogActions'
+import Divider from '@mui/material/Divider'
+import Popover from '@mui/material/Popover'
+import Typography from '@mui/material/Typography'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
-import { useAuth } from '../../lib/auth'
-import Box from '@mui/material/Box'
-import {  ConfigService } from '../../lib/config/config.service'
+import React, { type FunctionComponent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ConfigService } from '../../lib/config/config.service'
+import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import { PatientListColumn } from './models/enums/patient-list.enum'
+import { PatientListOptionToggle } from './patient-list-option-toggle'
+import { isMedicalTeamOnly } from './utils/columns.util'
 
 interface ColumnSelectorPopoverProps {
   anchorEl: Element
+  isSelectedTeamPrivate: boolean
   onClose: () => void
 }
 
-interface ColumnToggleDefinition {
-  name: PatientListColumns
+interface ColumnToggleItem {
+  name: PatientListColumn
   checked: boolean
   disabled?: boolean
-  hcpOnly?: true
   tooltip?: string
 }
 
 export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps> = (props) => {
-  const { anchorEl, onClose } = props
-  const { user } = useAuth()
+  const { anchorEl, isSelectedTeamPrivate, onClose } = props
   const { t } = useTranslation()
   const { displayedColumns, saveColumnsPreferences } = usePatientListContext()
   const [updatedColumnsModel, setUpdatedColumnsModel] = useState<GridColumnVisibilityModel>({ ...displayedColumns })
 
-  const columnToggles: ColumnToggleDefinition[] = [
+  const columnToggles: ColumnToggleItem[] = [
     {
-      name: PatientListColumns.Patient,
+      name: PatientListColumn.Patient,
       checked: true,
       disabled: true,
       tooltip: t('un-removable-column')
     },
     {
-      name: PatientListColumns.PatientProfile,
-      checked: updatedColumnsModel[PatientListColumns.PatientProfile],
-      hcpOnly: true
+      name: PatientListColumn.PatientProfile,
+      checked: updatedColumnsModel[PatientListColumn.PatientProfile],
     },
     {
-      name: PatientListColumns.Age,
-      checked: updatedColumnsModel[PatientListColumns.Age]
+      name: PatientListColumn.Age,
+      checked: updatedColumnsModel[PatientListColumn.Age]
     },
     ...(ConfigService.getDateOfBirthHidden() ? [] : [{
-      name: PatientListColumns.DateOfBirth,
-      checked: updatedColumnsModel[PatientListColumns.DateOfBirth]
+      name: PatientListColumn.DateOfBirth,
+      checked: updatedColumnsModel[PatientListColumn.DateOfBirth]
     }]),
     {
-      name: PatientListColumns.Gender,
-      checked: updatedColumnsModel[PatientListColumns.Gender]
+      name: PatientListColumn.Gender,
+      checked: updatedColumnsModel[PatientListColumn.Gender]
     },
     {
-      name: PatientListColumns.System,
-      checked: updatedColumnsModel[PatientListColumns.System]
+      name: PatientListColumn.System,
+      checked: updatedColumnsModel[PatientListColumn.System]
     },
     {
-      name: PatientListColumns.Clinicians,
-      checked: updatedColumnsModel[PatientListColumns.Clinicians],
-      hcpOnly: true
+      name: PatientListColumn.Clinicians,
+      checked: updatedColumnsModel[PatientListColumn.Clinicians],
     },
     {
-      name: PatientListColumns.MonitoringAlerts,
-      checked: updatedColumnsModel[PatientListColumns.MonitoringAlerts],
-      hcpOnly: true
+      name: PatientListColumn.MonitoringAlerts,
+      checked: updatedColumnsModel[PatientListColumn.MonitoringAlerts],
     },
     {
-      name: PatientListColumns.Messages,
-      checked: updatedColumnsModel[PatientListColumns.Messages],
-      hcpOnly: true
+      name: PatientListColumn.Messages,
+      checked: updatedColumnsModel[PatientListColumn.Messages],
     },
     {
-      name: PatientListColumns.TimeInRange,
-      checked: updatedColumnsModel[PatientListColumns.TimeInRange]
+      name: PatientListColumn.TimeInRange,
+      checked: updatedColumnsModel[PatientListColumn.TimeInRange]
     },
     {
-      name: PatientListColumns.GlucoseManagementIndicator,
-      checked: updatedColumnsModel[PatientListColumns.GlucoseManagementIndicator]
+      name: PatientListColumn.GlucoseManagementIndicator,
+      checked: updatedColumnsModel[PatientListColumn.GlucoseManagementIndicator]
     },
     {
-      name: PatientListColumns.BelowRange,
-      checked: updatedColumnsModel[PatientListColumns.BelowRange]
+      name: PatientListColumn.BelowRange,
+      checked: updatedColumnsModel[PatientListColumn.BelowRange]
     },
     {
-      name: PatientListColumns.Variance,
-      checked: updatedColumnsModel[PatientListColumns.Variance]
+      name: PatientListColumn.Variance,
+      checked: updatedColumnsModel[PatientListColumn.Variance]
     },
     {
-      name: PatientListColumns.LastDataUpdate,
-      checked: updatedColumnsModel[PatientListColumns.LastDataUpdate]
+      name: PatientListColumn.LastDataUpdate,
+      checked: updatedColumnsModel[PatientListColumn.LastDataUpdate]
     }
   ]
 
-  const updateColumnVisibility = (column: PatientListColumns): void => {
+  const shouldDisplayToggle = (columnName: PatientListColumn): boolean => {
+    const isMedicalTeamColumn = isMedicalTeamOnly(columnName)
+
+    if (!isSelectedTeamPrivate) {
+      return true
+    }
+
+    return !isMedicalTeamColumn
+  }
+
+  const updateColumnVisibility = (column: PatientListColumn): void => {
     setUpdatedColumnsModel(prevState => ({ ...prevState, [column]: !prevState[column] }))
   }
 
@@ -150,9 +155,9 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
     >
       <CardContent>
         <Typography variant="h6">{t('show-column')}</Typography>
-        {columnToggles.map((toggle, index) => (
-          <Box key={index}>
-            {(user.isUserHcp() || (user.isUserCaregiver() && !toggle.hcpOnly)) &&
+        {columnToggles.map((toggle: ColumnToggleItem) => (
+          <Box key={toggle.name}>
+            {shouldDisplayToggle(toggle.name) &&
               <PatientListOptionToggle
                 ariaLabel={t(toggle.name)}
                 checked={toggle.checked}

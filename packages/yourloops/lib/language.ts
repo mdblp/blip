@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,21 +36,21 @@ import { type Country } from './auth/models/country.model'
 import { getBrowserLocale } from './browser'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
-import { type LanguageCodes } from './auth/models/enums/language-codes.enum'
+import { type LanguageCode } from './auth/models/enums/language-code.enum'
 
-const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
+const availableLanguageCodes = _.keys(locales.resources) as LanguageCode[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
   return { code: key, name: item.name } as Country
 })
 
 
-export const getLanguage = (): LanguageCodes => {
-  return (localStorage.getItem('lang') || getBrowserLocale() || 'en') as LanguageCodes
+export const getLanguage = (): LanguageCode => {
+  return (localStorage.getItem('lang') || getBrowserLocale() || 'en') as LanguageCode
 }
 
-let language: LanguageCodes = getLanguage()
+let language: LanguageCode = getLanguage()
 
-function refreshLanguage(language: LanguageCodes): void {
+function refreshLanguage(language: LanguageCode): void {
   zendeskLocale(language)
   dayjs.locale(language)
   moment.locale(language)
@@ -90,7 +90,7 @@ async function init(options = i18nOptions): Promise<void> {
   i18n.use(initReactI18next)
 
   // Update moment with the right language, for date display
-  i18n.on('languageChanged', (lng: LanguageCodes) => {
+  i18n.on('languageChanged', (lng: LanguageCode) => {
     if (language !== lng && availableLanguageCodes.includes(lng)) {
       language = lng
       refreshLanguage(language)
@@ -115,8 +115,8 @@ function t(s: string, p?: TOptions): string {
 }
 
 const changeLanguage = i18n.changeLanguage.bind(i18n)
-const getCurrentLang = (): LanguageCodes => language
-const getLangName = (languageCode: LanguageCodes): string => {
+const getCurrentLang = (): LanguageCode => language
+const getLangName = (languageCode: LanguageCode): string => {
   return _.get(locales, `resources.${languageCode}.name`, 'en')
 }
 

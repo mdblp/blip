@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React, { createContext, type FunctionComponent, type PropsWithChildren, u
 import useUserAccountPageContextHook from './user-account-page-context.hook'
 import { type UserAccountErrors, type UserAccountForm } from './models/user-account-form.model'
 import { type UserAccountFormKey } from './models/enums/user-account-form-key.enum'
-import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { type LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type BgUnit } from 'medical-domain'
 
@@ -39,7 +39,7 @@ interface UserAccountPageContext {
   userAccountForm: UserAccountForm
   saveUserAccount: () => Promise<void>
   saving: boolean
-  updateUserAccountForm: (key: UserAccountFormKey, value: boolean | string | LanguageCodes | BgUnit | HcpProfession) => void
+  updateUserAccountForm: (key: UserAccountFormKey, value: boolean | string | LanguageCode | BgUnit | HcpProfession) => void
 }
 
 const UserAccountPageStateContext = createContext<UserAccountPageContext>({} as UserAccountPageContext)

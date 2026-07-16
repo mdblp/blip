@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,25 +29,25 @@ import React, { type FC, useState } from 'react'
 import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
 import Box from '@mui/material/Box'
-import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
 import config from '../../lib/config/config'
 
 const getFileName = (): string => {
   switch (getCurrentLang()) {
-    case LanguageCodes.Fr :
+    case LanguageCode.Fr :
       return config.YLPZ_RA_LAD_FR
-    case LanguageCodes.De :
+    case LanguageCode.De :
       return config.YLPZ_RA_LAD_DE
-    case LanguageCodes.Nl :
+    case LanguageCode.Nl :
       return config.YLPZ_RA_LAD_NL
-    case LanguageCodes.It :
+    case LanguageCode.It :
       return config.YLPZ_RA_LAD_IT
-    case LanguageCodes.Es :
+    case LanguageCode.Es :
       return config.YLPZ_RA_LAD_ES
     // default to english
-    case LanguageCodes.En :
+    case LanguageCode.En :
     default:
       return config.YLPZ_RA_LAD_EN
   }

@@ -34,7 +34,7 @@ import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import { Unit } from 'medical-domain'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 import { UserAccountFormKey } from '../../../../pages/user-account/models/enums/user-account-form-key.enum'
@@ -69,7 +69,7 @@ describe('User account page context hook', () => {
     country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
+  const preferences: Preferences = { displayLanguageCode: LanguageCode.Fr }
   const onSuccessAlertMock = jest.fn()
   const onErrorAlertMock = jest.fn()
   const updateUserAccountMock = jest.fn()

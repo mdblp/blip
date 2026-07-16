@@ -26,7 +26,7 @@
  */
 
 import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { type LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
 import { type BgUnit } from 'medical-domain'
 import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
 import type { CountryCode } from '../../../lib/auth/models/country.model'
@@ -35,7 +35,7 @@ export interface UserAccountForm {
   feedbackAccepted: boolean | undefined
   firstName: string
   hcpProfession: HcpProfession
-  lang: LanguageCodes
+  lang: LanguageCode
   lastName: string
   sex: Gender | undefined
   units: BgUnit

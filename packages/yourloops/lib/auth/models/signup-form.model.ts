@@ -27,7 +27,7 @@
 
 import { type HcpProfession } from './enums/hcp-profession.enum'
 import { type UserRole } from './enums/user-role.enum'
-import { type LanguageCodes } from './enums/language-codes.enum'
+import { type LanguageCode } from './enums/language-code.enum'
 import { type CountryCode } from './country.model'
 
 export interface SignupForm {
@@ -35,7 +35,7 @@ export interface SignupForm {
   feedback?: boolean // Consent to be contacted by Diabeloop
   hcpConfirmAck?: boolean
   hcpProfession?: HcpProfession
-  preferencesLanguage: LanguageCodes
+  preferencesLanguage: LanguageCode
   privacyPolicy: boolean
   profileCountry: CountryCode
   profileFirstname: string

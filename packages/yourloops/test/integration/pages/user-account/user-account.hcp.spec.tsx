@@ -35,7 +35,7 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCode } from '../../../../lib/auth/models/country.model'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
@@ -72,7 +72,7 @@ describe('User account page for hcp', () => {
     country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
+  const preferences: Preferences = { displayLanguageCode: LanguageCode.Fr }
 
   beforeAll(() => {
     mockAuth0Hook()
@@ -107,7 +107,7 @@ describe('User account page for hcp', () => {
         }
       }
     }
-    const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
+    const expectedPreferences = { displayLanguageCode: LanguageCode.En }
     const expectedSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCode.Austria }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)

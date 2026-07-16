@@ -30,7 +30,7 @@ import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enu
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { CountryCode } from '../../../lib/auth/models/country.model'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
 import { Unit } from 'medical-domain'
 
 const getHcp = (): User => {
@@ -86,7 +86,7 @@ const getPatient = (): User => {
       ssn: '012345678901234'
     }
   }
-  patient.preferences = { displayLanguageCode: LanguageCodes.Fr }
+  patient.preferences = { displayLanguageCode: LanguageCode.Fr }
   return patient
 }
 

@@ -46,7 +46,7 @@ import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
 import { getCurrentLang } from '../../lib/language'
-import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
@@ -225,7 +225,7 @@ export const Footer: FunctionComponent = () => {
   const { classes } = footerStyle()
 
   const currentLanguage = getCurrentLang()
-  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCodes.Ja
+  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCode.Ja
 
   const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
   const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()

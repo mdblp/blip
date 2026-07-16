@@ -32,7 +32,7 @@ import { usePatientListProviderHook } from '../../../../lib/providers/patient-li
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
-import { PatientListColumns } from '../../../../components/patient-list/models/enums/patient-list.enum'
+import { PatientListColumn } from '../../../../components/patient-list/models/enums/patient-list.enum'
 
 jest.mock('../../../../lib/auth')
 describe('usePatientListProviderHook', () => {
@@ -62,7 +62,7 @@ describe('usePatientListProviderHook', () => {
       return {
         user: {
           isUserHcp: () => true,
-          preferences: { patientsListSortedOptionalColumns: [PatientListColumns.System, PatientListColumns.LastDataUpdate, PatientListColumns.Messages] }
+          preferences: { patientsListSortedOptionalColumns: [PatientListColumn.System, PatientListColumn.LastDataUpdate, PatientListColumn.Messages] }
         } as User,
         updatePreferences: updatePreferencesMock
       }
@@ -126,15 +126,15 @@ describe('usePatientListProviderHook', () => {
     it('should save the column choice into user preferences', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const updatedColumnsVisibilityModel: GridColumnVisibilityModel = {
-        [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
-        [PatientListColumns.Patient]: true,
-        [PatientListColumns.MonitoringAlerts]: false,
-        [PatientListColumns.LastDataUpdate]: false,
-        [PatientListColumns.Messages]: false,
-        [PatientListColumns.Actions]: true
+        [PatientListColumn.Flag]: true,
+        [PatientListColumn.System]: true,
+        [PatientListColumn.Patient]: true,
+        [PatientListColumn.MonitoringAlerts]: false,
+        [PatientListColumn.LastDataUpdate]: false,
+        [PatientListColumn.Messages]: false,
+        [PatientListColumn.Actions]: true
       }
-      const patientsListSortedOptionalColumns = [PatientListColumns.Flag, PatientListColumns.System, PatientListColumns.Patient, PatientListColumns.Actions]
+      const patientsListSortedOptionalColumns = [PatientListColumn.Flag, PatientListColumn.System, PatientListColumn.Patient, PatientListColumn.Actions]
 
       act(() => {
         result.current.saveColumnsPreferences(updatedColumnsVisibilityModel)
@@ -148,22 +148,22 @@ describe('usePatientListProviderHook', () => {
     it('should have the correct list of columns for hcp based on his preference', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
-        [PatientListColumns.Flag]: true,
-        [PatientListColumns.Patient]: true,
-        [PatientListColumns.PatientProfile]: false,
-        [PatientListColumns.Age]: false,
-        [PatientListColumns.DateOfBirth]: false,
-        [PatientListColumns.Gender]: false,
-        [PatientListColumns.GlucoseManagementIndicator]: false,
-        [PatientListColumns.BelowRange]: false,
-        [PatientListColumns.System]: true,
-        [PatientListColumns.TimeInRange]: false,
-        [PatientListColumns.Variance]: false,
-        [PatientListColumns.Clinicians]: false,
-        [PatientListColumns.MonitoringAlerts]: false,
-        [PatientListColumns.Messages]: true,
-        [PatientListColumns.LastDataUpdate]: true,
-        [PatientListColumns.Actions]: true
+        [PatientListColumn.Flag]: true,
+        [PatientListColumn.Patient]: true,
+        [PatientListColumn.PatientProfile]: false,
+        [PatientListColumn.Age]: false,
+        [PatientListColumn.DateOfBirth]: false,
+        [PatientListColumn.Gender]: false,
+        [PatientListColumn.GlucoseManagementIndicator]: false,
+        [PatientListColumn.BelowRange]: false,
+        [PatientListColumn.System]: true,
+        [PatientListColumn.TimeInRange]: false,
+        [PatientListColumn.Variance]: false,
+        [PatientListColumn.Clinicians]: false,
+        [PatientListColumn.MonitoringAlerts]: false,
+        [PatientListColumn.Messages]: true,
+        [PatientListColumn.LastDataUpdate]: true,
+        [PatientListColumn.Actions]: true
       }
 
       expect(result.current.displayedColumns).toEqual(expectedColumns)
@@ -174,28 +174,28 @@ describe('usePatientListProviderHook', () => {
         return {
           user: {
             isUserHcp: () => false,
-            preferences: { patientsListSortedOptionalColumns: [PatientListColumns.System, PatientListColumns.LastDataUpdate] }
+            preferences: { patientsListSortedOptionalColumns: [PatientListColumn.System, PatientListColumn.LastDataUpdate] }
           } as User
         }
       })
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
-        [PatientListColumns.Flag]: true,
-        [PatientListColumns.Patient]: true,
-        [PatientListColumns.PatientProfile]: false,
-        [PatientListColumns.Age]: false,
-        [PatientListColumns.DateOfBirth]: false,
-        [PatientListColumns.Gender]: false,
-        [PatientListColumns.GlucoseManagementIndicator]: false,
-        [PatientListColumns.BelowRange]: false,
-        [PatientListColumns.System]: true,
-        [PatientListColumns.TimeInRange]: false,
-        [PatientListColumns.Variance]: false,
-        [PatientListColumns.Clinicians]: false,
-        [PatientListColumns.MonitoringAlerts]: false,
-        [PatientListColumns.Messages]: false,
-        [PatientListColumns.LastDataUpdate]: true,
-        [PatientListColumns.Actions]: true
+        [PatientListColumn.Flag]: true,
+        [PatientListColumn.Patient]: true,
+        [PatientListColumn.PatientProfile]: false,
+        [PatientListColumn.Age]: false,
+        [PatientListColumn.DateOfBirth]: false,
+        [PatientListColumn.Gender]: false,
+        [PatientListColumn.GlucoseManagementIndicator]: false,
+        [PatientListColumn.BelowRange]: false,
+        [PatientListColumn.System]: true,
+        [PatientListColumn.TimeInRange]: false,
+        [PatientListColumn.Variance]: false,
+        [PatientListColumn.Clinicians]: false,
+        [PatientListColumn.MonitoringAlerts]: false,
+        [PatientListColumn.Messages]: false,
+        [PatientListColumn.LastDataUpdate]: true,
+        [PatientListColumn.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)
     })
@@ -211,22 +211,22 @@ describe('usePatientListProviderHook', () => {
       })
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
-        [PatientListColumns.Flag]: true,
-        [PatientListColumns.Patient]: true,
-        [PatientListColumns.PatientProfile]: true,
-        [PatientListColumns.Age]: false,
-        [PatientListColumns.DateOfBirth]: true,
-        [PatientListColumns.Gender]: false,
-        [PatientListColumns.GlucoseManagementIndicator]: false,
-        [PatientListColumns.BelowRange]: true,
-        [PatientListColumns.System]: false,
-        [PatientListColumns.TimeInRange]: true,
-        [PatientListColumns.Variance]: false,
-        [PatientListColumns.Clinicians]: true,
-        [PatientListColumns.MonitoringAlerts]: true,
-        [PatientListColumns.Messages]: true,
-        [PatientListColumns.LastDataUpdate]: true,
-        [PatientListColumns.Actions]: true
+        [PatientListColumn.Flag]: true,
+        [PatientListColumn.Patient]: true,
+        [PatientListColumn.PatientProfile]: true,
+        [PatientListColumn.Age]: false,
+        [PatientListColumn.DateOfBirth]: true,
+        [PatientListColumn.Gender]: false,
+        [PatientListColumn.GlucoseManagementIndicator]: false,
+        [PatientListColumn.BelowRange]: true,
+        [PatientListColumn.System]: false,
+        [PatientListColumn.TimeInRange]: true,
+        [PatientListColumn.Variance]: false,
+        [PatientListColumn.Clinicians]: true,
+        [PatientListColumn.MonitoringAlerts]: true,
+        [PatientListColumn.Messages]: true,
+        [PatientListColumn.LastDataUpdate]: true,
+        [PatientListColumn.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)
     })
@@ -242,22 +242,22 @@ describe('usePatientListProviderHook', () => {
       })
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
-        [PatientListColumns.Flag]: true,
-        [PatientListColumns.Patient]: true,
-        [PatientListColumns.PatientProfile]: false,
-        [PatientListColumns.Age]: false,
-        [PatientListColumns.DateOfBirth]: true,
-        [PatientListColumns.Gender]: false,
-        [PatientListColumns.GlucoseManagementIndicator]: false,
-        [PatientListColumns.BelowRange]: true,
-        [PatientListColumns.System]: false,
-        [PatientListColumns.TimeInRange]: true,
-        [PatientListColumns.Variance]: false,
-        [PatientListColumns.Clinicians]: false,
-        [PatientListColumns.MonitoringAlerts]: false,
-        [PatientListColumns.Messages]: false,
-        [PatientListColumns.LastDataUpdate]: true,
-        [PatientListColumns.Actions]: true
+        [PatientListColumn.Flag]: true,
+        [PatientListColumn.Patient]: true,
+        [PatientListColumn.PatientProfile]: false,
+        [PatientListColumn.Age]: false,
+        [PatientListColumn.DateOfBirth]: true,
+        [PatientListColumn.Gender]: false,
+        [PatientListColumn.GlucoseManagementIndicator]: false,
+        [PatientListColumn.BelowRange]: true,
+        [PatientListColumn.System]: false,
+        [PatientListColumn.TimeInRange]: true,
+        [PatientListColumn.Variance]: false,
+        [PatientListColumn.Clinicians]: false,
+        [PatientListColumn.MonitoringAlerts]: false,
+        [PatientListColumn.Messages]: false,
+        [PatientListColumn.LastDataUpdate]: true,
+        [PatientListColumn.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)
     })

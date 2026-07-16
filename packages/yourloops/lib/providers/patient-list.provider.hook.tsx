@@ -28,7 +28,7 @@
 import { useState } from 'react'
 import { type PatientsFilters } from './models/patients-filters.model'
 import { type PatientListContextResult } from './models/patient-list-context-result.model'
-import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
+import { PatientListColumn } from '../../components/patient-list/models/enums/patient-list.enum'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 import { ConfigService } from '../config/config.service'
@@ -46,35 +46,35 @@ const DEFAULT_FILTERS = {
 const DATE_OF_BIRTH_HIDDEN = ConfigService.getDateOfBirthHidden()
 
 const DEFAULT_COLUMNS_HCP = [
-  PatientListColumns.Flag,
-  PatientListColumns.Patient,
-  DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
-  PatientListColumns.DateOfBirth,
-  PatientListColumns.MonitoringAlerts,
-  PatientListColumns.Messages,
-  PatientListColumns.TimeInRange,
-  PatientListColumns.BelowRange,
-  PatientListColumns.LastDataUpdate,
-  PatientListColumns.Actions,
-  PatientListColumns.PatientProfile,
-  PatientListColumns.Clinicians
+  PatientListColumn.Flag,
+  PatientListColumn.Patient,
+  DATE_OF_BIRTH_HIDDEN ? PatientListColumn.Age : PatientListColumn.DateOfBirth,
+  PatientListColumn.DateOfBirth,
+  PatientListColumn.MonitoringAlerts,
+  PatientListColumn.Messages,
+  PatientListColumn.TimeInRange,
+  PatientListColumn.BelowRange,
+  PatientListColumn.LastDataUpdate,
+  PatientListColumn.Actions,
+  PatientListColumn.PatientProfile,
+  PatientListColumn.Clinicians
 ]
 
 const DEFAULT_COLUMNS_CAREGIVER = [
-  PatientListColumns.Flag,
-  PatientListColumns.Patient,
-  DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
-  PatientListColumns.TimeInRange,
-  PatientListColumns.BelowRange,
-  PatientListColumns.LastDataUpdate,
-  PatientListColumns.Actions,
+  PatientListColumn.Flag,
+  PatientListColumn.Patient,
+  DATE_OF_BIRTH_HIDDEN ? PatientListColumn.Age : PatientListColumn.DateOfBirth,
+  PatientListColumn.TimeInRange,
+  PatientListColumn.BelowRange,
+  PatientListColumn.LastDataUpdate,
+  PatientListColumn.Actions,
 ]
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
   const { user, updatePreferences } = useAuth()
   const isUserHcp = user.isUserHcp()
 
-  const getColumnPreference = (columnName: PatientListColumns): boolean => {
+  const getColumnPreference = (columnName: PatientListColumn): boolean => {
     const userPreferredColumns = user.preferences?.patientsListSortedOptionalColumns
     const defaultColumns = isUserHcp ? DEFAULT_COLUMNS_HCP : DEFAULT_COLUMNS_CAREGIVER
 
@@ -83,24 +83,24 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
 
   const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
   const [displayedColumns, setDisplayedColumns] = useState<GridColumnVisibilityModel>({
-    [PatientListColumns.Flag]: true,
-    [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
-    [PatientListColumns.Patient]: true,
+    [PatientListColumn.Flag]: true,
+    [PatientListColumn.System]: getColumnPreference(PatientListColumn.System),
+    [PatientListColumn.Patient]: true,
     // Here we're not using the const DATE_OF_BIRTH_HIDDEN because it breaks test, if you have time try to replace
     // ConfigService.getDateOfBirthHidden by DATE_OF_BIRTH_HIDDEN and fix the according test in patient profile view hcp spec test file
-    [PatientListColumns.DateOfBirth]: ConfigService.getDateOfBirthHidden() ? false : getColumnPreference(PatientListColumns.DateOfBirth),
-    [PatientListColumns.Age]: getColumnPreference(PatientListColumns.Age),
-    [PatientListColumns.Gender]: getColumnPreference(PatientListColumns.Gender),
-    [PatientListColumns.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumns.MonitoringAlerts) : false,
-    [PatientListColumns.LastDataUpdate]: getColumnPreference(PatientListColumns.LastDataUpdate),
-    [PatientListColumns.Messages]: isUserHcp ? getColumnPreference(PatientListColumns.Messages) : false,
-    [PatientListColumns.TimeInRange]: getColumnPreference(PatientListColumns.TimeInRange),
-    [PatientListColumns.GlucoseManagementIndicator]: getColumnPreference(PatientListColumns.GlucoseManagementIndicator),
-    [PatientListColumns.BelowRange]: getColumnPreference(PatientListColumns.BelowRange),
-    [PatientListColumns.Variance]: getColumnPreference(PatientListColumns.Variance),
-    [PatientListColumns.Actions]: true,
-    [PatientListColumns.PatientProfile]: getColumnPreference(PatientListColumns.PatientProfile),
-    [PatientListColumns.Clinicians]: getColumnPreference(PatientListColumns.Clinicians),
+    [PatientListColumn.DateOfBirth]: ConfigService.getDateOfBirthHidden() ? false : getColumnPreference(PatientListColumn.DateOfBirth),
+    [PatientListColumn.Age]: getColumnPreference(PatientListColumn.Age),
+    [PatientListColumn.Gender]: getColumnPreference(PatientListColumn.Gender),
+    [PatientListColumn.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumn.MonitoringAlerts) : false,
+    [PatientListColumn.LastDataUpdate]: getColumnPreference(PatientListColumn.LastDataUpdate),
+    [PatientListColumn.Messages]: isUserHcp ? getColumnPreference(PatientListColumn.Messages) : false,
+    [PatientListColumn.TimeInRange]: getColumnPreference(PatientListColumn.TimeInRange),
+    [PatientListColumn.GlucoseManagementIndicator]: getColumnPreference(PatientListColumn.GlucoseManagementIndicator),
+    [PatientListColumn.BelowRange]: getColumnPreference(PatientListColumn.BelowRange),
+    [PatientListColumn.Variance]: getColumnPreference(PatientListColumn.Variance),
+    [PatientListColumn.Actions]: true,
+    [PatientListColumn.PatientProfile]: getColumnPreference(PatientListColumn.PatientProfile),
+    [PatientListColumn.Clinicians]: getColumnPreference(PatientListColumn.Clinicians),
   })
 
   const buildColumnsPreferencesArray = (columnsVisibilityModel: GridColumnVisibilityModel): string[] => {

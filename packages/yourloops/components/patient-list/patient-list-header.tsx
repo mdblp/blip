@@ -294,6 +294,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
       {isColumnSelectorOpened &&
         <ColumnSelectorPopover
           anchorEl={columnsRef.current}
+          isSelectedTeamPrivate={isSelectedTeamPrivate}
           onClose={() => {
             setIsColumnSelectorOpened(false)
           }}

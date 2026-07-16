@@ -29,26 +29,26 @@ import { DiabeticType } from 'medical-domain'
 import moment from 'moment-timezone'
 import { LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
+import { type PatientListColumn, type PendingPatientListColumns } from './enums/patient-list.enum'
 
 export interface GridRowModel {
   id: string
-  [PatientListColumns.Flag]?: Patient
-  [PatientListColumns.Patient]: Patient
-  [PatientListColumns.DateOfBirth]?: Patient
-  [PatientListColumns.Age]?: number
-  [PatientListColumns.Gender]?: string
-  [PatientListColumns.System]?: string
-  [PatientListColumns.MonitoringAlerts]?: Patient
-  [PatientListColumns.Messages]?: boolean
-  [PatientListColumns.TimeInRange]?: number
-  [PatientListColumns.GlucoseManagementIndicator]?: number
-  [PatientListColumns.BelowRange]?: number
-  [PatientListColumns.Variance]?: number
-  [PatientListColumns.LastDataUpdate]?: moment.Moment | null
-  [PatientListColumns.Actions]: Patient
-  [PatientListColumns.PatientProfile]: DiabeticType,
-  [PatientListColumns.Clinicians]: LeadClinician[],
+  [PatientListColumn.Flag]?: Patient
+  [PatientListColumn.Patient]: Patient
+  [PatientListColumn.DateOfBirth]?: Patient
+  [PatientListColumn.Age]?: number
+  [PatientListColumn.Gender]?: string
+  [PatientListColumn.System]?: string
+  [PatientListColumn.MonitoringAlerts]?: Patient
+  [PatientListColumn.Messages]?: boolean
+  [PatientListColumn.TimeInRange]?: number
+  [PatientListColumn.GlucoseManagementIndicator]?: number
+  [PatientListColumn.BelowRange]?: number
+  [PatientListColumn.Variance]?: number
+  [PatientListColumn.LastDataUpdate]?: moment.Moment | null
+  [PatientListColumn.Actions]: Patient
+  [PatientListColumn.PatientProfile]: DiabeticType,
+  [PatientListColumn.Clinicians]: LeadClinician[],
 }
 
 export interface PendingGridRowModel {

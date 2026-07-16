@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor } from '@testing-library/react'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 describe('Product labelling page', () => {
@@ -62,27 +62,27 @@ describe('Product labelling page', () => {
     expect(udi).toHaveAttribute('width', '100%')
 
     act(() => {
-      i18n.changeLanguage(LanguageCodes.Fr)
+      i18n.changeLanguage(LanguageCode.Fr)
     })
     expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-fr-Rev9.pdf')
 
     act(() => {
-      i18n.changeLanguage(LanguageCodes.Nl)
+      i18n.changeLanguage(LanguageCode.Nl)
     })
     expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-nl-Rev6.pdf')
 
     act(() => {
-      i18n.changeLanguage(LanguageCodes.Es)
+      i18n.changeLanguage(LanguageCode.Es)
     })
     expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-es-Rev6.pdf')
 
     act(() => {
-      i18n.changeLanguage(LanguageCodes.It)
+      i18n.changeLanguage(LanguageCode.It)
     })
     expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-it-Rev6.pdf')
 
     act(() => {
-      i18n.changeLanguage(LanguageCodes.De)
+      i18n.changeLanguage(LanguageCode.De)
     })
     expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-de-Rev6.pdf')
 

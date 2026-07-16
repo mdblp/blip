@@ -42,7 +42,7 @@ import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { useLogin } from './login.hook'
 
 const styles = makeStyles({ name: 'login-page-styles' })((theme) => ({
@@ -228,7 +228,7 @@ const LoginPageDesktop: FunctionComponent = () => {
                 />
               </p>
             </Box>
-            {i18n.language !== LanguageCodes.Fr &&
+            {i18n.language !== LanguageCode.Fr &&
               <Link
                 underline="none"
                 href={diabeloopExternalUrls.dblDiabetes}

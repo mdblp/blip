@@ -38,7 +38,7 @@ import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { Unit } from 'medical-domain'
@@ -86,7 +86,7 @@ describe('User account page for patient', () => {
     country: CountryCode.France,
     units: { bg: Unit.MilligramPerDeciliter }
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
+  const preferences: Preferences = { displayLanguageCode: LanguageCode.Fr }
   // not used only for the mockPatientApiForPatients
   const patient = buildPatient({ userid: "fakeone" })
 
@@ -104,7 +104,7 @@ describe('User account page for patient', () => {
 
   it('should render user account page for a French patient and be able to edit his profile', async () => {
     const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Tanrien', fullName: 'Jean Tanrien' }
-    const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
+    const expectedPreferences = { displayLanguageCode: LanguageCode.En }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
 
@@ -129,7 +129,7 @@ describe('User account page for patient', () => {
   })
 
   it('should have access to the Data Sharing section with consents', async () => {
-    const preferencesWithEnLanguage: Preferences = { displayLanguageCode: LanguageCodes.En }
+    const preferencesWithEnLanguage: Preferences = { displayLanguageCode: LanguageCode.En }
     jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
       profile: account,
       settings,
