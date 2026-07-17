@@ -29,7 +29,7 @@ import React from 'react'
 
 import SvgIcon, { type SvgIconProps } from '@mui/material/SvgIcon'
 
-const DeviceIconOutlined = (props: SvgIconProps): JSX.Element => {
+const DeviceSystemIconOutlined = (props: SvgIconProps): JSX.Element => {
   return (
     <SvgIcon xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24"
              width="24" {...props}>
@@ -53,6 +53,6 @@ const DeviceIconOutlined = (props: SvgIconProps): JSX.Element => {
   )
 }
 
-export default DeviceIconOutlined
+export default DeviceSystemIconOutlined
 
 

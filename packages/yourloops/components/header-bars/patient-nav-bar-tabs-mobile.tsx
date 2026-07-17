@@ -31,18 +31,8 @@ import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
 import TeamUtils from '../../lib/team/team.util'
 import BottomNavigation from '@mui/material/BottomNavigation'
-import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import { useParams } from 'react-router-dom'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
-import InsertChartIcon from '@mui/icons-material/InsertChart'
-import ProfileIcon from '../icons/profile-second-nav-bar-icon'
-import DeviceIcon from '../icons/device-icon'
-import DailyIcon from '../icons/daily-icon'
-import ProfileIconOutlined from '../icons/profile-second-nav-bar-icon-outlined'
-import DeviceIconOutlined from '../icons/device-icon-outlined'
-import DailyIconOutlined from '../icons/daily-icon-outlined'
+import { BottomNavigationTab } from './bottom-navigation-tab'
 
 interface PatientNavBarTabsProps {
   currentPatientView: PatientView
@@ -60,17 +50,7 @@ const styles = makeStyles()((theme) => {
       zIndex: theme.zIndex.drawer + 2,
       backgroundColor: 'var(--info-color-5)',
       height: TAB_HEIGHT
-    },
-
-    bottomNavAction: {
-      minWidth: 'auto',
-      '&.Mui-selected': {
-        backgroundColor: 'var(--info-color-20)',
-        color: 'var(--text-color-primary)',
-        borderRadius: '24px'
-      }
     }
-
   }
 })
 
@@ -87,85 +67,48 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
     return currentPatientView ?? PatientView.Dashboard
   }
 
+  const isSelected = (view: PatientView): boolean => {
+    return currentPatientView === view
+  }
+
   return (
     <BottomNavigation
-      showLabels
       className={classes.bottomNav}
       value={getSelectedTab()}
-      onChange={(event, newValue) => onChangePatientView(newValue)}
+      onChange={(_, newValue) => onChangePatientView(newValue)}
       data-testid="subnav-patient-info-mobile"
     >
-      <BottomNavigationAction
-        icon={getSelectedTab() === PatientView.Dashboard ? (
-          <DashboardIcon />
-        ) : (
-          <DashboardOutlinedIcon />
-        )}
-        className={classes.bottomNavAction}
-        onClick={() => {
-          onChangePatientView(PatientView.Dashboard)
-        }}
+      <BottomNavigationTab
         value={PatientView.Dashboard}
-        data-testid="dashboard-tab"
-        aria-label="Dashboard"
+        dataTestId="dashboard-tab"
+        isSelected={isSelected(PatientView.Dashboard)}
+        onChangePatientView={onChangePatientView}
       />
-      <BottomNavigationAction
-        icon={getSelectedTab() === PatientView.Daily ? (
-          <DailyIcon />
-        ) : (
-          <DailyIconOutlined />
-        )}
-        className={classes.bottomNavAction}
-        onClick={() => {
-          onChangePatientView(PatientView.Daily)
-        }}
+      <BottomNavigationTab
         value={PatientView.Daily}
-        data-testid="daily-tab"
-        aria-label="Daily"
+        dataTestId="daily-tab"
+        isSelected={isSelected(PatientView.Daily)}
+        onChangePatientView={onChangePatientView}
       />
-      <BottomNavigationAction
-        icon={getSelectedTab() === PatientView.Trends ? (
-          <InsertChartIcon />
-        ) : (
-          <InsertChartOutlinedIcon />
-        )}
-        className={classes.bottomNavAction}
-        onClick={() => {
-          onChangePatientView(PatientView.Trends)
-        }}
+      <BottomNavigationTab
         value={PatientView.Trends}
-        data-testid="trends-tab"
-        aria-label="Trends"
+        dataTestId="trends-tab"
+        isSelected={isSelected(PatientView.Trends)}
+        onChangePatientView={onChangePatientView}
       />
       {user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
-        <BottomNavigationAction
-          icon={getSelectedTab() === PatientView.PatientProfile ? (
-            <ProfileIcon />
-          ) : (
-            <ProfileIconOutlined />
-          )}
-          className={classes.bottomNavAction}
-          onClick={() => {
-            onChangePatientView(PatientView.PatientProfile)
-          }}
+        <BottomNavigationTab
           value={PatientView.PatientProfile}
-          data-testid="patient-profile-tab"
-          aria-label="Profile"
+          dataTestId="patient-profile-tab"
+          isSelected={isSelected(PatientView.PatientProfile)}
+          onChangePatientView={onChangePatientView}
         />
       }
-      <BottomNavigationAction
-        icon={getSelectedTab() === PatientView.Devices ? (
-          <DeviceIcon />
-        ) : (
-          <DeviceIconOutlined />
-        )}
-        className={classes.bottomNavAction}
-        onClick={() => {
-          onChangePatientView(PatientView.Devices)
-        }}
+      <BottomNavigationTab
         value={PatientView.Devices}
-        data-testid="device-tab"
-        aria-label="Devices"
+        dataTestId="device-tab"
+        isSelected={isSelected(PatientView.Devices)}
+        onChangePatientView={onChangePatientView}
       />
     </BottomNavigation>
   )

@@ -37,7 +37,7 @@ interface PatientNavBarProps {
   onClickPrint?: () => void
 }
 
-const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
+export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
     currentPatientView,
     onChangePatientView,
@@ -64,4 +64,3 @@ const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
   )
 }
 
-export const PatientNavBarMobileMemoized = memo(PatientNavBarMobile)

@@ -32,7 +32,7 @@ import { type PatientView } from '../../enum/patient-view.enum'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
 import { useTheme } from '@mui/material/styles'
-import { PatientNavBarMobileMemoized } from './patient-nav-bar-mobile'
+import { PatientNavBarMobile } from './patient-nav-bar-mobile'
 
 interface PatientNavBarProps {
   currentPatientView: PatientView
@@ -66,7 +66,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
 
       {isMobile
         ?
-          <PatientNavBarMobileMemoized
+          <PatientNavBarMobile
             currentPatientView={currentPatientView}
             onChangePatientView={onChangePatientView}
             onClickPrint={onClickPrint}
