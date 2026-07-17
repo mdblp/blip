@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.11.0-beta - 2026-07-01
 ### Changed
 - YLP-3338 Use weight unit from parameters instead of "kg"
+- YLP-3842 New design for monitoring alerts configuration
 - YLP-3939 Adapting the main header to mobile format for HCP
 - YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver

@@ -25,15 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { formatBgValue } from 'dumb'
-import { convertBG } from '../../lib/units/units.util'
-import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './monitoring-alert.default'
-import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
-import { type BgUnit, Unit } from 'medical-domain'
 
 import i18next from 'i18next'
+import { type BgUnit, Unit } from 'medical-domain'
+import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
+import { convertBG } from '../../lib/units/units.util'
+import { DEFAULT_THRESHOLDS_IN_MGDL } from './monitoring-alert.default'
 
-export const PERCENTAGES = [...new Array(21)]
-  .map((_each, index) => `${index * 5}%`).slice(1, 21)
+const t = i18next.t.bind(i18next)
+
+const PERCENTAGE_VALUES_ARRAY = Array.from({ length: 20 }, (_, index) => (index + 1) * 5)
+
+export const PERCENTAGES = PERCENTAGE_VALUES_ARRAY.map(value => `${value}%`)
 
 export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
@@ -57,20 +60,6 @@ export const buildThresholds = (bgUnit: BgUnit): Thresholds => {
   return { ...DEFAULT_THRESHOLDS_IN_MGDL }
 }
 
-export const buildBgValues = (bgUnit: BgUnit): BgValues => {
-  if (bgUnit === Unit.MmolPerLiter) {
-    return {
-      ...DEFAULT_BG_VALUES,
-      bgUnitDefault: Unit.MmolPerLiter,
-      highBgDefault: Math.round(convertBG(DEFAULT_BG_VALUES.highBgDefault, Unit.MilligramPerDeciliter) * 10) / 10,
-      veryLowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
-      veryHighBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
-      lowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, Unit.MilligramPerDeciliter) * 10) / 10
-    }
-  }
-  return { ...DEFAULT_BG_VALUES }
-}
-
 const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => {
   const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
   const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
@@ -82,6 +71,24 @@ export const getConvertedValue = (value: number, currentUnit: BgUnit, requiredUn
   const isConversionRequired = currentUnit !== requiredUnit
 
   return isConversionRequired ? convertAndFormatBgValue(value, currentUnit) : value
+}
+
+
+export const getPercentageLabels = (defaultValue: number): string[] => {
+  // const percentageValues = PERCENTAGE_VALUES_ARRAY.slice(1, 21)
+  const percentageValues = PERCENTAGE_VALUES_ARRAY
+
+  return percentageValues.map((value: number) => getPercentageLabel(value, defaultValue))
+}
+
+export const getPercentageLabel = (value: number, defaultValue: number): string => {
+  const percentageValue = `${value}%`
+
+  if (value === defaultValue) {
+    return t('default-value', { value: percentageValue })
+  }
+
+  return percentageValue
 }
 
 export const getErrorMessage = (bgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter, value: number, lowValue: number, highValue: number): string | null => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -130,7 +130,6 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
       <MonitoringAlertsContentConfiguration
         bgUnit={userBgUnit}
         displayInReadonly={displayInReadonly}
-        displayDefaultValues={false}
         monitoringValuesDisplayed={monitoringValuesDisplayed}
         setMonitoringValuesDisplayed={setMonitoringValuesDisplayed}
         onValueChange={onValueChange}

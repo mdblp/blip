@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,22 +35,18 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 
 export interface BasicDropdownProps {
   id: string
-  defaultValue: string
+  value: string
   disabled?: boolean
   values: string[]
   error?: boolean
+  ariaLabel?: string
   onSelect: (value: string) => void
 }
 
 const styles = makeStyles()((theme) => ({
   select: {
-    backgroundColor: theme.palette.grey[100],
     height: '40px',
     maxWidth: '200px',
-    borderRadius: '8px',
-    '& .MuiOutlinedInput-notchedOutline': {
-      border: 'none'
-    }
   },
   error: {
     border: `1px solid ${theme.palette.error.main}`
@@ -61,10 +57,9 @@ const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
 
 function BasicDropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultValue, disabled, values, id, error } = props
+  const { onSelect, value, disabled, values, id, error, ariaLabel } = props
   const { t } = useTranslation('yourloops')
   const { classes } = styles()
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue)
 
   const MenuProps = {
     PaperProps: {
@@ -75,9 +70,22 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     }
   }
 
+  const getSanitizedLabel = (label: string): string => {
+    return label
+      // Replace non-alphanumeric characters with hyphens
+      .replace(/[^a-zA-Z0-9-]/g, '-')
+      // Collapse repeated hyphens
+      .replace(/-+/g, '-')
+      // Trim edge hyphens
+      .replace(/^-|-$/g, '')
+  }
+
+  const getId = (label: string): string => {
+    return `basic-dropdown-${id}-menuitem-${getSanitizedLabel(label)}`
+  }
+
   const handleSelectChange = (event: SelectChangeEvent<unknown>): void => {
     const value = event.target.value as string
-    setSelectedValue(value)
     onSelect(value)
   }
 
@@ -85,8 +93,9 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     <Select
       disabled={disabled}
       id={`basic-dropdown-${id}-selector`}
+      aria-label={ariaLabel}
       data-testid={`basic-dropdown-${id}-selector`}
-      value={selectedValue}
+      value={value}
       className={classes.select}
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}
@@ -94,7 +103,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       classes={error ? { select: classes.error } : undefined}
     >
       {values.map(item => (
-        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item} data-testid={`basic-dropdown-${id}-menuitem-${item}`}>
+        <MenuItem id={getId(item)} key={item} value={item} data-testid={getId(item)}>
           {t(item)}
         </MenuItem>
       ))}
