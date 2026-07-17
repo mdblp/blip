@@ -56,10 +56,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     },
     bySpan: {
       paddingLeft: '12px',
-      paddingRight: '12px',
-      [theme.breakpoints.down('sm')]: {
-        paddingRight: '0'
-      }
+      paddingRight: '12px'
     },
     centerBox: {
       alignItems: 'center',
@@ -75,11 +72,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
         order: 1,
         textAlign: 'center',
         width: '100%'
-      },
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'space-around',
-        marginLeft: '10px',
-        marginRight: '10px'
       }
     },
     container: {
@@ -104,11 +96,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     diabeloopLogo: {
       paddingRight: '3px'
     },
-    diabeloopLink: {
-      [theme.breakpoints.down('sm')]: {
-        marginTop: '12px'
-      }
-    },
     firstLine: {
       display: 'flex',
       justifyContent: 'center',
@@ -117,9 +104,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       width: '100%',
       [theme.breakpoints.down('md')]: {
         marginBottom: '0'
-      },
-      [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap'
       }
     },
     firstLineElement: {
@@ -129,12 +113,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       [theme.breakpoints.down('md')]: {
         marginTop: '10px',
         marginBottom: '17px'
-      },
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '15px',
-        marginTop: '0',
-        width: '100%',
-        justifyContent: 'center'
       }
     },
     icon: {
@@ -147,13 +125,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     documentBox: {
       display: 'flex',
       height: '20px',
-      alignItems: 'center',
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '15px',
-        marginTop: '0',
-        width: '100%',
-        justifyContent: 'center'
-      }
+      alignItems: 'center'
     },
     languageSeparator: {
       alignSelf: 'center'
@@ -166,13 +138,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     },
     link: {
       color: theme.palette.grey[700],
-      fontWeight: 400,
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '15px',
-        marginLeft: '0.5rem',
-        marginRight: '0.5rem',
-        textAlign: 'center'
-      }
+      fontWeight: 400
     },
     medicalDeviceWarning: {
       paddingRight: theme.spacing(4)
@@ -182,20 +148,15 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       justifyContent: 'right',
       [theme.breakpoints.down('md')]: {
         order: 3
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'flex',
-        flexDirection: 'column',
-        textAlign: 'right'
       }
     },
     separator: {
       paddingLeft: '15px',
       paddingRight: '15px',
       [theme.breakpoints.down('sm')]: {
-        display: 'none',
-        visibility: 'hidden'
-      }
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+      },
     },
     sideBox: {
       flex: '1'
@@ -203,9 +164,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     supportButton: {
       height: '46px',
       width: '134px',
-      [theme.breakpoints.down('sm')]: {
-        marginTop: '10px'
-      }
     },
     svg: {
       height: '12px',
@@ -344,7 +302,6 @@ export const Footer: FunctionComponent = () => {
         </Box>
         <Link
           id="footer-link-url-diabeloop"
-          className={classes.diabeloopLink}
           target="_blank"
           href={diabeloopExternalUrls.support} rel="nofollow"
         >
