@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, memo, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import Box from '@mui/material/Box'
 import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
 import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
