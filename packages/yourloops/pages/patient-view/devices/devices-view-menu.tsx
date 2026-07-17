@@ -29,7 +29,7 @@ import React, { FC } from 'react'
 import { History, PhonelinkSetup } from '@mui/icons-material'
 import { DeviceViewSection } from './device-view-section.enum'
 import { useTranslation } from 'react-i18next'
-import { DeviceSystemIcon } from '../../../components/icons/diabeloop/device-system-icon'
+import { DeviceSystemIconOutlined } from '../../../components/icons/diabeloop/device-system-icon-outlined'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 import { SectionMenu } from '../../../components/menus/section-menu/section-menu'
 import { BasalIcon } from '../../../components/icons/diabeloop/basal-icon'
@@ -72,7 +72,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
       label: t('device-change-history'),
       value: DeviceViewSection.DeviceChangeHistory,
       testId: 'device-change-history-menu-button',
-      icon: <DeviceSystemIcon fontSize="small" />
+      icon: <DeviceSystemIconOutlined fontSize="small" />
     }
   ]
 

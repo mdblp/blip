@@ -66,20 +66,18 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
 
       {isMobile
         ?
-          <PatientNavBarMobile
-            currentPatientView={currentPatientView}
-            onChangePatientView={onChangePatientView}
-            onClickPrint={onClickPrint}
-          />
+        <PatientNavBarMobile
+          currentPatientView={currentPatientView}
+          onChangePatientView={onChangePatientView}
+          onClickPrint={onClickPrint}
+        />
         :
-        <Box>
-          <PatientNavBarTabs
-            currentPatient={currentPatient}
-            currentPatientView={currentPatientView}
-            onChangePatientView={onChangePatientView}
-            onClickPrint={onClickPrint}
-          />
-        </Box>
+        <PatientNavBarTabs
+          currentPatient={currentPatient}
+          currentPatientView={currentPatientView}
+          onChangePatientView={onChangePatientView}
+          onClickPrint={onClickPrint}
+        />
       }
     </Box>
   )

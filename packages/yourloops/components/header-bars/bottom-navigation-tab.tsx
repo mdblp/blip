@@ -35,8 +35,8 @@ import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import InsertChartIcon from '@mui/icons-material/InsertChart'
 import ProfileIcon from '../icons/diabeloop/profile-icon'
 import ProfileIconOutlined from '../icons/diabeloop/profile-icon-outlined'
-import { DeviceSystemIcon } from '../icons/diabeloop/device-system-icon'
-import DeviceSystemIconOutlined from '../icons/diabeloop/device-system-icon-outlined'
+import { DeviceSystemIconOutlined } from '../icons/diabeloop/device-system-icon-outlined'
+import DeviceSystemIcon from '../icons/diabeloop/device-system-icon'
 import { ChartIconOutlined } from '../icons/diabeloop/chart-icon-outlined'
 import ChartIcon from '../icons/diabeloop/chart-icon'
 import { useTranslation } from 'react-i18next'
@@ -89,6 +89,7 @@ export const BottomNavigationTab: React.FC<BottomNavigationTabProps> = (props) =
 
   return (
     <BottomNavigationAction
+      {...props}
       value={value}
       icon={getIcon(value)}
       className={classes.bottomNavAction}
