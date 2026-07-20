@@ -198,6 +198,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerName: isMobile ? t('alerts') : t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         sortComparator: sortByMonitoringAlertsCount,
+        headerAlign: isMobile ? 'center' : 'left',
         width: isMobile ? undefined : 150,
         flex: isMobile ? 0.4 : undefined,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
@@ -220,8 +221,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         field: PatientListColumn.TimeInRange,
         headerName: t('time-in-range'),
         description: t('time-in-range-tooltip'),
-        headerAlign: 'left',
-        align: 'left',
+        headerAlign: isMobile ? 'center' : 'left',
+        align: isMobile ? 'center' : 'left',
         flex: isMobile ? 0.4 : undefined,
         valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
         renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
