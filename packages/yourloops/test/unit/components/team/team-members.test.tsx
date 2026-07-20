@@ -26,7 +26,7 @@
  */
 
 import { ThemeProvider } from '@mui/material/styles'
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
@@ -99,7 +99,7 @@ describe('TeamMembers', () => {
 
   it('should show add member button when logged in user is admin', () => {
     render(getTeamMembersJSX())
-    expect(screen.queryByRole('button', { name: 'button-team-add-member' })).not.toBeNull()
+    expect(screen.getByRole('button', { name: 'button-team-add-member' })).not.toBeNull()
   })
 
   it('should open the invite member dialog when clicking on the add member button', () => {
@@ -107,7 +107,7 @@ describe('TeamMembers', () => {
     expect(screen.queryByRole('dialog')).toBeNull()
     const addMemberButton = screen.getByRole('button', { name: 'button-team-add-member' })
     fireEvent.click(addMemberButton)
-    expect(screen.queryByRole('dialog')).not.toBeNull()
+    expect(screen.getByRole('dialog')).not.toBeNull()
   })
 
   it('should call teamHook when inviting a member and succeed', async () => {
@@ -121,14 +121,12 @@ describe('TeamMembers', () => {
     const adminCheckbox = inviteMemberDialog.getByRole('checkbox')
     fireEvent.click(adminCheckbox)
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
-    await act(async () => {
-      fireEvent.click(inviteButton)
-      await waitFor(() => {
-        expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.admin)
-      })
-      await waitFor(() => {
-        expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp')
-      })
+    fireEvent.click(inviteButton)
+    await waitFor(() => {
+      expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.admin)
+    })
+    await waitFor(() => {
+      expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp')
     })
   })
 
@@ -144,14 +142,12 @@ describe('TeamMembers', () => {
     const emailInput = inviteMemberDialog.getByRole('textbox', { name: 'email' })
     await userEvent.type(emailInput, email)
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
-    await act(async () => {
-      fireEvent.click(inviteButton)
-      await waitFor(() => {
-        expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.member)
-      })
-      await waitFor(() => {
-        expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp')
-      })
+    fireEvent.click(inviteButton)
+    await waitFor(() => {
+      expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.member)
+    })
+    await waitFor(() => {
+      expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp')
     })
   })
 
