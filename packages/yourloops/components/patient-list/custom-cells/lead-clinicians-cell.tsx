@@ -46,9 +46,12 @@ export const LeadCliniciansCell: FC<LeadCliniciansCellProps> = (props) => {
   const sortedClinicians = sortClinicians(clinicians)
 
   return (
-    hasClinicians
-      ? <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', justifyItems: 'center' }}>
-        <AvatarGroup>
+    <Box
+      data-testid="lead-clinicians-cell"
+      sx={{ display: 'flex', alignItems: 'center', height: '100%', justifyItems: 'center' }}
+    >
+      {hasClinicians
+        ? <AvatarGroup>
           {sortedClinicians.map((clinician: LeadClinician) => {
             const clinicianName = clinician.name
 
@@ -57,6 +60,7 @@ export const LeadCliniciansCell: FC<LeadCliniciansCellProps> = (props) => {
                 <Avatar
                   alt={clinicianName}
                   sx={{ width: 24, height: 24, fontSize: 12, bgcolor: 'var(--text-color-secondary)' }}
+                  data-testid={`lead-clinician-avatar-${clinicianName}`}
                 >
                   {getInitials(clinicianName)}
                 </Avatar>
@@ -65,7 +69,8 @@ export const LeadCliniciansCell: FC<LeadCliniciansCellProps> = (props) => {
           })
           }
         </AvatarGroup>
-      </Box>
-      : t('N/A')
+        : t('N/A')
+      }
+    </Box>
   )
 }

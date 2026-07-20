@@ -1029,3 +1029,50 @@ export const checkAndCloseAckAlert = async (alertText: string): Promise<void> =>
   const closeButton = within(confirmation).getByRole('button', { name: 'Close' })
   await userEvent.click(closeButton)
 }
+
+export const checkLeadCliniciansColumn = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+
+  const cliniciansAllRows = within(dataGridRows).getAllByTestId('lead-clinicians-cell')
+  expect(cliniciansAllRows.length).toBe(5)
+
+  const cliniciansFirstRow = cliniciansAllRows[0]
+  expect(cliniciansFirstRow).toHaveTextContent('N/A')
+
+  const cliniciansSecondRow = cliniciansAllRows[1]
+  expect(cliniciansSecondRow).toHaveTextContent('N/A')
+
+  const cliniciansThirdRow = cliniciansAllRows[2]
+  expect(cliniciansThirdRow).toHaveTextContent('N/A')
+
+  const cliniciansFourthRow = cliniciansAllRows[3]
+  expect(cliniciansFourthRow).toHaveTextContent('TC')
+  await checkClinicianTooltip('TC', 'Tim Canu', cliniciansFourthRow)
+
+  const cliniciansFifthRow = cliniciansAllRows[4]
+  expect(cliniciansFifthRow).toHaveTextContent('YRTCHRCNCF')
+  await checkClinicianTooltip('YR', 'Ydris Rebibane', cliniciansFifthRow)
+  await checkClinicianTooltip('TC', 'Tim Canu', cliniciansFifthRow)
+  await checkClinicianTooltip('HR', 'Hugo Rodrigues', cliniciansFifthRow)
+  await checkClinicianTooltip('CN', 'Clinician Number five', cliniciansFifthRow)
+  await checkClinicianTooltip('CF', 'Clinician Four', cliniciansFifthRow)
+}
+
+export const checkDataGridTranslations = (): void => {
+  const dataGrid = screen.getByTestId('current-patient-list-grid')
+  expect(dataGrid).toHaveTextContent('Lignes par page :101–5 sur 5')
+}
+
+const checkClinicianTooltip = async (initials: string, fullName: string, row: HTMLElement): Promise<void> => {
+  const avatar = within(row).getByText(initials)
+
+  await userEvent.hover(avatar)
+  expect(screen.getByRole('tooltip')).toHaveTextContent(fullName)
+
+  await userEvent.unhover(avatar)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+}
+
+

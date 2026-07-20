@@ -26,12 +26,13 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor } from '@testing-library/react'
 import i18n from 'i18next'
-import { renderPage } from '../../utils/render'
+import { act } from 'react'
 import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
+import { renderPage } from '../../utils/render'
 
 describe('Product labelling page', () => {
   beforeAll(() => {

@@ -25,11 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event';
+import i18n from 'i18next'
+import { Unit } from 'medical-domain'
+import { act } from 'react'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
+import { ConfigService } from '../../../../lib/config/config.service'
+import NotificationApi from '../../../../lib/notifications/notification.api'
+import PatientApi from '../../../../lib/patient/patient.api'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { flaggedPatientId, patient1Info, patient1Metrics } from '../../data/patient.api.data'
+import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockChatAPI } from '../../mock/chat.api.mock'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
+import { mockErrorApi } from '../../mock/error.api.mock'
+import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
+import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import {
   buildAvailableTeams,
   filtersTeamId,
@@ -37,34 +55,20 @@ import {
   myThirdTeamId,
   myThirdTeamName
 } from '../../mock/team.api.mock'
-import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import PatientApi from '../../../../lib/patient/patient.api'
-import { mockDataAPI } from '../../mock/data.api.mock'
-import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
+import { type Router } from '../../models/router.model'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testAckMonitoringAlerts,
   testAckMonitoringAlertsWithError,
+  testDataGridTranslations,
   testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
 } from '../../use-cases/patient-list-management'
 import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
 import { testTeamCreation } from '../../use-cases/teams-management'
-import { Unit } from 'medical-domain'
-import NotificationApi from '../../../../lib/notifications/notification.api'
-import { type Router } from '../../models/router.model'
-import { AppUserRoute } from '../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
-import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
-import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
-import { mockErrorApi } from '../../mock/error.api.mock'
-import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
-import { ConfigService } from '../../../../lib/config/config.service'
-import userEvent from '@testing-library/user-event';
+import { renderPage } from '../../utils/render'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -227,5 +231,15 @@ describe('HCP home page', () => {
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcpWithMmolL()
+  })
+
+  it('should translate the data grid labels if the language is not English', async () => {
+    act(() => {
+      i18n.changeLanguage(LanguageCode.Fr)
+    })
+
+    await renderHomePage(thirdTeamPatientsList)
+
+    await testDataGridTranslations()
   })
 })
