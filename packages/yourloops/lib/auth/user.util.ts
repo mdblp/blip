@@ -52,7 +52,7 @@ export const getInitials = (fullName: string): string => {
 }
 
 export const sortClinicians = (clinicians: LeadClinician[]): LeadClinician[] => {
-  return clinicians.toSorted((a, b) => a.name?.localeCompare(b.name))
+  return clinicians.toSorted((a, b) => a.name.localeCompare(b.name))
 }
 
 export const sanitizeBgUnit = (bgUnit: string): Unit.MilligramPerDeciliter | Unit.MmolPerLiter => {

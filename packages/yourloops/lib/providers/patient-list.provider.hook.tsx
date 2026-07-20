@@ -49,7 +49,6 @@ const DEFAULT_COLUMNS_HCP = [
   PatientListColumn.Flag,
   PatientListColumn.Patient,
   DATE_OF_BIRTH_HIDDEN ? PatientListColumn.Age : PatientListColumn.DateOfBirth,
-  PatientListColumn.DateOfBirth,
   PatientListColumn.MonitoringAlerts,
   PatientListColumn.Messages,
   PatientListColumn.TimeInRange,

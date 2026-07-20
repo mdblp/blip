@@ -56,11 +56,11 @@ export const LeadCliniciansCell: FC<LeadCliniciansCellProps> = (props) => {
             const clinicianName = clinician.name
 
             return (
-              <Tooltip title={clinicianName} key={clinicianName}>
+              <Tooltip title={clinicianName} key={clinician.email}>
                 <Avatar
                   alt={clinicianName}
                   sx={{ width: 24, height: 24, fontSize: 12, bgcolor: 'var(--text-color-secondary)' }}
-                  data-testid={`lead-clinician-avatar-${clinicianName}`}
+                  data-testid={`lead-clinician-avatar-${clinician.email}`}
                 >
                   {getInitials(clinicianName)}
                 </Avatar>

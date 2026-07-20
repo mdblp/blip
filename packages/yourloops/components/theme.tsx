@@ -42,7 +42,7 @@ const getColor = (variable: string): string => appElement ? cssVar(variable) : D
 const MUI_LOCALE_BY_LANGUAGE_CODE = {
   [LanguageCode.De]: 'deDE',
   [LanguageCode.Fr]: 'frFR',
-  [LanguageCode.En]: 'enEN',
+  [LanguageCode.En]: 'enUS',
   [LanguageCode.It]: 'itIT',
   [LanguageCode.Es]: 'esES',
   [LanguageCode.Nl]: 'nlNL',
@@ -60,7 +60,7 @@ export function initTheme(): void {
 }
 
 export function getTheme(languageCode: LanguageCode): Theme {
-  const muiLocale = MUI_LOCALE_BY_LANGUAGE_CODE[languageCode]
+  const muiLocale = MUI_LOCALE_BY_LANGUAGE_CODE[languageCode] ?? MUI_LOCALE_BY_LANGUAGE_CODE[LanguageCode.En]
 
   return createTheme(
     {

@@ -26,7 +26,7 @@
  */
 
 import { screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event'
 import i18n from 'i18next'
 import { Unit } from 'medical-domain'
 import { act } from 'react'

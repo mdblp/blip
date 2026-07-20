@@ -25,21 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import { ThemeProvider } from '@mui/material/styles'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
+import TeamMembers, { type TeamMembersProps } from '../../../../components/team/team-members'
+import { getTheme } from '../../../../components/theme'
+import * as alertHookMock from '../../../../components/utils/snackbar'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
+import ErrorApi from '../../../../lib/error/error.api'
 
 import * as teamHookMock from '../../../../lib/team'
-import { buildTeam, buildTeamMember } from '../../common/utils'
-import TeamUtils from '../../../../lib/team/team.util'
-import TeamMembers, { type TeamMembersProps } from '../../../../components/team/team-members'
-import * as alertHookMock from '../../../../components/utils/snackbar'
-import { getTheme } from '../../../../components/theme'
-import { ThemeProvider } from '@mui/material/styles'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { MemoryRouter } from 'react-router-dom'
-import ErrorApi from '../../../../lib/error/error.api'
+import TeamUtils from '../../../../lib/team/team.util'
+import { buildTeam, buildTeamMember } from '../../common/utils'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
@@ -81,7 +82,7 @@ describe('TeamMembers', () => {
   function getTeamMembersJSX({ team }: TeamMembersProps = { team: defaultTeam }) {
     return (
       <MemoryRouter>
-        <ThemeProvider theme={getTheme()}>
+        <ThemeProvider theme={getTheme(LanguageCode.En)}>
           <TeamMembers
             team={team}
           />
