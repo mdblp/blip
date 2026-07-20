@@ -58,13 +58,16 @@ export const testPatientListForHcp = async () => {
   await checkPatientListTooltipsMgDL()
   await checkPatientListTooltipsNoData()
   await checkPatientListColumnSort()
-  await checkMonitoringAlertsIconsInactiveForFirstPatient()
   await checkPatientListFilters()
   await checkPatientColumnsFiltersContent()
   await checkPendingPatientColumnsSettingsMedicalTeam()
   await checkPatientListHideShowColumns()
   await checkPatientListPendingTab()
   await checkPatientListCurrentTab()
+}
+
+export const testPatientListContentForHcp = async () => {
+  await checkMonitoringAlertsIconsInactiveForFirstPatient()
   await checkLeadCliniciansColumn()
 }
 

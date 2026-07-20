@@ -62,6 +62,7 @@ import {
   testAckMonitoringAlerts,
   testAckMonitoringAlertsWithError,
   testDataGridTranslations,
+  testPatientListContentForHcp,
   testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
@@ -179,6 +180,12 @@ describe('HCP home page', () => {
 
     await testPatientListForHcp()
   }, 500000)
+
+  it('should see the content of the list when scoped on a medical team', async () => {
+    await renderHomePage(thirdTeamPatientsList)
+
+    await testPatientListContentForHcp()
+  })
 
   it('should not be able to see birth date in the patient list when scoped on a medical team', async () => {
     const textToFind = "Date of birth"

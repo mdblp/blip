@@ -1067,7 +1067,9 @@ const checkClinicianTooltip = async (initials: string, fullName: string, row: HT
   const avatar = within(row).getByText(initials)
 
   await userEvent.hover(avatar)
-  expect(screen.getByRole('tooltip')).toHaveTextContent(fullName)
+  await waitFor(() => {
+    expect(screen.getByRole('tooltip')).toHaveTextContent(fullName)
+  })
 
   await userEvent.unhover(avatar)
   await waitFor(() => {
