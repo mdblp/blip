@@ -130,7 +130,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
     <React.Fragment>
       <Box
         data-testid="patient-list-header"
-        sx={{ padding: theme.spacing(2, 1, 0, 2) }}
+        sx={{ padding: theme.spacing(3, 1, 0, 2) }}
       >
         <Box
           sx={{
