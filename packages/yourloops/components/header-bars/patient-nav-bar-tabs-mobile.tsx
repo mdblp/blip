@@ -71,6 +71,35 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
     return currentPatientView === view
   }
 
+  const tabItems = [
+    {
+      value: PatientView.Dashboard,
+      dataTestId: 'dashboard-tab'
+    },
+    {
+      value: PatientView.Daily,
+      dataTestId: 'daily-tab'
+    },
+    {
+      value: PatientView.Trends,
+      dataTestId: 'trends-tab'
+    },
+    {
+      value: PatientView.PatientProfile,
+      dataTestId: 'patient-profile-tab'
+    },
+    {
+      value: PatientView.Devices,
+      dataTestId: 'device-tab'
+    }
+  ]
+
+  const profileAppearanceCondition = user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId)
+
+  const visibleTabItems = tabItems.filter((tabItem) =>
+    tabItem.value !== PatientView.PatientProfile || profileAppearanceCondition
+  )
+
   return (
     <BottomNavigation
       className={classes.bottomNav}
@@ -78,38 +107,15 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
       onChange={(_, newValue) => onChangePatientView(newValue)}
       data-testid="subnav-patient-info-mobile"
     >
-      <BottomNavigationTab
-        value={PatientView.Dashboard}
-        dataTestId="dashboard-tab"
-        isSelected={isSelected(PatientView.Dashboard)}
-        onChangePatientView={onChangePatientView}
-      />
-      <BottomNavigationTab
-        value={PatientView.Daily}
-        dataTestId="daily-tab"
-        isSelected={isSelected(PatientView.Daily)}
-        onChangePatientView={onChangePatientView}
-      />
-      <BottomNavigationTab
-        value={PatientView.Trends}
-        dataTestId="trends-tab"
-        isSelected={isSelected(PatientView.Trends)}
-        onChangePatientView={onChangePatientView}
-      />
-      {user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
+      {visibleTabItems.map((tabItem) => (
         <BottomNavigationTab
-          value={PatientView.PatientProfile}
-          dataTestId="patient-profile-tab"
-          isSelected={isSelected(PatientView.PatientProfile)}
+          key={tabItem.value}
+          value={tabItem.value}
+          dataTestId={tabItem.dataTestId}
+          isSelected={isSelected(tabItem.value)}
           onChangePatientView={onChangePatientView}
         />
-      }
-      <BottomNavigationTab
-        value={PatientView.Devices}
-        dataTestId="device-tab"
-        isSelected={isSelected(PatientView.Devices)}
-        onChangePatientView={onChangePatientView}
-      />
+      ))}
     </BottomNavigation>
   )
 }
