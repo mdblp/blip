@@ -25,9 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import {
-  buildBgValues,
   buildThresholds,
-  getConvertedValue, getErrorMessage
+  getConvertedValue, getErrorMessage, getPercentageLabels
 } from '../../../../components/monitoring-alert/monitoring-alert-content-configuration.util'
 import { Unit } from 'medical-domain'
 
@@ -68,39 +67,6 @@ describe('MonitoringAlertsContentConfiguration util', function () {
       expect(thresholdsInMgdl.maxLowBg).toBe(100)
       expect(thresholdsInMgdl.minVeryLowBg).toBe(40)
       expect(thresholdsInMgdl.maxVeryLowBg).toBe(90)
-    })
-  })
-
-  describe('buildBgValues', () => {
-    const defaultMonitoringBgValue = () => ({
-      enabled: true,
-      parameters: {
-        bgUnitDefault: Unit.MilligramPerDeciliter,
-        outOfRangeThresholdDefault: 50,
-        nonDataTxThresholdDefault: 50,
-        hypoThresholdDefault: 5,
-        veryLowBgDefault: 54,
-        lowBgDefault: 70,
-        highBgDefault: 180,
-        reportingPeriodDefault: 7 * 24
-      }
-    })
-
-    it('should return default bg values in mmol/L if the parameters are in mmol/L', () => {
-      const monitoring = defaultMonitoringBgValue()
-      const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
-      expect(bgValuesInMmol.highBgDefault).toBe(180)
-      expect(bgValuesInMmol.lowBgDefault).toBe(70)
-      expect(bgValuesInMmol.veryLowBgDefault).toBe(54)
-    })
-
-    it('should return default bg values in mg/dL if the parameters are in mg/dL', () => {
-      const monitoring = defaultMonitoringBgValue()
-      monitoring.parameters.bgUnitDefault = Unit.MmolPerLiter
-      const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
-      expect(bgValuesInMmol.highBgDefault).toBe(10)
-      expect(bgValuesInMmol.lowBgDefault).toBe(2.8)
-      expect(bgValuesInMmol.veryLowBgDefault).toBe(2.2)
     })
   })
 
@@ -157,6 +123,56 @@ describe('MonitoringAlertsContentConfiguration util', function () {
       const errorMessage = getErrorMessage(Unit.MilligramPerDeciliter, value, lowValue, highValue)
 
       expect(errorMessage).toBe('mandatory-range')
+    })
+  })
+
+  describe('getPercentageLabels', () => {
+    it('should return an array of 20 items covering 5% to 100% in steps of 5', () => {
+      const labels = getPercentageLabels(25)
+
+      expect(labels).toHaveLength(20)
+      expect(labels[0]).toContain('5%')
+      expect(labels[19]).toContain('100%')
+    })
+
+    it('should return plain percentage strings for non-default values', () => {
+      const labels = getPercentageLabels(25)
+
+      expect(labels).toContain('5%')
+      expect(labels).toContain('10%')
+      expect(labels).toContain('100%')
+    })
+
+    it('should mark the matching default value with the "default-value" i18n key', () => {
+      const labels = getPercentageLabels(25)
+
+      expect(labels).toContain('default-value')
+      expect(labels).not.toContain('25%')
+    })
+
+    it('should mark the first item as default when defaultValue is 5', () => {
+      const labels = getPercentageLabels(5)
+
+      expect(labels[0]).toBe('default-value')
+    })
+
+    it('should mark the last item as default when defaultValue is 100', () => {
+      const labels = getPercentageLabels(100)
+
+      expect(labels[19]).toBe('default-value')
+    })
+
+    it('should return no "default-value" label when defaultValue is outside the 5–100 range', () => {
+      const labels = getPercentageLabels(0)
+
+      expect(labels.every(label => label !== 'default-value')).toBe(true)
+    })
+
+    it('should return labels in ascending order', () => {
+      const labels = getPercentageLabels(25)
+      const numericValues = labels.map(label => parseInt(label))
+
+      expect(numericValues).toEqual([...numericValues].sort((a, b) => a - b))
     })
   })
 })

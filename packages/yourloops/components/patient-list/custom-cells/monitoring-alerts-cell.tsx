@@ -145,7 +145,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       >
         <HyperglycemiaIcon
           sx={{ marginLeft: theme.spacing(1), cursor: isFrequencyOfHyperglycemiaAlertActive ? 'pointer' : 'default' }}
-          color={isFrequencyOfHyperglycemiaAlertActive ? 'error' : 'disabled'}
+          color={isFrequencyOfHyperglycemiaAlertActive ? 'warning' : 'disabled'}
           data-testid="hyperglycemia-icon"
           onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, isFrequencyOfHyperglycemiaAlertActive)}
         />

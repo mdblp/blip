@@ -167,7 +167,6 @@ describe('Patient profile view for HCP', () => {
 
       await testAlertsViewContent()
       await testUnsavedChangesOnNavigation()
-
     })
   })
 
