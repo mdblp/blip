@@ -94,11 +94,15 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
     }
   ]
 
-  const profileAppearanceCondition = user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId)
+  const isProfileTabVisible = user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId)
 
-  const visibleTabItems = tabItems.filter((tabItem) =>
-    tabItem.value !== PatientView.PatientProfile || profileAppearanceCondition
-  )
+  const visibleTabItems = tabItems.filter((tabItem) => {
+    if (tabItem.value === PatientView.PatientProfile) {
+      return isProfileTabVisible
+    }
+
+    return true
+  })
 
   return (
     <BottomNavigation
