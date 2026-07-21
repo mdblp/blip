@@ -67,10 +67,7 @@ export const PatientListPage: FunctionComponent = () => {
       <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
       {isMobile ?
         <PatientListHeaderMobile
-          selectedTab={selectedTab}
           inputSearch={inputSearch}
-          patientsDisplayedCount={patients.length}
-          onChangingTab={onChangingTab}
           setInputSearch={setInputSearch}
         />
         :
