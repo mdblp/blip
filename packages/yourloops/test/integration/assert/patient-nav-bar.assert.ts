@@ -37,12 +37,32 @@ const checkPatientNavBarCommon = (expectedTabListTextContent: string) => {
   expect(patientNavBar.getByText('Download report')).toBeVisible()
 }
 
+const checkPatientNavBarCommonMobile = (expectedNavbarTextContent: string[]) => {
+  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
+  expect(patientNavBar.getByTestId('subnav-patient-info-mobile')).toBeVisible()
+  const container = screen.getByTestId('subnav-patient-info-mobile');
+
+  const buttons = within(container).getAllByRole('button');
+
+  const ariaLabels = buttons.map(button => button.getAttribute('aria-label'));
+
+  expect(ariaLabels).toEqual(expectedNavbarTextContent);
+}
+
 export const checkPatientNavBarAsHcp = () => {
   checkPatientNavBarCommon('DashboardDailyTrendsProfileDevices')
 }
 
+export const checkPatientNavBarAsHcpMobile = () => {
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Profile', 'Devices'])
+}
+
 export const checkPatientNavBarAsHcpInPrivateTeam = () => {
   checkPatientNavBarCommon('DashboardDailyTrendsDevice')
+}
+
+export const checkPatientNavBarAsHcpInPrivateTeamMobile = () => {
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Devices'])
 }
 
 export const checkPatientNavBarAsCaregiver = () => {
@@ -51,6 +71,14 @@ export const checkPatientNavBarAsCaregiver = () => {
 
 export const checkPatientNavBarAsPatient = () => {
   checkPatientNavBarCommon('DashboardDailyTrendsProfileDevice')
+}
+
+export const checkPatientNavBarAsCaregiverMobile = () => {
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Devices'])
+}
+
+export const checkPatientNavBarAsPatientMobile = () => {
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Profile', 'Devices'])
 }
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
@@ -79,7 +107,17 @@ export const checkPatientNavBarForPatient = async () => {
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsProfileDevicesDownload report')
 }
 
+export const checkPatientNavBarForPatientMobile = async () => {
+  const secondaryHeader = await screen.findByTestId('patient-nav-bar-mobile')
+  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsProfileDevices')
+}
+
 export const checkPatientNavBarForCaregiver = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDevicesDownload report')
+}
+
+export const checkPatientNavBarForCaregiverMobile = async () => {
+  const secondaryHeader = await screen.findByTestId('patient-nav-bar-mobile')
+  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDevices')
 }
