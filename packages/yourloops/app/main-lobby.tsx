@@ -148,7 +148,7 @@ export const MainLobby: FC = () => {
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <GlobalStyles
-                styles={{ body: { backgroundColor: isMobile ? '#ffffff' : 'var(--body-background-color)' } }} />
+                styles={{ body: { backgroundColor: isMobile ? theme.palette.common.white : 'var(--body-background-color)' } }} />
               <SnackbarContextProvider context={DefaultSnackbarContext}>
                 <Box>
                   <Routes>

@@ -33,15 +33,8 @@ import SearchIcon from '@mui/icons-material/Search'
 import IconButton from '@mui/material/IconButton'
 import FilterList from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import HowToRegIcon from '@mui/icons-material/HowToReg'
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
-import Badge from '@mui/material/Badge'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
-import { usePatientsContext } from '../../../lib/patient/patients.provider'
-import { type PatientListTabs } from '../models/enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
 import { InvitePatientDialog } from '../../patient/invite-patient-dialog/invite-patient-dialog'
 import TeamCodeDialog from '../../patient/team-code-dialog'
@@ -50,38 +43,22 @@ import { useAuth } from '../../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
 import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
 import { PatientFiltersPopover } from '../patient-filters-popover'
-import { PatientListHeaderFiltersLabel } from '../patient-list-header-filters-label'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface PatientListHeaderProps {
-  selectedTab: PatientListTabs
   inputSearch: string
-  patientsDisplayedCount: number
-  onChangingTab: (newTab: PatientListTabs) => void
   setInputSearch: (value: string) => void
 }
 
 const useStyles = makeStyles()((theme) => {
-  const TAB_HEIGHT = theme.spacing(6)
   return {
     customTextField: {
       width: 'auto',
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: 'inherit !important'
       }
-    },
-    resetButton: {
-      cursor: 'pointer',
-      '&:hover': {
-        color: theme.palette.common.black
-      }
-    },
-    tab: {
-      minHeight: TAB_HEIGHT,
-      height: TAB_HEIGHT
     },
     patientListHeaderButton: {
       padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
@@ -93,19 +70,17 @@ const useStyles = makeStyles()((theme) => {
 })
 
 export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> = (props) => {
-  const { selectedTab, inputSearch, patientsDisplayedCount, onChangingTab, setInputSearch } = props
+  const { inputSearch, setInputSearch } = props
   const theme = useTheme()
   const { t } = useTranslation()
   const { user } = useAuth()
   const { classes } = useStyles()
-  const { pendingPatientsCount } = usePatientsContext()
   const { filters } = usePatientListContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { teamId } = useParams()
   const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const filtersRef = useRef<HTMLButtonElement>(null)
 
@@ -131,127 +106,79 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
     <React.Fragment>
       <Box
         data-testid="patient-list-header"
-        sx={{ padding: theme.spacing(3, 1, 0, 2) }}
+        sx={{
+          padding: theme.spacing(3, 1, 4, 2),
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
       >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
+            display: 'flex',
+            flexWrap: 'nowrap',
+            width: '100%'
           }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'nowrap',
-              width: '100%'
-            }}>
-            <Box sx={{ flexGrow: 1, flexShrink: 1, minWidth: 0, marginRight: theme.spacing(1) }}>
-              <Tooltip title={t('patient-list-search-tooltip')}>
-                <TextField
-                  aria-label={t('patient-list-search-tooltip')}
-                  placeholder={t('patient-list-search-placeholder')}
-                  value={inputSearch}
-                  className={classes.customTextField}
-                  slotProps={{
-                    input: {
-                      endAdornment:
-                        <InputAdornment position="end">
-                          <SearchIcon />
-                        </InputAdornment>,
-                      sx: { height: '42px', borderRadius: '24px' }
-                    },
-                    htmlInput: {
-                      'aria-label': t('aria-search'),
-                      'data-testid': 'search-patient-bar'
-                    }
-                  }}
-                  onChange={event => {
-                    setInputSearch(event.target.value)
-                  }}
-                />
-              </Tooltip>
-            </Box>
-            {isUserHcp &&
-              <>
-                <Tooltip
-                  title={filterButtonTooltipTitle}
-                >
-                  <IconButton
-                    size="large"
-                    onClick={openFiltersDialog}
-                    disabled={filters.pendingEnabled}
-                    ref={filtersRef}
-                    className={classes.patientListHeaderButton}
-                    sx={{ border: '1px solid' }}
-                  >
-                    <FilterList />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  title={isSelectedTeamPrivate ? t('add-new-patient-disabled-info') : ''}
-                  placement="left"
-                >
-                  <IconButton
-                    size="large"
-                    disabled={isSelectedTeamPrivate}
-                    data-testid="add-patient-button"
-                    onClick={() => {
-                      setShowAddPatientDialog(true)
-                    }}
-                    className={classes.patientListHeaderButton}
-                    sx={{ backgroundColor: 'var(--info-color-main)' }}
-                  >
-                    <PersonAddIcon sx={{ color: '#ffffff' }} />
-                  </IconButton>
-                </Tooltip>
-              </>
-            }
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            paddingTop: 1,
-            padding: theme.spacing(2, 0, 2, 0)
-          }}>
-          {!isMobile &&
-            <Tabs
-              value={selectedTab}
-              onChange={(event, newValue) => {
-                onChangingTab(newValue)
-              }}
-            >
-              <Tab
-                icon={<HowToRegIcon />}
-                iconPosition="start"
-                label={t('current')}
-                aria-label={t('current')}
-                classes={{ root: classes.tab }}
-              />
-              {isUserHcp && !isSelectedTeamPrivate &&
-                <Tab
-                  data-testid="patient-list-pending-tab"
-                  icon={<HourglassEmptyIcon />}
-                  iconPosition="start"
-                  label={
-                    <>
-                      {t('pending')}
-                      <Badge
-                        badgeContent={pendingPatientsCount}
-                        color="primary"
-                        sx={{ marginLeft: theme.spacing(2) }} />
-                    </>
+          <Box sx={{ flexShrink: 1, marginRight: theme.spacing(1) }}>
+            <Tooltip title={t('patient-list-search-tooltip')}>
+              <TextField
+                aria-label={t('patient-list-search-tooltip')}
+                placeholder={t('patient-list-search-placeholder')}
+                value={inputSearch}
+                className={classes.customTextField}
+                slotProps={{
+                  input: {
+                    endAdornment:
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>,
+                    sx: { height: '42px', borderRadius: '24px' }
+                  },
+                  htmlInput: {
+                    'aria-label': t('aria-search'),
+                    'data-testid': 'search-patient-bar'
                   }
-                  aria-label={t('pending')}
-                  classes={{ root: classes.tab }}
-                />
-              }
-            </Tabs>
-          }
+                }}
+                onChange={event => {
+                  setInputSearch(event.target.value)
+                }}
+              />
+            </Tooltip>
+          </Box>
           {isUserHcp &&
-            <PatientListHeaderFiltersLabel patientsDisplayedCount={patientsDisplayedCount} />
+            <>
+              <Tooltip
+                title={filterButtonTooltipTitle}
+              >
+                <IconButton
+                  size="large"
+                  onClick={openFiltersDialog}
+                  disabled={filters.pendingEnabled}
+                  ref={filtersRef}
+                  className={classes.patientListHeaderButton}
+                  sx={{ border: '1px solid' }}
+                >
+                  <FilterList />
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title={isSelectedTeamPrivate ? t('add-new-patient-disabled-info') : ''}
+                placement="left"
+              >
+                <IconButton
+                  size="large"
+                  disabled={isSelectedTeamPrivate}
+                  data-testid="add-patient-button"
+                  onClick={() => {
+                    setShowAddPatientDialog(true)
+                  }}
+                  className={classes.patientListHeaderButton}
+                  sx={{ backgroundColor: 'var(--info-color-main)' }}
+                >
+                  <PersonAddIcon sx={{ color: theme.palette.common.white }} />
+                </IconButton>
+              </Tooltip>
+            </>
           }
         </Box>
       </Box>

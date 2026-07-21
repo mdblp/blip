@@ -47,24 +47,11 @@ import { ExternalFilesService } from '../../lib/external-files/external-files.se
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
-    firstLine: {
+    allLines: {
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(1)
-    },
-    secondLine: {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'center',
-      marginBottom: theme.spacing(2),
-    },
-    thirdLine: {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'center',
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     container: {
       alignItems: 'center',
@@ -75,7 +62,8 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       fontSize: '12px',
       zIndex: theme.zIndex.drawer + 1,
       marginTop: theme.spacing(3),
-      paddingTop: theme.spacing(2),
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(1),
       minHeight: theme.spacing(14),
       flexDirection: 'column'
     },
@@ -86,11 +74,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       width: '20px',
       marginBottom: '3px'
     },
-    documentBox: {
-      display: 'flex',
-      height: '20px',
-      alignItems: 'center'
-    },
     languageSeparator: {
       alignSelf: 'center'
     },
@@ -99,10 +82,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       fontWeight: 400,
       textAlign: 'center',
       display: 'inline-block',
-      lineHeight: 1.2,
-    },
-    medicalDeviceWarning: {
-      paddingRight: theme.spacing(4)
+      lineHeight: 1.2
     },
     separator: {
       paddingLeft: theme.spacing(1),
@@ -119,7 +99,7 @@ export const FooterMobile: FunctionComponent = () => {
 
   const currentLanguage = getCurrentLang()
 
-  const isLongLanguage = ( currentLanguage === LanguageCodes.De ) || ( currentLanguage === LanguageCodes.Nl )
+  const isLongLanguage = (currentLanguage === LanguageCodes.De) || (currentLanguage === LanguageCodes.Nl)
 
   const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCodes.Ja
 
@@ -142,23 +122,23 @@ export const FooterMobile: FunctionComponent = () => {
   return (
     <Container id="footer-links-container" data-testid="footer" className={classes.container} maxWidth={false}>
       {shouldDisplayMedicalDeviceWarning &&
-        <Box className={classes.medicalDeviceWarning}>{t('not-a-medical-device')}</Box>
+        <Box className={classes.allLines}>{t('not-a-medical-device')}</Box>
       }
-
-      <Box className={classes.firstLine}>
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
-          ? <Box>
-            <LanguageIcon className={classes.icon} />
-            <LanguageSelector />
-            <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
-            <AccompanyingDocumentLinks user={user} />
-          </Box>
-          : <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
+          ? <>
+            <Box className={classes.allLines} >
+              <LanguageIcon className={classes.icon} />
+              <LanguageSelector />
+            </Box>
+            <Box id="footer-accompanying-documents-box" className={classes.allLines}>
+              <AccompanyingDocumentLinks user={user} />
+            </Box>
+          </>
+          : <Box id="footer-accompanying-documents-box" className={classes.allLines}>
             <AccompanyingDocumentLinks user={user} />
           </Box>
         }
-      </Box>
-      <Box className={classes.secondLine}>
+      <Box className={classes.allLines}>
         <Link
           id="footer-link-url-privacy-policy"
           target="_blank"
@@ -166,7 +146,7 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
-          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
+          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('privacy-policy')}
         </Link>
@@ -178,17 +158,17 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('terms')}
           className={classes.link}
-          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
+          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('terms-of-use')}
         </Link>
       </Box>
-      <Box className={classes.thirdLine}>
+      <Box className={classes.allLines}>
         <Link
           id="footer-link-cookies-management"
           className={classes.link}
           onClick={handleShowCookieBanner}
-          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
+          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('cookies-management')}
         </Link>
@@ -200,7 +180,7 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
-          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
+          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('cookies-policy')}
         </Link>
@@ -210,7 +190,7 @@ export const FooterMobile: FunctionComponent = () => {
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('yourloops-mailto-contact')}
           className={classes.link}
-          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
+          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('contact')}
         </Link>
