@@ -58,6 +58,13 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
+      marginBottom: theme.spacing(2),
+    },
+    thirdLine: {
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: theme.spacing(2),
     },
     container: {
       alignItems: 'center',
@@ -66,16 +73,11 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       display: 'flex',
       flexShrink: 0,
       fontSize: '12px',
-      paddingBlock: '11px',
       zIndex: theme.zIndex.drawer + 1,
       marginTop: theme.spacing(3),
-      height: theme.spacing(14),
+      paddingTop: theme.spacing(2),
+      minHeight: theme.spacing(14),
       flexDirection: 'column'
-    },
-    cookiesManagement: {
-      '&:hover': {
-        cursor: 'pointer'
-      }
     },
     icon: {
       alignSelf: 'center',
@@ -95,7 +97,9 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     link: {
       color: theme.palette.grey[700],
       fontWeight: 400,
-      textAlign: 'center'
+      textAlign: 'center',
+      display: 'inline-block',
+      lineHeight: 1.2,
     },
     medicalDeviceWarning: {
       paddingRight: theme.spacing(4)
@@ -114,6 +118,9 @@ export const FooterMobile: FunctionComponent = () => {
   const { classes } = footerStyle()
 
   const currentLanguage = getCurrentLang()
+
+  const isLongLanguage = ( currentLanguage === LanguageCodes.De ) || ( currentLanguage === LanguageCodes.Nl )
+
   const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCodes.Ja
 
   const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
@@ -148,10 +155,10 @@ export const FooterMobile: FunctionComponent = () => {
           </Box>
           : <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
             <AccompanyingDocumentLinks user={user} />
-            <Box className={classes.separator}>|</Box>
           </Box>
         }
-
+      </Box>
+      <Box className={classes.secondLine}>
         <Link
           id="footer-link-url-privacy-policy"
           target="_blank"
@@ -159,11 +166,11 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
+          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('privacy-policy')}
         </Link>
-      </Box>
-      <Box className={classes.secondLine}>
+        <Box className={classes.separator}>|</Box>
         <Link
           id="footer-link-url-terms"
           target="_blank"
@@ -171,14 +178,17 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('terms')}
           className={classes.link}
+          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('terms-of-use')}
         </Link>
-        <Box className={classes.separator}>|</Box>
+      </Box>
+      <Box className={classes.thirdLine}>
         <Link
           id="footer-link-cookies-management"
-          className={`${classes.link} ${classes.cookiesManagement}`}
+          className={classes.link}
           onClick={handleShowCookieBanner}
+          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('cookies-management')}
         </Link>
@@ -190,6 +200,7 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
+          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('cookies-policy')}
         </Link>
@@ -199,6 +210,7 @@ export const FooterMobile: FunctionComponent = () => {
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('yourloops-mailto-contact')}
           className={classes.link}
+          sx = {{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('contact')}
         </Link>

@@ -54,6 +54,7 @@ import { PatientListHeaderFiltersLabel } from '../patient-list-header-filters-la
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -86,7 +87,6 @@ const useStyles = makeStyles()((theme) => {
       padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
       marginRight: theme.spacing(1),
       borderColor: 'var(--text-color-primary)',
-      border: '1px solid',
       borderRadius: '24px'
     }
   }
@@ -105,6 +105,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { teamId } = useParams()
   const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const filtersRef = useRef<HTMLButtonElement>(null)
 
@@ -181,6 +182,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
                     disabled={filters.pendingEnabled}
                     ref={filtersRef}
                     className={classes.patientListHeaderButton}
+                    sx={{ border: '1px solid' }}
                   >
                     <FilterList />
                   </IconButton>
@@ -212,40 +214,42 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
             display: "flex",
             justifyContent: "space-between",
             paddingTop: 1,
-            padding: theme.spacing(2, 0, 0, 0)
+            padding: theme.spacing(2, 0, 2, 0)
           }}>
-          <Tabs
-            value={selectedTab}
-            onChange={(event, newValue) => {
-              onChangingTab(newValue)
-            }}
-          >
-            <Tab
-              icon={<HowToRegIcon />}
-              iconPosition="start"
-              label={t('current')}
-              aria-label={t('current')}
-              classes={{ root: classes.tab }}
-            />
-            {isUserHcp && !isSelectedTeamPrivate &&
+          {!isMobile &&
+            <Tabs
+              value={selectedTab}
+              onChange={(event, newValue) => {
+                onChangingTab(newValue)
+              }}
+            >
               <Tab
-                data-testid="patient-list-pending-tab"
-                icon={<HourglassEmptyIcon />}
+                icon={<HowToRegIcon />}
                 iconPosition="start"
-                label={
-                  <>
-                    {t('pending')}
-                    <Badge
-                      badgeContent={pendingPatientsCount}
-                      color="primary"
-                      sx={{ marginLeft: theme.spacing(2) }} />
-                  </>
-                }
-                aria-label={t('pending')}
+                label={t('current')}
+                aria-label={t('current')}
                 classes={{ root: classes.tab }}
               />
-            }
-          </Tabs>
+              {isUserHcp && !isSelectedTeamPrivate &&
+                <Tab
+                  data-testid="patient-list-pending-tab"
+                  icon={<HourglassEmptyIcon />}
+                  iconPosition="start"
+                  label={
+                    <>
+                      {t('pending')}
+                      <Badge
+                        badgeContent={pendingPatientsCount}
+                        color="primary"
+                        sx={{ marginLeft: theme.spacing(2) }} />
+                    </>
+                  }
+                  aria-label={t('pending')}
+                  classes={{ root: classes.tab }}
+                />
+              }
+            </Tabs>
+          }
           {isUserHcp &&
             <PatientListHeaderFiltersLabel patientsDisplayedCount={patientsDisplayedCount} />
           }
