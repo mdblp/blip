@@ -30,15 +30,31 @@ import {
   checkCaregiverHeader,
   checkHcpHeader,
   checkPatientHeader,
-  type HeaderInfo
+  type HeaderInfo,
 } from '../assert/header.assert'
-import { checkBannerLanguageChangeMobile, checkHcpHeaderMobile, checkCaregiverHeaderMobile, checkPatientHeaderMobile } from '../assert/header-mobile.assert'
+import {
+  checkBannerLanguageChangeMobile,
+  checkHcpHeaderMobile,
+  checkCaregiverHeaderMobile,
+  checkPatientHeaderMobile,
+  type HeaderInfoMobile
+} from '../assert/header-mobile.assert'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
-import { checkPatientNavBarAsHcp, checkPatientNavBarAsHcpInPrivateTeam } from '../assert/patient-nav-bar.assert'
+import {
+  checkPatientNavBarAsHcp,
+  checkPatientNavBarAsHcpMobile,
+  checkPatientNavBarAsHcpInPrivateTeam,
+  checkPatientNavBarAsHcpInPrivateTeamMobile
+} from '../assert/patient-nav-bar.assert'
 
 export interface AppMainLayoutHcpParams {
   footerHasLanguageSelector?: boolean
   headerInfo: HeaderInfo
+}
+
+export interface AppMainLayoutHcpMobileParams {
+  footerHasLanguageSelector?: boolean
+  headerInfoMobile: HeaderInfoMobile
 }
 
 export interface AppMainLayoutParams {
@@ -51,8 +67,8 @@ export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayout
   checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
-export const testAppMainLayoutForHcpMobile = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
-  await checkHcpHeaderMobile(appMainLayoutParams.headerInfo)
+export const testAppMainLayoutForHcpMobile = async (appMainLayoutParams: AppMainLayoutHcpMobileParams) => {
+  await checkHcpHeaderMobile(appMainLayoutParams.headerInfoMobile)
 }
 
 export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
@@ -82,6 +98,14 @@ export const testPatientNavBarLayoutForHcp = () => {
   checkPatientNavBarAsHcp()
 }
 
+export const testPatientNavBarLayoutForHcpMobile = () => {
+  checkPatientNavBarAsHcpMobile()
+}
+
 export const testPatientNavBarLayoutForHcpInPrivateTeam = () => {
   checkPatientNavBarAsHcpInPrivateTeam()
+}
+
+export const testPatientNavBarLayoutForHcpInPrivateTeamMobile = () => {
+  checkPatientNavBarAsHcpInPrivateTeamMobile()
 }

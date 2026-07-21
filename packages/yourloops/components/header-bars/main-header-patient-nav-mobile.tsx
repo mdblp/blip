@@ -61,6 +61,7 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
   const goBack = (): void => {
     navigate('/')
   }
+
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)

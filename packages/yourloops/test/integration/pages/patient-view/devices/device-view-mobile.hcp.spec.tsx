@@ -69,6 +69,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
+
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 })

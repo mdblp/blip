@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { checkPatientNavBarAsPatientMobile } from '../../../assert/patient-nav-bar.assert'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
@@ -55,6 +56,8 @@ describe('Trends view for patient', () => {
       renderPage(AppUserRoute.Trends)
     })
 
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsPatientMobile()
     await checkPatientLayoutMobile(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
   })
 })

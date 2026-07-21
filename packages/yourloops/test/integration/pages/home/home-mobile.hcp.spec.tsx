@@ -38,7 +38,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import {
-  type AppMainLayoutHcpParams,
+  type AppMainLayoutHcpMobileParams,
   testAppMainLayoutForHcpMobile
 } from '../../use-cases/app-main-layout-visualisation'
 import NotificationApi from '../../../../lib/notifications/notification.api'
@@ -92,13 +92,14 @@ describe('HCP home page, mobile version', () => {
     }])
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
-    const appMainLayoutParams: AppMainLayoutHcpParams = {
+    const appMainLayoutParams: AppMainLayoutHcpMobileParams = {
       footerHasLanguageSelector: false,
-      headerInfo: {
+      headerInfoMobile: {
         loggedInUserFullName: `${lastName} ${firstName}`,
+        homePageBoolean : true,
         teamMenuInfo: {
           isSelectedTeamPrivate: true,
-          availableTeams: buildAvailableTeams()
+          availableTeams: buildAvailableTeams(),
         }
       }
     }

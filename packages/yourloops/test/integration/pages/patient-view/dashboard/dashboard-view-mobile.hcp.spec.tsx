@@ -80,5 +80,4 @@ describe('Dashboard view for HCP', () => {
 
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
-
 })

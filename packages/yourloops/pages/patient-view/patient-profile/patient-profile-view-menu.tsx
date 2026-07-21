@@ -30,7 +30,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useTranslation } from 'react-i18next'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
-import { ChartIcon } from '../../../components/icons/diabeloop/chart-icon'
+import { ChartIconOutlined } from '../../../components/icons/diabeloop/chart-icon-outlined'
 import { SectionMenu } from '../../../components/menus/section-menu/section-menu'
 
 interface PatientProfileViewMenuProps {
@@ -53,7 +53,7 @@ export const PatientProfileViewMenu: FC<PatientProfileViewMenuProps> = (props) =
       label: t('range'),
       value: PatientProfileViewSection.Range,
       testId: 'range-profile-menu-button',
-      icon: <ChartIcon fontSize="small" />
+      icon: <ChartIconOutlined fontSize="small" />
     },
     {
       label: t('alerts'),
