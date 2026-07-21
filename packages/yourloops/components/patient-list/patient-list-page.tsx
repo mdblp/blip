@@ -48,7 +48,7 @@ export const PatientListPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
   const { teamId } = paramHook as { teamId: string }
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const {
     selectedTab,

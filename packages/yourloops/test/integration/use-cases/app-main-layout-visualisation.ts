@@ -39,7 +39,7 @@ import {
   checkPatientHeaderMobile,
   type HeaderInfoMobile
 } from '../assert/header-mobile.assert'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
+import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForHcpMobile, checkFooterForPatient } from '../assert/footer.assert'
 import {
   checkPatientNavBarAsHcp,
   checkPatientNavBarAsHcpMobile,
@@ -69,6 +69,7 @@ export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayout
 
 export const testAppMainLayoutForHcpMobile = async (appMainLayoutParams: AppMainLayoutHcpMobileParams) => {
   await checkHcpHeaderMobile(appMainLayoutParams.headerInfoMobile)
+  checkFooterForHcpMobile(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
