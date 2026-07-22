@@ -25,12 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { flaggedPatientId, patient1Info, patient1Metrics } from '../../data/patient.api.data'
-import { buildAvailableTeams, mockTeamAPI } from '../../mock/team.api.mock'
+import {
+  buildAvailableTeams,
+  filtersTeamId,
+  mockTeamAPI,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -41,6 +47,12 @@ import {
   type AppMainLayoutHcpMobileParams,
   testAppMainLayoutForHcpMobile
 } from '../../use-cases/app-main-layout-visualisation'
+import {
+  testAckMonitoringAlertsMobile,
+  testAckMonitoringAlertsWithErrorMobile,
+  testPatientListForHcpMobile,
+  testPatientListForHcpPrivateTeamMobile,
+} from '../../use-cases/patient-list-management'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
@@ -51,12 +63,18 @@ import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.moc
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../mock/mobile-screen.mock'
+import { ConfigService } from '../../../../lib/config/config.service'
+import userEvent from '@testing-library/user-event/dist/cjs/index.js'
+import { testTeamCreation } from '../../use-cases/teams-management'
+import { Unit } from 'medical-domain'
 
 describe('HCP home page, mobile version', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
 
   const privatePatientsList = `${AppUserRoute.Teams}/${PRIVATE_TEAM_ID}/patients`
+  const thirdTeamPatientsList = `${AppUserRoute.Teams}/${myThirdTeamId}/patients`
+  const filterTeamPatientsList = `${AppUserRoute.Teams}/${filtersTeamId}/patients`
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -107,6 +125,65 @@ describe('HCP home page, mobile version', () => {
     await renderHomePage(privatePatientsList)
 
     await testAppMainLayoutForHcpMobile(appMainLayoutParams)
+  })
+
+  it('should be able to manage the patient list when scoped on the private practice team', async () => {
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
+      ...patient1Info,
+      invitationStatus: UserInviteStatus.Accepted
+    }])
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
+
+    await renderHomePage(privatePatientsList)
+    await testPatientListForHcpPrivateTeamMobile()
+  })
+
+  it('should render correct layout when scoped on a medical team', async () => {
+    const appMainLayoutParams: AppMainLayoutHcpMobileParams = {
+      footerHasLanguageSelector: false,
+      headerInfoMobile: {
+        loggedInUserFullName: `${lastName} ${firstName}`,
+        homePageBoolean : true,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+
+    await renderHomePage(thirdTeamPatientsList)
+
+    await testAppMainLayoutForHcpMobile(appMainLayoutParams)
+
+    expect(PatientApi.getPatientsMetricsForHcp).toHaveBeenCalledTimes(1)
+  })
+
+  it('should be able to manage the patient list when scoped on a medical team', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
+    await renderHomePage(thirdTeamPatientsList)
+
+    await testPatientListForHcpMobile()
+  })
+
+  it('should be able to acknowledge patient alerts from the patient list', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
+    const router = await renderHomePage(filterTeamPatientsList)
+
+    await testAckMonitoringAlertsMobile(router)
+  })
+
+  it('should handle gracefully error cases when acknowledging monitoring alerts', async () => {
+    jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockRejectedValue('Ack alert error')
+    await renderHomePage(filterTeamPatientsList)
+
+    await testAckMonitoringAlertsWithErrorMobile()
+  })
+
+  it('should be able to create a team when on the home page', async () => {
+    const router = await renderHomePage(thirdTeamPatientsList)
+
+    await testTeamCreation(router)
   })
 
 })

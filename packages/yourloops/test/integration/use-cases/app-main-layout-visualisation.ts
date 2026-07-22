@@ -39,7 +39,7 @@ import {
   checkPatientHeaderMobile,
   type HeaderInfoMobile
 } from '../assert/header-mobile.assert'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForHcpMobile, checkFooterForPatient } from '../assert/footer.assert'
+import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
 import {
   checkPatientNavBarAsHcp,
   checkPatientNavBarAsHcpMobile,
@@ -64,30 +64,32 @@ export interface AppMainLayoutParams {
 
 export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
   await checkHcpHeader(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false, false)
 }
 
 export const testAppMainLayoutForHcpMobile = async (appMainLayoutParams: AppMainLayoutHcpMobileParams) => {
   await checkHcpHeaderMobile(appMainLayoutParams.headerInfoMobile)
-  checkFooterForHcpMobile(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false, true)
 }
 
 export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false, false)
 }
 
 export const testAppMainLayoutForCaregiverMobile = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkCaregiverHeaderMobile(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false, true)
 }
 
 export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false, false)
 }
 
 export const testAppMainLayoutForPatientMobile = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkPatientHeaderMobile(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false, true)
 }
 
 export const testBannerLanguageUpdate = async () => {

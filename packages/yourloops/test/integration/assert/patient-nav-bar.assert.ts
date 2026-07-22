@@ -107,17 +107,8 @@ export const checkPatientNavBarForPatient = async () => {
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsProfileDevicesDownload report')
 }
 
-export const checkPatientNavBarForPatientMobile = async () => {
-  const secondaryHeader = await screen.findByTestId('patient-nav-bar-mobile')
-  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsProfileDevices')
-}
-
 export const checkPatientNavBarForCaregiver = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDevicesDownload report')
 }
 
-export const checkPatientNavBarForCaregiverMobile = async () => {
-  const secondaryHeader = await screen.findByTestId('patient-nav-bar-mobile')
-  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDevices')
-}
