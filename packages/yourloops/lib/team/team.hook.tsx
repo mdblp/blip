@@ -154,6 +154,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
+    // TODO: move the if else logic to crew, it will decide if we send a email or not
     if (member.status === UserInviteStatus.Pending) {
       if (!member.invitationId) {
         throw new Error('Missing invite!')

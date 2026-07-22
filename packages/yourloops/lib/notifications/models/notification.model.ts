@@ -28,6 +28,7 @@
 import { type TeamMemberRole } from '../../team/models/enums/team-member-role.enum'
 import { type UserAccount } from '../../auth/models/user-account.model'
 import { type NotificationType } from './enums/notification-type.enum'
+import { INotificationType } from './enums/i-notification-type.enum'
 
 export interface Notification {
   id: string
@@ -52,4 +53,14 @@ export interface Notification {
     userid: string
     profile?: UserAccount | null
   }
+}
+
+export interface InAppNotification {
+  id: string
+  type: INotificationType
+  userEmail: string
+  // depends of the type of notification, it can be a teamId or a userId
+  payload: Record<string, unknown>
+  status: string
+  deliveredAt: string
 }
