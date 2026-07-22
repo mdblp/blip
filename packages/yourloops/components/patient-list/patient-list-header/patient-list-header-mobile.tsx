@@ -154,6 +154,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
                   size="large"
                   onClick={openFiltersDialog}
                   disabled={filters.pendingEnabled}
+                  data-testid="filters-button"
                   ref={filtersRef}
                   className={classes.patientListHeaderButton}
                   sx={{ border: '1px solid' }}
