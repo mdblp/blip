@@ -69,7 +69,7 @@ describe('Login page mobile view', () => {
     expect(loginButton).toBeVisible()
     expect(languageSelector).toBeVisible()
 
-    checkFooterForUserNotLoggedIn(false)
+    checkFooterForUserNotLoggedIn(false, true)
 
     // More info link should disappear if language is french
     fireEvent.mouseDown(within(languageSelector).getByRole('combobox', { hidden: true }))
