@@ -40,13 +40,13 @@ import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-caregiver-dialog'
 import CaregiversTable from './caregivers-table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
-import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
-import { type Notification } from '../../../lib/notifications/models/notification.model'
+import { InAppNotification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 import SpinningLoader from '../../../components/loaders/spinning-loader'
 import { logError } from '../../../utils/error.util'
+import { INotificationType } from '../../../lib/notifications/models/enums/i-notification-type.enum'
 
 export const PatientCaregiversPage: FC = () => {
   const { t } = useTranslation('yourloops')
@@ -94,16 +94,15 @@ export const PatientCaregiversPage: FC = () => {
   }
 
   const getCaregiversFromPendingInvitations = useCallback((): ShareUser[] => {
-    return sentInvitations.reduce((acc: ShareUser[], invitation: Notification) => {
-      if (invitation.type !== NotificationType.directInvitation) {
+    return sentInvitations.reduce((acc: ShareUser[], invitation: InAppNotification) => {
+      if (invitation.type !== INotificationType.directInvitation) {
         return acc
       }
 
       const caregiver: ShareUser = {
-        invitation,
         status: UserInviteStatus.Pending,
         user: {
-          username: invitation.email,
+          username: invitation.payload["email"] as string, //TODO: check the payload for direct Share
           userid: uuidv4(),
           role: UserRole.Caregiver
         }

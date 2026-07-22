@@ -26,10 +26,10 @@
  */
 
 export enum INotificationType {
-  careTeamInvitation = 'careteam_invitation',
-  medicalTeamProInvitation = 'medicalteam_invitation',
-  medicalTeamPatientInvitation = 'medicalteam_patient_invitation',
-  medicalTeamDoAdmin = 'medicalteam_do_admin',
-  medicalTeamRemoveMember = 'medicalteam_remove',
+  directInvitation = 'careteam_invitation',
+  careTeamProInvitation = 'medicalteam_invitation',
+  careTeamPatientInvitation = 'medicalteam_patient_invitation',
+  careTeamDoAdmin = 'medicalteam_do_admin',
+  careTeamRemoveMember = 'medicalteam_remove',
   medicalTeamMonitoringInvitation = 'medicalteam_monitoring_invitation',
 }

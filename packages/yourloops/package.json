@@ -41,6 +41,7 @@
     "@mui/x-data-grid": "^8.0.0",
     "axios": "^1.16.0",
     "bows": "^1.7.2",
+    "centrifuge": "^5.7.0",
     "core-js": "^3.38.0",
     "dayjs": "^1.11.10",
     "emoji-picker-react": "^4.5.16",
