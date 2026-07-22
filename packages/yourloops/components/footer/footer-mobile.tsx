@@ -44,6 +44,8 @@ import { type AppRoute } from '../../models/enums/routes.enum'
 import { getCurrentLang } from '../../lib/language'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { ExternalFilesService } from '../../lib/external-files/external-files.service'
+import { PatientView } from '../../enum/patient-view.enum'
+import { useTheme } from '@mui/material/styles'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
@@ -94,6 +96,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
 export const FooterMobile: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
+  const theme = useTheme()
   const { pathname } = useLocation()
   const { classes } = footerStyle()
 
@@ -118,6 +121,18 @@ export const FooterMobile: FunctionComponent = () => {
       metrics.send('pdf_document', 'view_document', title)
     }
   }
+
+  const PATIENT_VIEW_URL_MAPPING: Record<PatientView, string> = {
+    [PatientView.Daily]: 'daily',
+    [PatientView.Dashboard]: 'dashboard',
+    [PatientView.Devices]: 'devices',
+    [PatientView.PatientProfile]: 'patient-profile',
+    [PatientView.Trends]: 'trends',
+  }
+
+  const isMatchingPatientView = Object.values(PATIENT_VIEW_URL_MAPPING).some(viewValue =>
+    pathname.includes(viewValue)
+  )
 
   return (
     <Container id="footer-links-container" data-testid="footer" className={classes.container} maxWidth={false}>
@@ -195,6 +210,9 @@ export const FooterMobile: FunctionComponent = () => {
           {t('contact')}
         </Link>
       </Box>
+      {isMatchingPatientView &&
+        <Box sx={{ height: theme.spacing(9) }} />
+      }
     </Container>
   )
 }
