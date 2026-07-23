@@ -51,7 +51,7 @@ export const TableLine: FC<TableLineProps> = (props) => {
             justifyContent: "space-between"
           }}>
           <Typography variant="body2">{label}</Typography>
-          <Typography variant="body2" className="bold">{value ?? FALLBACK_VALUE}</Typography>
+          <Typography variant="body2" className="bold">{value || FALLBACK_VALUE}</Typography>
         </Box>
       </ListItemText>
     </ListItem>
