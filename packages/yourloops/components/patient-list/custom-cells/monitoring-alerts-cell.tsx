@@ -136,7 +136,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       alignContent: 'center',
       flexWrap: 'wrap'
     }}>
-      {isMobile && isTimeSpentAwayFromTargetAlertActive ?
+      {(isMobile && isTimeSpentAwayFromTargetAlertActive) &&
         <Tooltip
           title={
             <>
@@ -159,9 +159,8 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, isTimeSpentAwayFromTargetAlertActive)}
           />
         </Tooltip>
-        : null
       }
-      {isMobile && isFrequencyOfHyperglycemiaAlertActive ?
+      {(isMobile && isFrequencyOfHyperglycemiaAlertActive) &&
         <Tooltip
           title={
             <>
@@ -182,10 +181,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, isFrequencyOfHyperglycemiaAlertActive)}
           />
         </Tooltip>
-        : null
       }
 
-      {isMobile && isFrequencyOfSevereHypoglycemiaAlertActive ?
+      {(isMobile && isFrequencyOfSevereHypoglycemiaAlertActive) &&
         <Tooltip
           title={
             <>
@@ -209,10 +207,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, isFrequencyOfSevereHypoglycemiaAlertActive)}
           />
         </Tooltip>
-        : null
       }
 
-      {isMobile && isNonDataTransmissionAlertActive ?
+      { (isMobile && isNonDataTransmissionAlertActive) &&
         <Tooltip
           title={
             <>
@@ -229,7 +226,6 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             onClick={buildAlertClickHandler(MonitoringAlertType.DataNotTransmitted, isNonDataTransmissionAlertActive)}
           />
         </Tooltip>
-        : null
       }
 
       <AcknowledgeMonitoringAlertDialog
