@@ -35,7 +35,7 @@ import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { TableLine } from './table-line'
 
-interface GenericListCardProps extends PropsWithChildren {
+interface GenericListCardProps {
   title: string,
   tableLines: { label: string; value: string }[]
   ['data-testid']?: string
