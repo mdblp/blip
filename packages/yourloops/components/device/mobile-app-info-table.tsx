@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DeviceConfig, MobileAppConfig } from 'medical-domain'
+import { type DeviceConfig, type MobileAppConfig } from 'medical-domain'
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatCode } from '../../utils/format.utils'

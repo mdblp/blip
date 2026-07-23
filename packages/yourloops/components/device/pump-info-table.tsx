@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PumpConfig } from 'medical-domain'
+import { type PumpConfig } from 'medical-domain'
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GenericListCard } from './generic-list-card'
