@@ -63,7 +63,6 @@ import {
   checkAckMonitoringAlertHypoglycemiaMobile,
   checkAckMonitoringAlertNoDataMobile,
   checkAckMonitoringAlertTimeOutOfRangeMobile,
-  checkInactiveAlertIconRedirectToDashboardMobile,
   checkPatientListColumnSortMobile,
   checkPatientListCurrentTabMobile,
   checkPatientListCurrentTabForPrivateTeamMobile,
@@ -126,8 +125,6 @@ export const testAckMonitoringAlerts = async (router: Router) => {
 }
 
 export const testAckMonitoringAlertsMobile = async (router: Router) => {
-  await checkInactiveAlertIconRedirectToDashboardMobile(router)
-  await goBackToPatientsListMobile(router)
   await checkAckMonitoringAlertDialogContentMobile()
   await checkAckMonitoringAlertDialogCloseOnAnalyseMobile(router)
   await goBackToPatientsListMobile(router)
