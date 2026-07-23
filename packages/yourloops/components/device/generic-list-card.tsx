@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, type PropsWithChildren } from 'react'
 import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import List from '@mui/material/List'
+import CardHeader from '@mui/material/CardHeader'
 import Divider from '@mui/material/Divider'
+import List from '@mui/material/List'
 import { useTheme } from '@mui/material/styles'
+import React, { type FC } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import { TableLine } from './table-line'
 
