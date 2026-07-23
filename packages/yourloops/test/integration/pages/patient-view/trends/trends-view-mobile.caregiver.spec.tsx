@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -33,6 +33,7 @@ import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { checkPatientNavBarAsCaregiverMobile } from '../../../assert/patient-nav-bar.assert'
 import { renderPage } from '../../../utils/render'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../../mock/user.api.mock'
@@ -75,5 +76,7 @@ describe('Trends view for caregiver', () => {
     })
 
     checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
+    checkPatientNavBarAsCaregiverMobile()
   })
 })

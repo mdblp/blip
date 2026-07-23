@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, within, waitFor } from '@testing-library/react'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
@@ -39,6 +39,7 @@ interface TeamMenuInfo {
 export interface HeaderInfoMobile {
   loggedInUserFullName: string
   teamMenuInfo: TeamMenuInfo
+  homePageBoolean: boolean
 }
 
 const checkHeader = (header: BoundFunctions<typeof queries>) => {
@@ -59,8 +60,10 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   expect(userMenu.getByText('Customer support')).toBeVisible()
   expect(userMenu.getByText('Logout')).toBeVisible()
 
-  await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
-  expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument()
+  await userEvent.click(userMenu.getByTestId('user-menu-settings-item'))
+  await waitFor(() => {
+    expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument();
+  });
 }
 
 const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMenuInfo: TeamMenuInfo) => {
@@ -93,11 +96,15 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
 
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
     expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
-  } else {
-    expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
   }
-
-  expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
+  else if (headerInfo.homePageBoolean) {
+    expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
+    expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
+    expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument()
+  }
+  else {
+    expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
+  }
 
   //Go to notification tab and go back using the back button
   await userEvent.click(header.getByTestId('notification-icon'))

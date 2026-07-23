@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Box from '@mui/material/Box'
+import { Parameter } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import { formatParameterValue } from '../../../utils/format/format.util'
 import styles from './parameter-tooltip.css'
-import React, { FC } from 'react'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { Parameter } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import Grid from '@mui/material/Grid'
 
 interface ParameterChangeLineProps {
   parameter: Parameter
@@ -47,8 +47,8 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
   const value = formatParameterValue(parameter.value, parameter.unit)
 
   return (
-    <Grid container spacing={1} key={parameterId}>
-      <Grid size={7}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+      <Box>
         <span
           id={`tooltip-daily-parameter-${parameterId}-name`}
           data-testid={'parameter-name'}
@@ -56,30 +56,24 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         >
           {t(`params|${parameter.name}`)}
         </span>
-      </Grid>
+      </Box>
 
-      <Grid size={1} display="flex" justifyContent="end">
+      <Box sx={{ display: 'flex', gap: 1 }}>
         {
           hasPreviousValue &&
-          <span
-            id={`tooltip-daily-parameter-${parameterId}-prev`}
-            data-testid={'parameter-previous-value'}
-          >
-          {formattedPreviousValue}
-        </span>
+          <>
+            <span
+              id={`tooltip-daily-parameter-${parameterId}-prev`}
+              data-testid={'parameter-previous-value'}
+            >
+            {formattedPreviousValue}
+            </span>
+            <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>
+               &rarr;
+            </span>
+          </>
         }
-      </Grid>
 
-      <Grid size={1} display="flex" justifyContent="center">
-        {
-          hasPreviousValue &&
-          <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>
-            &rarr;
-          </span>
-        }
-      </Grid>
-
-      <Grid size={1} display="flex" justifyContent="end">
         <span
           id={`tooltip-daily-parameter-${parameterId}-value`}
           data-testid={'parameter-value'}
@@ -87,9 +81,6 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         >
           {value}
         </span>
-      </Grid>
-
-      <Grid size={2}>
         <span
           id={`tooltip-daily-parameter-${parameterId}-units`}
           data-testid={'parameter-units'}
@@ -97,7 +88,7 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         >
           {t(parameter.unit)}
         </span>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   )
 }

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
@@ -34,6 +34,7 @@ import { patient2Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { checkPatientNavBarAsPatientMobile } from '../../../assert/patient-nav-bar.assert'
 
 describe('Daily view for patient', () => {
   beforeEach(() => {
@@ -54,6 +55,8 @@ describe('Daily view for patient', () => {
       renderPage(AppUserRoute.Daily)
     })
 
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsPatientMobile()
     await checkPatientLayoutMobile(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
   })
 
