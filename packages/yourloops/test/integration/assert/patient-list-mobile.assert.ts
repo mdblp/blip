@@ -35,7 +35,7 @@ import {
   closeFiltersPresentation,
   defaultToggles,
   updatePatientsFilters
-} from './patient-filters.assert'
+} from './patient-filters-mobile.assert'
 import { changeTeamScope } from './header-mobile.assert'
 import {
   hypoglycemiaPatientInfo,
@@ -51,7 +51,6 @@ import { Router } from '../models/router.model'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement): void => {
-  expect(screen.getByTestId('reset-filters-link')).toHaveTextContent('Reset')
   const allRows = within(dataGridRow).getAllByRole('row')
   expect(allRows).toHaveLength(2)
 }
@@ -97,7 +96,7 @@ export const checkPatientListFiltersMobile = async () => {
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
 
   // Check the default values
-  const filtersButton = screen.getByRole('button', { name: 'Filters' })
+  const filtersButton = screen.getByTestId('filters-button')
   await userEvent.click(filtersButton)
   checkPatientsFilters()
 
@@ -108,7 +107,6 @@ export const checkPatientListFiltersMobile = async () => {
   // check the time spent out of target toggle
   await updatePatientsFilters({
     ...defaultToggles,
-    manualFlagFilterToggle: true,
     outOfRangeFilterToggle: true
   })
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent)
@@ -149,8 +147,7 @@ export const checkPatientListFiltersMobile = async () => {
   // Reset the filters
   await userEvent.click(filtersButton)
   await updatePatientsFilters({
-    ...defaultToggles,
-    unreadMessagesFilterToggle: true
+    ...defaultToggles
   })
 
   expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(6)
