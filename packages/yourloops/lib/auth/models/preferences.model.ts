@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type LanguageCodes } from './enums/language-codes.enum'
+import { type LanguageCode } from './enums/language-code.enum'
 
 export interface Preferences {
-  displayLanguageCode?: LanguageCodes
+  displayLanguageCode?: LanguageCode
   patientsStarred?: string[]
   patientsListSortedOptionalColumns?: string[]
 }

@@ -41,7 +41,7 @@ import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/pa
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCode } from '../../../../lib/auth/models/country.model'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
@@ -80,7 +80,7 @@ describe('User account page for caregiver', () => {
     country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
+  const preferences: Preferences = { displayLanguageCode: LanguageCode.Fr }
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
   beforeAll(() => {
@@ -99,7 +99,7 @@ describe('User account page for caregiver', () => {
 
   it('should render user account page for a caregiver and be able to change his password and change his role to HCP', async () => {
     const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
-    const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
+    const expectedPreferences = { displayLanguageCode: LanguageCode.En }
     const expectedSettings: Settings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,65 +25,52 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useState } from 'react'
-import { getCurrentLang } from '../../lib/language'
-import i18n from 'i18next'
+import { AvatarGroup } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
-import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
-import { setPageTitle } from '../../lib/utils'
+import Tooltip from '@mui/material/Tooltip'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import config from '../../lib/config/config'
+import { getInitials, sortClinicians } from '../../../lib/auth/user.util'
+import { LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
 
-const getFileName = (): string => {
-  switch (getCurrentLang()) {
-    case LanguageCode.Fr :
-      return config.YLPZ_RA_LAD_FR
-    case LanguageCode.De :
-      return config.YLPZ_RA_LAD_DE
-    case LanguageCode.Nl :
-      return config.YLPZ_RA_LAD_NL
-    case LanguageCode.It :
-      return config.YLPZ_RA_LAD_IT
-    case LanguageCode.Es :
-      return config.YLPZ_RA_LAD_ES
-    // default to english
-    case LanguageCode.En :
-    default:
-      return config.YLPZ_RA_LAD_EN
-  }
+interface LeadCliniciansCellProps {
+  clinicians: LeadClinician[]
 }
 
-const  getFilePath = (): string => {
-  return `${config.ASSETS_URL}${getFileName()}.pdf`
-}
-
-export const ProductLabellingPage: FC = () => {
+export const LeadCliniciansCell: FC<LeadCliniciansCellProps> = (props) => {
+  const { clinicians } = props
   const { t } = useTranslation()
 
-  const [filePath, setFilePath] = useState(getFilePath())
-
-  i18n.on('languageChanged', () => {
-    setFilePath(getFilePath())
-  })
-
-  setPageTitle(t('product-labelling'))
+  const hasClinicians = clinicians && clinicians.length > 0
+  const sortedClinicians = sortClinicians(clinicians)
 
   return (
     <Box
-      sx={{
-        marginBottom: 2,
-        width: '100%',
-        height: '100%'
-      }}>
-      <object
-        aria-label={t('product-labelling')}
-        data-testid="udipdf"
-        type="application/pdf"
-        data={filePath}
-        width="100%" height="100%"
-      >
-        {t('product-labelling')}
-      </object>
+      data-testid="lead-clinicians-cell"
+      sx={{ display: 'flex', alignItems: 'center', height: '100%', justifyItems: 'center' }}
+    >
+      {hasClinicians
+        ? <AvatarGroup>
+          {sortedClinicians.map((clinician: LeadClinician) => {
+            const clinicianName = clinician.name
+
+            return (
+              <Tooltip title={clinicianName} key={clinician.email}>
+                <Avatar
+                  alt={clinicianName}
+                  sx={{ width: 24, height: 24, fontSize: 12, bgcolor: 'var(--text-color-secondary)' }}
+                  data-testid={`lead-clinician-avatar-${clinician.email}`}
+                >
+                  {getInitials(clinicianName)}
+                </Avatar>
+              </Tooltip>
+            )
+          })
+          }
+        </AvatarGroup>
+        : t('N/A')
+      }
     </Box>
   )
 }

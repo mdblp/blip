@@ -25,16 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import * as coreLocales from '@mui/material/locale'
+import * as dataGridLocales from '@mui/x-data-grid/locales'
 import { createTheme, type Theme } from '@mui/material/styles'
-import config from '../lib/config/config'
-import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
 import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'
+import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
+import { LanguageCode } from '../lib/auth/models/enums/language-code.enum'
+import config from '../lib/config/config'
 
 const DEFAULT_COLOR = '#000'
 const appElement = document.getElementById('app')
 
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
 const getColor = (variable: string): string => appElement ? cssVar(variable) : DEFAULT_COLOR
+
+const MUI_LOCALE_BY_LANGUAGE_CODE = {
+  [LanguageCode.De]: 'deDE',
+  [LanguageCode.Fr]: 'frFR',
+  [LanguageCode.En]: 'enUS',
+  [LanguageCode.It]: 'itIT',
+  [LanguageCode.Es]: 'esES',
+  [LanguageCode.Nl]: 'nlNL',
+  [LanguageCode.Ja]: 'jaJP',
+}
 
 /** Set one and only one class for the branding in `<div id='app'>` */
 export function initTheme(): void {
@@ -46,11 +59,14 @@ export function initTheme(): void {
   favIcon.href = `./branding_${config.BRANDING}_favicon.ico`
 }
 
-export function getTheme(): Theme {
-  return createTheme({
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: `
+export function getTheme(languageCode: LanguageCode): Theme {
+  const muiLocale = MUI_LOCALE_BY_LANGUAGE_CODE[languageCode] ?? MUI_LOCALE_BY_LANGUAGE_CODE[LanguageCode.En]
+
+  return createTheme(
+    {
+      components: {
+        MuiCssBaseline: {
+          styleOverrides: `
         @font-face {
           font-family: 'MuseoSlab';
           src: url('${MuseoSlabRegular}') format('opentype');
@@ -63,124 +79,129 @@ export function getTheme(): Theme {
           font-weight: 900;
         }
       `
-      },
-      MuiAlert: {
-        styleOverrides: {
-          root: {
-            borderRadius: 12
+        },
+        MuiAlert: {
+          styleOverrides: {
+            root: {
+              borderRadius: 12
+            }
           }
-        }
-      },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            fontWeight: 600,
-            borderRadius: '24px',
-            textTransform: 'none'
+        },
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              fontWeight: 600,
+              borderRadius: '24px',
+              textTransform: 'none'
+            }
           }
-        }
-      },
-      MuiTab: {
-        styleOverrides: {
-          root: {
-            fontWeight: 600,
-            textTransform: 'none'
+        },
+        MuiTab: {
+          styleOverrides: {
+            root: {
+              fontWeight: 600,
+              textTransform: 'none'
+            }
           }
-        }
-      },
-      MuiDialogActions: {
-        styleOverrides: {
-          spacing: {
-            padding: 16,
-            '& > :last-child': {
-              marginLeft: 16
+        },
+        MuiDialogActions: {
+          styleOverrides: {
+            spacing: {
+              padding: 16,
+              '& > :last-child': {
+                marginLeft: 16
+              }
+            }
+          }
+        },
+        MuiSvgIcon: {
+          styleOverrides: {
+            root: {
+              margin: 0
+            }
+          }
+        },
+        MuiLink: {
+          defaultProps: {
+            underline: 'hover'
+          }
+        },
+        MuiListItemIcon: {
+          styleOverrides: {
+            root: {
+              minWidth: 40,
+              color: getColor('--text-color-primary')
+            }
+          }
+        },
+        MuiPaper: {
+          styleOverrides: {
+            rounded: {
+              borderRadius: 24
             }
           }
         }
       },
-      MuiSvgIcon: {
-        styleOverrides: {
-          root: {
-            margin: 0
-          }
-        }
-      },
-      MuiLink: {
-        defaultProps: {
-          underline: 'hover'
-        }
-      },
-      MuiListItemIcon: {
-        styleOverrides: {
-          root: {
-            minWidth: 40,
-            color: getColor('--text-color-primary')
-          }
-        }
-      },
-      MuiPaper: {
-        styleOverrides: {
-          rounded: {
-            borderRadius: 24
-          }
+      palette: {
+        mode: 'light',
+        text: {
+          primary: getColor('--text-color-primary'),
+          secondary: getColor('--text-color-secondary')
+        },
+        primary: {
+          main: getColor('--primary-color-main'),
+          light: getColor('--primary-color-light'),
+          dark: getColor('--primary-color-dark'),
+          contrastText: getColor('--primary-color-contrast-text')
+        },
+        secondary: {
+          main: getColor('--secondary-color-main'),
+          light: getColor('--secondary-color-light'),
+          dark: getColor('--secondary-color-dark')
+        },
+        success: {
+          main: getColor('--success-color-main'),
+          light: getColor('--success-color-light'),
+          dark: getColor('--success-color-dark')
+        },
+        error: {
+          main: getColor('--error-color-main'),
+          light: getColor('--error-color-light'),
+          dark: getColor('--error-color-dark')
+        },
+        warning: {
+          main: getColor('--warning-color-main'),
+          light: getColor('--warning-color-light'),
+          dark: getColor('--warning-color-dark')
+        },
+        info: {
+          main: getColor('--info-color-main'),
+          light: getColor('--info-color-light'),
+          dark: getColor('--info-color-dark')
+        },
+        lightBlue: {
+          main: getColor('--info-color-20'),
+          light: getColor('--info-color-20'),
+          dark: getColor('--info-color-20'),
+          contrastText: getColor('--text-color-primary')
+        },
+        lightPink: {
+          main: getColor('--pink-color-20'),
+          light: getColor('--pink-color-20'),
+          dark: getColor('--pink-color-20'),
+          contrastText: getColor('--text-color-primary')
+        },
+        lightDarkBlue: {
+          main: getColor('--dark-blue-color-20'),
+          light: getColor('--dark-blue-color-20'),
+          dark: getColor('--dark-blue-color-20'),
+          contrastText: getColor('--text-color-primary')
         }
       }
     },
-    palette: {
-      mode: 'light',
-      text: {
-        primary: getColor('--text-color-primary'),
-        secondary: getColor('--text-color-secondary')
-      },
-      primary: {
-        main: getColor('--primary-color-main'),
-        light: getColor('--primary-color-light'),
-        dark: getColor('--primary-color-dark'),
-        contrastText: getColor('--primary-color-contrast-text')
-      },
-      secondary: {
-        main: getColor('--secondary-color-main'),
-        light: getColor('--secondary-color-light'),
-        dark: getColor('--secondary-color-dark')
-      },
-      success: {
-        main: getColor('--success-color-main'),
-        light: getColor('--success-color-light'),
-        dark: getColor('--success-color-dark')
-      },
-      error: {
-        main: getColor('--error-color-main'),
-        light: getColor('--error-color-light'),
-        dark: getColor('--error-color-dark')
-      },
-      warning: {
-        main: getColor('--warning-color-main'),
-        light: getColor('--warning-color-light'),
-        dark: getColor('--warning-color-dark')
-      },
-      info: {
-        main: getColor('--info-color-main'),
-        light: getColor('--info-color-light'),
-        dark: getColor('--info-color-dark')
-      },
-      lightBlue: {
-        main: getColor('--info-color-20'),
-        light: getColor('--info-color-20'),
-        dark: getColor('--info-color-20'),
-        contrastText: getColor('--text-color-primary'),
-      },
-      lightPink: {
-        main: getColor('--pink-color-20'),
-        light: getColor('--pink-color-20'),
-        dark: getColor('--pink-color-20'),
-        contrastText: getColor('--text-color-primary'),
-      },
-      lightDarkBlue: {
-        main: getColor('--dark-blue-color-20'),
-        light: getColor('--dark-blue-color-20'),
-        dark: getColor('--dark-blue-color-20'),
-        contrastText: getColor('--text-color-primary'),
-      }
-    }
-  })
+    coreLocales[muiLocale],
+    // Translations for @mui/x-date-pickers package: not used in our codebase
+    undefined,
+    dataGridLocales[muiLocale]
+  )
 }

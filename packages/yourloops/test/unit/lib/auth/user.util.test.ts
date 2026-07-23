@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getUserName, sanitizeBgUnit } from '../../../../lib/auth/user.util'
+import { getUserName, sanitizeBgUnit, sortClinicians } from '../../../../lib/auth/user.util'
 import { Unit } from 'medical-domain'
+import { LeadClinician } from '../../../../lib/lead-clinicians/models/lead-clinician.model'
 
 describe('User util', () => {
   describe('getUserName', () => {
@@ -62,6 +63,54 @@ describe('User util', () => {
       expect(sanitizeBgUnit('mmol/l')).toEqual(Unit.MmolPerLiter)
       expect(sanitizeBgUnit('MMOL/L')).toEqual(Unit.MmolPerLiter)
       expect(sanitizeBgUnit('Mmol/l')).toEqual(Unit.MmolPerLiter)
+    })
+  })
+
+  describe('sortClinicians', () => {
+    const buildClinician = (name: string): LeadClinician => ({
+      id: name,
+      name,
+      profession: 'Doctor',
+      email: `${name.toLowerCase().replace(' ', '.')}@clinic.com`
+    })
+
+    it('should return an empty array when given an empty array', () => {
+      expect(sortClinicians([])).toEqual([])
+    })
+
+    it('should return the same single-element array unchanged', () => {
+      const clinician = buildClinician('Alice Martin')
+      expect(sortClinicians([clinician])).toEqual([clinician])
+    })
+
+    it('should sort clinicians alphabetically by name', () => {
+      const charlie = buildClinician('Charlie Brown')
+      const alice = buildClinician('Alice Martin')
+      const bob = buildClinician('Bob Smith')
+
+      const result = sortClinicians([charlie, alice, bob])
+
+      expect(result.map((c) => c.name)).toEqual(['Alice Martin', 'Bob Smith', 'Charlie Brown'])
+    })
+
+    it('should preserve order of already-sorted clinicians', () => {
+      const alice = buildClinician('Alice Martin')
+      const bob = buildClinician('Bob Smith')
+      const charlie = buildClinician('Charlie Brown')
+
+      const result = sortClinicians([alice, bob, charlie])
+
+      expect(result.map((c) => c.name)).toEqual(['Alice Martin', 'Bob Smith', 'Charlie Brown'])
+    })
+
+    it('should not mutate the original array', () => {
+      const charlie = buildClinician('Charlie Brown')
+      const alice = buildClinician('Alice Martin')
+      const original = [charlie, alice]
+
+      sortClinicians(original)
+
+      expect(original.map((c) => c.name)).toEqual(['Charlie Brown', 'Alice Martin'])
     })
   })
 })

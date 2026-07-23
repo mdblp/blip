@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import Select from '@mui/material/Select'
 
 import { availableLanguageCodes, getLangName } from '../../../lib/language'
 import { ConsentFeedback } from '../../../components/consents'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { type LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
 import { useUserAccountPageState } from '../user-account-page-context'
 import { useAuth } from '../../../lib/auth'
 import { userAccountFormCommonClasses } from '../css-classes'
@@ -88,7 +88,7 @@ export const PreferencesForm: FunctionComponent = () => {
             data-testid="user-account-locale-selector"
             value={userAccountForm.lang}
             onChange={event => {
-              updateUserAccountForm(UserAccountFormKey.lang, event.target.value as LanguageCodes)
+              updateUserAccountForm(UserAccountFormKey.lang, event.target.value as LanguageCode)
             }}
           >
             {availableLanguageCodes.map((languageCode) => (

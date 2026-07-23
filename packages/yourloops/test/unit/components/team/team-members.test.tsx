@@ -25,21 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { ThemeProvider } from '@mui/material/styles'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
+import TeamMembers, { type TeamMembersProps } from '../../../../components/team/team-members'
+import { getTheme } from '../../../../components/theme'
+import * as alertHookMock from '../../../../components/utils/snackbar'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
+import ErrorApi from '../../../../lib/error/error.api'
 
 import * as teamHookMock from '../../../../lib/team'
-import { buildTeam, buildTeamMember } from '../../common/utils'
-import TeamUtils from '../../../../lib/team/team.util'
-import TeamMembers, { type TeamMembersProps } from '../../../../components/team/team-members'
-import * as alertHookMock from '../../../../components/utils/snackbar'
-import { getTheme } from '../../../../components/theme'
-import { ThemeProvider } from '@mui/material/styles'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { MemoryRouter } from 'react-router-dom'
-import ErrorApi from '../../../../lib/error/error.api'
+import TeamUtils from '../../../../lib/team/team.util'
+import { buildTeam, buildTeamMember } from '../../common/utils'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
@@ -81,7 +82,7 @@ describe('TeamMembers', () => {
   function getTeamMembersJSX({ team }: TeamMembersProps = { team: defaultTeam }) {
     return (
       <MemoryRouter>
-        <ThemeProvider theme={getTheme()}>
+        <ThemeProvider theme={getTheme(LanguageCode.En)}>
           <TeamMembers
             team={team}
           />
@@ -98,7 +99,7 @@ describe('TeamMembers', () => {
 
   it('should show add member button when logged in user is admin', () => {
     render(getTeamMembersJSX())
-    expect(screen.queryByRole('button', { name: 'button-team-add-member' })).not.toBeNull()
+    expect(screen.getByRole('button', { name: 'button-team-add-member' })).not.toBeNull()
   })
 
   it('should open the invite member dialog when clicking on the add member button', () => {
@@ -106,7 +107,7 @@ describe('TeamMembers', () => {
     expect(screen.queryByRole('dialog')).toBeNull()
     const addMemberButton = screen.getByRole('button', { name: 'button-team-add-member' })
     fireEvent.click(addMemberButton)
-    expect(screen.queryByRole('dialog')).not.toBeNull()
+    expect(screen.getByRole('dialog')).not.toBeNull()
   })
 
   it('should call teamHook when inviting a member and succeed', async () => {
@@ -120,14 +121,12 @@ describe('TeamMembers', () => {
     const adminCheckbox = inviteMemberDialog.getByRole('checkbox')
     fireEvent.click(adminCheckbox)
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
-    await act(async () => {
-      fireEvent.click(inviteButton)
-      await waitFor(() => {
-        expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.admin)
-      })
-      await waitFor(() => {
-        expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp')
-      })
+    fireEvent.click(inviteButton)
+    await waitFor(() => {
+      expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.admin)
+    })
+    await waitFor(() => {
+      expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp')
     })
   })
 
@@ -143,14 +142,12 @@ describe('TeamMembers', () => {
     const emailInput = inviteMemberDialog.getByRole('textbox', { name: 'email' })
     await userEvent.type(emailInput, email)
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
-    await act(async () => {
-      fireEvent.click(inviteButton)
-      await waitFor(() => {
-        expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.member)
-      })
-      await waitFor(() => {
-        expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp')
-      })
+    fireEvent.click(inviteButton)
+    await waitFor(() => {
+      expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.member)
+    })
+    await waitFor(() => {
+      expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp')
     })
   })
 

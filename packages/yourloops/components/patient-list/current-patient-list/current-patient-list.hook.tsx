@@ -25,13 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Patient } from '../../../lib/patient/models/patient.model'
+import { Skeleton } from '@mui/material'
+import Box from '@mui/material/Box'
 import { type GridColDef, type GridRenderCellParams, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
-import { useTranslation } from 'react-i18next'
-import { type GridRowModel } from '../models/grid-row.model'
-import { PatientListColumns } from '../models/enums/patient-list.enum'
-import PatientUtils from '../../../lib/patient/patient.util'
+import { formatBirthdate } from 'dumb'
+import { DiabeticType } from 'medical-domain'
+import moment from 'moment-timezone'
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../lib/auth'
+
+import { getUserName } from '../../../lib/auth/user.util'
+import { LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import PatientUtils from '../../../lib/patient/patient.util'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
+import { ActionsCell } from '../custom-cells/actions-cell'
+import { FlagIconCell } from '../custom-cells/flag-icon-cell'
+import { LeadCliniciansCell } from '../custom-cells/lead-clinicians-cell'
+import { MessageCell } from '../custom-cells/message-cell'
+import { MonitoringAlertsCell } from '../custom-cells/monitoring-alerts-cell'
+import { MonitoringAlertsSkeletonCell } from '../custom-cells/monitoring-alerts-skeleton-cell'
+import { PatientListColumn } from '../models/enums/patient-list.enum'
+import { type GridRowModel } from '../models/grid-row.model'
+import { usePatientListStyles } from '../patient-list.styles'
 import {
   sortByDateOfBirth,
   sortByFlag,
@@ -39,23 +58,6 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../utils/sort-comparators.util'
-
-import { getUserName } from '../../../lib/auth/user.util'
-import Box from '@mui/material/Box'
-import { formatBirthdate } from 'dumb'
-import { usePatientListStyles } from '../patient-list.styles'
-import { useNavigate } from 'react-router-dom'
-import { Skeleton } from '@mui/material'
-import { useAuth } from '../../../lib/auth'
-import { DiabeticType } from 'medical-domain'
-import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
-import moment from 'moment-timezone'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
-import { FlagIconCell } from '../custom-cells/flag-icon-cell'
-import { MonitoringAlertsSkeletonCell } from '../custom-cells/monitoring-alerts-skeleton-cell'
-import { MonitoringAlertsCell } from '../custom-cells/monitoring-alerts-cell'
-import { MessageCell } from '../custom-cells/message-cell'
-import { ActionsCell } from '../custom-cells/actions-cell'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -89,21 +91,22 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
-        [PatientListColumns.Flag]: patient,
-        [PatientListColumns.Patient]: patient,
-        [PatientListColumns.DateOfBirth]: patient,
-        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
-        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
-        [PatientListColumns.MonitoringAlerts]: patient,
-        [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
-        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData),
-        [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
-        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
-        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
-        [PatientListColumns.BelowRange]: patient.glycemiaIndicators?.hypoglycemia,
-        [PatientListColumns.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
-        [PatientListColumns.Actions]: patient,
-        [PatientListColumns.PatientProfile]: patient.diabeticProfile?.type ?? DiabeticType.DT1DT2
+        [PatientListColumn.Flag]: patient,
+        [PatientListColumn.Patient]: patient,
+        [PatientListColumn.DateOfBirth]: patient,
+        [PatientListColumn.Age]: PatientUtils.computeAge(birthdate),
+        [PatientListColumn.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
+        [PatientListColumn.MonitoringAlerts]: patient,
+        [PatientListColumn.System]: patient.settings.system ?? noDataLabel,
+        [PatientListColumn.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData),
+        [PatientListColumn.Messages]: patient.hasSentUnreadMessages,
+        [PatientListColumn.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
+        [PatientListColumn.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
+        [PatientListColumn.BelowRange]: patient.glycemiaIndicators?.hypoglycemia,
+        [PatientListColumn.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
+        [PatientListColumn.Actions]: patient,
+        [PatientListColumn.PatientProfile]: patient.diabeticProfile?.type ?? DiabeticType.DT1DT2,
+        [PatientListColumn.Clinicians]: patient.leadClinicians
       }
     })
   }, [noDataLabel, sortedPatients])
@@ -115,7 +118,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   const allColumns = useMemo((): GridColDef[] => {
     return [
       {
-        field: PatientListColumns.Flag,
+        field: PatientListColumn.Flag,
         type: 'actions',
         headerName: '',
         width: 55,
@@ -128,7 +131,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         }
       },
       {
-        field: PatientListColumns.Patient,
+        field: PatientListColumn.Patient,
         headerName: t('patient'),
         hideable: false,
         width: 250,
@@ -142,39 +145,51 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         sortComparator: sortByUserName
       },
       {
-        field: PatientListColumns.PatientProfile,
+        field: PatientListColumn.PatientProfile,
         headerName: t('patient-profile'),
         width: 150,
         align: 'left',
         renderCell: (params: GridRenderCellParams<GridRowModel, DiabeticType>) => {
           return <PatientDiabeticProfileChip
-                  patientDiabeticType={params.value}
-                  sx={{ ml: '0 !important' }} /> // override default margin-left
+            patientDiabeticType={params.value}
+            sx={{ ml: '0 !important' }} /> // override default margin-left
         }
       },
       {
-        field: PatientListColumns.Age,
+        field: PatientListColumn.Age,
         type: 'string',
         headerName: t('age'),
         width: 80
       },
       {
-        field: PatientListColumns.DateOfBirth,
+        field: PatientListColumn.DateOfBirth,
         headerName: t('date-of-birth'),
         sortComparator: sortByDateOfBirth,
         width: 150,
         valueFormatter: (patient: Patient): string => formatBirthdate(patient.profile.birthdate)
       },
       {
-        field: PatientListColumns.Gender,
+        field: PatientListColumn.Gender,
         headerName: t('gender')
       },
       {
-        field: PatientListColumns.System,
+        field: PatientListColumn.System,
         headerName: t('system')
       },
       {
-        field: PatientListColumns.MonitoringAlerts,
+        field: PatientListColumn.Clinicians,
+        headerName: t('lead-clinicians'),
+        align: 'left',
+        width: 130,
+        sortable: false,
+        renderCell: (params: GridRenderCellParams<GridRowModel, LeadClinician[]>) => {
+          const clinicians = params.value
+
+          return <LeadCliniciansCell clinicians={clinicians} />
+        }
+      },
+      {
+        field: PatientListColumn.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         sortComparator: sortByMonitoringAlertsCount,
@@ -188,7 +203,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'boolean',
-        field: PatientListColumns.Messages,
+        field: PatientListColumn.Messages,
         headerName: t('messages'),
         renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => {
           return <MessageCell hasNewMessages={params.value} />
@@ -196,7 +211,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'number',
-        field: PatientListColumns.TimeInRange,
+        field: PatientListColumn.TimeInRange,
         headerName: t('time-in-range'),
         description: t('time-in-range-tooltip'),
         headerAlign: 'left',
@@ -214,8 +229,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'number',
-        field: PatientListColumns.GlucoseManagementIndicator,
-        headerName:t('column-header-glucose-management'),
+        field: PatientListColumn.GlucoseManagementIndicator,
+        headerName: t('column-header-glucose-management'),
         description: t('glucose-management-indicator'),
         headerAlign: 'left',
         align: 'left',
@@ -233,7 +248,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'number',
-        field: PatientListColumns.BelowRange,
+        field: PatientListColumn.BelowRange,
         headerName: t('below-range'),
         description: t('below-range-tooltip'),
         headerAlign: 'left',
@@ -252,7 +267,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'number',
-        field: PatientListColumns.Variance,
+        field: PatientListColumn.Variance,
         headerName: t('variance'),
         description: t('coefficient-of-variation'),
         headerAlign: 'left',
@@ -270,7 +285,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'string',
-        field: PatientListColumns.LastDataUpdate,
+        field: PatientListColumn.LastDataUpdate,
         width: 180,
         headerName: t('last-data-update'),
         description: t('last-data-update-tooltip'),
@@ -280,21 +295,21 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           const value = params.value
           let dateToDisplay = noDataLabel
           if (value !== null) {
-              const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-              const date = moment.tz(value, browserTimezone)
-              if (date.isValid()) {
-                dateToDisplay = date.format('lll')
-              }
+            const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+            const date = moment.tz(value, browserTimezone)
+            if (date.isValid()) {
+              dateToDisplay = date.format('lll')
+            }
           }
           return dateToDisplay ?? <Skeleton data-testid="last-data-update-cell-skeleton"
-                                    variant="rounded"
-                                    width={150}
-                                    height={SKELETON_HEIGHT_PX} />
+                                            variant="rounded"
+                                            width={150}
+                                            height={SKELETON_HEIGHT_PX} />
         }
       },
       {
         type: 'actions',
-        field: PatientListColumns.Actions,
+        field: PatientListColumn.Actions,
         headerName: t('actions'),
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,

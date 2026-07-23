@@ -27,6 +27,7 @@
 
 import i18next from 'i18next'
 import { Unit } from 'medical-domain'
+import { LeadClinician } from '../lead-clinicians/models/lead-clinician.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -48,6 +49,10 @@ export const getInitials = (fullName: string): string => {
   const initials = `${firstInitial}${secondInitial}`
 
   return initials.toUpperCase()
+}
+
+export const sortClinicians = (clinicians: LeadClinician[]): LeadClinician[] => {
+  return clinicians.toSorted((a, b) => a.name.localeCompare(b.name))
 }
 
 export const sanitizeBgUnit = (bgUnit: string): Unit.MilligramPerDeciliter | Unit.MmolPerLiter => {

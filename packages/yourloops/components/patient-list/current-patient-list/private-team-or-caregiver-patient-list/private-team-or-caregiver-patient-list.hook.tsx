@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { type GridColDef, type GridRowParams, type GridRowsProp, type GridValidRowModel } from '@mui/x-data-grid'
-import { useCallback, useState } from 'react'
-import { type UserToRemove } from '../../../dialogs/remove-direct-share-dialog'
-import { usePatientsContext } from '../../../../lib/patient/patients.provider'
-import { useAuth } from '../../../../lib/auth'
 import { getPatientFullName } from 'dumb'
-import { useCurrentPatientListHook } from '../current-patient-list.hook'
-import { PatientListColumns } from '../../models/enums/patient-list.enum'
 import _ from 'lodash'
+import { useCallback, useState } from 'react'
+import { useAuth } from '../../../../lib/auth'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
+import { usePatientsContext } from '../../../../lib/patient/patients.provider'
+import { type UserToRemove } from '../../../dialogs/remove-direct-share-dialog'
+import { PatientListColumn } from '../../models/enums/patient-list.enum'
+import { EXCLUDED_COLUMNS_PRIVATE_TEAM_CAREGIVER } from '../../utils/columns.util'
+import { useCurrentPatientListHook } from '../current-patient-list.hook'
 
 interface PrivateTeamOrCaregiverPatientListHookProps {
   patients: Patient[]
@@ -48,8 +49,6 @@ interface PrivateTeamOrCaregiverPatientListHookReturns {
   onCloseRemoveDialog: () => void
   onRowClick: (params: GridRowParams) => void
 }
-
-const EXCLUDED_COLUMNS = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
 
 export const usePrivateTeamOrCaregiverPatientListHook = (props: PrivateTeamOrCaregiverPatientListHookProps): PrivateTeamOrCaregiverPatientListHookReturns => {
   const { patients } = props
@@ -79,8 +78,8 @@ export const usePrivateTeamOrCaregiverPatientListHook = (props: PrivateTeamOrCar
     setPatientToRemoveFromDirectShare(null)
   }
 
-  const columns = allColumns.filter((column: GridColDef) => !EXCLUDED_COLUMNS.includes(column.field as PatientListColumns))
-  const rowsProps = allRows.map((row: GridValidRowModel) => _.omit(row, EXCLUDED_COLUMNS))
+  const columns = allColumns.filter((column: GridColDef) => !EXCLUDED_COLUMNS_PRIVATE_TEAM_CAREGIVER.has(column.field as PatientListColumn))
+  const rowsProps = allRows.map((row: GridValidRowModel) => _.omit(row, Array.from(EXCLUDED_COLUMNS_PRIVATE_TEAM_CAREGIVER)))
 
   return {
     columns,

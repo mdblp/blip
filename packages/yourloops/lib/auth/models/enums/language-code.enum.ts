@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum LanguageCodes {
+export enum LanguageCode {
   De = 'de',
   En = 'en',
   Es = 'es',

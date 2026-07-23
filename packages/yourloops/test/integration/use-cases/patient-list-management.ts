@@ -25,13 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
 import {
   checkAckMonitoringAlertDialogCloseOnAnalyse,
-  checkAckMonitoringAlertDialogContent, checkAckMonitoringAlertHyperglycemia,
+  checkAckMonitoringAlertDialogContent,
+  checkAckMonitoringAlertHyperglycemia,
   checkAckMonitoringAlertHypoglycemia,
   checkAckMonitoringAlertNoData,
   checkAckMonitoringAlertTimeOutOfRange,
+  checkDataGridTranslations,
   checkInactiveAlertIconRedirectToDashboard,
+  checkLeadCliniciansColumn,
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
   checkPatientListColumnSort,
@@ -44,9 +48,9 @@ import {
   checkPatientListTooltipsMgDL,
   checkPatientListTooltipsMmolL,
   checkPatientListTooltipsNoData,
-  checkPendingPatientColumnsSettingsMedicalTeam, goBackToPatientsList
+  checkPendingPatientColumnsSettingsMedicalTeam,
+  goBackToPatientsList
 } from '../assert/patient-list.assert'
-import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
 import { Router } from '../models/router.model'
 
 export const testPatientListForHcp = async () => {
@@ -54,13 +58,17 @@ export const testPatientListForHcp = async () => {
   await checkPatientListTooltipsMgDL()
   await checkPatientListTooltipsNoData()
   await checkPatientListColumnSort()
-  await checkMonitoringAlertsIconsInactiveForFirstPatient()
   await checkPatientListFilters()
   await checkPatientColumnsFiltersContent()
   await checkPendingPatientColumnsSettingsMedicalTeam()
   await checkPatientListHideShowColumns()
   await checkPatientListPendingTab()
   await checkPatientListCurrentTab()
+}
+
+export const testPatientListContentForHcp = async () => {
+  await checkMonitoringAlertsIconsInactiveForFirstPatient()
+  await checkLeadCliniciansColumn()
 }
 
 export const testPatientListForHcpWithMmolL = async () => {
@@ -86,4 +94,8 @@ export const testAckMonitoringAlerts = async (router: Router) => {
 
 export const testAckMonitoringAlertsWithError = async () => {
   await checkAckMonitoringAlertHypoglycemia(true)
+}
+
+export const testDataGridTranslations = async () => {
+  checkDataGridTranslations()
 }

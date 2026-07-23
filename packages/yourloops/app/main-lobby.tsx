@@ -39,6 +39,7 @@ import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import { Footer } from '../components/footer/footer'
+import { getCurrentLang } from '../lib/language'
 import { CompleteSignUpPage } from '../pages/signup/complete-signup-page'
 import { MainLayout } from '../layout/main-layout'
 import { TrainingPage } from '../pages/training/training'
@@ -104,9 +105,10 @@ export const MainLobby: FC = () => {
   const { fetchingUser, isLoggedIn, logout, setAppStateJson, user } = useAuth()
   const location = useLocation()
   const queryParams = useQueryParams()
+  const language = getCurrentLang()
 
   const currentRoute = location.pathname
-  const theme = getTheme()
+  const theme = getTheme(language)
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
   const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(currentRoute)
 

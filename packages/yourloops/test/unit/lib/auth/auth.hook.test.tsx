@@ -39,7 +39,7 @@ import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/aut
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCode } from '../../../../lib/auth/models/country.model'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import { Unit } from 'medical-domain'
 
 jest.mock('@auth0/auth0-react')
@@ -57,7 +57,7 @@ describe('Auth hook', () => {
     email: 'fake@email.com',
     hcpProfession: HcpProfession.diabeto
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.En }
+  const preferences: Preferences = { displayLanguageCode: LanguageCode.En }
   const settings: Settings = { country: CountryCode.France, units: { bg: Unit.MilligramPerDeciliter } }
 
   const initAuthContext = async (): Promise<void> => {
@@ -126,7 +126,7 @@ describe('Auth hook', () => {
   })
 
   describe('Updates', () => {
-    const updatedPreferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
+    const updatedPreferences: Preferences = { displayLanguageCode: LanguageCode.Fr }
     const updatedUserAccount: UserAccount = {
       ...account,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
@@ -255,7 +255,7 @@ describe('Auth hook', () => {
     it('setFlagPatients should replace the currently flagged patient', async () => {
       const userId = '0123456789'
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({
-        displayLanguageCode: LanguageCodes.Fr,
+        displayLanguageCode: LanguageCode.Fr,
         patientsStarred: [userId]
       })
       jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(Promise.resolve({
@@ -286,7 +286,7 @@ describe('Auth hook', () => {
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
-        preferencesLanguage: LanguageCodes.Fr,
+        preferencesLanguage: LanguageCode.Fr,
         profileCountry: CountryCode.France,
         terms: true,
         privacyPolicy: true,
@@ -310,7 +310,7 @@ describe('Auth hook', () => {
       expect(auth.user.account.termsOfUse.isAccepted).toBeTruthy()
       expect(auth.user.account.privacyPolicy.isAccepted).toBeTruthy()
       expect(auth.user.account.contactConsent.isAccepted).toBeTruthy()
-      expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCodes.Fr)
+      expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCode.Fr)
       expect(auth.user.settings.country).toEqual(CountryCode.France)
     })
   })

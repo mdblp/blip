@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import RemoveDirectShareDialog from '../../../dialogs/remove-direct-share-dialog
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
-import { PatientListColumns } from '../../models/enums/patient-list.enum'
+import { PatientListColumn } from '../../models/enums/patient-list.enum'
 import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
 import AnalyticsApi, { ElementType } from '../../../../lib/analytics/analytics.api'
 
@@ -60,7 +60,7 @@ export const PrivateTeamOrCaregiverPatientList: FunctionComponent<PrivateTeamOrC
   const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
-  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
+  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumn.Patient, sort: 'asc' }])
 
 
   const handleSortChange = (model: GridSortModel) => {
