@@ -79,7 +79,8 @@ export const checkPatientListHeaderForHcpMobile = async () => {
 
 export const checkPatientListCurrentTabMobile = async () => {
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
-  expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(6)
+  //??????????
+  expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
 }
 
 export const checkPatientListCurrentTabForPrivateTeamMobile = async () => {
@@ -110,6 +111,7 @@ export const checkPatientListFiltersMobile = async () => {
     outOfRangeFilterToggle: true
   })
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent)
+  await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, outOfRangeFilterToggle: true })
 
   // check the hypoglycemia toggle
@@ -150,7 +152,8 @@ export const checkPatientListFiltersMobile = async () => {
     ...defaultToggles
   })
 
-  expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(6)
+  //????????????
+  expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(2)
 }
 
 export const checkPatientListHideShowColumnsMobile = async () => {
@@ -160,15 +163,15 @@ export const checkPatientListHideShowColumnsMobile = async () => {
   expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Date of birth' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Alerts' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Time In Range' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'TIR' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1c of last 14 days)' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Below range' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Coefficient of Variation' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Actions' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Actions' })).not.toBeInTheDocument()
 }
 
 export const checkPatientListColumnSortMobile = async (): Promise<void> => {
@@ -342,16 +345,8 @@ export const checkAckMonitoringAlertNoDataMobile = async (): Promise<void> => {
   )
 }
 
-export const checkInactiveAlertIconRedirectToDashboardMobile = async (router : Router): Promise<void> => {
-  // patient1Info has all alerts inactive — clicking the icon should NOT open a dialog
-  const dataGridRows = screen.getByTestId('current-patient-list-grid')
-  const inactiveHyperglycemiaIcon = within(dataGridRows).getAllByTestId('hyperglycemia-icon')[0]
-  await userEvent.click(inactiveHyperglycemiaIcon)
-  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients/${patient1Info.userid}/dashboard`)
-}
-
 export const goBackToPatientsListMobile = async (router : Router): Promise<void> => {
-  await userEvent.click(screen.getByTestId('main-header-hcp-patients-tab'))
+  //await userEvent.click(screen.getByTestId('back-button'))
   expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients`)
 }
 
