@@ -29,7 +29,7 @@ import { screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
 
-const checkFooter = (hasLanguageSelector: boolean = false, isMobile: boolean) => {
+const checkFooter = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const productLabellingLink = footer.getByText('Product Labelling')
   const termsOfUseLink = footer.getByText('Terms of use')
@@ -62,35 +62,35 @@ const checkFooter = (hasLanguageSelector: boolean = false, isMobile: boolean) =>
   expect(contactLink).toBeVisible()
 }
 
-export const checkFooterForUserNotLoggedIn = (hasLanguageSelector: boolean = false, isMobile: boolean ) => {
+export const checkFooterForUserNotLoggedIn = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
   expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl())
-  checkFooter(hasLanguageSelector, isMobile)
+  checkFooter(isMobile, hasLanguageSelector)
 }
 
-export const checkFooterForHcp = (hasLanguageSelector: boolean = false, isMobile: boolean ) => {
+export const checkFooterForHcp = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
   expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl(UserRole.Hcp))
-  checkFooter(hasLanguageSelector, isMobile)
+  checkFooter(isMobile, hasLanguageSelector)
 }
 
-export const checkFooterForPatient = (hasLanguageSelector: boolean = false, isMobile: boolean ) => {
+export const checkFooterForPatient = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
   expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl(UserRole.Patient))
-  checkFooter(hasLanguageSelector, isMobile)
+  checkFooter(isMobile, hasLanguageSelector)
 }
 
-export const checkFooterForCaregiver = (hasLanguageSelector: boolean = false, isMobile: boolean ) => {
+export const checkFooterForCaregiver = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
   expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl(UserRole.Caregiver))
-  checkFooter(hasLanguageSelector, isMobile)
+  checkFooter(isMobile, hasLanguageSelector)
 }
 
