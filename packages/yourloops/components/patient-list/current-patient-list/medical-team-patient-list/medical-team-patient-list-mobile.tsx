@@ -34,7 +34,7 @@ import {
 } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { PatientListCustomFooter } from '../../patient-list-custom-footer'
-import { PatientListColumns } from '../../models/enums/patient-list.enum'
+import { PatientListColumn } from '../../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useMedicalTeamPatientListHook } from './medical-team-patient-list.hook'
@@ -63,7 +63,7 @@ export const MedicalTeamPatientListMobile: FunctionComponent<MedicalTeamPatientL
   const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
-  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
+  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumn.Patient, sort: 'asc' }])
 
   const handleSortChange = (model: GridSortModel) => {
     setSortModel(model)
