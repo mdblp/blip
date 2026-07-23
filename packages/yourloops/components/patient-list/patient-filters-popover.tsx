@@ -82,6 +82,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
       open
       anchorEl={anchorEl}
       onClose={onClose}
+      data-testid = "filters-popover"
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'left'
