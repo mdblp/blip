@@ -29,11 +29,11 @@ import Box from '@mui/material/Box'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 
 interface TableLineProps {
   label: string
-  value: string
+  value: string | null
   hideDivider?: boolean
 }
 
