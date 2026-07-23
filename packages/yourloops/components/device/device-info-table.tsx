@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
 import { type DeviceConfig } from 'medical-domain'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import Typography from '@mui/material/Typography'
+import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
 
 interface DeviceInfoProps {
@@ -41,56 +37,20 @@ interface DeviceInfoProps {
 export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
   const { t } = useTranslation()
 
+  const getTableLines = (device: DeviceConfig): { value: string, label: string }[] => {
+    return [
+      { label: t('Manufacturer'), value: device.manufacturer },
+      { label: t('Identifier'), value: device.deviceId },
+      { label: t('IMEI'), value: device.imei },
+      { label: t('Software version'), value: device.swVersion },
+    ]
+  }
+
   return (
-    <GenericListCard title={device.name} data-testid="settings-table-terminal">
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Manufacturer')}</Typography>
-            <Typography variant="body2" className="bold">{device.manufacturer}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Identifier')}</Typography>
-            <Typography variant="body2" className="bold">{device.deviceId}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('IMEI')}</Typography>
-            <Typography variant="body2" className="bold">{device.imei}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem>
-        <ListItemText className="list-item">
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Software version')}</Typography>
-            <Typography variant="body2" className="bold">{device.swVersion}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-    </GenericListCard>
+    <GenericListCard
+      title={device.name}
+      tableLines={getTableLines(device)}
+      data-testid="settings-table-terminal"
+    />
   )
 }

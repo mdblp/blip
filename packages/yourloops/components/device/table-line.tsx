@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,32 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PumpConfig } from 'medical-domain'
-import React, { type FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { GenericListCard } from './generic-list-card'
+import Box from '@mui/material/Box'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
+import React, { FC } from 'react'
 
-interface PumpInfoProps {
-  pump: PumpConfig
+interface TableLineProps {
+  label: string
+  value: string
+  hideDivider?: boolean
 }
 
-export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
-  const { t } = useTranslation()
+const FALLBACK_VALUE = '-'
 
-  const getTableLines = (pump: PumpConfig): { value: string, label: string }[] => {
-    return [
-      { label: t('Manufacturer'), value: pump?.manufacturer?.toUpperCase() },
-      { label: t('Product'), value: pump.product },
-      { label: t('Serial Number'), value: pump.serialNumber },
-      { label: t('Pump version'), value: pump.swVersion }
-    ]
-  }
+export const TableLine: FC<TableLineProps> = (props) => {
+  const { label, value, hideDivider } = props
 
   return (
-    <GenericListCard
-      title={t('Pump')}
-      tableLines={getTableLines(pump)}
-      data-testid="settings-table-pump"
-    />
+    <ListItem divider={!hideDivider} className="list-item">
+      <ListItemText>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between"
+          }}>
+          <Typography variant="body2">{label}</Typography>
+          <Typography variant="body2" className="bold">{value ?? FALLBACK_VALUE}</Typography>
+        </Box>
+      </ListItemText>
+    </ListItem>
   )
 }

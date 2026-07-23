@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
 import { type DeviceConfig, MobileAppConfig } from 'medical-domain'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import Typography from '@mui/material/Typography'
+import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
-import { GenericListCard } from './generic-list-card'
 import { formatCode } from '../../utils/format.utils'
+import { GenericListCard } from './generic-list-card'
 
 interface MobileApplicationInfoProps {
   app: MobileAppConfig,
@@ -43,93 +39,23 @@ interface MobileApplicationInfoProps {
 export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device }) => {
   const { t } = useTranslation()
 
+  const getTableLines = (app: MobileAppConfig, device: DeviceConfig): { value: string, label: string }[] => {
+    return [
+      { label: t('Manufacturer'), value: app?.manufacturer?.toUpperCase() },
+      { label: t('Name'), value: device.name },
+      { label: t('Software version'), value: app.swVersion },
+      { label: t('activation-code'), value: formatCode(app.activationCode) },
+      { label: t('Identifier'), value: app.identifier },
+      { label: t('smartphone-model'), value: device.smartphoneModel },
+      { label: t('smartphone-os-version'), value: device.osVersion }
+    ]
+  }
+
   return (
-    <GenericListCard title={t('mobile-application')} data-testid="settings-table-mobileapp">
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Manufacturer')}</Typography>
-            <Typography variant="body2" className="bold"
-                        sx={{ textTransform: 'uppercase' }}>{app.manufacturer ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Name')}</Typography>
-            <Typography variant="body2" className="bold">{device.name ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Software version')}</Typography>
-            <Typography variant="body2" className="bold">{app.swVersion ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('activation-code')}</Typography>
-            <Typography variant="body2" className="bold">{formatCode(app.activationCode) ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Identifier')}</Typography>
-            <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('smartphone-model')}</Typography>
-            <Typography variant="body2" className="bold">{device.smartphoneModel ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem>
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('smartphone-os-version')}</Typography>
-            <Typography variant="body2" className="bold">{device.osVersion ?? t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-    </GenericListCard>
+    <GenericListCard
+      title={t('mobile-application')}
+      tableLines={getTableLines(app, device)}
+      data-testid="settings-table-mobileapp"
+    />
   )
 }

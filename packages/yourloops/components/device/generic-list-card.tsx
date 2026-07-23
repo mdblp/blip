@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,9 +33,11 @@ import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
+import { TableLine } from './table-line'
 
 interface GenericListCardProps extends PropsWithChildren {
-  title: string
+  title: string,
+  tableLines: { label: string; value: string }[]
   ['data-testid']?: string
 }
 
@@ -57,7 +59,7 @@ const useStyles = makeStyles()((theme) => ({
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { title, children } = props
+  const { title, tableLines } = props
 
   return (
     <Card
@@ -73,7 +75,9 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
       <CardContent className={classes.cardContent}>
         <List disablePadding>
           <Divider component="li" />
-          {children}
+          {tableLines.map((item, index, array) => (
+            <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
+          ))}
         </List>
       </CardContent>
     </Card>
