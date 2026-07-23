@@ -38,20 +38,22 @@ export interface PatientDashboardLayoutParams {
 
 export const checkCaregiverLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkCaregiverHeader(fullName)
-  checkFooterForCaregiver(needFooterLanguageSelector)
+  checkFooterForCaregiver(false, needFooterLanguageSelector)
 }
 
-export const checkCaregiverLayoutMobile = async (fullName: string) => {
+export const checkCaregiverLayoutMobile = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkCaregiverHeaderMobile(fullName)
+  checkFooterForCaregiver(true, needFooterLanguageSelector)
 }
 
 export const checkPatientLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkPatientHeader(fullName)
-  checkFooterForPatient(needFooterLanguageSelector)
+  checkFooterForPatient(false, needFooterLanguageSelector)
 }
 
-export const checkPatientLayoutMobile = async (fullName: string) => {
+export const checkPatientLayoutMobile = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkPatientHeaderMobile(fullName)
+  checkFooterForPatient(true, needFooterLanguageSelector)
 }
 
 export const checkPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {
