@@ -115,7 +115,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
         [PatientListColumn.DateOfBirth]: false,
         [PatientListColumn.Age]: false,
         [PatientListColumn.Gender]: false,
-        [PatientListColumn.MonitoringAlerts]: isUserHcp ? true : false,
+        [PatientListColumn.MonitoringAlerts]: isUserHcp,
         [PatientListColumn.LastDataUpdate]: false,
         [PatientListColumn.Messages]: false,
         [PatientListColumn.TimeInRange]: true,
