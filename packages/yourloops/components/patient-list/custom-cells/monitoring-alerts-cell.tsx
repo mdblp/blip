@@ -136,7 +136,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       alignContent: 'center',
       flexWrap: 'wrap'
     }}>
-      {(isMobile && isTimeSpentAwayFromTargetAlertActive) &&
+      {(!isMobile || isTimeSpentAwayFromTargetAlertActive) &&
         <Tooltip
           title={
             <>
@@ -160,7 +160,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           />
         </Tooltip>
       }
-      {(isMobile && isFrequencyOfHyperglycemiaAlertActive) &&
+      {(!isMobile || isFrequencyOfHyperglycemiaAlertActive) &&
         <Tooltip
           title={
             <>
@@ -183,7 +183,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         </Tooltip>
       }
 
-      {(isMobile && isFrequencyOfSevereHypoglycemiaAlertActive) &&
+      {(!isMobile || isFrequencyOfSevereHypoglycemiaAlertActive) &&
         <Tooltip
           title={
             <>
@@ -209,7 +209,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         </Tooltip>
       }
 
-      { (isMobile && isNonDataTransmissionAlertActive) &&
+      { (!isMobile || isNonDataTransmissionAlertActive) &&
         <Tooltip
           title={
             <>
