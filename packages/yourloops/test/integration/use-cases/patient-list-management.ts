@@ -125,13 +125,13 @@ export const testAckMonitoringAlerts = async (router: Router) => {
 }
 
 export const testAckMonitoringAlertsMobile = async (router: Router) => {
+  await checkAckMonitoringAlertNoDataMobile()
+  await checkAckMonitoringAlertHyperglycemiaMobile()
   await checkAckMonitoringAlertDialogContentMobile()
   await checkAckMonitoringAlertDialogCloseOnAnalyseMobile(router)
   await goBackToPatientsListMobile(router)
   await checkAckMonitoringAlertHypoglycemiaMobile()
   await checkAckMonitoringAlertTimeOutOfRangeMobile()
-  await checkAckMonitoringAlertNoDataMobile()
-  await checkAckMonitoringAlertHyperglycemiaMobile()
 }
 
 export const testAckMonitoringAlertsWithError = async () => {
