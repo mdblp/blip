@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type PumpConfig } from 'medical-domain'
 import React, { type FC } from 'react'
-import type { PumpConfig } from 'medical-domain'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
 
 interface PumpInfoProps {
@@ -41,61 +37,20 @@ interface PumpInfoProps {
 export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
   const { t } = useTranslation()
 
+  const getTableLines = (pump: PumpConfig): { value: string, label: string }[] => {
+    return [
+      { label: t('Manufacturer'), value: pump?.manufacturer?.toUpperCase() },
+      { label: t('Product'), value: pump.product },
+      { label: t('Serial Number'), value: pump.serialNumber },
+      { label: t('Pump version'), value: pump.swVersion }
+    ]
+  }
+
   return (
-    <GenericListCard title={t('Pump')} data-testid="settings-table-pump">
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Manufacturer')}</Typography>
-            <Typography
-              variant="body2"
-              className="bold"
-              sx={{ textTransform: 'uppercase' }}
-            >
-              {pump.manufacturer ? pump.manufacturer : t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Product')}</Typography>
-            <Typography variant="body2" className="bold">{pump.product ? pump.product : t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Serial Number')}</Typography>
-            <Typography variant="body2" className="bold">{pump.serialNumber ? pump.serialNumber : t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem className="list-item">
-        <ListItemText>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between"
-            }}>
-            <Typography variant="body2">{t('Pump version')}</Typography>
-            <Typography variant="body2" className="bold">{pump.swVersion ? pump.swVersion : t('N/A')}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-    </GenericListCard>
+    <GenericListCard
+      title={t('Pump')}
+      tableLines={getTableLines(pump)}
+      data-testid="settings-table-pump"
+    />
   )
 }

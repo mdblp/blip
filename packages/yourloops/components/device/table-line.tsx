@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DeviceConfig, type MobileAppConfig } from 'medical-domain'
+import Box from '@mui/material/Box'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
 import React, { type FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { formatCode } from '../../utils/format.utils'
-import { GenericListCard } from './generic-list-card'
 
-interface MobileApplicationInfoProps {
-  app: MobileAppConfig,
-  device: DeviceConfig
+interface TableLineProps {
+  label: string
+  value: string | null
+  hideDivider?: boolean
 }
 
-export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device }) => {
-  const { t } = useTranslation()
+const FALLBACK_VALUE = '-'
 
-  const getTableLines = (app: MobileAppConfig, device: DeviceConfig): { value: string, label: string }[] => {
-    return [
-      { label: t('Manufacturer'), value: app?.manufacturer?.toUpperCase() },
-      { label: t('Name'), value: device.name },
-      { label: t('Software version'), value: app.swVersion },
-      { label: t('activation-code'), value: formatCode(app.activationCode) },
-      { label: t('Identifier'), value: app.identifier },
-      { label: t('smartphone-model'), value: device.smartphoneModel },
-      { label: t('smartphone-os-version'), value: device.osVersion }
-    ]
-  }
+export const TableLine: FC<TableLineProps> = (props) => {
+  const { label, value, hideDivider } = props
 
   return (
-    <GenericListCard
-      title={t('mobile-application')}
-      tableLines={getTableLines(app, device)}
-      data-testid="settings-table-mobileapp"
-    />
+    <ListItem divider={!hideDivider} className="list-item">
+      <ListItemText>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between"
+          }}>
+          <Typography variant="body2">{label}</Typography>
+          <Typography variant="body2" className="bold">{value || FALLBACK_VALUE}</Typography>
+        </Box>
+      </ListItemText>
+    </ListItem>
   )
 }

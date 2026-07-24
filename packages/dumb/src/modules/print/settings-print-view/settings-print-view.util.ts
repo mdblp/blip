@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -175,8 +175,8 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
           label: t('software-number'),
           value: cgmData.softwareNumber || ''
         }, {
-          label: t('firmware-version'),
-          value: cgmData.firmwareVersion || ''
+          label: t('pairing-code'),
+          value: cgmData.pairingCode || ''
         }]
       }
 
