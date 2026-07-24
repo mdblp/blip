@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import FlagIcon from '@mui/icons-material/Flag'
 import Popover from '@mui/material/Popover'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
+import StethoscopeIcon from '../icons/stethoscope-icon'
 import { PatientListOptionToggle } from './patient-list-option-toggle'
 import Divider from '@mui/material/Divider'
 import DialogActions from '@mui/material/DialogActions'
@@ -104,6 +105,18 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
 
         {!isSelectedTeamPrivate &&
           <>
+            <Typography variant="h6" className={classes.title}>{t('lead-clinicians')}</Typography>
+            <PatientListOptionToggle
+              ariaLabel={t('filter-my-patients')}
+              checked={filters.myPatientsEnabled}
+              icon={<StethoscopeIcon />}
+              label={t('my-patients')}
+              onToggleChange={() => {
+                setFilters({ ...filters, myPatientsEnabled: !filters.myPatientsEnabled })
+                AnalyticsApi.trackClick('patient-filters-my-patients', ElementType.Toggle)
+              }}
+            />
+
             <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
             <PatientListOptionToggle
               ariaLabel={t('filter-out-of-range')}

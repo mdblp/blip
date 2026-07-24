@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createPatient } from '../../common/utils'
-import PatientUtils from '../../../../lib/patient/patient.util'
-import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
+import { LeadClinician } from '../../../../lib/lead-clinicians/models/lead-clinician.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 import PatientApi from '../../../../lib/patient/patient.api'
+import PatientUtils from '../../../../lib/patient/patient.util'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
+import { createPatient } from '../../common/utils'
 
 const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
@@ -46,6 +47,7 @@ const defaultMonitoringAlerts = {
 const defaultPatientFilters = {
   pendingEnabled: false,
   manualFlagEnabled: false,
+  myPatientsEnabled: false,
   timeOutOfTargetEnabled: false,
   hyperglycemiaEnabled: false,
   hypoglycemiaEnabled: false,
@@ -115,7 +117,7 @@ describe('Patient utils', () => {
   })
 
   describe('filterPatientsOnMonitoringAlerts', () => {
-    const patients = [patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert,patientWithHyperglycemiaAlert, patientWithNoDataAlert, noAlertsPatient]
+    const patients = [patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithHyperglycemiaAlert, patientWithNoDataAlert, noAlertsPatient]
 
     it('should return all patient when no filter is selected', () => {
       const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, defaultPatientFilters)
@@ -261,11 +263,26 @@ describe('Patient utils', () => {
   })
 
   describe('extractPatients', () => {
+    const userId = 'user-id'
+
     const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, undefined, undefined, undefined, undefined)
     const monitoredPatient = createPatient('monitoredPatient', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined)
     const flaggedPatient = createPatient('flaggedPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined)
     const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined, true)
-    const patients = [noAlertsPatient, pendingPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlertsPatient, flaggedPatient]
+    const clinicianPatient = createPatient('clinicianPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined, false, null, [{ id: userId } as LeadClinician])
+
+    const patients = [
+      noAlertsPatient,
+      pendingPatient,
+      monitoredPatient,
+      unreadMessagesPatient,
+      patientWithTimeOutOfTargetAlert,
+      patientWithHypoglycemiaAlert,
+      patientWithNoDataAlert,
+      noAlertsPatient,
+      flaggedPatient,
+      clinicianPatient
+    ]
     const flaggedPatientsIds = [flaggedPatient.userid]
 
     it('should return only patients with alerts when only alerts filters are selected', () => {
@@ -277,16 +294,27 @@ describe('Patient utils', () => {
           timeOutOfTargetEnabled: true,
           hypoglycemiaEnabled: true
         },
-        flaggedPatientsIds
+        flaggedPatientsIds,
+        userId
       )
 
       expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert])
     })
 
     it('should return all patients except the pending one when no filters are selected', () => {
-      const result = PatientUtils.extractPatients(patients, defaultPatientFilters, flaggedPatientsIds)
+      const result = PatientUtils.extractPatients(patients, defaultPatientFilters, flaggedPatientsIds, userId)
 
-      expect(result).toEqual([noAlertsPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlertsPatient, flaggedPatient])
+      expect(result).toEqual([
+        noAlertsPatient,
+        monitoredPatient,
+        unreadMessagesPatient,
+        patientWithTimeOutOfTargetAlert,
+        patientWithHypoglycemiaAlert,
+        patientWithNoDataAlert,
+        noAlertsPatient,
+        flaggedPatient,
+        clinicianPatient
+      ])
     })
 
     it('should return only flagged patient when only flagged filter is selected', () => {
@@ -296,7 +324,8 @@ describe('Patient utils', () => {
           ...defaultPatientFilters,
           manualFlagEnabled: true
         },
-        flaggedPatientsIds
+        flaggedPatientsIds,
+        userId
       )
 
       expect(result).toEqual([flaggedPatient])
@@ -309,7 +338,8 @@ describe('Patient utils', () => {
           ...defaultPatientFilters,
           messagesEnabled: true
         },
-        flaggedPatientsIds
+        flaggedPatientsIds,
+        userId
       )
 
       expect(result).toEqual([unreadMessagesPatient])
@@ -322,10 +352,25 @@ describe('Patient utils', () => {
           ...defaultPatientFilters,
           pendingEnabled: true
         },
-        flaggedPatientsIds
+        flaggedPatientsIds,
+        userId
       )
 
       expect(result).toEqual([pendingPatient])
+    })
+
+    it('should return only patients of the clinician when only "My patients" filter is selected', () => {
+      const result = PatientUtils.extractPatients(
+        patients,
+        {
+          ...defaultPatientFilters,
+          myPatientsEnabled: true
+        },
+        flaggedPatientsIds,
+        userId
+      )
+
+      expect(result).toEqual([clinicianPatient])
     })
   })
 

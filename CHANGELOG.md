@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.11.0-beta - 2026-07-01
 ### Added
+- YLP-1930 Filter by clinician in Patients list
 - YLP-3790 "Lead clinicians" column in Patients list
 
 ### Changed
