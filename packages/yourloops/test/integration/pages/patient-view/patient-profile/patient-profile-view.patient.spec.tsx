@@ -25,30 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockDataAPI } from '../../../mock/data.api.mock'
-import { renderPage } from '../../../utils/render'
-import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
 import { act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { getTranslation } from '../../../../utils/i18n'
-import PatientApi from '../../../../../lib/patient/patient.api'
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { patient1Info, patient2Info, patient3Info } from '../../../data/patient.api.data'
-import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
+import { ConfigService } from '../../../../../lib/config/config.service'
+import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
+import PatientApi from '../../../../../lib/patient/patient.api'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getTranslation } from '../../../../utils/i18n'
+import { patient1Info, patient2Info, patient3Info, patientWithMmolInfo } from '../../../data/patient.api.data'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import {
   checkCliniciansEmptyList,
   checkCliniciansFiveClinicians,
   checkCliniciansManagementErrors,
   checkCliniciansManagementPatient
 } from '../../../use-cases/clinicians-management'
-import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
-import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
-import { mockErrorApi } from '../../../mock/error.api.mock'
-import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { ConfigService } from '../../../../../lib/config/config.service'
+import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
+import { renderPage } from '../../../utils/render'
 
 describe('Patient profile view for Patient', () => {
 
@@ -91,6 +91,8 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should be able to view clinicians list with 0 clinician', async () => {
+      mockPatientLogin(patientWithMmolInfo)
+
       await act(async () => {
         renderPage(patientProfileRoute)
       })
