@@ -195,7 +195,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         field: PatientListColumn.MonitoringAlerts,
-        headerName: isMobile ? t('alerts') : t('monitoring-alerts'),
+        headerName: isMobile ? t('alert') : t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         sortComparator: sortByMonitoringAlertsCount,
         headerAlign: isMobile ? 'center' : 'left',
