@@ -362,6 +362,7 @@
   "filter-flagged": "Filter patients being flagged",
   "filter-hyperglycemia": "Filter patients having a \"Hyperglycemia\" monitoring alert",
   "filter-hypoglycemia": "Filter patients having a \"Hypoglycemia\" monitoring alert",
+  "filter-my-patients": "Filter patients having me as their lead clinician",
   "filter-out-of-range": "Filter patients having a \"Time out of the range\" monitoring alert",
   "filter-pending": "{{patientsFilteredCount}} pending patient(s)",
   "filter-unread-messages": "Filter patients having sent unread messages",
