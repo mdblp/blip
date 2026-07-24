@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -64,9 +64,7 @@ import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../mock/mobile-screen.mock'
 import { ConfigService } from '../../../../lib/config/config.service'
-import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 import { testTeamCreation } from '../../use-cases/teams-management'
-import { Unit } from 'medical-domain'
 
 describe('HCP home page, mobile version', () => {
   const firstName = 'Eric'

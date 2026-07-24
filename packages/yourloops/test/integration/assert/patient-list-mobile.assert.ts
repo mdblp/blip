@@ -79,15 +79,17 @@ export const checkPatientListHeaderForHcpMobile = async () => {
 
 export const checkPatientListCurrentTabMobile = async () => {
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
-  //??????????
+  //Pourquoi 2 et plus 6 ?
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
 }
 
+//Pas de sens de garder une fonction qui check le current tab, il n'y a plus de current tab
 export const checkPatientListCurrentTabForPrivateTeamMobile = async () => {
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
 }
 
+//fonction importante, on devrait la garder
 export const checkPatientListFiltersMobile = async () => {
   await changeTeamScope(myThirdTeamName, filtersTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, filtersTeamId)
@@ -152,17 +154,19 @@ export const checkPatientListFiltersMobile = async () => {
     ...defaultToggles
   })
 
-  //????????????
+  //Pourquoi 2 et plus 6 ?
   expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(2)
 }
 
 export const checkPatientListHideShowColumnsMobile = async () => {
   // Assert only mandatory columns are displayed
+  // Une seule fonction comme celle-ci nécessaire
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'Profile' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Date of birth' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Lead clinicians' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Alerts' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
@@ -203,23 +207,6 @@ export const checkPatientListColumnSortMobile = async (): Promise<void> => {
   expect(allRowsAfterSecondSort[3]).toHaveTextContent(`${patientWithMmolInfo.profile.lastName} ${patientWithMmolInfo.profile.firstName}`)
   expect(allRowsAfterSecondSort[4]).toHaveTextContent(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
   expect(allRowsAfterSecondSort[5]).toHaveTextContent(`${patient3Info.profile.lastName} ${patient3Info.profile.firstName}`)
-}
-
-const checkDefaultColumnsDisplay = () => {
-  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Profile' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'GMI' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Below range' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Actions' })).not.toBeInTheDocument()
 }
 
 const openAckDialogForPatient = async (testId: string, rowIndex: number): Promise<HTMLElement> => {
