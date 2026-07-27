@@ -40,6 +40,15 @@ export const getFormattedDuration = (value: number): string => {
 export const getTimeInRangePercentages = (dataArray: CBGPercentageData[], total: number): PercentageValueItem[] => {
   const rawPercentages = getRawPercentages(dataArray, total)
 
+  if (total === 0) {
+    return dataArray.map((data: CBGPercentageData) => {
+      return {
+        id: data.id,
+        percentage: 0
+      }
+    })
+  }
+
   return getSmartRoundedPercentages(rawPercentages)
 }
 
