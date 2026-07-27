@@ -25,33 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGStatType, LoopModeStat, TimeInRangeChart, TimeInTightRangeChart, TimeInRangeDT1Chart } from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import { SensorUsageStat } from './sensor-usage-stat'
+import { useTheme } from '@mui/material/styles'
+import { type BgPrefs, LoopModeStat, TimeInRangeChart, TimeInRangeDT1Chart, TimeInTightRangeChart } from 'dumb'
 import {
   BasalBolusStatisticsService,
   type BgType,
   CarbsStatisticsService,
   type DateFilter,
-  DatumType, defaultBgClasses, DiabeticType,
+  DatumType,
+  defaultBgClasses,
+  DiabeticType,
   GlycemiaStatisticsService,
   type MedicalData,
   MS_IN_DAY,
   TimeService
 } from 'medical-domain'
-import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
+import React, { type FunctionComponent } from 'react'
 import { useLocation } from 'react-router-dom'
-import { CoefficientOfVariation } from './coefficient-of-variation-stat'
-import { StandardDeviationStat } from './standard-deviation-stat'
-import { AverageGlucoseStat } from './average-glucose-stat'
-import { TotalInsulinStat } from './total-insulin-stat'
 import { makeStyles } from 'tss-react/mui'
-import { CarbsStat } from './carbs-stat'
-import { DataCard } from '../data-card/data-card'
-import { useTheme } from '@mui/material/styles'
 import AnalyticsApi from '../../lib/analytics/analytics.api'
+import { DataCard } from '../data-card/data-card'
+import { AverageGlucoseStat } from './average-glucose-stat'
+import { CarbsStat } from './carbs-stat'
+import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
+import { SensorUsageStat } from './sensor-usage-stat'
+import { StandardDeviationStat } from './standard-deviation-stat'
+import { TotalInsulinStat } from './total-insulin-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
