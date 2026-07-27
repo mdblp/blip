@@ -27,20 +27,14 @@
 
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { loggedInUserId } from '../mock/auth0.hook.mock'
-import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
+import moment from 'moment-timezone'
+import NotificationApi from '../../../lib/notifications/notification.api'
 import PatientApi from '../../../lib/patient/patient.api'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 import {
-  checkPatientsFilters,
-  closeFiltersPresentation,
-  defaultToggles,
-  updatePatientsFilters
-} from './patient-filters.assert'
-import { changeTeamScope } from './header.assert'
-import {
+  hyperglycemiaPatientInfo,
   hypoglycemiaPatientInfo,
   hypoglycemiaPatientMetrics,
-  hyperglycemiaPatientInfo,
   noDataTransferredPatientInfo,
   patient1Info,
   patient2Info,
@@ -49,11 +43,18 @@ import {
   pendingPatient,
   timeSpentOutOfTargetRangePatientInfo
 } from '../data/patient.api.data'
-import NotificationApi from '../../../lib/notifications/notification.api'
-import moment from 'moment-timezone'
-import { PATIENT_AGE } from '../utils/helpers'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
+import { removeDirectShareMock } from '../mock/direct-share.api.mock'
+import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
 import { Router } from '../models/router.model'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { PATIENT_AGE } from '../utils/helpers'
+import { changeTeamScope } from './header.assert'
+import {
+  checkPatientsFilters,
+  closeFiltersPresentation,
+  defaultToggles,
+  updatePatientsFilters
+} from './patient-filters.assert'
 
 const SVG_ICON_DISABLED_CLASS = 'MuiSvgIcon-colorDisabled'
 const SVG_ICON_FILL = 'currentColor'
@@ -1071,6 +1072,146 @@ export const checkDataGridTranslations = (): void => {
   expect(dataGrid).toHaveTextContent('Lignes par page :101–5 sur 5')
 }
 
+export const checkPatientListColumnsCaregiver = async () => {
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
+
+  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+
+  // Hidden columns for the Caregiver role
+  expect(screen.queryByRole('columnheader', { name: 'Profile' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Lead clinicians' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
+
+  await userEvent.click(columnSettingsButton)
+
+  const columnSettingsPopover = screen.getByRole('presentation')
+  const applyButton = within(columnSettingsPopover).getByRole('button', { name: 'Apply' })
+  expect(columnSettingsPopover).toBeVisible()
+  expect(within(columnSettingsPopover).getByText('Show column')).toBeVisible()
+
+  const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('switch')
+  const ageToggle = within(within(columnSettingsPopover).getByLabelText('Age')).getByRole('switch')
+  const dateOfBirthToggle = within(within(columnSettingsPopover).getByLabelText('Date of birth')).getByRole('switch')
+  const genderToggle = within(within(columnSettingsPopover).getByLabelText('Gender')).getByRole('switch')
+  const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('switch')
+  const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('switch')
+  expect(patientToggle).toHaveProperty('checked', true)
+  expect(patientToggle).toHaveProperty('disabled', true)
+  expect(ageToggle).toHaveProperty('checked', false)
+  expect(dateOfBirthToggle).toHaveProperty('checked', true)
+  expect(genderToggle).toHaveProperty('checked', false)
+  expect(systemToggle).toHaveProperty('checked', false)
+  expect(lastUpdateToggle).toHaveProperty('checked', true)
+
+  const disabledToggle = screen.getByLabelText('This column cannot be removed')
+  await userEvent.hover(disabledToggle)
+  expect(await screen.findByText('This column cannot be removed')).toBeVisible()
+
+  await userEvent.click(ageToggle)
+  await userEvent.click(lastUpdateToggle)
+  expect(ageToggle).toHaveProperty('checked', true)
+  expect(lastUpdateToggle).toHaveProperty('checked', false)
+
+  await userEvent.click(applyButton)
+
+  expect(columnSettingsPopover).not.toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Age' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+}
+
+export const checkRemovePatientErrorCaregiver = async () => {
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
+
+  await userEvent.click(removeButton)
+
+  const removeDialog = screen.getByRole('dialog')
+
+  const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
+
+  await userEvent.click(confirmRemoveButton)
+
+  expect(removeDirectShareMock).toHaveBeenCalledWith(patient2Info.userid, loggedInUserId)
+  expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
+}
+
+export const checkRemovePatientCaregiver = async () => {
+  const patientTableBody = screen.getByTestId('current-patient-list-grid')
+  expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
+  expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980N/AFlag patient pending-patient@diabeloop.frPatient PendingJan 1, 1980N/AFlag patient patient2@diabeloop.frRouis Patient2Jan 1, 1980N/AFlag patient patient3@diabeloop.frSrairi Patient3Jan 1, 1980N/A')
+  const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
+  expect(removePatientButton).toBeVisible()
+
+  await userEvent.click(removePatientButton)
+
+  const removePatientDialog = screen.getByRole('dialog')
+  expect(removePatientDialog).toBeVisible()
+
+  const removePatientDialogTitle = within(removePatientDialog).getByText('Remove patient Patient2 Rouis')
+  expect(removePatientDialogTitle).toBeVisible()
+
+  expect(removePatientDialog).toHaveTextContent('Are you sure you want to remove Patient2 Rouis?')
+
+  const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
+  expect(removePatientDialogCancelButton).toBeVisible()
+
+  const removePatientDialogConfirmButton = within(removePatientDialog).getByRole('button', { name: 'Remove patient' })
+  expect(removePatientDialogConfirmButton).toBeVisible()
+
+  await userEvent.click(removePatientDialogCancelButton)
+
+  expect(removePatientDialog).not.toBeInTheDocument()
+
+  await userEvent.click(removePatientButton)
+
+  const removePatientDialog2 = screen.getByRole('dialog')
+  expect(removePatientDialog2).toBeVisible()
+
+  const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
+
+  await userEvent.click(removePatientDialog2ConfirmButton)
+
+  expect(removeDirectShareMock).toHaveBeenCalledWith(patient2Info.userid, loggedInUserId)
+  expect(jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1Info])).toHaveBeenCalledTimes(2)
+  expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
+}
+
+export const checkPatientListSearchCaregiver = async (lastDataUploadDate: string) => {
+  // Checking that all patients are displayed
+  const dataGridRow = screen.getByTestId('current-patient-list-grid')
+  expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+  expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient annie@versaire.comVersaire AnnieMay 25, 20150%0%Jun 22, 2023 7:02 AM`)
+
+  const searchPatient = screen.getByPlaceholderText('Search for a patient...')
+
+  // Searching by birthdate only
+  await userEvent.type(searchPatient, '20/01/2010')
+  expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AM`)
+  await userEvent.clear(searchPatient)
+
+  // Searching by birthdate and first name
+  await userEvent.type(searchPatient, '20/01/2010 Aki')
+  expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%${lastDataUploadDate}`)
+  await userEvent.clear(searchPatient)
+
+  // Searching by birthdate and last name
+  await userEvent.type(searchPatient, '20/01/2010provi')
+  expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AM')
+}
+
 const checkClinicianTooltip = async (initials: string, fullName: string, row: HTMLElement): Promise<void> => {
   const avatar = within(row).getByText(initials)
 
@@ -1084,5 +1225,6 @@ const checkClinicianTooltip = async (initials: string, fullName: string, row: HT
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 }
+
 
 
