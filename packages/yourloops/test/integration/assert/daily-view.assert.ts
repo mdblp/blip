@@ -285,13 +285,6 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Rescue carbs', RESCUE_CARBS_TOOLTIP)
 }
 
-export const checkSMBGDailyStatsWidgetsTooltips = async () => {
-  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  await checkStatTooltip(patientStatistics, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_BGM_TOOLTIP)
-}
-
 export const checkEventsSuperposition = async () => {
   const eventSuperposition = screen.getByTestId(`eventSuperposition_group_${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`)
   expect(eventSuperposition).toBeVisible()

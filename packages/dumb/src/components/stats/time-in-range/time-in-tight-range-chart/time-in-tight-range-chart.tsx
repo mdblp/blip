@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
 import Box from '@mui/material/Box'
-import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-title'
-import { CBGPercentageBarMemoized as CbgPercentageBarChart } from '../cbg-percentage-bar/cbg-percentage-bar'
-import { CBGStatType, StatLevel } from '../../../../models/stats.model'
-import { useTranslation } from 'react-i18next'
-import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
-import { BgPrefs } from '../../../../models/blood-glucose.model'
 import { TIGHT_RANGE_BOUNDS } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { BgPrefs } from '../../../../models/blood-glucose.model'
+import { CBGStatType, StatLevel } from '../../../../models/stats.model'
+import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
+import { CBGPercentageBarMemoized as CbgPercentageBarChart } from '../cbg-percentage-bar/cbg-percentage-bar'
+import { getFormattedDuration } from '../time-in-range-chart/time-in-range.util'
+import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-title'
 
 interface TimeInTightRangeChartProps {
   data: { value: number, total: number }
@@ -55,6 +56,9 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
 
   const isDisabled = data.value === 0 && data.total === 0
 
+  const hasValues = data.total > 0
+  const percentage = hasValues ? Math.round(data.value / data.total * 100) : 0
+
   return (
     <Box data-testid="time-in-tight-range-chart">
       <TimeInRangeTitle
@@ -72,8 +76,9 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
           isDisabled={isDisabled}
           onMouseEnter={() => {}}
           title={title}
-          total={data.total}
-          value={data.value}
+          duration={getFormattedDuration(data.value)}
+          percentage={percentage}
+          hasValues={hasValues}
           isReducedSize={true}
         />
       </Box>

@@ -10,7 +10,6 @@ export interface TimeInRangeData {
   total: number
 }
 
-export interface ReadingsInRangeData extends TimeInRangeData {}
 
 declare class DataUtil {
   constructor(data: unknown[], opts?: {
@@ -100,7 +99,6 @@ declare class DataUtil {
     manufacturer: any
   }
 
-  getReadingsInRangeData: () => ReadingsInRangeData
   getSensorUsage: () => {
     sensorUsage: any
     total: number

@@ -42,8 +42,6 @@ import {
   checkAverageGlucoseStatWidget,
   checkCoefficientOfVariationStatWidget,
   checkGlucoseManagementIndicator,
-  checkReadingsInRangeStats,
-  checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
   checkStatTooltip,
   checkTimeInRangeStatsTitle
@@ -124,16 +122,14 @@ describe('Trends view for anyone', () => {
   })
 
   describe('with smbg data', () => {
-    it('should display correct readings in range stats info', async () => {
+    it('should display correct time in range stats info', async () => {
       mockDataAPI(smbgData)
       await act(async () => {
         renderPage(trendsRoute)
       })
 
-      await checkReadingsInRangeStats()
       await checkSMBGTrendsStatsWidgetsTooltips()
 
-      await checkReadingsInRangeStatsWidgets()
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
       await checkCoefficientOfVariationStatWidget('CV (BGM)78%')

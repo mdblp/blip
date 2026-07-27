@@ -47,7 +47,6 @@ export const commonStats = {
   carbs: 'carbs',
   coefficientOfVariation: 'coefficientOfVariation',
   glucoseManagementIndicator: 'glucoseManagementIndicator',
-  readingsInRange: 'readingsInRange',
   sensorUsage: 'sensorUsage',
   standardDev: 'standardDev',
   timeInAuto: 'timeInAuto',
@@ -61,7 +60,6 @@ export const statFetchMethods = {
   [commonStats.carbs]: 'getCarbsData',
   [commonStats.coefficientOfVariation]: 'getCoefficientOfVariationData',
   [commonStats.glucoseManagementIndicator]: 'getGlucoseManagementIndicatorData',
-  [commonStats.readingsInRange]: 'getReadingsInRangeData',
   [commonStats.sensorUsage]: 'getSensorUsage',
   [commonStats.standardDev]: 'getStandardDevData',
   [commonStats.timeInAuto]: 'getTimeInAutoData',
@@ -82,7 +80,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
     commonStats.averageGlucose,
     commonStats.coefficientOfVariation,
     commonStats.glucoseManagementIndicator,
-    commonStats.readingsInRange,
     commonStats.timeInRange,
     commonStats.standardDev
   ]
@@ -95,10 +92,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       } else {
         annotations.push(t('**Daily Insulin:** All basal and bolus insulin delivery (in Units) added together.'))
       }
-      break
-
-    case commonStats.readingsInRange:
-      annotations.push(t('**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.', { smbgLabel: statBgSourceLabels.smbg }))
       break
 
 
@@ -235,40 +228,6 @@ export const getStatData = (data, type, opts = {}) => {
         summary: 'data.0'
       }
       break
-
-    case commonStats.readingsInRange:
-      statData.data = [
-        {
-          id: 'veryLow',
-          value: ensureNumeric(data.veryLow),
-          title: t('Readings Below Range'),
-          legendTitle: bgRanges.veryLow
-        },
-        {
-          id: 'low',
-          value: ensureNumeric(data.low),
-          title: t('Readings Below Range'),
-          legendTitle: bgRanges.low
-        },
-        {
-          id: 'target',
-          value: ensureNumeric(data.target),
-          title: t('Readings In Range'),
-          legendTitle: bgRanges.target
-        },
-        {
-          id: 'high',
-          value: ensureNumeric(data.high),
-          title: t('Readings Above Range'),
-          legendTitle: bgRanges.high
-        },
-        {
-          id: 'veryHigh',
-          value: ensureNumeric(data.veryHigh),
-          title: t('Readings Above Range'),
-          legendTitle: bgRanges.veryHigh
-        }
-      ]
 
       statData.total = { value: getSum(statData.data) }
       statData.dataPaths = {
@@ -421,10 +380,6 @@ export const getStatTitle = (type, opts = {}) => {
       title = (days > 1) ? t('Avg. Daily Carbs') : t('Total Carbs')
       break
 
-    case commonStats.readingsInRange:
-      title = (days > 1) ? t('Avg. Daily Readings In Range') : t('Readings In Range')
-      break
-
     case commonStats.timeInAuto:
       title = t('Time In Loop Mode')
       break
@@ -494,19 +449,6 @@ export const getStatDefinition = (data, type, opts = {}) => {
         summary: statFormats.gmi
       }
       stat.type = statTypes.simple
-      break
-
-    case commonStats.readingsInRange:
-      stat.alwaysShowTooltips = true
-      stat.dataFormat = {
-        label: statFormats.bgCount,
-        summary: statFormats.bgCount,
-        tooltip: statFormats.percentage,
-        tooltipTitle: statFormats.bgRange
-      }
-      stat.legend = true
-      stat.reverseLegendOrder = true
-      stat.units = _.get(opts, 'bgPrefs.bgUnits')
       break
 
     case commonStats.sensorUsage:

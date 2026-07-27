@@ -277,7 +277,6 @@ export function generatePDFStats(data, dataUtil) {
 
     data.basics.stats = {
       [commonStats.timeInRange]: getStat(commonStats.timeInRange),
-      [commonStats.readingsInRange]: getStat(commonStats.readingsInRange),
       [commonStats.totalInsulin]: getStat(commonStats.totalInsulin),
       [commonStats.timeInAuto]: isAutomatedDevice ? getStat(commonStats.timeInAuto) : undefined,
       [commonStats.carbs]: getStat(commonStats.carbs),

@@ -75,7 +75,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
 
   const cbgSelected = medicalData.cbg.length > 0
   const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
-  const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
@@ -104,9 +103,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
-  const timeInRangeChartData = cbgStatType === CBGStatType.TimeInRange
-    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+  const timeInRangeChartData = GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
   const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
 
@@ -153,7 +150,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       <DataCard>
         <TimeInRangeChart
           bgType={bgType}
-          cbgStatType={cbgStatType}
           data={timeInRangeChartData}
           bgPrefs={bgPrefs}
           days={numberOfDays}

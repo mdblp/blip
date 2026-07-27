@@ -218,9 +218,8 @@ class BasicsPrintView extends PrintView {
     this.doc.fontSize(this.smallFontSize)
 
     if (this.bgSource) {
-      const stat = this.bgSource === CGM_DATA_KEY ? 'timeInRange' : 'readingsInRange'
-      const rangeDurations = _.get(this.data, `stats.${stat}.data.raw`, {})
-      const totalDuration = _.get(this.data, `stats.${stat}.data.total.value`, {})
+      const rangeDurations = _.get(this.data, 'stats.timeInRange.data.raw', {})
+      const totalDuration = _.get(this.data, 'stats.timeInRange.data.total.value', {})
 
       this.doc.text(cgmStatusMessage(this.cgmStatus), { width: columnWidth })
 

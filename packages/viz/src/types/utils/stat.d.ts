@@ -32,7 +32,6 @@ export namespace commonStats {
     export { carbs_1 as carbs };
     export const coefficientOfVariation: string;
     export const glucoseManagementIndicator: string;
-    export const readingsInRange: string;
     export const sensorUsage: string;
     export const standardDev: string;
     export const timeInAuto: string;

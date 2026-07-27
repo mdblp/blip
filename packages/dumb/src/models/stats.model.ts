@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,16 +28,10 @@
 export const EMPTY_DATA_PLACEHOLDER = '--'
 
 export enum CBGStatType {
-  AverageDailyDose = 'averageDailyDose',
-  AverageGlucose = 'averageGlucose',
   Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
   TimeInRange = 'timeInRange',
   TimeInRangeDt1 = 'timeInRangeDt1',
   TimeInTightRange = 'timeInTightRange',
-  TotalInsulin = 'totalInsulin',
 }
 
 export interface CBGPercentageData {

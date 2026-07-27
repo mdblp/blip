@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,13 +32,13 @@ import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../mode
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 import { DatumType, Unit } from 'medical-domain'
 
-describe('CBGPercentageBarChart hook', () => {
+describe('Time in range chart hook', () => {
   const veryHighStatValue = 100
   const highStatValue = 200
   const targetStatValue = 150
   const lowStatValue = 250
   const veryLowStatValue = 50
-  const total = 1000
+
   const createCBGTimeData = (id: StatLevel, title: string, value: number): CBGPercentageData => {
     return { id, title, value }
   }
@@ -61,7 +61,6 @@ describe('CBGPercentageBarChart hook', () => {
     bgType: DatumType.Cbg,
     data,
     days: 2,
-    type: CBGStatType.TimeInRange,
     bgPrefs: {
       bgBounds: {
         veryHighThreshold: 250,
@@ -83,41 +82,57 @@ describe('CBGPercentageBarChart hook', () => {
   it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }
     const { result } = renderHook(() => useTimeInRangeChartHook(props))
+
     expect(result.current.cbgStatsProps).toEqual({
       veryHighStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...veryHighStat
+        duration: '0m',
+        percentage: 11,
+        hasValues: true,
+        id: veryHighStat.id,
+        title: veryHighStat.title
       },
       highStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...highStat
+        duration: '0m',
+        percentage: 21,
+        hasValues: true,
+        id: highStat.id,
+        title: highStat.title
       },
       targetStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...targetStat
+        duration: '0m',
+        percentage: 16,
+        hasValues: true,
+        id: targetStat.id,
+        title: targetStat.title
       },
       lowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...lowStat
+        duration: '0m',
+        percentage: 26,
+        hasValues: true,
+        id: lowStat.id,
+        title: lowStat.title
       },
       veryLowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...veryLowStat
+        duration: '0m',
+        percentage: 6,
+        hasValues: true,
+        id: veryLowStat.id,
+        title: veryLowStat.title
       }
     })
   })
@@ -128,19 +143,6 @@ describe('CBGPercentageBarChart hook', () => {
 
     const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.title).toEqual('Time In Range')
-
-    const { result: thirdHook } = renderHook(() => useTimeInRangeChartHook({
-      ...defaultProps,
-      type: CBGStatType.ReadingsInRange
-    }))
-    expect(thirdHook.current.title).toEqual('Avg. Daily Readings In Range')
-
-    const { result: fourthHook } = renderHook(() => useTimeInRangeChartHook({
-      ...defaultProps,
-      days: 0,
-      type: CBGStatType.ReadingsInRange
-    }))
-    expect(fourthHook.current.title).toEqual('Readings In Range')
 
     const { result: fifthHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
@@ -155,13 +157,6 @@ describe('CBGPercentageBarChart hook', () => {
 
     const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
-
-    const { result: thirdHook } = renderHook(() => useTimeInRangeChartHook({
-      ...defaultProps,
-      days: 0,
-      type: CBGStatType.ReadingsInRange
-    }))
-    expect(thirdHook.current.annotations).toEqual(['**Readings In Range:** Number of BGM readings.'])
 
     const { result: fourthHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
