@@ -126,7 +126,6 @@ describe('stat', () => {
     const opts = overrides => _.assign({}, defaultOpts, overrides)
 
     const cbgOpts = opts({ bgSource: 'cbg' })
-    const smbgOpts = opts({ bgSource: 'smbg' })
     const singleDayOpts = opts({ days: 1 })
     const multiDayOpts = opts({ days: 14 })
 

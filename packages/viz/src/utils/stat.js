@@ -229,15 +229,6 @@ export const getStatData = (data, type, opts = {}) => {
       }
       break
 
-      statData.total = { value: getSum(statData.data) }
-      statData.dataPaths = {
-        summary: [
-          'data',
-          _.findIndex(statData.data, { id: 'target' })
-        ]
-      }
-      break
-
     case commonStats.sensorUsage:
       statData.data = [
         {
