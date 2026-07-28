@@ -25,25 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Box from '@mui/material/Box'
+import { type CbgRangeStatistics } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
+import { type BgPrefs } from '../../../../models/blood-glucose.model'
+import { CBGStatType } from '../../../../models/stats.model'
+import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
 import { CBGPercentageBarMemoized as CBGPercentageBar } from '../cbg-percentage-bar/cbg-percentage-bar'
 import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-title'
 import { useTimeInRangeChartHook } from './time-in-range-chart.hook'
-import { CBGStatType } from '../../../../models/stats.model'
-import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
-import Box from '@mui/material/Box'
-import { type BgPrefs } from '../../../../models/blood-glucose.model'
-import { type BgType, type CbgRangeStatistics } from 'medical-domain'
 
 interface TimeInRangeChartProps {
-  bgType: BgType
   bgPrefs: BgPrefs
   data: CbgRangeStatistics
   trackHoverFunc: (name: string) => void
 }
 
 const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
-  const { bgPrefs, bgType, data, trackHoverFunc } = props
+  const { bgPrefs, data, trackHoverFunc } = props
   const {
     annotations,
     cbgStatsProps,
@@ -52,7 +51,6 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
     title,
     legendValues
   } = useTimeInRangeChartHook({
-    bgType,
     data,
     bgPrefs
   })

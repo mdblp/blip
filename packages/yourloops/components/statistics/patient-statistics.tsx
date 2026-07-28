@@ -150,7 +150,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     <Box data-testid="patient-statistics">
       <DataCard>
         <TimeInRangeChart
-          bgType={bgType}
           data={timeInRangeChartData}
           bgPrefs={bgPrefs}
           trackHoverFunc={AnalyticsApi.trackHover}

@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgType, DatumType } from 'medical-domain'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
@@ -35,7 +34,6 @@ import { ensureNumeric } from '../../stats.util'
 import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
 
 export interface TimeInRangeChartHookProps {
-  bgType: BgType
   data: TimeInRangeData
   bgPrefs: BgPrefs
 }
@@ -56,7 +54,7 @@ interface TimeInRangeChartHookReturn {
 }
 
 export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeInRangeChartHookReturn => {
-  const { data, bgType, bgPrefs } = props
+  const { data, bgPrefs } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
@@ -68,21 +66,10 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
     setTitle(defaultTitle)
   }, [defaultTitle])
 
-  const annotations = useMemo<string[]>(() => {
-    const annotations = [
-      t('time-in-range-cgm-one-day'),
-      t('compute-oneday-time-in-range')
-    ]
-
-    if (bgType === DatumType.Smbg) {
-      annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
-        total: data.total,
-        smbgLabel: t('BGM')
-      }))
-    }
-
-    return annotations
-  }, [bgType, data.total, t])
+  const annotations = [
+    t('time-in-range-cgm-one-day'),
+    t('compute-oneday-time-in-range')
+  ]
 
   const onStatMouseover = (id: StatLevel, barTitle: string, hasValues: boolean): void => {
     if (hasValues) {
