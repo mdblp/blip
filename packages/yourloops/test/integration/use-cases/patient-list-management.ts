@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { checkCaregiverLayout } from '../assert/layout.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
 import {
   checkAckMonitoringAlertDialogCloseOnAnalyse,
@@ -38,17 +39,22 @@ import {
   checkLeadCliniciansColumn,
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
+  checkPatientListColumnsCaregiver,
   checkPatientListColumnSort,
   checkPatientListCurrentTab,
   checkPatientListCurrentTabForPrivateTeam,
   checkPatientListFilters,
+  checkPatientListHeaderCaregiver,
   checkPatientListHeaderForHcp,
   checkPatientListHideShowColumns,
   checkPatientListPendingTab,
+  checkPatientListSearchCaregiver,
   checkPatientListTooltipsMgDL,
   checkPatientListTooltipsMmolL,
   checkPatientListTooltipsNoData,
   checkPendingPatientColumnsSettingsMedicalTeam,
+  checkRemovePatientCaregiver,
+  checkRemovePatientErrorCaregiver,
   goBackToPatientsList
 } from '../assert/patient-list.assert'
 import { Router } from '../models/router.model'
@@ -98,4 +104,23 @@ export const testAckMonitoringAlertsWithError = async () => {
 
 export const testDataGridTranslations = async () => {
   checkDataGridTranslations()
+}
+
+export const testPatientListColumnsCaregiver = async () => {
+  checkPatientListHeaderCaregiver()
+  await checkPatientListColumnsCaregiver()
+}
+
+export const testRemovePatientErrorCaregiver = async () => {
+  await checkRemovePatientErrorCaregiver()
+}
+
+export const testRemovePatientCaregiver = async (lastName: string, firstName: string) => {
+  await checkCaregiverLayout(`${lastName} ${firstName}`)
+  checkPatientListHeaderCaregiver()
+  await checkRemovePatientCaregiver()
+}
+
+export const testPatientListSearchCaregiver = async (lastDataUploadDate: string) => {
+  await checkPatientListSearchCaregiver(lastDataUploadDate)
 }

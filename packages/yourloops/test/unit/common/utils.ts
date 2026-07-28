@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
 import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type Team, type TeamMember } from '../../../lib/team'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
@@ -54,7 +55,8 @@ export const createPatient = (
   monitoringAlerts: Partial<MonitoringAlerts> = undefined,
   flagged: boolean = false,
   hasSentUnreadMessages: boolean = false,
-  medicalData: MedicalData = null
+  medicalData: MedicalData = null,
+  leadClinicians: LeadClinician[] = []
 ): Patient => {
   return {
     monitoringAlerts: {
@@ -99,6 +101,7 @@ export const createPatient = (
       a1c: settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
       system: settings?.system
     },
+    leadClinicians,
     flagged,
     medicalData,
     hasSentUnreadMessages,

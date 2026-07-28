@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 export interface PatientsFilters {
   pendingEnabled: boolean
   manualFlagEnabled: boolean
+  myPatientsEnabled: boolean
   timeOutOfTargetEnabled: boolean
   hyperglycemiaEnabled: boolean
   hypoglycemiaEnabled: boolean
