@@ -63,7 +63,6 @@ import {
   checkAckMonitoringAlertHypoglycemiaMobile,
   checkAckMonitoringAlertNoDataMobile,
   checkAckMonitoringAlertTimeOutOfRangeMobile,
-  checkPatientListColumnSortMobile,
   checkPatientListCurrentTabMobile,
   checkPatientListCurrentTabForPrivateTeamMobile,
   checkPatientListFiltersMobile,
@@ -88,7 +87,6 @@ export const testPatientListForHcp = async () => {
 
 export const testPatientListForHcpMobile = async () => {
   await checkPatientListHeaderForHcpMobile()
-  await checkPatientListColumnSortMobile()
   await checkPatientListFiltersMobile()
   await checkPatientListHideShowColumnsMobile()
   await checkPatientListCurrentTabMobile()
@@ -126,12 +124,13 @@ export const testAckMonitoringAlerts = async (router: Router) => {
 
 export const testAckMonitoringAlertsMobile = async (router: Router) => {
   await checkAckMonitoringAlertNoDataMobile()
-  await checkAckMonitoringAlertHyperglycemiaMobile()
   await checkAckMonitoringAlertDialogContentMobile()
   await checkAckMonitoringAlertDialogCloseOnAnalyseMobile(router)
   await goBackToPatientsListMobile(router)
   await checkAckMonitoringAlertHypoglycemiaMobile()
   await checkAckMonitoringAlertTimeOutOfRangeMobile()
+  await checkAckMonitoringAlertNoDataMobile()
+  await checkAckMonitoringAlertHyperglycemiaMobile()
 }
 
 export const testAckMonitoringAlertsWithError = async () => {

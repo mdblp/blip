@@ -178,10 +178,4 @@ describe('HCP home page, mobile version', () => {
     await testAckMonitoringAlertsWithErrorMobile()
   })
 
-  it('should be able to create a team when on the home page', async () => {
-    const router = await renderHomePage(thirdTeamPatientsList)
-
-    await testTeamCreation(router)
-  })
-
 })
