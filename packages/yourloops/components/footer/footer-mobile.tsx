@@ -45,7 +45,7 @@ import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useTheme } from '@mui/material/styles'
-import { FooterLink } from './Footer-link-mobile'
+import { FooterLink } from './footer-link-mobile'
 
 export const footerStyle = makeStyles<{ isLongLanguage: boolean }>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
   return {
