@@ -15,11 +15,16 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from 'lodash'
-import i18next from 'i18next'
-import moment from 'moment-timezone'
+import * as d3 from 'd3'
 
 import { buildLayoutColumns, LayoutColumnType, PrintView } from 'dumb'
+import i18next from 'i18next'
+import _ from 'lodash'
+import { PumpManufacturer } from 'medical-domain'
+import moment from 'moment-timezone'
+import parse from 'parse-svg-path'
+import serialize from 'serialize-svg-path'
+import translate from 'translate-svg-path'
 
 import {
   cgmStatusMessage,
@@ -32,17 +37,11 @@ import {
 } from '../../utils/basics/data'
 
 import { generateBgRangeLabels } from '../../utils/bloodglucose'
+
+import { NO_SITE_CHANGE, SITE_CHANGE } from '../../utils/constants'
 import { formatDecimalNumber, formatPercentage } from '../../utils/format'
 
-import * as d3 from 'd3'
-import parse from 'parse-svg-path'
-import translate from 'translate-svg-path'
-import serialize from 'serialize-svg-path'
-
-import { CGM_DATA_KEY, NO_SITE_CHANGE, SITE_CHANGE } from '../../utils/constants'
-
 import { Images } from './utils/constants'
-import { PumpManufacturer } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
@@ -218,9 +217,8 @@ class BasicsPrintView extends PrintView {
     this.doc.fontSize(this.smallFontSize)
 
     if (this.bgSource) {
-      const stat = this.bgSource === CGM_DATA_KEY ? 'timeInRange' : 'readingsInRange'
-      const rangeDurations = _.get(this.data, `stats.${stat}.data.raw`, {})
-      const totalDuration = _.get(this.data, `stats.${stat}.data.total.value`, {})
+      const rangeDurations = _.get(this.data, 'stats.timeInRange.data.raw', {})
+      const totalDuration = _.get(this.data, 'stats.timeInRange.data.total.value', {})
 
       this.doc.text(cgmStatusMessage(this.cgmStatus), { width: columnWidth })
 

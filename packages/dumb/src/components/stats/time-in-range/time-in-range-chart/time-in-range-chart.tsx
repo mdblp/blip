@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,14 +38,12 @@ import { type BgType, type CbgRangeStatistics } from 'medical-domain'
 interface TimeInRangeChartProps {
   bgType: BgType
   bgPrefs: BgPrefs
-  cbgStatType: CBGStatType
   data: CbgRangeStatistics
-  days: number
   trackHoverFunc: (name: string) => void
 }
 
 const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
-  const { bgPrefs, bgType, cbgStatType, data, days, trackHoverFunc } = props
+  const { bgPrefs, bgType, data, trackHoverFunc } = props
   const {
     annotations,
     cbgStatsProps,
@@ -56,8 +54,6 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
   } = useTimeInRangeChartHook({
     bgType,
     data,
-    days,
-    type: cbgStatType,
     bgPrefs
   })
 

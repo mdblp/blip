@@ -738,43 +738,6 @@ describe('DataUtil', () => {
     })
   })
 
-  describe('getReadingsInRangeData', () => {
-    it('should return the readings in range data when viewing 1 day', () => {
-      expect(dataUtil.getReadingsInRangeData()).to.eql({
-        veryLow: 0,
-        low: 1,
-        target: 2,
-        high: 1,
-        veryHigh: 0,
-        total: 4
-      })
-    })
-
-    it('should return the readings in range data when viewing 2 days', () => {
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getReadingsInRangeData()).to.eql({
-        veryLow: 0,
-        low: 0.5,
-        target: 1,
-        high: 0.5,
-        veryHigh: 0.5,
-        total: 5
-      })
-    })
-
-    it('should return the avg daily readings in range data when viewing more than 2 days', () => {
-      dataUtil.endpoints = threeDayEndpoints
-      expect(dataUtil.getReadingsInRangeData()).to.eql({
-        veryLow: 0,
-        low: 0.3333333333333333,
-        target: 0.6666666666666666,
-        high: 0.3333333333333333,
-        veryHigh: 0.3333333333333333,
-        total: 5
-      })
-    })
-  })
-
   describe('getSensorUsage', () => {
     it('should return the duration of sensor usage and total duration of the endpoint range', () => {
       dataUtil.endpoints = dayEndpoints

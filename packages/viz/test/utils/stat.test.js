@@ -62,7 +62,6 @@ describe('stat', () => {
         carbs: 'carbs',
         coefficientOfVariation: 'coefficientOfVariation',
         glucoseManagementIndicator: 'glucoseManagementIndicator',
-        readingsInRange: 'readingsInRange',
         sensorUsage: 'sensorUsage',
         standardDev: 'standardDev',
         timeInAuto: 'timeInAuto',
@@ -80,7 +79,6 @@ describe('stat', () => {
         carbs: 'getCarbsData',
         coefficientOfVariation: 'getCoefficientOfVariationData',
         glucoseManagementIndicator: 'getGlucoseManagementIndicatorData',
-        readingsInRange: 'getReadingsInRangeData',
         sensorUsage: 'getSensorUsage',
         standardDev: 'getStandardDevData',
         timeInAuto: 'getTimeInAutoData',
@@ -128,7 +126,6 @@ describe('stat', () => {
     const opts = overrides => _.assign({}, defaultOpts, overrides)
 
     const cbgOpts = opts({ bgSource: 'cbg' })
-    const smbgOpts = opts({ bgSource: 'smbg' })
     const singleDayOpts = opts({ days: 1 })
     const multiDayOpts = opts({ days: 14 })
 
@@ -164,14 +161,6 @@ describe('stat', () => {
       })
     })
 
-    describe('readingsInRange', () => {
-      it('should return annotations for `readingsInRange` stat', () => {
-        expect(stat.getStatAnnotations(data, commonStats.readingsInRange, smbgOpts)).to.have.ordered.members([
-          '**Readings In Range:** Daily average of the number of BGM readings.',
-          'Derived from _**10**_ BGM readings.'
-        ])
-      })
-    })
     describe('standardDev', () => {
       it('should return insufficient dataannotation for `standardDev` stat when not enough data was present for a calculation', () => {
         const insufficientData = {
@@ -474,57 +463,6 @@ describe('stat', () => {
       })
     })
 
-    it('should format and return `readingsInRange` data', () => {
-      const data = {
-        veryLow: 10,
-        low: 20,
-        target: 30,
-        high: 40,
-        veryHigh: 50
-      }
-
-      const statData = stat.getStatData(data, commonStats.readingsInRange, opts)
-
-      expect(statData.data).to.eql([
-        {
-          id: 'veryLow',
-          value: 10,
-          title: 'Readings Below Range',
-          legendTitle: '<54'
-        },
-        {
-          id: 'low',
-          value: 20,
-          title: 'Readings Below Range',
-          legendTitle: '54-70'
-        },
-        {
-          id: 'target',
-          value: 30,
-          title: 'Readings In Range',
-          legendTitle: '70-180'
-        },
-        {
-          id: 'high',
-          value: 40,
-          title: 'Readings Above Range',
-          legendTitle: '180-250'
-        },
-        {
-          id: 'veryHigh',
-          value: 50,
-          title: 'Readings Above Range',
-          legendTitle: '>250'
-        }
-      ])
-
-      expect(statData.total).to.eql({ value: 150 })
-
-      expect(statData.dataPaths).to.eql({
-        summary: ['data', 2]
-      })
-    })
-
     it('should format and return `sensorUsage` data', () => {
       const data = {
         sensorUsage: 80,
@@ -750,16 +688,6 @@ describe('stat', () => {
       })
     })
 
-    describe('readingsInRange', () => {
-      it('should return title for `readingsInRange` stat when viewing a single day of data', () => {
-        expect(stat.getStatTitle(commonStats.readingsInRange, singleDayOpts)).to.equal('Readings In Range')
-      })
-
-      it('should return title for `readingsInRange` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.readingsInRange, multiDayOpts)).to.equal('Readings In Range')
-      })
-    })
-
     describe('sensorUsage', () => {
       it('should return title for `sensorUsage` stat', () => {
         expect(stat.getStatTitle(commonStats.sensorUsage)).to.equal('Sensor Usage')
@@ -887,20 +815,6 @@ describe('stat', () => {
       expect(def.dataFormat).to.eql({
         summary: statFormats.gmi
       })
-    })
-
-    it('should define the `readingsInRange` stat', () => {
-      const def = stat.getStatDefinition(data, commonStats.readingsInRange, opts)
-      expect(def).to.include.all.keys(commonStatProperties)
-      expect(def.id).to.equal(commonStats.readingsInRange)
-      expect(def.type).to.equal(statTypes.barBg)
-      expect(def.dataFormat).to.eql({
-        label: statFormats.bgCount,
-        summary: statFormats.bgCount,
-        tooltip: statFormats.percentage,
-        tooltipTitle: statFormats.bgRange
-      })
-      expect(def.alwaysShowTooltips).to.be.true
     })
 
     it('should define the `sensorUsage` stat', () => {
