@@ -64,7 +64,6 @@ import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../mock/mobile-screen.mock'
 import { ConfigService } from '../../../../lib/config/config.service'
-import { testTeamCreation } from '../../use-cases/teams-management'
 
 describe('HCP home page, mobile version', () => {
   const firstName = 'Eric'
