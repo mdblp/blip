@@ -36,6 +36,7 @@ import { ConfigService } from '../config/config.service'
 const DEFAULT_FILTERS = {
   pendingEnabled: false,
   manualFlagEnabled: false,
+  myPatientsEnabled: false,
   timeOutOfTargetEnabled: false,
   hyperglycemiaEnabled: false,
   hypoglycemiaEnabled: false,
@@ -129,7 +130,13 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     setFilters(DEFAULT_FILTERS)
   }
 
-  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.timeOutOfTargetEnabled || filters.hyperglycemiaEnabled || filters.hypoglycemiaEnabled  || filters.dataNotTransferredEnabled || filters.messagesEnabled
+  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled
+    || filters.myPatientsEnabled
+    || filters.timeOutOfTargetEnabled
+    || filters.hyperglycemiaEnabled
+    || filters.hypoglycemiaEnabled
+    || filters.dataNotTransferredEnabled
+    || filters.messagesEnabled
 
   return {
     filters,

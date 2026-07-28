@@ -200,7 +200,7 @@ describe('Patient profile view for HCP', () => {
 
     it('should be able to view clinicians list with 0 clinician', async () => {
       await act(async () => {
-        renderPage(patientProfileRoute)
+        renderPage(malePatientProfileRoute)
       })
 
       await checkCliniciansEmptyList()

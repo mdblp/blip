@@ -41,6 +41,8 @@ import {
 } from '../mock/team.api.mock'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import {
+  loggedInUserEmail,
+  loggedInUserFullName,
   loggedInUserId,
   userHugoEmail,
   userHugoFullName,
@@ -98,7 +100,12 @@ export const patient1Info: Patient = buildPatient({
     sex: Gender.Female
   },
   settings: { ...defaultSettings, system: DeviceSystem.Dblg2 },
-  referringHcps: []
+  referringHcps: [{
+    id: loggedInUserId,
+    name: loggedInUserFullName,
+    email: loggedInUserEmail,
+    profession: 'hcp-profession-nurse'
+  }]
 })
 
 export const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })

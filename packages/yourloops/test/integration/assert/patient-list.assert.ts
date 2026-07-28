@@ -27,20 +27,14 @@
 
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { loggedInUserId } from '../mock/auth0.hook.mock'
-import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
+import moment from 'moment-timezone'
+import NotificationApi from '../../../lib/notifications/notification.api'
 import PatientApi from '../../../lib/patient/patient.api'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 import {
-  checkPatientsFilters,
-  closeFiltersPresentation,
-  defaultToggles,
-  updatePatientsFilters
-} from './patient-filters.assert'
-import { changeTeamScope } from './header.assert'
-import {
+  hyperglycemiaPatientInfo,
   hypoglycemiaPatientInfo,
   hypoglycemiaPatientMetrics,
-  hyperglycemiaPatientInfo,
   noDataTransferredPatientInfo,
   patient1Info,
   patient2Info,
@@ -49,11 +43,18 @@ import {
   pendingPatient,
   timeSpentOutOfTargetRangePatientInfo
 } from '../data/patient.api.data'
-import NotificationApi from '../../../lib/notifications/notification.api'
-import moment from 'moment-timezone'
-import { PATIENT_AGE } from '../utils/helpers'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
+import { removeDirectShareMock } from '../mock/direct-share.api.mock'
+import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
 import { Router } from '../models/router.model'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { PATIENT_AGE } from '../utils/helpers'
+import { changeTeamScope } from './header.assert'
+import {
+  checkPatientsFilters,
+  closeFiltersPresentation,
+  defaultToggles,
+  updatePatientsFilters
+} from './patient-filters.assert'
 
 const SVG_ICON_DISABLED_CLASS = 'MuiSvgIcon-colorDisabled'
 const SVG_ICON_FILL = 'currentColor'
@@ -108,7 +109,7 @@ export const checkPatientListCurrentTab = async () => {
   await userEvent.click(currentTab)
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(6)
-  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980YBNo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
 }
 
 export const checkPatientListCurrentTabForPrivateTeam = async () => {
@@ -131,7 +132,7 @@ export const checkPatientListFilters = async () => {
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
 
   const lastDataUploadDate = moment.tz(hypoglycemiaPatientMetrics.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
-  expect(dataGridRowCurrent).toHaveTextContent(`PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadType 1Jan 1, 1980N/AThe patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient hyperglycemia@patient.frPatient HyperglycemiaType 1Jan 1, 1980N/ANo new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient hypoglycemia@patient.frPatient HypoglycemiaType 1Jan 1, 1980N/ANo new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AData calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.Rows per page:101–7 of 7`)
+  expect(dataGridRowCurrent).toHaveTextContent(`PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980YBNo new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadType 1Jan 1, 1980N/AThe patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient hyperglycemia@patient.frPatient HyperglycemiaType 1Jan 1, 1980N/ANo new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient hypoglycemia@patient.frPatient HypoglycemiaType 1Jan 1, 1980N/ANo new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AData calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.Rows per page:101–7 of 7`)
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -144,15 +145,24 @@ export const checkPatientListFilters = async () => {
 
   // check the manual flag toggle
   await updatePatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
-  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 7')
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Unflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
 
-  // check the time spent out of target toggle
+  // check the "My patients" toggle
   await updatePatientsFilters({
     ...defaultToggles,
     manualFlagFilterToggle: true,
+    myPatientsFilterToggle: true
+  })
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980YBNo new messages from the patient0%0%N/A')
+  await userEvent.click(filtersButton)
+  checkPatientsFilters({ ...defaultToggles, myPatientsFilterToggle: true })
+
+  // check the time spent out of target toggle
+  await updatePatientsFilters({
+    ...defaultToggles,
+    myPatientsFilterToggle: true,
     outOfRangeFilterToggle: true
   })
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient time-out-of-range@patient.frOut of Range Patient TimeType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/A')
@@ -178,7 +188,6 @@ export const checkPatientListFilters = async () => {
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, `Flag patient hyperglycemia@patient.frPatient HyperglycemiaType 1Jan 1, 1980N/ANo new messages from the patient0%0%${lastDataUploadDate}`)
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, hyperglycemiaFilterToggle: true })
-
 
   // check the no data toggle
   await updatePatientsFilters({
@@ -277,7 +286,7 @@ export const checkPatientListHideShowColumns = async () => {
   // Assert default columns are displayed
   checkDefaultColumnsDisplay()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980YBNo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
 
   await userEvent.click(columnSettingsButton)
 
@@ -454,7 +463,7 @@ export const checkPatientListHideShowColumns = async () => {
 
   await checkTooltipsColumnHeader(dataGridCurrentRows)
 
-  expect(dataGridCurrentRows).toHaveTextContent(`PatientProfileAgeDate of birthGenderSystemLead cliniciansMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG2N/ANo new messages from the patient0%N/A0%N/AN/AFlag patient z-no-data@patient.frPatient Z - No DataType 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG1N/ANo new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1${PATIENT_AGE}Jan 1, 1980MaleDBLG1N/ANo new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frRouis Patient2Type 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG1TCNo new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1${PATIENT_AGE}Jan 1, 1980MaleDBLG1YRTCHRCNCFNo new messages from the patient0%N/A0%N/AN/A`)
+  expect(dataGridCurrentRows).toHaveTextContent(`PatientProfileAgeDate of birthGenderSystemLead cliniciansMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG2YBNo new messages from the patient0%N/A0%N/AN/AFlag patient z-no-data@patient.frPatient Z - No DataType 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG1N/ANo new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1${PATIENT_AGE}Jan 1, 1980MaleDBLG1N/ANo new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frRouis Patient2Type 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG1TCNo new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1${PATIENT_AGE}Jan 1, 1980MaleDBLG1YRTCHRCNCFNo new messages from the patient0%N/A0%N/AN/A`)
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')
@@ -513,12 +522,12 @@ export const checkPatientListHideShowColumns = async () => {
   // Assert default columns are displayed
   checkDefaultColumnsDisplay()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980YBNo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
 }
 
 const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string, hyperglycemiaTooltipValue: string): Promise<void> => {
   await waitFor(() => {
-    expect(screen.queryByTestId('current-patient-list-grid')).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
+    expect(screen.queryByTestId('current-patient-list-grid')).toHaveTextContent('PatientProfileDate of birthLead cliniciansMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980YBNo new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980N/ANo new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980TCNo new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980YRTCHRCNCFNo new messages from the patient0%0%N/A')
   })
   const dataGridRows = screen.getByTestId('current-patient-list-grid')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
@@ -1037,7 +1046,7 @@ export const checkLeadCliniciansColumn = async (): Promise<void> => {
   expect(cliniciansAllRows.length).toBe(5)
 
   const cliniciansFirstRow = cliniciansAllRows[0]
-  expect(cliniciansFirstRow).toHaveTextContent('N/A')
+  expect(cliniciansFirstRow).toHaveTextContent('YB')
 
   const cliniciansSecondRow = cliniciansAllRows[1]
   expect(cliniciansSecondRow).toHaveTextContent('N/A')
@@ -1063,6 +1072,146 @@ export const checkDataGridTranslations = (): void => {
   expect(dataGrid).toHaveTextContent('Lignes par page :101–5 sur 5')
 }
 
+export const checkPatientListColumnsCaregiver = async () => {
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
+
+  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+
+  // Hidden columns for the Caregiver role
+  expect(screen.queryByRole('columnheader', { name: 'Profile' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Lead clinicians' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
+
+  await userEvent.click(columnSettingsButton)
+
+  const columnSettingsPopover = screen.getByRole('presentation')
+  const applyButton = within(columnSettingsPopover).getByRole('button', { name: 'Apply' })
+  expect(columnSettingsPopover).toBeVisible()
+  expect(within(columnSettingsPopover).getByText('Show column')).toBeVisible()
+
+  const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('switch')
+  const ageToggle = within(within(columnSettingsPopover).getByLabelText('Age')).getByRole('switch')
+  const dateOfBirthToggle = within(within(columnSettingsPopover).getByLabelText('Date of birth')).getByRole('switch')
+  const genderToggle = within(within(columnSettingsPopover).getByLabelText('Gender')).getByRole('switch')
+  const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('switch')
+  const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('switch')
+  expect(patientToggle).toHaveProperty('checked', true)
+  expect(patientToggle).toHaveProperty('disabled', true)
+  expect(ageToggle).toHaveProperty('checked', false)
+  expect(dateOfBirthToggle).toHaveProperty('checked', true)
+  expect(genderToggle).toHaveProperty('checked', false)
+  expect(systemToggle).toHaveProperty('checked', false)
+  expect(lastUpdateToggle).toHaveProperty('checked', true)
+
+  const disabledToggle = screen.getByLabelText('This column cannot be removed')
+  await userEvent.hover(disabledToggle)
+  expect(await screen.findByText('This column cannot be removed')).toBeVisible()
+
+  await userEvent.click(ageToggle)
+  await userEvent.click(lastUpdateToggle)
+  expect(ageToggle).toHaveProperty('checked', true)
+  expect(lastUpdateToggle).toHaveProperty('checked', false)
+
+  await userEvent.click(applyButton)
+
+  expect(columnSettingsPopover).not.toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Age' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+}
+
+export const checkRemovePatientErrorCaregiver = async () => {
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
+
+  await userEvent.click(removeButton)
+
+  const removeDialog = screen.getByRole('dialog')
+
+  const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
+
+  await userEvent.click(confirmRemoveButton)
+
+  expect(removeDirectShareMock).toHaveBeenCalledWith(patient2Info.userid, loggedInUserId)
+  expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
+}
+
+export const checkRemovePatientCaregiver = async () => {
+  const patientTableBody = screen.getByTestId('current-patient-list-grid')
+  expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
+  expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980N/AFlag patient pending-patient@diabeloop.frPatient PendingJan 1, 1980N/AFlag patient patient2@diabeloop.frRouis Patient2Jan 1, 1980N/AFlag patient patient3@diabeloop.frSrairi Patient3Jan 1, 1980N/A')
+  const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
+  expect(removePatientButton).toBeVisible()
+
+  await userEvent.click(removePatientButton)
+
+  const removePatientDialog = screen.getByRole('dialog')
+  expect(removePatientDialog).toBeVisible()
+
+  const removePatientDialogTitle = within(removePatientDialog).getByText('Remove patient Patient2 Rouis')
+  expect(removePatientDialogTitle).toBeVisible()
+
+  expect(removePatientDialog).toHaveTextContent('Are you sure you want to remove Patient2 Rouis?')
+
+  const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
+  expect(removePatientDialogCancelButton).toBeVisible()
+
+  const removePatientDialogConfirmButton = within(removePatientDialog).getByRole('button', { name: 'Remove patient' })
+  expect(removePatientDialogConfirmButton).toBeVisible()
+
+  await userEvent.click(removePatientDialogCancelButton)
+
+  expect(removePatientDialog).not.toBeInTheDocument()
+
+  await userEvent.click(removePatientButton)
+
+  const removePatientDialog2 = screen.getByRole('dialog')
+  expect(removePatientDialog2).toBeVisible()
+
+  const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
+
+  await userEvent.click(removePatientDialog2ConfirmButton)
+
+  expect(removeDirectShareMock).toHaveBeenCalledWith(patient2Info.userid, loggedInUserId)
+  expect(jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1Info])).toHaveBeenCalledTimes(2)
+  expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
+}
+
+export const checkPatientListSearchCaregiver = async (lastDataUploadDate: string) => {
+  // Checking that all patients are displayed
+  const dataGridRow = screen.getByTestId('current-patient-list-grid')
+  expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+  expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient annie@versaire.comVersaire AnnieMay 25, 20150%0%Jun 22, 2023 7:02 AM`)
+
+  const searchPatient = screen.getByPlaceholderText('Search for a patient...')
+
+  // Searching by birthdate only
+  await userEvent.type(searchPatient, '20/01/2010')
+  expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AM`)
+  await userEvent.clear(searchPatient)
+
+  // Searching by birthdate and first name
+  await userEvent.type(searchPatient, '20/01/2010 Aki')
+  expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%${lastDataUploadDate}`)
+  await userEvent.clear(searchPatient)
+
+  // Searching by birthdate and last name
+  await userEvent.type(searchPatient, '20/01/2010provi')
+  expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AM')
+}
+
 const checkClinicianTooltip = async (initials: string, fullName: string, row: HTMLElement): Promise<void> => {
   const avatar = within(row).getByText(initials)
 
@@ -1076,5 +1225,6 @@ const checkClinicianTooltip = async (initials: string, fullName: string, row: HT
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 }
+
 
 
