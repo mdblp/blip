@@ -33,7 +33,6 @@ import { useLocation } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import LanguageIcon from '@mui/icons-material/Language'
-import Link from '@mui/material/Link'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
 import { useAuth } from '../../lib/auth'
@@ -46,6 +45,7 @@ import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useTheme } from '@mui/material/styles'
+import { FooterLink } from './Footer-link-mobile'
 
 export const footerStyle = makeStyles<{ isLongLanguage: boolean }>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
   return {
@@ -79,13 +79,6 @@ export const footerStyle = makeStyles<{ isLongLanguage: boolean }>({ name: 'foot
     },
     languageSeparator: {
       alignSelf: 'center'
-    },
-    link: {
-      color: theme.palette.grey[700],
-      fontWeight: 400,
-      textAlign: 'center',
-      display: 'inline-block',
-      lineHeight: 1.2
     },
     separator: {
       paddingLeft: theme.spacing(1),
@@ -156,56 +149,48 @@ export const FooterMobile: FunctionComponent = () => {
           </Box>
         }
       <Box className={classes.allLines}>
-        <Link
+        <FooterLink
           id="footer-link-url-privacy-policy"
-          target="_blank"
           href={privacyPolicyUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
-          className={classes.link}
+          isExternal
         >
           {t('privacy-policy')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-url-terms"
-          target="_blank"
           href={termsOfUseUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('terms')}
-          className={classes.link}
+          isExternal
         >
           {t('terms-of-use')}
-        </Link>
+        </FooterLink>
       </Box>
       <Box className={classes.allLines}>
-        <Link
+        <FooterLink
           id="footer-link-cookies-management"
-          className={classes.link}
           onClick={handleShowCookieBanner}
         >
           {t('cookies-management')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-url-cookies-policy"
-          target="_blank"
           href={cookiesPolicyUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
-          className={classes.link}
+          isExternal
         >
           {t('cookies-policy')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-contact-mailto"
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
-          onClick={metricsPdfDocument('yourloops-mailto-contact')}
-          className={classes.link}
+          onClick={metricsPdfDocument('mailto-contact')}
         >
           {t('contact')}
-        </Link>
+        </FooterLink>
       </Box>
       {isMatchingPatientView &&
         <Box sx={{ height: theme.spacing(9) }} />
