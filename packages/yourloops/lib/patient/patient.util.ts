@@ -83,26 +83,26 @@ export default class PatientUtils {
     })
   }
 
-  static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
+  static readonly computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
     return patients.map((patient: Patient) => {
       patient.flagged = flaggedPatients.includes(patient.userid)
       return patient
     })
   }
 
-  static isInvitationPending = (patient: Patient): boolean => {
+  static readonly isInvitationPending = (patient: Patient): boolean => {
     return patient.invitationStatus === UserInviteStatus.Pending
   }
 
-  static getNonPendingPatients = (patients: Patient[]): Patient[] => {
+  static readonly getNonPendingPatients = (patients: Patient[]): Patient[] => {
     return patients.filter(patient => !PatientUtils.isInvitationPending(patient))
   }
 
-  static getPendingPatients = (patients: Patient[]): Patient[] => {
+  static readonly getPendingPatients = (patients: Patient[]): Patient[] => {
     return patients.filter(patient => patient.invitationStatus === UserInviteStatus.Pending)
   }
 
-  static filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
+  static readonly filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
     if (!patientFilters.timeOutOfTargetEnabled && !patientFilters.hypoglycemiaEnabled &&
         !patientFilters.dataNotTransferredEnabled && !patientFilters.hyperglycemiaEnabled) {
       return patients
@@ -117,7 +117,7 @@ export default class PatientUtils {
     })
   }
 
-  static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined): Patient[] => {
+  static readonly extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined, userId: string): Patient[] => {
     // When the filter is pending, we only get the pending patients and don't apply any filter on them
     if (patientFilters.pendingEnabled) {
       return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
@@ -127,9 +127,10 @@ export default class PatientUtils {
     return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
       .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)
       .filter(patient => patientFilters.messagesEnabled ? patient.hasSentUnreadMessages : patient)
+      .filter(patient => patientFilters.myPatientsEnabled ? patient.leadClinicians.some((clinician) => clinician.id === userId) : patient)
   }
 
-  static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {
+  static readonly extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {
     return patients.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
@@ -140,11 +141,11 @@ export default class PatientUtils {
     })
   }
 
-  static computeAge = (birthdate: string): number => {
+  static readonly computeAge = (birthdate: string): number => {
     return moment().diff(birthdate, 'years')
   }
 
-  static getGenderLabel = (gender: Gender): string => {
+  static readonly getGenderLabel = (gender: Gender): string => {
     switch (gender) {
       case Gender.Indeterminate:
         return t('gender-i')

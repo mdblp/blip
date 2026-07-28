@@ -40,6 +40,7 @@ describe('usePatientListProviderHook', () => {
   const defaultFilters: PatientsFilters = {
     pendingEnabled: false,
     manualFlagEnabled: false,
+    myPatientsEnabled: false,
     timeOutOfTargetEnabled: false,
     hyperglycemiaEnabled: false,
     hypoglycemiaEnabled: false,
@@ -50,6 +51,7 @@ describe('usePatientListProviderHook', () => {
   const filtersUpdated: PatientsFilters = {
     pendingEnabled: true,
     manualFlagEnabled: true,
+    myPatientsEnabled: true,
     timeOutOfTargetEnabled: true,
     hyperglycemiaEnabled: true,
     hypoglycemiaEnabled: true,
