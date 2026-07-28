@@ -47,13 +47,14 @@ import { ExternalFilesService } from '../../lib/external-files/external-files.se
 import { PatientView } from '../../enum/patient-view.enum'
 import { useTheme } from '@mui/material/styles'
 
-export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
+export const footerStyle = makeStyles<{ isLongLanguage: boolean }>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
   return {
     allLines: {
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      wordBreak: isLongLanguage ? 'break-word' : 'normal'
     },
     container: {
       alignItems: 'center',
@@ -98,11 +99,12 @@ export const FooterMobile: FunctionComponent = () => {
   const { user } = useAuth()
   const theme = useTheme()
   const { pathname } = useLocation()
-  const { classes } = footerStyle()
 
   const currentLanguage = getCurrentLang()
 
   const isLongLanguage = (currentLanguage === LanguageCode.De) || (currentLanguage === LanguageCode.Nl)
+
+  const { classes } = footerStyle( { isLongLanguage })
 
   const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCode.Ja
 
@@ -161,7 +163,6 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
-          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('privacy-policy')}
         </Link>
@@ -173,7 +174,6 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('terms')}
           className={classes.link}
-          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('terms-of-use')}
         </Link>
@@ -183,7 +183,6 @@ export const FooterMobile: FunctionComponent = () => {
           id="footer-link-cookies-management"
           className={classes.link}
           onClick={handleShowCookieBanner}
-          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('cookies-management')}
         </Link>
@@ -195,7 +194,6 @@ export const FooterMobile: FunctionComponent = () => {
           rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
-          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('cookies-policy')}
         </Link>
@@ -205,7 +203,6 @@ export const FooterMobile: FunctionComponent = () => {
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('yourloops-mailto-contact')}
           className={classes.link}
-          sx={{ wordBreak: isLongLanguage ? 'break-word' : 'normal' }}
         >
           {t('contact')}
         </Link>

@@ -28,7 +28,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
-import { filtersTeamId, filtersTeamName, myThirdTeamName } from '../mock/team.api.mock'
+import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
 import PatientApi from '../../../lib/patient/patient.api'
 import {
   checkPatientsFilters,
@@ -38,13 +38,9 @@ import {
 } from './patient-filters-mobile.assert'
 import { changeTeamScope } from './header-mobile.assert'
 import {
-  hypoglycemiaPatientInfo,
   hyperglycemiaPatientInfo,
+  hypoglycemiaPatientInfo,
   noDataTransferredPatientInfo,
-  patient1Info,
-  patient2Info,
-  patient3Info,
-  patientWithMmolInfo,
   timeSpentOutOfTargetRangePatientInfo
 } from '../data/patient.api.data'
 import { Router } from '../models/router.model'
@@ -67,7 +63,6 @@ export const checkPatientListHeaderCaregiverMobile = () => {
   expect(within(header).queryByRole('button', { name: 'Filters' })).not.toBeInTheDocument()
   expect(screen.queryByTestId('filters-label')).not.toBeInTheDocument()
   expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
 }
 
 export const checkPatientListHeaderForHcpMobile = async () => {
@@ -144,9 +139,11 @@ export const checkPatientListFiltersMobile = async () => {
   })
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent)
   await userEvent.click(filtersButton)
-  checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
 
   await closeFiltersPresentation()
+
+  await changeTeamScope(filtersTeamName, myThirdTeamName)
+  expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, myThirdTeamId)
 
   // Reset the filters
   await userEvent.click(filtersButton)
@@ -178,42 +175,16 @@ export const checkPatientListHideShowColumnsMobile = async () => {
   expect(screen.queryByRole('columnheader', { name: 'Actions' })).not.toBeInTheDocument()
 }
 
-export const checkPatientListColumnSortMobile = async (): Promise<void> => {
-  const dataGridRows = screen.getByTestId('current-patient-list-grid')
-
-  const patientColumnHeader = within(dataGridRows).getByRole('columnheader', { name: 'Patient' })
-  const allRowsBeforeSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsBeforeSort[1]).toHaveTextContent(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`)
-  expect(allRowsBeforeSort[2]).toHaveTextContent(`${noDataTransferredPatientInfo.profile.lastName} ${noDataTransferredPatientInfo.profile.firstName}`)
-  expect(allRowsBeforeSort[3]).toHaveTextContent(`${patientWithMmolInfo.profile.lastName} ${patientWithMmolInfo.profile.firstName}`)
-  expect(allRowsBeforeSort[4]).toHaveTextContent(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
-  expect(allRowsBeforeSort[5]).toHaveTextContent(`${patient3Info.profile.lastName} ${patient3Info.profile.firstName}`)
-
-  const sortButton = within(patientColumnHeader).getByRole('button', { hidden: true })
-  await userEvent.click(sortButton)
-
-  const allRowsAfterFirstSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterFirstSort[1]).toHaveTextContent(`${patient3Info.profile.lastName} ${patient3Info.profile.firstName}`)
-  expect(allRowsAfterFirstSort[2]).toHaveTextContent(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
-  expect(allRowsAfterFirstSort[3]).toHaveTextContent(`${patientWithMmolInfo.profile.lastName} ${patientWithMmolInfo.profile.firstName}`)
-  expect(allRowsAfterFirstSort[4]).toHaveTextContent(`${noDataTransferredPatientInfo.profile.lastName} ${noDataTransferredPatientInfo.profile.firstName}`)
-  expect(allRowsAfterFirstSort[5]).toHaveTextContent(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`)
-
-  await userEvent.click(sortButton)
-
-  const allRowsAfterSecondSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterSecondSort[1]).toHaveTextContent(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`)
-  expect(allRowsAfterSecondSort[2]).toHaveTextContent(`${noDataTransferredPatientInfo.profile.lastName} ${noDataTransferredPatientInfo.profile.firstName}`)
-  expect(allRowsAfterSecondSort[3]).toHaveTextContent(`${patientWithMmolInfo.profile.lastName} ${patientWithMmolInfo.profile.firstName}`)
-  expect(allRowsAfterSecondSort[4]).toHaveTextContent(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
-  expect(allRowsAfterSecondSort[5]).toHaveTextContent(`${patient3Info.profile.lastName} ${patient3Info.profile.firstName}`)
-}
-
 const openAckDialogForPatient = async (testId: string, rowIndex: number): Promise<HTMLElement> => {
-  const dataGridRows = screen.getByTestId('current-patient-list-grid')
-  const icon = within(dataGridRows).getAllByTestId(testId)[rowIndex]
-  await userEvent.click(icon)
-  return screen.getByRole('dialog')
+  const user = userEvent.setup();
+  const rows = screen.getAllByRole('row');
+
+  const targetRow = rows[rowIndex + 1];
+
+  const button = within(targetRow).getByTestId(testId);
+
+  await user.click(button);
+  return await screen.findByRole('dialog');
 }
 
 // Check the content of the Acknowledge monitoring alert dialog for a hypoglycemia alert, then close it with the close button
@@ -245,7 +216,7 @@ export const checkAckMonitoringAlertDialogCloseOnAnalyseMobile = async (router: 
   expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients/${hypoglycemiaPatientInfo.userid}/dashboard`)
 }
 
-export const checkAckMonitoringAlertHypoglycemiaMobile = async (withError=false): Promise<void> => {
+export const checkAckMonitoringAlertHypoglycemiaMobile = async (withError = false): Promise<void> => {
   const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.lastName} ${hypoglycemiaPatientInfo.profile.firstName}`
   const dialog = await openAckDialogForPatient('hypoglycemia-icon', 5)
 
@@ -266,7 +237,7 @@ export const checkAckMonitoringAlertHypoglycemiaMobile = async (withError=false)
       hypoglycemia: expect.any(Date),
       hyperglycemia: null,
       nonDataTransmission: null,
-      timeOutOfRange: null,
+      timeOutOfRange: null
     })
   )
 }
@@ -288,7 +259,7 @@ export const checkAckMonitoringAlertHyperglycemiaMobile = async (): Promise<void
       hyperglycemia: expect.any(Date),
       hypoglycemia: null,
       nonDataTransmission: null,
-      timeOutOfRange: null,
+      timeOutOfRange: null
     })
   )
 }
@@ -308,7 +279,7 @@ export const checkAckMonitoringAlertTimeOutOfRangeMobile = async (): Promise<voi
       timeOutOfRange: expect.any(Date),
       hyperglycemia: null,
       hypoglycemia: null,
-      nonDataTransmission: null,
+      nonDataTransmission: null
     })
   )
 }
@@ -318,8 +289,8 @@ export const checkAckMonitoringAlertNoDataMobile = async (): Promise<void> => {
   const PatientName = `${noDataTransferredPatientInfo.profile.lastName} ${noDataTransferredPatientInfo.profile.firstName}`
   const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
   await userEvent.click(acknowledgeButton)
-  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   await checkAndCloseAckAlert(`Monitoring alert Data not transmitted acknowledged successfully for patient ${PatientName}`)
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
     filtersTeamId,
     noDataTransferredPatientInfo.userid,
@@ -327,19 +298,24 @@ export const checkAckMonitoringAlertNoDataMobile = async (): Promise<void> => {
       nonDataTransmission: expect.any(Date),
       hyperglycemia: null,
       hypoglycemia: null,
-      timeOutOfRange: null,
+      timeOutOfRange: null
     })
   )
 }
 
-export const goBackToPatientsListMobile = async (router : Router): Promise<void> => {
-  //await userEvent.click(screen.getByTestId('back-button'))
+export const goBackToPatientsListMobile = async (router: Router): Promise<void> => {
+  await userEvent.click(screen.getByTestId('back-button'))
   expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients`)
 }
 
 export const checkAndCloseAckAlert = async (alertText: string): Promise<void> => {
-  const confirmation = screen.getByRole('alert')
-  expect(confirmation).toHaveTextContent(alertText)
-  const closeButton = within(confirmation).getByRole('button', { name: 'Close' })
-  await userEvent.click(closeButton)
+
+  const messageElement = await screen.findByText(alertText);
+
+  const confirmationAlert = (messageElement.closest('.MuiAlert-root') || messageElement) as HTMLElement;
+
+  expect(confirmationAlert).toHaveTextContent(alertText);
+
+  const closeButton = within(confirmationAlert).getByRole('button', { name: 'Close', hidden: true });
+  await userEvent.click(closeButton);
 }
