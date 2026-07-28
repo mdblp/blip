@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
+import { type LeadClinician } from '../../../lib/lead-clinicians/models/lead-clinician.model'
 import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type Team, type TeamMember } from '../../../lib/team'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'

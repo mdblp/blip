@@ -26,7 +26,7 @@
  */
 
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
-import { LeadClinician } from '../../../../lib/lead-clinicians/models/lead-clinician.model'
+import { type LeadClinician } from '../../../../lib/lead-clinicians/models/lead-clinician.model'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import PatientApi from '../../../../lib/patient/patient.api'
 import PatientUtils from '../../../../lib/patient/patient.util'
