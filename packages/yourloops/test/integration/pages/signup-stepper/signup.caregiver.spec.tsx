@@ -67,7 +67,7 @@ describe('Signup stepper as caregiver', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/complete-signup')
     })
-    checkFooterForUserNotLoggedIn(true)
+    checkFooterForUserNotLoggedIn(false, true)
     checkStepper()
 
     // Step one
