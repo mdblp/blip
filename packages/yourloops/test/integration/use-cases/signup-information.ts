@@ -29,7 +29,7 @@ import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
 import { checkRegisterButton, checkSignupInformationPageContent } from '../assert/signup-information.assert'
 
 export const testSignupInformation = async (loginWithRedirectMock: jest.Mock) => {
-  checkFooterForUserNotLoggedIn(true)
+  checkFooterForUserNotLoggedIn(false, true)
   await checkSignupInformationPageContent()
   await checkRegisterButton(loginWithRedirectMock)
 }

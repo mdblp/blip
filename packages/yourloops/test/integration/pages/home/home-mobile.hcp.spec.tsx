@@ -51,7 +51,6 @@ import {
   testAckMonitoringAlertsMobile,
   testAckMonitoringAlertsWithErrorMobile,
   testPatientListForHcpMobile,
-  testPatientListForHcpPrivateTeamMobile,
 } from '../../use-cases/patient-list-management'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
@@ -89,7 +88,6 @@ describe('HCP home page, mobile version', () => {
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
-    // For testing with a mobile sized device
     mockMobileScreen();
   })
 
@@ -122,17 +120,6 @@ describe('HCP home page, mobile version', () => {
     await renderHomePage(privatePatientsList)
 
     await testAppMainLayoutForHcpMobile(appMainLayoutParams)
-  })
-
-  it('should be able to manage the patient list when scoped on the private practice team', async () => {
-    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
-      ...patient1Info,
-      invitationStatus: UserInviteStatus.Accepted
-    }])
-    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
-
-    await renderHomePage(privatePatientsList)
-    await testPatientListForHcpPrivateTeamMobile()
   })
 
   it('should render correct layout when scoped on a medical team', async () => {

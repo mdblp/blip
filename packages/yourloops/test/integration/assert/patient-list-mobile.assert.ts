@@ -72,19 +72,6 @@ export const checkPatientListHeaderForHcpMobile = async () => {
   expect(within(header).getByTestId('add-patient-button')).toBeVisible()
 }
 
-export const checkPatientListCurrentTabMobile = async () => {
-  const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
-  //Pourquoi 2 et plus 6 ?
-  expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
-}
-
-//Pas de sens de garder une fonction qui check le current tab, il n'y a plus de current tab
-export const checkPatientListCurrentTabForPrivateTeamMobile = async () => {
-  const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
-  expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
-}
-
-//fonction importante, on devrait la garder
 export const checkPatientListFiltersMobile = async () => {
   await changeTeamScope(myThirdTeamName, filtersTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, filtersTeamId)
@@ -157,7 +144,6 @@ export const checkPatientListFiltersMobile = async () => {
 
 export const checkPatientListHideShowColumnsMobile = async () => {
   // Assert only mandatory columns are displayed
-  // Une seule fonction comme celle-ci nécessaire
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'Profile' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
