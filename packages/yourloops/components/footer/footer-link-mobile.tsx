@@ -47,7 +47,6 @@ interface FooterLinkProps {
   href?: string
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   isExternal?: boolean
-  className?: string
   children: React.ReactNode
 }
 
