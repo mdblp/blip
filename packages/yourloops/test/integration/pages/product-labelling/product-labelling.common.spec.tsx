@@ -48,7 +48,7 @@ describe('Product labelling page', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/login')
     })
-    checkFooterForUserNotLoggedIn(false)
+    checkFooterForUserNotLoggedIn(false, false)
 
     await userEvent.click(screen.getByText('Product Labelling'))
 
