@@ -326,7 +326,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         }
       }
     ]
-  }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel])
+  }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel, isMobile])
 
   const onRowClick = (params: GridRowParams): void => {
     navigate(`${params.id}${AppUserRoute.Dashboard}`)
