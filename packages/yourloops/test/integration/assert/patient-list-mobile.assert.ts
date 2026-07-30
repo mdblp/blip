@@ -28,7 +28,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
-import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
+import { filtersTeamId, filtersTeamName, myThirdTeamName } from '../mock/team.api.mock'
 import PatientApi from '../../../lib/patient/patient.api'
 import {
   checkPatientsFilters,
@@ -140,7 +140,7 @@ export const checkPatientListFiltersMobile = async () => {
     hyperglycemiaFilterToggle: false,
     dataNotTransferredFilterToggle: false
   })
-  
+
   await userEvent.click(filtersButton)
 
   checkPatientsFilters({ ...defaultToggles, hyperglycemiaFilterToggle: false, hypoglycemiaFilterToggle: false, outOfRangeFilterToggle: false, dataNotTransferredFilterToggle: false })
