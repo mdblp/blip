@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,3 +32,7 @@ export enum BgClass {
   VeryHigh = 'veryHigh',
   VeryLow = 'veryLow',
 }
+
+export const BG_CLASS_TIGHT_RANGE = 'tightRange'
+
+export type BgClassWithTightRange = BgClass | 'tightRange'

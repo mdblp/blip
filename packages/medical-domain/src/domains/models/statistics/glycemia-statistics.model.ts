@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { BgClass } from './enum/bg-class.enum'
+
 export interface BgBounds {
   veryHighThreshold: number
   targetUpperBound: number
@@ -33,11 +35,11 @@ export interface BgBounds {
 }
 
 export interface CbgRangeStatistics {
-  veryLow: number
-  low: number
-  target: number
-  high: number
-  veryHigh: number
+  [BgClass.VeryLow]: number
+  [BgClass.Low]: number
+  [BgClass.Target]: number
+  [BgClass.High]: number
+  [BgClass.VeryHigh]: number
   total: number
 }
 
