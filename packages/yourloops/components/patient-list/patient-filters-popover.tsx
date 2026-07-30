@@ -82,7 +82,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
       open
       anchorEl={anchorEl}
       onClose={onClose}
-      data-testid = "filters-popover"
+      data-testid="filters-popover"
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'left'
@@ -110,20 +110,23 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
           </>
         }
 
-        {
-          !isSelectedTeamPrivate &&
+        {!isSelectedTeamPrivate &&
           <>
-            <Typography variant="h6" className={classes.title}>{t('lead-clinicians')}</Typography>
-            <PatientListOptionToggle
-              ariaLabel={t('filter-my-patients')}
-              checked={filters.myPatientsEnabled}
-              icon={<StethoscopeIcon />}
-              label={t('my-patients')}
-              onToggleChange={() => {
-                setFilters({ ...filters, myPatientsEnabled: !filters.myPatientsEnabled })
-                AnalyticsApi.trackClick('patient-filters-my-patients', ElementType.Toggle)
-              }}
-            />
+            {!isMobile &&
+              <>
+                <Typography variant="h6" className={classes.title}>{t('lead-clinicians')}</Typography>
+                <PatientListOptionToggle
+                  ariaLabel={t('filter-my-patients')}
+                  checked={filters.myPatientsEnabled}
+                  icon={<StethoscopeIcon />}
+                  label={t('my-patients')}
+                  onToggleChange={() => {
+                    setFilters({ ...filters, myPatientsEnabled: !filters.myPatientsEnabled })
+                    AnalyticsApi.trackClick('patient-filters-my-patients', ElementType.Toggle)
+                  }}
+                />
+              </>
+            }
 
             <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
             <PatientListOptionToggle
