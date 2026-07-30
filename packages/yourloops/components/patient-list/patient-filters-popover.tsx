@@ -102,6 +102,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               checked={filters.manualFlagEnabled}
               icon={<FlagIcon />}
               label={t('manual-flag')}
+              disabled={isMobile}
               onToggleChange={() => {
                 setFilters({ ...filters, manualFlagEnabled: !filters.manualFlagEnabled })
                 AnalyticsApi.trackClick('patient-filters-flagged', ElementType.Toggle)
@@ -120,6 +121,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
                   checked={filters.myPatientsEnabled}
                   icon={<StethoscopeIcon />}
                   label={t('my-patients')}
+                  disabled={isMobile}
                   onToggleChange={() => {
                     setFilters({ ...filters, myPatientsEnabled: !filters.myPatientsEnabled })
                     AnalyticsApi.trackClick('patient-filters-my-patients', ElementType.Toggle)
@@ -177,6 +179,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
                   checked={filters.messagesEnabled}
                   icon={<MessageIcon />}
                   label={t('messages')}
+                  disabled={isMobile}
                   onToggleChange={() => {
                     setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
                     AnalyticsApi.trackClick('patient-filters-unread-messages', ElementType.Toggle)
