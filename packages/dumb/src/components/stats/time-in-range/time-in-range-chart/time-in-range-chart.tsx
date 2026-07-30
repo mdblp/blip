@@ -26,7 +26,7 @@
  */
 
 import Box from '@mui/material/Box'
-import { type BgType, type CbgRangeStatistics } from 'medical-domain'
+import { type CbgRangeStatistics } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
 import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import { CBGStatType } from '../../../../models/stats.model'
