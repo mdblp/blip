@@ -25,14 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgType, DatumType } from 'medical-domain'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 import { BgPrefs } from '../../../../models/blood-glucose.model'
-import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
-import { ensureNumeric } from '../../stats.util'
-import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
 import { ensureNumeric } from '../../stats.util'
 import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
