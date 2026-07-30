@@ -53,7 +53,6 @@ class Messages extends React.Component {
       <Message
         key={message.id}
         theNote={message}
-        imageSize="large"
         onSaveEdit={this.getSaveEdit(message.userid)}
         timePrefs={this.props.timePrefs}
         trackMetric={this.props.trackMetric}
@@ -66,7 +65,6 @@ class Messages extends React.Component {
       <Message
         key={message.id}
         theNote={message}
-        imageSize="small"
         onSaveEdit={this.getSaveEdit(message.userid)}
         timePrefs={this.props.timePrefs}
         trackMetric={this.props.trackMetric}

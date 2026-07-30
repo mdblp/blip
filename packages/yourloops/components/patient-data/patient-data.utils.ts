@@ -141,10 +141,6 @@ export class PatientDataUtils {
     return medicalData
   }
 
-  changePatient(patient: Patient): void {
-    this.patient = patient
-  }
-
   calculateDashboardDateRange(dateBg: string[]): number {
     const dateRangeSet = new Set(dateBg)
     if (dateRangeSet.size >= DEFAULT_DASHBOARD_TIME_RANGE_DAYS) {

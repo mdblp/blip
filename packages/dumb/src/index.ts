@@ -38,9 +38,6 @@ export { SettingsPrintView } from './modules/print/settings-print-view/settings-
 // Controls
 export { ChartFooter } from './components/controls/chart-footer/chart-footer'
 
-// Dialogs
-export { ViewNoteDialog } from './components/dialogs/view-note/view-note-dialog'
-
 // Stats
 export { AverageGlucoseMemoized as AverageGlucose } from './components/stats/average-glucose/average-glucose-stat'
 export {

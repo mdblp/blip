@@ -15,16 +15,16 @@
  * == BSD2 LICENSE ==
  */
 
-import { getTooltipContainer } from 'dumb/dist/src/utils/daily-chart/daily-chart.util'
-import _ from 'lodash'
-import i18next from 'i18next'
 import bows from 'bows'
-import moment from 'moment-timezone'
 import * as d3 from 'd3'
+import { getTooltipContainer } from 'dumb/dist/src/utils/daily-chart/daily-chart.util'
+import i18next from 'i18next'
+import _ from 'lodash'
+import moment from 'moment-timezone'
+import newNoteIcon from 'new-note.svg'
+import noteIcon from 'note.svg'
 
 import format from '../data/util/format'
-import postItImage from 'note.svg'
-import newNoteImg from 'new-note.svg'
 
 const getDateAndTime = (epoch, timezone) => {
   const mTime = moment.utc(epoch).tz(timezone)
@@ -96,7 +96,7 @@ function plotMessage(pool, opts = {}) {
     selection
       .append('image')
       .classed('d3-image d3-message', true)
-      .attr('href', postItImage) // updated from xlink:href to href
+      .attr('href', noteIcon) // updated from xlink:href to href
       .attr('x', message.xPosition)
       .attr('y', message.yPosition)
       .style('cursor', 'pointer')
@@ -119,70 +119,9 @@ function plotMessage(pool, opts = {}) {
     selection.on('click', function (event, datum) {
       event.stopPropagation() // silence the click-and-drag listener
 
-      if (opts.onNoteClick) {
-        opts.onNoteClick({
-          data: datum,
-          rect: getTooltipContainer(this),
-          htmlEvent: event
-        })
-      }
+      opts.emitter.emit('messageThread', datum.id)
       d3.select(this).selectAll('.d3-rect-message').classed('hidden', false)
     })
-  }
-
-  message.displayTooltip = (event, datum) => {
-    const tooltips = pool.tooltips()
-
-    const tooltip = tooltips.addForeignObjTooltip({
-      cssClass: 'svg-tooltip-message',
-      datum: { ...datum, type: 'message' },
-      shape: 'generic',
-      xPosition: message.xPositionCenter,
-      yPosition: message.yPositionCenter
-    })
-
-    const foGroup = tooltip.foGroup
-    const { msgDate, msgTime } = getDateAndTime(datum.epoch, datum.timezone)
-
-    const htmlDateTime = `<span data-testid="message-from-to" class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
-    const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(datum.user)}:</span>`
-    const htmlValue = `<br><span data-testid="message-text" class="message-text">${format.textPreview(datum.messageText)}</span>`
-
-    foGroup
-      .append('p')
-      .classed('messageTooltip', true)
-      .append('span')
-      .classed('secondary', true)
-      .html(htmlDateTime)
-
-    foGroup
-      .append('p')
-      .classed('messageTooltip', true)
-      .append('span')
-      .classed('secondary', true)
-      .html(htmlName + htmlValue)
-
-    const dims = tooltips.foreignObjDimensions(foGroup)
-
-    const foreignObj = d3.select(foGroup.node().parentNode)
-
-    tooltips.anchorForeignObj(foreignObj, {
-      w: dims.width + opts.tooltipPadding,
-      h: dims.height,
-      x: message.xPositionCenter(datum),
-      y: -dims.height,
-      orientation: {
-        default: 'leftAndDown',
-        leftEdge: 'rightAndDown',
-        rightEdge: 'leftAndDown'
-      },
-      shape: 'generic',
-      edge: tooltip.edge
-    })
-  }
-
-  message.removeTooltip = (event, d) => {
-    d3.select('#tooltip_' + d.id).remove()
   }
 
   message.updateMessageInPool = function (selection) {
@@ -235,7 +174,7 @@ function plotMessage(pool, opts = {}) {
       .append('image')
       .classed('newNoteIcon', true)
       .attr('id', 'newNoteIcon')
-      .attr('href', newNoteImg)
+      .attr('href', newNoteIcon)
       .attr('x', NEW_NOTE_X)
       .attr('y', NEW_NOTE_Y)
       .style('cursor', 'pointer')

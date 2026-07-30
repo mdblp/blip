@@ -33,7 +33,6 @@ import {
   RescueCarbsTooltip,
   ReservoirTooltip,
   TimeChangeTooltip,
-  ViewNoteDialog,
   WarmUpTooltip,
   ZenModeTooltip
 } from 'dumb'
@@ -315,7 +314,6 @@ class Daily extends React.Component {
       inTransition: false,
       title: this.getTitle(props.epochLocation),
       tooltip: null,
-      dialog: null,
       chartMounted: false
     }
 
@@ -350,7 +348,7 @@ class Daily extends React.Component {
 
   render() {
     const { tidelineData, epochLocation, msRange, loading, timePrefs } = this.props
-    const { inTransition, atMostRecent, dialog, tooltip, title } = this.state
+    const { inTransition, atMostRecent, tooltip, title } = this.state
     const trackMetric = metrics.send
     const endpoints = this.getEndpoints()
     const dateFilter = {
@@ -474,7 +472,6 @@ class Daily extends React.Component {
           </Box>
         </Box>
         {tooltip}
-        {dialog}
       </div>
     )
   }
@@ -891,22 +888,6 @@ class Daily extends React.Component {
         onClose={this.handleTooltipOut}
       />)
     this.setState({ tooltip })
-  }
-
-  handleNoteClick = (datum) => {
-    AnalyticsApi.trackClick('daily-note', ElementType.Button)
-    this.updateDatumHoverForTooltip(datum)
-    const dialog = (
-      <ViewNoteDialog
-        note={datum.data}
-        timePrefs={datum.timePrefs}
-        onClose={this.handleDialogClose}
-      />)
-    this.setState({ dialog })
-  }
-
-  handleDialogClose = () => {
-    this.setState({ dialog: null })
   }
 
   // Messages:

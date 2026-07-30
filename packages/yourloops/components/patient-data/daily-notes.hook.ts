@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MutableRefObject, useState } from 'react'
-import { type MessageNote } from '../../lib/data/models/message-note.model'
+import MedicalDataService from 'medical-domain'
 import moment, { type Moment } from 'moment-timezone'
+import { type MutableRefObject, useState } from 'react'
 import DataApi from '../../lib/data/data.api'
+import { type MessageNote } from '../../lib/data/models/message-note.model'
 import metrics from '../../lib/metrics'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
-import type MedicalDataService from 'medical-domain'
 
 export interface UseDailyNotesProps {
   dailyChartRef: MutableRefObject<DailyChartRef>

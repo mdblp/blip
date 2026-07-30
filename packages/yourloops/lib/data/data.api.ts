@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { sortBy } from 'lodash'
-import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { type GetPatientDataOptions } from './models/get-patient-data-options.model'
-import type User from '../auth/models/user.model'
 import bows from 'bows'
-import { type Patient } from '../patient/models/patient.model'
-import { type MessageNote } from './models/message-note.model'
+import { sortBy } from 'lodash'
+import { MedicalData, Unit } from 'medical-domain'
+import type User from '../auth/models/user.model'
+import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
-import { MedicalData, Unit } from 'medical-domain'
-import type { PatientDataRange } from './models/data-range.model'
+import { type Patient } from '../patient/models/patient.model'
 import { CsvReportModel } from './models/csv-report.model'
+import type { PatientDataRange } from './models/data-range.model'
+import { type GetPatientDataOptions } from './models/get-patient-data-options.model'
+import { MessageNote } from './models/message-note.model'
 
 const log = bows('Data API')
 

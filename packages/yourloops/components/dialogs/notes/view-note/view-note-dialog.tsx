@@ -33,39 +33,45 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Typography from '@mui/material/Typography'
-import { Note, TimePrefs } from 'medical-domain'
+import { TimePrefs } from 'medical-domain'
+import moment from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { getInitials } from '../../../../lib/auth/user.util'
+import { MessageNote } from '../../../../lib/data/models/message-note.model'
 import styles from './view-note-dialog.css'
 
-const getInitials = (fullName: string): string => {
-  if (!fullName) {
-    return ''
-  }
-
-  const splitName = fullName.split(' ')
-  const firstInitial = splitName[0]?.charAt(0) || ''
-  const secondInitial = splitName[1]?.charAt(0) || ''
-
-  const initials = `${firstInitial}${secondInitial}`
-
-  return initials.toUpperCase()
-}
-
 interface ViewNoteDialogProps {
-  note: Note
+  notes: MessageNote[]
   timePrefs: TimePrefs
   onClose: () => void
 }
 
+const AVATAR_MEDIUM_SIZE = '40px'
+const AVATAR_SMALL_SIZE = '32px'
+
+const MEDIUM_FONT_SIZE = '20px'
+const SMALL_FONT_SIZE = '16px'
+
 export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
-  const { note, timePrefs, onClose } = props
+  const { notes, timePrefs, onClose } = props
   const { t } = useTranslation('main')
 
-  const authorInitials = getInitials(note.user.fullName)
-  const dateTitle = getDateTitleForBaseDatum(note, timePrefs)
-  const time = computeDateValue(dateTitle)
+  const getDateTime = (timestamp: string) => {
+    const format = t('MMM D, YYYY h:mm a')
+    const timezone = timePrefs.timezoneName || 'UTC'
+    const momentObject = moment.isMoment(timestamp) ? timestamp : moment.utc(timestamp)
+
+    return momentObject.tz(timezone).format(format)
+  }
+
+  const isMainNote = (index: number): boolean => {
+    return index === 0
+  }
+
+  const getSize = (index: number): string => {
+    return isMainNote(index) ? AVATAR_MEDIUM_SIZE : AVATAR_SMALL_SIZE
+  }
 
   return (
     <Dialog
@@ -81,29 +87,40 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
         {t('note')}
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ display: 'flex', alignItems: 'top', gap: 1 }}>
-          <Avatar sx={{ bgcolor: 'var(--dark-blue-main)' }}>
-            {authorInitials}
-          </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Typography variant="caption" sx={{ px: 2, color: 'var(--text-color-secondary)' }}>
-              <span className={styles.bold}>{note.user.fullName}</span>
-              <span> - {time}</span>
-            </Typography>
-            <Box>
-              <Box
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {notes.map(((note: MessageNote, index: number) => (
+            <Box sx={{ display: 'flex', alignItems: 'top', gap: 1, marginLeft: isMainNote(index) ? 0 : 3 }} key={note.id}>
+              <Avatar
                 sx={{
-                  backgroundColor: 'var(--info-color-10)',
-                  borderRadius: '24px',
-                  px: 2,
-                  py: 1,
-                  width: 'fit-content',
-                }}
+                  bgcolor: 'var(--dark-blue-main)',
+                  width: getSize(index),
+                  height: getSize(index),
+                  fontSize: isMainNote(index) ? MEDIUM_FONT_SIZE : SMALL_FONT_SIZE,
+              }}
               >
-                <Typography variant="subtitle2">{note.messageText}</Typography>
+                {getInitials(note.user.fullName)}
+              </Avatar>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="caption" sx={{ px: 2, color: 'var(--text-color-secondary)' }}>
+                  <span className={styles.bold}>{note.user.fullName}</span>
+                  <span> - {getDateTime(note.timestamp)}</span>
+                </Typography>
+                <Box>
+                  <Box
+                    sx={{
+                      backgroundColor: 'var(--info-color-10)',
+                      borderRadius: '24px',
+                      px: 2,
+                      py: 1,
+                      width: 'fit-content',
+                    }}
+                  >
+                    <Typography variant="body2">{note.messagetext}</Typography>
+                  </Box>
+                </Box>
               </Box>
             </Box>
-          </Box>
+          )))}
         </Box>
       </DialogContent>
       <DialogActions>
