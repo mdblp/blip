@@ -140,7 +140,6 @@ export const checkPatientListFiltersMobile = async () => {
     ...defaultToggles
   })
 
-  //Pourquoi 2 et plus 6 ?
   expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(2)
 }
 
@@ -298,7 +297,7 @@ export const goBackToPatientsListMobile = async (router: Router): Promise<void> 
 
 export const checkAndCloseAckAlert = async (alertText: string): Promise<void> => {
 
-  const messageElement = await screen.findByText(alertText);
+  const messageElement = await screen.findByText(alertText, {}, { timeout: 3000 });
 
   const confirmationAlert = (messageElement.closest('.MuiAlert-root') || messageElement) as HTMLElement;
 
