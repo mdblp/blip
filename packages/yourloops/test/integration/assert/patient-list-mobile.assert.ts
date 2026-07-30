@@ -77,6 +77,8 @@ export const checkPatientListFiltersMobile = async () => {
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, filtersTeamId)
 
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
+  await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument())
+
   const dataGridRowCurrent = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
 
