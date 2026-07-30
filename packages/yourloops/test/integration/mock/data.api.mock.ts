@@ -1611,7 +1611,7 @@ export const smallDataSet: Data = {
         ]
       }
     ],
-    "messages": [],
+    "notes": [],
     "meals": [],
     "physicalActivities": [
       {
@@ -1750,7 +1750,7 @@ export const smbgData: Data = {
     "deviceParametersChanges": [],
     "eatingShortlyEvents": [],
     "iob": [],
-    "messages": [],
+    "notes": [],
     "meals": [],
     "nightModes": [],
     "physicalActivities": [],
@@ -2258,7 +2258,7 @@ export const timeInRangeStatsTrendViewData: Data = {
     "deviceParametersChanges": [],
     "eatingShortlyEvents": [],
     "iob": [],
-    "messages": [],
+    "notes": [],
     "meals": [],
     "nightModes": [],
     "physicalActivities": [],
@@ -2524,7 +2524,7 @@ export const twoWeeksOfCbg: Data = {
     "deviceParametersChanges": [],
     "eatingShortlyEvents": [],
     "iob": [],
-    "messages": [],
+    "notes": [],
     "meals": [],
     "nightModes": [],
     "physicalActivities": [],

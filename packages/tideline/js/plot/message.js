@@ -15,6 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
+import { getTooltipContainer } from 'dumb/dist/src/utils/daily-chart/daily-chart.util'
 import _ from 'lodash'
 import i18next from 'i18next'
 import bows from 'bows'
@@ -22,8 +23,8 @@ import moment from 'moment-timezone'
 import * as d3 from 'd3'
 
 import format from '../data/util/format'
-import postItImage from '../../img/message/post_it.svg'
-import newNoteImg from '../../img/message/new.png'
+import postItImage from 'note.svg'
+import newNoteImg from 'new-note.svg'
 
 const getDateAndTime = (epoch, timezone) => {
   const mTime = moment.utc(epoch).tz(timezone)
@@ -54,11 +55,14 @@ function plotMessage(pool, opts = {}) {
   function message(selection) {
     opts.xScale = pool.xScale().copy()
 
-    selection.each(function (currentData) {
+    selection.each(function () {
+      const medicalData = opts.tidelineData.medicalData
+      const notes = pool.filterDataForRender(medicalData.messages)
+
       const messages = d3
         .select(this)
         .selectAll('g.d3-message-group')
-        .data(currentData, (d) => d.id)
+        .data(notes, (d) => d.id)
 
       const messageGroups = messages
         .enter()
@@ -99,12 +103,29 @@ function plotMessage(pool, opts = {}) {
       .attr('width', opts.size)
       .attr('height', opts.size)
 
-    selection.on('mouseover', message.displayTooltip)
-    selection.on('mouseout', message.removeTooltip)
+    selection.on('mouseover', function (_event, d) {
+      if (opts.onElementHover) {
+        opts.onElementHover({
+          data: d,
+          rect: getTooltipContainer(this)
+        })
+      }
+    })
+    selection.on('mouseout', function () {
+      if (opts.onElementOut) {
+        opts.onElementOut()
+      }
+    })
     selection.on('click', function (event, datum) {
-      log.debug('Message clicked!', datum)
       event.stopPropagation() // silence the click-and-drag listener
-      opts.emitter.emit('messageThread', datum.id)
+
+      if (opts.onNoteClick) {
+        opts.onNoteClick({
+          data: datum,
+          rect: getTooltipContainer(this),
+          htmlEvent: event
+        })
+      }
       d3.select(this).selectAll('.d3-rect-message').classed('hidden', false)
     })
   }

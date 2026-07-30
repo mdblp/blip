@@ -38,6 +38,9 @@ export { SettingsPrintView } from './modules/print/settings-print-view/settings-
 // Controls
 export { ChartFooter } from './components/controls/chart-footer/chart-footer'
 
+// Dialogs
+export { ViewNoteDialog } from './components/dialogs/view-note/view-note-dialog'
+
 // Stats
 export { AverageGlucoseMemoized as AverageGlucose } from './components/stats/average-glucose/average-glucose-stat'
 export {
@@ -72,6 +75,7 @@ export {
 export { EatingShortlyTooltip } from './components/tooltips/eating-shortly-tooltip/eating-shortly-tooltip'
 export { IobTooltip } from './components/tooltips/iob-tooltip/iob-tooltip'
 export { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
+export { NoteTooltip } from './components/tooltips/note-tooltip/note-tooltip'
 export { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 export { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 export { RescueCarbsTooltip } from './components/tooltips/rescue-carbs-tooltip/rescue-carbs-tooltip'

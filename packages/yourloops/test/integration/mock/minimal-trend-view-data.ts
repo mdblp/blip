@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -306,7 +306,7 @@ export const getMinimalTrendViewData =() : Data => {
       ],
       "confidentialModes": [],
       "deviceParametersChanges": [],
-      "messages": [],
+      "notes": [],
       "meals": [
         {
           "epoch": 1579428000000,

@@ -28,7 +28,7 @@
 import { MGDL_UNITS } from '../../models/medical/datum/bg.model'
 import type Fill from '../../models/medical/datum/fill.model'
 import type MedicalData from '../../models/medical/medical-data.model'
-import type Message from '../../models/medical/datum/message.model'
+import type Note from '../../models/medical/datum/note.model'
 import type ReservoirChange from '../../models/medical/datum/reservoir-change.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
 import type BasicData from './basics-data.service'
@@ -37,7 +37,7 @@ import BasalService from './datum/basal.service'
 import BolusService from './datum/bolus.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
 import FillService from './datum/fill.service'
-import MessageService from './datum/message.service'
+import NoteService from './datum/note.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
@@ -316,12 +316,12 @@ class MedicalDataService {
   }
 
   addMessage(message: Record<string, unknown>): void {
-    const normalizedMsg: Message = MessageService.normalize(message, this._datumOpts)
+    const normalizedMsg: Note = NoteService.normalize(message, this._datumOpts)
     this.medicalData.messages.push(normalizedMsg)
   }
 
-  editMessage(message: Record<string, unknown>): Message | null {
-    const normalizedMessage = MessageService.normalize(message, this._datumOpts)
+  editMessage(message: Record<string, unknown>): Note| null {
+    const normalizedMessage = NoteService.normalize(message, this._datumOpts)
     normalizedMessage.timezone = this.getTimezoneAt(normalizedMessage.epoch)
     normalizedMessage.displayOffset = getOffset(normalizedMessage.epoch, normalizedMessage.timezone)
     const currentMessageIdx = this.medicalData.messages.findIndex(msg => msg.id === normalizedMessage.id)

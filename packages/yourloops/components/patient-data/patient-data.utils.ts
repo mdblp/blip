@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DataApi from '../../lib/data/data.api'
-import moment, { type Moment } from 'moment-timezone'
-import { type Patient } from '../../lib/patient/models/patient.model'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
+import { BgPrefs, formatBgValue } from 'dumb'
+import i18next from 'i18next'
 import MedicalDataService, {
-  type BgUnit, convertBG,
+  type BgUnit,
+  convertBG,
   type MedicalData,
   Source,
   type TimePrefs,
-  TimeService, Unit
+  TimeService,
+  Unit
 } from 'medical-domain'
-import config from '../../lib/config/config'
+import moment, { type Moment } from 'moment-timezone'
 import { PatientView } from '../../enum/patient-view.enum'
-import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
-import i18next from 'i18next'
-import { BgPrefs, formatBgValue } from 'dumb'
+import config from '../../lib/config/config'
 import { ConfigService } from '../../lib/config/config.service'
+import DataApi from '../../lib/data/data.api'
+import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 
 interface GetDatetimeBoundsArgs {
   currentPatientView: PatientView

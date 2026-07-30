@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DatumType {
-  Basal = 'basal',
-  Bolus = 'bolus',
-  Cbg = 'cbg',
-  DeviceEvent = 'deviceEvent',
-  EatingShortlyEvent = 'EatingShortlyEvent',
-  Fill = 'fill',
-  Food = 'food',
-  Iob = 'iob',
-  Note = 'message',
-  PhysicalActivity = 'physicalActivity',
-  PumpSettings = 'pumpSettings',
-  Smbg = 'smbg',
-  Wizard = 'wizard'
+import { Note } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+
+export const NoteTooltip: FC<DailyTooltipProps<Note>> = (props) => {
+  const { datum: note, position, side, timePrefs } = props
+  const { t } = useTranslation('main')
+
+
+  return (
+    <Tooltip
+      position={position}
+      backgroundColor={colors.darkBlueBackground}
+      title={t('note')}
+      dateTitle={getDateTitleForBaseDatum(note, timePrefs)}
+      side={side}
+      offset={DEFAULT_TOOLTIP_OFFSET}
+      content={
+        <div className={commonStyles.containerFlex}>
+          <TooltipLine label={note.user.fullName} isBold />
+          <TooltipLine label={note.messageText} />
+        </div>
+      }
+    />
+  )
 }

@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DatumType {
-  Basal = 'basal',
-  Bolus = 'bolus',
-  Cbg = 'cbg',
-  DeviceEvent = 'deviceEvent',
-  EatingShortlyEvent = 'EatingShortlyEvent',
-  Fill = 'fill',
-  Food = 'food',
-  Iob = 'iob',
-  Note = 'message',
-  PhysicalActivity = 'physicalActivity',
-  PumpSettings = 'pumpSettings',
-  Smbg = 'smbg',
-  Wizard = 'wizard'
+import type BaseDatum from './basics/base-datum.model'
+import { type DatumType } from './enums/datum-type.enum'
+
+type Note = BaseDatum & {
+  type: DatumType.Note
+  userid: string
+  groupid: string
+  messageText: string
+  parentMessage: string | null
+  user: {
+    fullName: string
+  }
 }
+
+export default Note
