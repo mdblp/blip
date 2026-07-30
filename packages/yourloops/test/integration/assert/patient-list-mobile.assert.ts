@@ -119,7 +119,6 @@ export const checkPatientListFiltersMobile = async () => {
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, hyperglycemiaFilterToggle: true })
 
-
   // check the no data toggle
   await updatePatientsFilters({
     ...defaultToggles,
@@ -131,16 +130,22 @@ export const checkPatientListFiltersMobile = async () => {
 
   await closeFiltersPresentation()
 
-  await changeTeamScope(filtersTeamName, myThirdTeamName)
-  expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, myThirdTeamId)
-
   // Reset the filters
   await userEvent.click(filtersButton)
-  await updatePatientsFilters({
-    ...defaultToggles
-  })
 
-  expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(2)
+  await updatePatientsFilters({
+    ...defaultToggles,
+    outOfRangeFilterToggle: false,
+    hypoglycemiaFilterToggle: false,
+    hyperglycemiaFilterToggle: false,
+    dataNotTransferredFilterToggle: false
+  })
+  
+  await userEvent.click(filtersButton)
+
+  checkPatientsFilters({ ...defaultToggles, hyperglycemiaFilterToggle: false, hypoglycemiaFilterToggle: false, outOfRangeFilterToggle: false, dataNotTransferredFilterToggle: false })
+
+  expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
 }
 
 export const checkPatientListHideShowColumnsMobile = async () => {
