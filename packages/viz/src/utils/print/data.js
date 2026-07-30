@@ -15,13 +15,13 @@
  * == BSD2 LICENSE ==
  */
 
+import * as d3 from 'd3'
 import _ from 'lodash'
 import moment from 'moment-timezone'
-import * as d3 from 'd3'
 
-import { getBasalSequences, getGroupDurations } from '../../utils/basal'
-import { isAutomatedBasalDevice } from '../../utils/device'
-import { commonStats, getStatDefinition, statFetchMethods } from '../../utils/stat'
+import { getBasalSequences, getGroupDurations } from '../basal'
+import { isAutomatedBasalDevice } from '../device'
+import { commonStats, getStatDefinition, statFetchMethods } from '../stat'
 
 /**
  * @typedef { import("../data").default } DataUtil
@@ -277,7 +277,6 @@ export function generatePDFStats(data, dataUtil) {
 
     data.basics.stats = {
       [commonStats.timeInRange]: getStat(commonStats.timeInRange),
-      [commonStats.readingsInRange]: getStat(commonStats.readingsInRange),
       [commonStats.totalInsulin]: getStat(commonStats.totalInsulin),
       [commonStats.timeInAuto]: isAutomatedDevice ? getStat(commonStats.timeInAuto) : undefined,
       [commonStats.carbs]: getStat(commonStats.carbs),

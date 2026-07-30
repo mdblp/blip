@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,10 +67,8 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
       case CBGStatType.TimeInTightRange:
       case CBGStatType.TimeInRangeDt1:
         return formatDuration(value, true)
-      case CBGStatType.ReadingsInRange:
-        return (Math.round(value * 10) / 10).toString()
       default:
-        throw Error(`Unknown stat type ${type}`)
+        throw new Error(`Unknown stat type ${type}`)
     }
   }, [type, value])
 

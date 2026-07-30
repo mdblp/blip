@@ -106,7 +106,6 @@ import { checkStatTooltip } from './stats.assert'
 import { getTranslation } from '../../utils/i18n'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
-const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added together.How we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
@@ -287,7 +286,7 @@ export const checkDailyStatsWidgetsTooltips = async () => {
 
 export const checkSMBGDailyStatsWidgetsTooltips = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  await checkStatTooltip(patientStatistics, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_BGM_TOOLTIP)
 }

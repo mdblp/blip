@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,25 +60,6 @@ export const checkTimeInRangeStatsTitle = async () => {
   await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-target-timeInRange', 'Time In Range')
   await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-low-timeInRange', 'Time Below Range')
   await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range')
-}
-
-export const checkReadingsInRangeStats = async () => {
-  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryHigh-readingsInRange', 'Readings Above Range')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-high-readingsInRange', 'Readings Above Range')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-target-readingsInRange', 'Readings In Range')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-low-readingsInRange', 'Readings Below Range')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryLow-readingsInRange', 'Readings Below Range')
-}
-
-export const checkReadingsInRangeStatsWidgets = async () => {
-  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('cbg-percentage-stat-veryHigh-readingsInRange')).toHaveTextContent('213%')
-  expect(patientStatistics.getByTestId('cbg-percentage-stat-high-readingsInRange')).toHaveTextContent('17%')
-  expect(patientStatistics.getByTestId('cbg-percentage-stat-target-readingsInRange')).toHaveTextContent('320%')
-  expect(patientStatistics.getByTestId('cbg-percentage-stat-low-readingsInRange')).toHaveTextContent('427%')
-  expect(patientStatistics.getByTestId('cbg-percentage-stat-veryLow-readingsInRange')).toHaveTextContent('533%')
-  expect(patientStatistics.getByTestId('timeInRange-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
 }
 
 export const checkAverageGlucoseStatWidget = async (expectedTextContent: string) => {

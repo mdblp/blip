@@ -93,13 +93,6 @@ describe('BasicsPrintView', () => {
     carbs: { data: { raw: {
       totalCarbsPerDay: 22
     } } },
-    readingsInRange: { data: {
-      raw: {
-        target: TimeService.MS_IN_HOUR * 3,
-        veryLow: TimeService.MS_IN_HOUR
-      },
-      total: { value: TimeService.MS_IN_HOUR * 4 }
-    } },
     timeInRange: { data: {
       raw: {
         target: TimeService.MS_IN_HOUR * 3,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgBounds } from '../../../src/domains/models/statistics/glycemia-statistics.model'
+import { type BgBounds, ClassificationType, classifyBgValue, GlycemiaStatisticsService, MGDL_UNITS } from '../../../src'
 import type Cbg from '../../../src/domains/models/medical/datum/cbg.model'
 import Unit from '../../../src/domains/models/medical/datum/enums/unit.enum'
 import type Smbg from '../../../src/domains/models/medical/datum/smbg.model'
-import {
-  classifyBgValue,
-  GlycemiaStatisticsService
-} from '../../../src/domains/repositories/statistics/glycemia-statistics.service'
 import { MS_IN_DAY, MS_IN_MIN } from '../../../src/domains/repositories/time/time.service'
 import { createRandomCbg, createRandomSmbg } from '../../data-generator'
-import { ClassificationType } from '../../../src/domains/models/statistics/enum/bg-classification.enum'
 import {
   dateFilterOneDay,
   dateFilterThreeDays,
@@ -43,7 +38,6 @@ import {
   dateFilterTwoDays,
   dateFilterTwoWeeks
 } from '../../mock/data.statistics.mock'
-import { MGDL_UNITS } from '../../../src'
 
 const buildCbgData = (data: Array<[Date, number, string]>): Cbg[] => (
   data.map((cbgData) => (
@@ -235,31 +229,6 @@ describe('GlycemiaStatisticsService getTimeInTightRangeData', () => {
       // 1 value with Abbott device + 2 values with Dexcom device = 15 + 5 * 2 mn
       value: (15 + 5 * 2) / expectedTotalMinutes * MS_IN_DAY,
       total: MS_IN_DAY
-    })
-  })
-})
-
-describe('GlycemiaStatisticsService getReadingsInRangeData', () => {
-  it('should return readings in range when viewing one day', () => {
-    const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, 1, dateFilterOneDay)
-    expect(stats).toEqual({
-      veryLow: 1,
-      low: 1,
-      target: 1,
-      high: 1,
-      veryHigh: 1,
-      total: 5
-    })
-  })
-  it('should return readings in range when viewing more than 1 day', () => {
-    const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, 2, dateFilterTwoDays)
-    expect(stats).toEqual({
-      veryLow: 1 / 2,
-      low: 1 / 2,
-      target: 1,
-      high: 1 / 2,
-      veryHigh: 1 / 2,
-      total: 6
     })
   })
 })
