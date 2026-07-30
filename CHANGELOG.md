@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.11.0-beta - 2026-07-01
 ### Added
+- YLP-1930 Filter by clinician in Patients list
 - YLP-3790 "Lead clinicians" column in Patients list
 
 ### Changed
@@ -19,6 +20,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Engineering
 - YLP-3864 SBOM generation in pipeline
+- Remove "Readings In Range" stat support
 
 ## 3.10.0 - 2026-06-25
 ### Added

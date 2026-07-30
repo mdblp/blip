@@ -25,12 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react'
-import { type TimeInRangeChartHookProps, useTimeInRangeChartHook } from './time-in-range-chart.hook'
 import { waitFor } from '@testing-library/dom'
-import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
+import { renderHook } from '@testing-library/react'
+import { act } from 'react'
+import { Unit } from 'medical-domain'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { DatumType, Unit } from 'medical-domain'
+import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
+import { type TimeInRangeChartHookProps, useTimeInRangeChartHook } from './time-in-range-chart.hook'
 
 describe('Time in range chart hook', () => {
   const veryHighStatValue = 100
@@ -58,9 +59,7 @@ describe('Time in range chart hook', () => {
   }
 
   const defaultProps: TimeInRangeChartHookProps = {
-    bgType: DatumType.Cbg,
     data,
-    days: 2,
     bgPrefs: {
       bgBounds: {
         veryHighThreshold: 250,
@@ -140,29 +139,11 @@ describe('Time in range chart hook', () => {
   it('should compute the right title', () => {
     const { result: firstHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps }))
     expect(firstHook.current.title).toEqual('Time In Range')
-
-    const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
-    expect(secondHook.current.title).toEqual('Time In Range')
-
-    const { result: fifthHook } = renderHook(() => useTimeInRangeChartHook({
-      ...defaultProps,
-      bgType: DatumType.Smbg
-    }))
-    expect(fifthHook.current.title).toEqual('Time In Range')
   })
 
   it('should compute the right annotations', () => {
     const { result: firstHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps }))
     expect(firstHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
-
-    const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
-    expect(secondHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
-
-    const { result: fourthHook } = renderHook(() => useTimeInRangeChartHook({
-      ...defaultProps,
-      bgType: DatumType.Smbg
-    }))
-    expect(fourthHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.', 'Derived from _**1000**_ BGM readings.'])
   })
 
   it('onMouseOver and OnMouseLeave should return correct values', async () => {

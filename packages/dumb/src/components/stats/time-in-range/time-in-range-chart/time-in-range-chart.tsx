@@ -36,15 +36,13 @@ import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-t
 import { useTimeInRangeChartHook } from './time-in-range-chart.hook'
 
 interface TimeInRangeChartProps {
-  bgType: BgType
   bgPrefs: BgPrefs
   data: CbgRangeStatistics
-  days: number
   trackHoverFunc: (name: string) => void
 }
 
 const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
-  const { bgPrefs, bgType, data, days, trackHoverFunc } = props
+  const { bgPrefs, data, trackHoverFunc } = props
   const {
     annotations,
     cbgStatsProps,
@@ -53,9 +51,7 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
     title,
     legendValues
   } = useTimeInRangeChartHook({
-    bgType,
     data,
-    days,
     bgPrefs
   })
 

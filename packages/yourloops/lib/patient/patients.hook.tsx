@@ -114,7 +114,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       return patients
     }
     const patientsStarred = user.preferences?.patientsStarred ?? []
-    return PatientUtils.extractPatients(patients, filters, patientsStarred)
+    return PatientUtils.extractPatients(patients, filters, patientsStarred, user.id)
   }
 
   const patientList = getPatientList()

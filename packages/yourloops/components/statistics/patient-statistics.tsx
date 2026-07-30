@@ -98,7 +98,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     totalMealCarbsWithRescueCarbsEntries,
     totalRescueCarbsEntries,
     totalCarbsPerDay,
-    mealCarbsPerDay,
+    mealCarbsPerDay
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -106,7 +106,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const timeInRangeChartData = GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-
   const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
 
   const {
@@ -123,7 +122,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     totalPenBoluses,
     totalCorrectiveBolusesAndBasals,
     totalInsulin,
-    estimatedTotalInsulin,
+    estimatedTotalInsulin
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings, automatedBasalDuration)
 
   let defaultBgPrefs: BgPrefs
@@ -154,17 +153,16 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgType={bgType}
           data={timeInRangeChartData}
           bgPrefs={bgPrefs}
-          days={numberOfDays}
           trackHoverFunc={AnalyticsApi.trackHover}
         />
-        { diabeticProfile === DiabeticType.DT1Pregnancy &&  isDailyView &&
-            <Box sx={{ marginTop: theme.spacing(3) }}>
-              <TimeInRangeDT1Chart
-                data={timeInRangeDt1Data}
-                bgPrefs={defaultBgPrefs}
-                trackHoverFunc={AnalyticsApi.trackHover}
-              />
-            </Box>
+        {diabeticProfile === DiabeticType.DT1Pregnancy && isDailyView &&
+          <Box sx={{ marginTop: theme.spacing(3) }}>
+            <TimeInRangeDT1Chart
+              data={timeInRangeDt1Data}
+              bgPrefs={defaultBgPrefs}
+              trackHoverFunc={AnalyticsApi.trackHover}
+            />
+          </Box>
         }
 
         <Box sx={{ marginTop: theme.spacing(3) }}>
@@ -176,7 +174,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         </Box>
         {isTrendsView &&
           <Box sx={{ marginTop: theme.spacing(2) }}>
-            <Divider className={classes.divider}/>
+            <Divider className={classes.divider} />
             <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} trackHoverFunc={AnalyticsApi.trackHover}
             />
           </Box>
@@ -187,11 +185,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         <CarbsStat
           totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
           totalRescueCarbsEntries={totalRescueCarbsEntries}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
-          rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
-          mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay * 10) / 10}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay * 10) / 10}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay * 10) / 10}
         />
-        <Divider className={classes.divider}/>
+        <Divider className={classes.divider} />
         <TotalInsulinStat
           totalMealBoluses={totalMealBoluses}
           totalManualBoluses={totalManualBoluses}
@@ -218,7 +216,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgPrefs={bgPrefs}
           bgType={bgType}
         />
-        <Divider className={classes.divider}/>
+        <Divider className={classes.divider} />
         <StandardDeviationStat
           total={standardDeviationTotal}
           bgType={bgType}
@@ -226,12 +224,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           averageGlucose={averageGlucose}
           standardDeviation={standardDeviation}
         />
-        <Divider className={classes.divider}/>
-        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType}/>
+        <Divider className={classes.divider} />
+        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
         {!isDailyView &&
           <>
-            <Divider className={classes.divider}/>
-            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator}/>
+            <Divider className={classes.divider} />
+            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           </>
         }
       </DataCard>

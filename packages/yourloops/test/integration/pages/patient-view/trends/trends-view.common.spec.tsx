@@ -25,7 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { act, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import {
+  checkAverageGlucoseStatWidget,
+  checkCoefficientOfVariationStatWidget,
+  checkGlucoseManagementIndicator,
+  checkStandardDeviationStatWidget,
+  checkStatTooltip,
+  checkTimeInRangeStatsTitle
+} from '../../../assert/stats.assert'
 import {
   checkDaysSelection,
   checkRangeSelection,
@@ -36,28 +46,18 @@ import {
   checkTrendsTimeInRangeStatsWidgets,
   GMI_TOOLTIP
 } from '../../../assert/trends-view.assert'
-import { mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../../mock/data.api.mock'
-import { renderPage } from '../../../utils/render'
-import {
-  checkAverageGlucoseStatWidget,
-  checkCoefficientOfVariationStatWidget,
-  checkGlucoseManagementIndicator,
-  checkStandardDeviationStatWidget,
-  checkStatTooltip,
-  checkTimeInRangeStatsTitle
-} from '../../../assert/stats.assert'
-import userEvent from '@testing-library/user-event'
-import { act, screen, within } from '@testing-library/react'
-import { patient2Info } from '../../../data/patient.api.data'
 import { buildHba1cData } from '../../../data/data-api.data'
+import { patient2Info } from '../../../data/patient.api.data'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../../mock/data.api.mock'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import {
   testTrendsDataVisualisationForHCP,
   testTrendsWeekDayFilter
 } from '../../../use-cases/patient-data-visualisation'
-import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
-import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { renderPage } from '../../../utils/render'
 
 describe('Trends view for anyone', () => {
   const trendsRoute = AppUserRoute.Trends

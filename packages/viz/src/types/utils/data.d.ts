@@ -10,7 +10,6 @@ export interface TimeInRangeData {
   total: number
 }
 
-
 declare class DataUtil {
   constructor(data: unknown[], opts?: {
     endpoints?: [string, string]

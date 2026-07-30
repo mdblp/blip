@@ -94,7 +94,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       }
       break
 
-
     case commonStats.timeInAuto:
       if (days > 1) {
         annotations.push(t('**Time In Loop Mode:** Daily average of the time spent in automated basal delivery.'))
