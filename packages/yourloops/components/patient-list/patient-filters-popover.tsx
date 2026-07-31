@@ -167,7 +167,10 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               icon={<NoDataIcon />}
               label={t('data-not-transmitted')}
               onToggleChange={() => {
-                setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })
+                setFilters(prevFilters => ({
+                  ...prevFilters,
+                  dataNotTransferredEnabled: !prevFilters.dataNotTransferredEnabled
+                }))
                 AnalyticsApi.trackClick('patient-filters-data-not-transmitted', ElementType.Toggle)
               }}
             />
