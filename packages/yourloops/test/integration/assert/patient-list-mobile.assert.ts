@@ -138,14 +138,15 @@ export const checkPatientListFiltersMobile = async () => {
     outOfRangeFilterToggle: false,
     hypoglycemiaFilterToggle: false,
     hyperglycemiaFilterToggle: false,
-    dataNotTransferredFilterToggle: false
+    dataNotTransferredFilterToggle: true
   })
 
   await userEvent.click(filtersButton)
 
   checkPatientsFilters({ ...defaultToggles, hyperglycemiaFilterToggle: false, hypoglycemiaFilterToggle: false, outOfRangeFilterToggle: false, dataNotTransferredFilterToggle: false })
+  await closeFiltersPresentation()
 
-  expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
+  expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(8)
 }
 
 export const checkPatientListHideShowColumnsMobile = async () => {
