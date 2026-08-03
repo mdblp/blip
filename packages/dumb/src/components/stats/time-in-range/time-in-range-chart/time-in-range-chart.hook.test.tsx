@@ -55,7 +55,7 @@ describe('Time in range chart hook', () => {
     target: targetStatValue,
     low: lowStatValue,
     veryLow: veryLowStatValue,
-    total: 1000
+    total: 750
   }
 
   const defaultProps: TimeInRangeChartHookProps = {
@@ -88,7 +88,7 @@ describe('Time in range chart hook', () => {
         isDisabled: false,
         onMouseEnter: expect.anything(),
         duration: '0m',
-        percentage: 11,
+        percentage: 13,
         hasValues: true,
         id: veryHighStat.id,
         title: veryHighStat.title
@@ -98,7 +98,7 @@ describe('Time in range chart hook', () => {
         isDisabled: false,
         onMouseEnter: expect.anything(),
         duration: '0m',
-        percentage: 21,
+        percentage: 27,
         hasValues: true,
         id: highStat.id,
         title: highStat.title
@@ -108,7 +108,7 @@ describe('Time in range chart hook', () => {
         isDisabled: false,
         onMouseEnter: expect.anything(),
         duration: '0m',
-        percentage: 16,
+        percentage: 20,
         hasValues: true,
         id: targetStat.id,
         title: targetStat.title
@@ -118,7 +118,7 @@ describe('Time in range chart hook', () => {
         isDisabled: false,
         onMouseEnter: expect.anything(),
         duration: '0m',
-        percentage: 26,
+        percentage: 33,
         hasValues: true,
         id: lowStat.id,
         title: lowStat.title
@@ -128,7 +128,7 @@ describe('Time in range chart hook', () => {
         isDisabled: false,
         onMouseEnter: expect.anything(),
         duration: '0m',
-        percentage: 6,
+        percentage: 7,
         hasValues: true,
         id: veryLowStat.id,
         title: veryLowStat.title

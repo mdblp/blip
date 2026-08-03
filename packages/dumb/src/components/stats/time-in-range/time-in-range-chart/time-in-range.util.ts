@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGPercentageData, StatLevel } from '../../../../models/stats.model'
+import { type CBGPercentageData, StatLevel } from '../../../../models/stats.model'
 import { formatDuration } from '../../../../utils/datetime/datetime.util'
 
 interface PercentageValueItem {
@@ -38,16 +38,11 @@ export const getFormattedDuration = (value: number): string => {
 }
 
 export const getTimeInRangePercentages = (dataArray: CBGPercentageData[], total: number): PercentageValueItem[] => {
-  const rawPercentages = getRawPercentages(dataArray, total)
-
-  if (total === 0) {
-    return dataArray.map((data: CBGPercentageData) => {
-      return {
-        id: data.id,
-        percentage: 0
-      }
-    })
+  if (!Number.isFinite(total) || total <= 0 || dataArray.every((d) => d.value === 0)) {
+    return dataArray.map((data: CBGPercentageData) => ({ id: data.id, percentage: 0 }))
   }
+
+  const rawPercentages = getRawPercentages(dataArray, total)
 
   return getSmartRoundedPercentages(rawPercentages)
 }
