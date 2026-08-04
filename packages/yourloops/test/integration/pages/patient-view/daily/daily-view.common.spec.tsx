@@ -38,7 +38,6 @@ import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.moc
 import { renderPage } from '../../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
-  checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget
 } from '../../../assert/stats.assert'
 import { act, screen, within } from '@testing-library/react'
@@ -253,8 +252,6 @@ describe('Daily view for anyone', () => {
     it('should display correct stats widgets', async () => {
       mockDataAPI(smbgData)
       renderPage(dailyRoute)
-
-      await checkReadingsInRangeStatsWidgets()
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')

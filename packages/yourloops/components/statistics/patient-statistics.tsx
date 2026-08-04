@@ -25,33 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGStatType, LoopModeStat, TimeInRangeChart, TimeInTightRangeChart, TimeInRangeDT1Chart } from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import { SensorUsageStat } from './sensor-usage-stat'
+import { useTheme } from '@mui/material/styles'
+import { type BgPrefs, LoopModeStat, TimeInRangeChart, TimeInRangeDT1Chart, TimeInTightRangeChart } from 'dumb'
 import {
   BasalBolusStatisticsService,
   type BgType,
   CarbsStatisticsService,
   type DateFilter,
-  DatumType, defaultBgClasses, DiabeticType,
+  DatumType,
+  defaultBgClasses,
+  DiabeticType,
   GlycemiaStatisticsService,
   type MedicalData,
   MS_IN_DAY,
   TimeService
 } from 'medical-domain'
-import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
+import React, { type FunctionComponent } from 'react'
 import { useLocation } from 'react-router-dom'
-import { CoefficientOfVariation } from './coefficient-of-variation-stat'
-import { StandardDeviationStat } from './standard-deviation-stat'
-import { AverageGlucoseStat } from './average-glucose-stat'
-import { TotalInsulinStat } from './total-insulin-stat'
 import { makeStyles } from 'tss-react/mui'
-import { CarbsStat } from './carbs-stat'
-import { DataCard } from '../data-card/data-card'
-import { useTheme } from '@mui/material/styles'
 import AnalyticsApi from '../../lib/analytics/analytics.api'
+import { DataCard } from '../data-card/data-card'
+import { AverageGlucoseStat } from './average-glucose-stat'
+import { CarbsStat } from './carbs-stat'
+import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
+import { SensorUsageStat } from './sensor-usage-stat'
+import { StandardDeviationStat } from './standard-deviation-stat'
+import { TotalInsulinStat } from './total-insulin-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -75,7 +77,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
 
   const cbgSelected = medicalData.cbg.length > 0
   const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
-  const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
@@ -97,17 +98,14 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     totalMealCarbsWithRescueCarbsEntries,
     totalRescueCarbsEntries,
     totalCarbsPerDay,
-    mealCarbsPerDay,
+    mealCarbsPerDay
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
-  const timeInRangeChartData = cbgStatType === CBGStatType.TimeInRange
-    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-
+  const timeInRangeChartData = GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
   const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
 
   const {
@@ -124,7 +122,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     totalPenBoluses,
     totalCorrectiveBolusesAndBasals,
     totalInsulin,
-    estimatedTotalInsulin,
+    estimatedTotalInsulin
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings, automatedBasalDuration)
 
   let defaultBgPrefs: BgPrefs
@@ -152,21 +150,18 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     <Box data-testid="patient-statistics">
       <DataCard>
         <TimeInRangeChart
-          bgType={bgType}
-          cbgStatType={cbgStatType}
           data={timeInRangeChartData}
           bgPrefs={bgPrefs}
-          days={numberOfDays}
           trackHoverFunc={AnalyticsApi.trackHover}
         />
-        { diabeticProfile === DiabeticType.DT1Pregnancy &&  isDailyView &&
-            <Box sx={{ marginTop: theme.spacing(3) }}>
-              <TimeInRangeDT1Chart
-                data={timeInRangeDt1Data}
-                bgPrefs={defaultBgPrefs}
-                trackHoverFunc={AnalyticsApi.trackHover}
-              />
-            </Box>
+        {diabeticProfile === DiabeticType.DT1Pregnancy && isDailyView &&
+          <Box sx={{ marginTop: theme.spacing(3) }}>
+            <TimeInRangeDT1Chart
+              data={timeInRangeDt1Data}
+              bgPrefs={defaultBgPrefs}
+              trackHoverFunc={AnalyticsApi.trackHover}
+            />
+          </Box>
         }
 
         <Box sx={{ marginTop: theme.spacing(3) }}>
@@ -178,7 +173,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         </Box>
         {isTrendsView &&
           <Box sx={{ marginTop: theme.spacing(2) }}>
-            <Divider className={classes.divider}/>
+            <Divider className={classes.divider} />
             <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} trackHoverFunc={AnalyticsApi.trackHover}
             />
           </Box>
@@ -189,11 +184,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         <CarbsStat
           totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
           totalRescueCarbsEntries={totalRescueCarbsEntries}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
-          rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
-          mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay * 10) / 10}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay * 10) / 10}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay * 10) / 10}
         />
-        <Divider className={classes.divider}/>
+        <Divider className={classes.divider} />
         <TotalInsulinStat
           totalMealBoluses={totalMealBoluses}
           totalManualBoluses={totalManualBoluses}
@@ -220,7 +215,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgPrefs={bgPrefs}
           bgType={bgType}
         />
-        <Divider className={classes.divider}/>
+        <Divider className={classes.divider} />
         <StandardDeviationStat
           total={standardDeviationTotal}
           bgType={bgType}
@@ -228,12 +223,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           averageGlucose={averageGlucose}
           standardDeviation={standardDeviation}
         />
-        <Divider className={classes.divider}/>
-        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType}/>
+        <Divider className={classes.divider} />
+        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
         {!isDailyView &&
           <>
-            <Divider className={classes.divider}/>
-            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator}/>
+            <Divider className={classes.divider} />
+            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           </>
         }
       </DataCard>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { diffDays, MS_IN_DAY, MS_IN_MIN } from '../time/time.service'
+import type Bg from '../../models/medical/datum/bg.model'
+import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
 import type Cbg from '../../models/medical/datum/cbg.model'
 import type Smbg from '../../models/medical/datum/smbg.model'
+import { DEFAULT_BG_BOUNDS } from '../../models/medical/medical-data-options.model'
+import { BgClass } from '../../models/statistics/enum/bg-class.enum'
+import { ClassificationType } from '../../models/statistics/enum/bg-classification.enum'
 import type {
   AverageGlucoseStatistics,
   BgBounds,
@@ -37,15 +41,10 @@ import type {
   SensorUsageStatistics,
   StandardDevStatistics
 } from '../../models/statistics/glycemia-statistics.model'
-import { ClassificationType } from '../../models/statistics/enum/bg-classification.enum'
-import CbgService, { convertBG } from '../medical/datum/cbg.service'
-import SmbgService from '../medical/datum/smbg.service'
 import type DateFilter from '../../models/time/date-filter.model'
-import type Bg from '../../models/medical/datum/bg.model'
-import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
+import CbgService, { convertBG } from '../medical/datum/cbg.service'
+import { diffDays, MS_IN_DAY, MS_IN_MIN } from '../time/time.service'
 import { getWeekDaysFilter, sumValues } from './statistics.utils'
-import { DEFAULT_BG_BOUNDS } from '../../models/medical/medical-data-options.model'
-import { BgClass } from '../../models/statistics/enum/bg-class.enum'
 
 export const TIGHT_RANGE_BOUNDS = {
   [MGDL_UNITS]: {
@@ -227,37 +226,6 @@ function getTimeInRangeDt1Data(cbgData: Cbg[], units: BgUnit, numDays: number, d
   return durationInRange
 }
 
-function getReadingsInRangeData(smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter): CbgRangeStatistics {
-  const filteredSmbg = SmbgService.filterOnDate(smbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const readingsInRange = filteredSmbg.reduce(
-    (result, smbg) => {
-      const classification = classifyBgValue(bgBounds, smbg.value, ClassificationType.FiveWay)
-      result[classification]++
-      result.total++
-      return result
-    },
-    {
-      veryLow: 0,
-      low: 0,
-      target: 0,
-      high: 0,
-      veryHigh: 0,
-      total: 0
-    }
-  )
-  if (numDays > 1) {
-    return {
-      veryLow: readingsInRange.veryLow / numDays,
-      low: readingsInRange.low / numDays,
-      target: readingsInRange.target / numDays,
-      high: readingsInRange.high / numDays,
-      veryHigh: readingsInRange.veryHigh / numDays,
-      total: readingsInRange.total
-    }
-  }
-  return readingsInRange
-}
-
 function getSensorUsage(cbgData: Cbg[], dateFilter: DateFilter): SensorUsageStatistics {
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const totalDuration = getCgmTotalDuration(filteredCbg)
@@ -373,7 +341,6 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 }
 
 export interface GlycemiaStatisticsAdapter {
-  getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInTightRangeData: (cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter) => {
     value: number,
@@ -391,7 +358,6 @@ export interface GlycemiaStatisticsAdapter {
 }
 
 export const GlycemiaStatisticsService: GlycemiaStatisticsAdapter = {
-  getReadingsInRangeData,
   getTimeInRangeData,
   getTimeInTightRangeData,
   getTimeInRangeDt1Data,
