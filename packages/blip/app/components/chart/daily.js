@@ -85,7 +85,6 @@ class DailyChart extends React.Component {
     onWarmUpHover: PropTypes.func.isRequired,
     onAlarmEventHover: PropTypes.func.isRequired,
     onNightModeHover: PropTypes.func.isRequired,
-    onNoteClick: PropTypes.func.isRequired,
     onNoteHover: PropTypes.func.isRequired,
     onZenModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
@@ -118,7 +117,6 @@ class DailyChart extends React.Component {
       'onAlarmEventHover',
       'onNightModeHover',
       'onNoteHover',
-      'onNoteClick',
       'onTimeChangeHover',
       'onZenModeHover',
       'onTooltipOut',
@@ -444,7 +442,6 @@ class Daily extends React.Component {
                   onIobHover={this.handleIobHover}
                   onNightModeHover={this.handleNightModeHover}
                   onNoteHover={this.handleNoteHover}
-                  onNoteClick={this.handleNoteClick}
                   onTimeChangeHover={this.handleTimeChangeHover}
                   onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}

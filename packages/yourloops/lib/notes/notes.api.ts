@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * A single message
- */
-export interface MessageNote {
-  id?: string
-  userid: string
-  groupid: string
-  messagetext: string
-  timestamp: string
-  timezone?: string
-  parentmessage?: string
-  user: {
-    fullName: string
+import { sortBy } from 'lodash'
+import { MessageNote } from '../data/models/message-note.model'
+import HttpService from '../http/http.service'
+
+const NOTES_URL = '/message/v1'
+
+export class NotesApi {
+  static async getMessageThread(messageId: string): Promise<MessageNote[]> {
+    const { data } = await HttpService.get<MessageNote[]>({ url: `${NOTES_URL}/thread/${messageId}` })
+    return sortBy(data, (message: MessageNote) => Date.parse(message.timestamp))
+  }
+
+  static async postMessageThread(message: MessageNote): Promise<string> {
+    const { data } = await HttpService.post<{ id: string }, MessageNote>({
+      url: `${NOTES_URL}/send`,
+      payload: message
+    })
+    return data.id
+  }
+
+  static async editMessage(message: MessageNote): Promise<void> {
+    await HttpService.put<void, MessageNote>({
+      url: `${NOTES_URL}/edit`,
+      payload: message
+    })
   }
 }

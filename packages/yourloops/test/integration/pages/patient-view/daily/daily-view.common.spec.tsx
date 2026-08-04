@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import {
   checkBolusChartYAxisForSmallBoluses,
@@ -40,7 +41,8 @@ import {
   checkAverageGlucoseStatWidget,
   checkStandardDeviationStatWidget
 } from '../../../assert/stats.assert'
-import { act, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
+import { act } from 'react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
@@ -91,6 +93,7 @@ describe('Daily view for anyone', () => {
     mockPatientLogin(patient2Info)
     mockErrorApi()
     mockAnalyticsApi()
+    mockNotesApi()
   })
 
   afterEach(() => {
@@ -101,6 +104,8 @@ describe('Daily view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
+      mockNotesApi(NOTES_THREAD)
+
       await act(async () => {
         renderPage(dailyRoute)
       })

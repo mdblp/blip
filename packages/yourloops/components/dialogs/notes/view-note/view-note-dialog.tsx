@@ -77,11 +77,10 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
     <Dialog
       open={true}
       onClose={onClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      role="alertdialog"
+      role="dialog"
       fullWidth={true}
       maxWidth="sm"
+      data-testid="view-note-dialog"
     >
       <DialogTitle>
         {t('note')}

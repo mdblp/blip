@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * A single message
- */
-export interface MessageNote {
-  id?: string
-  userid: string
-  groupid: string
-  messagetext: string
-  timestamp: string
-  timezone?: string
-  parentmessage?: string
-  user: {
-    fullName: string
+import { MessageNote } from '../../../lib/data/models/message-note.model'
+import { NotesApi } from '../../../lib/notes/notes.api'
+import { loggedInUserFullName, loggedInUserId, userTimFullName, userTimId } from './auth0.hook.mock'
+import { NOTE_ID } from './data.api.mock'
+
+const noteData = {
+  "id": NOTE_ID,
+  "timezone": "Europe/Paris",
+  "createdtime": "2022-08-08T12:00:00.000Z",
+  "modifiedtime": "2022-08-08T12:00:00.000Z",
+  "timestamp": "2022-08-08T12:00:00.000Z",
+  "groupid": "b3549d738546",
+  "userid": loggedInUserId,
+  "messagetext": "This day was very stressful",
+  "user": {
+    "fullName": loggedInUserFullName
   }
+}
+
+const noteAnswerData = {
+  "id": "68f5db7c612ea9466ce8c28c",
+  "groupid": "b3549d738546",
+  "userid": userTimId,
+  "parentmessage": "68f5d86d612ea9466ce8c28b",
+  "messagetext": "Really? What happened?",
+  "timestamp": "2022-08-08T15:00:00.000Z",
+  "createdtime": "2022-08-08T15:00:00.000Z",
+  "modifiedtime": "2022-08-08T15:00:00.000Z",
+  "user": {
+    "fullName": userTimFullName
+  }
+}
+
+export const NOTES_THREAD = [noteData, noteAnswerData]
+
+export const mockNotesApi = (notesThread: MessageNote[] = []) => {
+  jest.spyOn(NotesApi, 'getMessageThread').mockResolvedValue(notesThread)
 }

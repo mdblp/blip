@@ -20,18 +20,8 @@ import * as d3 from 'd3'
 import { getTooltipContainer } from 'dumb/dist/src/utils/daily-chart/daily-chart.util'
 import i18next from 'i18next'
 import _ from 'lodash'
-import moment from 'moment-timezone'
 import newNoteIcon from 'new-note.svg'
 import noteIcon from 'note.svg'
-
-import format from '../data/util/format'
-
-const getDateAndTime = (epoch, timezone) => {
-  const mTime = moment.utc(epoch).tz(timezone)
-  const msgDate = format.datestamp(mTime)
-  const msgTime = format.timestamp(mTime)
-  return { msgDate, msgTime }
-}
 
 function plotMessage(pool, opts = {}) {
   const NEW_NOTE_WIDTH = 36
@@ -71,10 +61,7 @@ function plotMessage(pool, opts = {}) {
         .attr('id', function (d) {
           return 'message_' + d.id
         })
-        .attr('data-testid', (d) => {
-          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
-          return `message-${msgDate}-${msgTime}`
-        })
+        .attr('data-testid', (d) => `note_group_${d.id}`)
 
       message.addMessageToPool(messageGroups)
 
@@ -135,10 +122,7 @@ function plotMessage(pool, opts = {}) {
         .append('g')
         .classed('d3-message-group', true)
         .attr('id', `message_${d.id}`)
-        .attr('data-testid', () => {
-          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
-          return `message-${msgDate}-${msgTime}`
-        })
+        .attr('data-testid', (d) => `note_group_${d.id}`)
         .datum(d)
       message.addMessageToPool(messageGroup)
     })

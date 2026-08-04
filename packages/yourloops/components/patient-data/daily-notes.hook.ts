@@ -28,9 +28,9 @@
 import MedicalDataService from 'medical-domain'
 import moment, { type Moment } from 'moment-timezone'
 import { type MutableRefObject, useState } from 'react'
-import DataApi from '../../lib/data/data.api'
 import { type MessageNote } from '../../lib/data/models/message-note.model'
 import metrics from '../../lib/metrics'
+import { NotesApi } from '../../lib/notes/notes.api'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 
 export interface UseDailyNotesProps {
@@ -57,7 +57,7 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   const [createMessageDatetime, setCreateMessageDatetime] = useState<string>(undefined)
 
   const createNewMessage = async (message: MessageNote): Promise<string> => {
-    return await DataApi.postMessageThread(message)
+    return await NotesApi.postMessageThread(message)
   }
 
   const closeMessageBox = (): void => {
@@ -66,7 +66,7 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   }
 
   const editMessage = async (message: MessageNote): Promise<void> => {
-    await DataApi.editMessage(message)
+    await NotesApi.editMessage(message)
     metrics.send('note', 'edit_note')
 
     if (!message.parentmessage) {
@@ -90,12 +90,12 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   }
 
   const showMessageThread = async (messageId: string): Promise<void> => {
-    const messages = await DataApi.getMessageThread(messageId)
+    const messages = await NotesApi.getMessageThread(messageId)
     setMessageThread(messages)
   }
 
   const replyToMessage = async (message: MessageNote): Promise<string> => {
-    const id = await DataApi.postMessageThread(message)
+    const id = await NotesApi.postMessageThread(message)
     metrics.send('note', 'reply_note')
     return id
   }

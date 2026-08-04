@@ -125,6 +125,7 @@ export const EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID = 'eventSuperpositionParame
 export const EATING_SHORTLY_EVENT_ID = 'eatingShortlyEventId'
 export const IOB_ID = 'iobId'
 export const NIGHT_MODE_ID = 'nightModeId'
+export const NOTE_ID = 'noteId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const ZEN_MODE_ID = 'zenModeId'
 export const ZEN_MODE_ID_WITH_GLY = 'zenModeIdGly'

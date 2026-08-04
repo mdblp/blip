@@ -25,18 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import DataApi from '../../../../lib/data/data.api'
-import { type GetPatientDataOptions } from '../../../../lib/data/models/get-patient-data-options.model'
+import { MedicalData, Unit } from 'medical-domain'
 import { type User } from '../../../../lib/auth'
-import { sortBy } from 'lodash'
-import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { type MessageNote } from '../../../../lib/data/models/message-note.model'
+import DataApi from '../../../../lib/data/data.api'
+import { CsvReportModel } from '../../../../lib/data/models/csv-report.model'
+import { type GetPatientDataOptions } from '../../../../lib/data/models/get-patient-data-options.model'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../../../../lib/http/models/enums/http-header-values.enum'
-import { MedicalData, Unit } from 'medical-domain'
-import { CsvReportModel } from '../../../../lib/data/models/csv-report.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 
 describe('Data API', () => {
   const patientId = 'patientId'
@@ -100,18 +98,6 @@ describe('Data API', () => {
     })
   })
 
-  describe('editMessage', () => {
-    it('should edit a message', async () => {
-      jest.spyOn(HttpService, 'put').mockResolvedValue(undefined)
-      const message = { userid: patientId } as MessageNote
-      await DataApi.editMessage(message)
-      expect(HttpService.put).toHaveBeenCalledWith({
-        url: '/message/v1/edit',
-        payload: message
-      })
-    })
-  })
-
   describe('exportData', () => {
     const report = {
       Data : {} as Blob,
@@ -154,39 +140,6 @@ describe('Data API', () => {
           params: { bgUnits, startDate, endDate },
           responseType: "blob",
         }
-      })
-    })
-  })
-
-  describe('getMessageThread', () => {
-    it('should get the message thread sorted by date', async () => {
-      const messageId = 'messageId'
-      const data: MessageNote[] = [
-        { userid: patientId, timestamp: new Date('2022-02-02') } as unknown as MessageNote,
-        { userid: patientId, timestamp: new Date('2022-02-03') } as unknown as MessageNote
-      ]
-      jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)
-
-      let response = await DataApi.getMessageThread(messageId)
-      response = sortBy(response, (message: MessageNote) => Date.parse(message.timestamp))
-      expect(response).toEqual(data)
-
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/message/v1/thread/${messageId}` })
-    })
-  })
-
-  describe('postMessageThread', () => {
-    it('should post a new message', async () => {
-      const message = { userid: patientId } as MessageNote
-      const messageId = 'messageId'
-      const data = { id: messageId }
-      jest.spyOn(HttpService, 'post').mockResolvedValue({ data } as AxiosResponse)
-
-      const response = await DataApi.postMessageThread(message)
-      expect(response).toEqual(messageId)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/message/v1/send',
-        payload: message
       })
     })
   })
