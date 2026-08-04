@@ -38,9 +38,14 @@ import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import usePatient from '../lib/patient/patient.hook'
 import { PatientProvider } from '../lib/patient/patient.provider'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { UserAccountMenuMobile } from '../pages/user-account/user-account-menu-mobile'
 
 export const PatientLayout: FC = () => {
   const { patient } = usePatient()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <TeamContextProvider>
@@ -51,6 +56,7 @@ export const PatientLayout: FC = () => {
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
           <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
           <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+          {isMobile && <Route path={AppUserRoute.UserMenu} element={<UserAccountMenuMobile />} />}
           <Route path="*" element={<PatientData patient={patient} />} />
         </Routes>
       </DashboardLayout>

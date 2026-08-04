@@ -108,7 +108,9 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSettings = (): void => {
-    navigate(AppUserRoute.UserAccount)
+    {
+      isMobile && user.isUserPatient() ? navigate(AppUserRoute.UserMenu) : navigate(AppUserRoute.UserAccount)
+    }
     closeMenu()
   }
 
