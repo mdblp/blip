@@ -306,7 +306,7 @@ export const getMinimalTrendViewData =() : Data => {
       ],
       "confidentialModes": [],
       "deviceParametersChanges": [],
-      "notes": [],
+      "messages": [],
       "meals": [
         {
           "epoch": 1579428000000,

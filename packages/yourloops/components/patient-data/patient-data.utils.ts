@@ -114,7 +114,7 @@ const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 export class PatientDataUtils {
   partialDataLoad: typeof PartialDataLoad
   private readonly bgUnits: BgUnit
-  private patient: Patient
+  private readonly patient: Patient
   private readonly timePrefs: TimePrefs
 
   constructor({ patient, timePrefs, bgUnits }) {

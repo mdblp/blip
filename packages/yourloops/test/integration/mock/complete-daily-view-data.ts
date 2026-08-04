@@ -1603,7 +1603,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
       ],
       eatingShortlyEvents: [],
       iob: [],
-      notes: [],
+      messages: [],
       meals: [
         {
           "epoch": 1659960000000,
@@ -2078,7 +2078,7 @@ export const getTimezoneChangeData = (): Data => {
       deviceParametersChanges: [],
       eatingShortlyEvents: [],
       iob: [],
-      notes: [],
+      messages: [],
       meals: [],
       nightModes: [],
       physicalActivities: [],
@@ -2183,7 +2183,7 @@ export const getTargetValueChangesData = (): Data => {
       ],
       eatingShortlyEvents: [],
       iob: [],
-      notes: [],
+      messages: [],
       meals: [
         {
           "epoch": 1659960000000,

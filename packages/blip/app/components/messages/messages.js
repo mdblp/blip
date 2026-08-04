@@ -60,27 +60,10 @@ class Messages extends React.Component {
     )
   }
 
-  renderComment(message) {
-    return (
-      <Message
-        key={message.id}
-        theNote={message}
-        onSaveEdit={this.getSaveEdit(message.userid)}
-        timePrefs={this.props.timePrefs}
-        trackMetric={this.props.trackMetric}
-      />
-    )
-  }
-
   renderThread() {
     if (this.isMessageThread()) {
       const { messages } = this.state
-      const thread = _.map(messages, (message) => {
-        if (_.isEmpty(message.parentmessage)) {
-          return this.renderNote(message)
-        }
-        return this.renderComment(message)
-      })
+      const thread = _.map(messages, (message) => this.renderNote(message))
 
       return <div className="messages-thread">{thread}</div>
     }
