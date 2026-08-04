@@ -320,7 +320,7 @@ class MedicalDataService {
     this.medicalData.messages.push(normalizedMsg)
   }
 
-  editMessage(message: Record<string, unknown>): Note| null {
+  editMessage(message: Record<string, unknown>): Note | null {
     const normalizedMessage = NoteService.normalize(message, this._datumOpts)
     normalizedMessage.timezone = this.getTimezoneAt(normalizedMessage.epoch)
     normalizedMessage.displayOffset = getOffset(normalizedMessage.epoch, normalizedMessage.timezone)

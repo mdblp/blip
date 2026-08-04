@@ -88,14 +88,21 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {notes.map(((note: MessageNote, index: number) => (
-            <Box sx={{ display: 'flex', alignItems: 'top', gap: 1, marginLeft: isMainNote(index) ? 0 : 3 }} key={note.id}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 1,
+                marginLeft: isMainNote(index) ? 0 : 3
+              }}
+              key={note.id}>
               <Avatar
                 sx={{
                   bgcolor: 'var(--dark-blue-main)',
                   width: getSize(index),
                   height: getSize(index),
-                  fontSize: isMainNote(index) ? MEDIUM_FONT_SIZE : SMALL_FONT_SIZE,
-              }}
+                  fontSize: isMainNote(index) ? MEDIUM_FONT_SIZE : SMALL_FONT_SIZE
+                }}
               >
                 {getInitials(note.user.fullName)}
               </Avatar>
@@ -111,7 +118,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
                       borderRadius: '24px',
                       px: 2,
                       py: 1,
-                      width: 'fit-content',
+                      width: 'fit-content'
                     }}
                   >
                     <Typography variant="body2">{note.messagetext}</Typography>

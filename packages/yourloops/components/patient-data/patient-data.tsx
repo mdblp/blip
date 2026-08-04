@@ -252,7 +252,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                             />
                           }
                           {
-                            messageThread &&
+                            messageThread && messageThread.length > 0 &&
                             <ViewNoteDialog
                               notes={messageThread}
                               timePrefs={timePrefs}

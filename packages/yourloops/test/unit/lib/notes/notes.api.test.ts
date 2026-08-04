@@ -26,7 +26,6 @@
  */
 
 import type { AxiosResponse } from 'axios'
-import { sortBy } from 'lodash'
 import type { MessageNote } from '../../../../lib/data/models/message-note.model'
 import HttpService from '../../../../lib/http/http.service'
 import { NotesApi } from '../../../../lib/notes/notes.api'
@@ -55,8 +54,7 @@ describe('Notes API', () => {
       ]
       jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)
 
-      let response = await NotesApi.getMessageThread(messageId)
-      response = sortBy(response, (message: MessageNote) => Date.parse(message.timestamp))
+      const response = await NotesApi.getMessageThread(messageId)
       expect(response).toEqual(data)
 
       expect(HttpService.get).toHaveBeenCalledWith({ url: `/message/v1/thread/${messageId}` })
