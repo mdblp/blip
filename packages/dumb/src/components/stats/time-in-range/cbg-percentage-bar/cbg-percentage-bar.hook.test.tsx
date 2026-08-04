@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,11 +60,5 @@ describe('CBGPercentageBar hook', () => {
     const props = { ...defaultProps, total: 0 }
     const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.hasValues).toBeFalsy()
-  })
-
-  it('should return barValue equals value when CBGStatType is ReadingsInRange', () => {
-    const props = { ...defaultProps, type: CBGStatType.ReadingsInRange }
-    const { result } = renderHook(() => useCBGPercentageBar(props))
-    expect(result.current.barValue).toBe(defaultProps.value.toString())
   })
 })

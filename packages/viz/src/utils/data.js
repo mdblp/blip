@@ -139,11 +139,6 @@ class DataUtil {
     return noPumpData
   }
 
-  getReadingsInRangeData = () => {
-    const dateFilter = this.dateFilter()
-    return GlycemiaStatisticsService.getReadingsInRangeData(this.rawData.smbg, this.bgBounds, this.days, dateFilter)
-  }
-
   getSensorUsage = () => {
     const dateFilter = this.dateFilter()
     return GlycemiaStatisticsService.getSensorUsage(this.rawData.cbg, dateFilter)

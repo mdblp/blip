@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
+import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { BgPrefs } from '../../../../models/blood-glucose.model'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
 import { ensureNumeric } from '../../stats.util'
-import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { type BgType, DatumType } from 'medical-domain'
-import { BgPrefs } from '../../../../models/blood-glucose.model'
+import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
 
 export interface TimeInRangeChartHookProps {
-  bgType: BgType
   data: TimeInRangeData
-  days: number
-  type: CBGStatType
   bgPrefs: BgPrefs
 }
 
@@ -57,54 +53,23 @@ interface TimeInRangeChartHookReturn {
   legendValues: { className: string, value: string }[]
 }
 
-const TITLE_TYPE_READINGS = 'Readings'
-const TITLE_TYPE_TIME = 'Time'
-
 export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeInRangeChartHookReturn => {
-  const { type, days, data, bgType, bgPrefs } = props
+  const { data, bgPrefs } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
-  const getDefaultTitle = useCallback((): string => {
-    switch (type) {
-      case CBGStatType.TimeInRange:
-        return t('Time In Range')
-      case CBGStatType.ReadingsInRange:
-      default:
-        return days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')
-    }
-  }, [days, t, type])
+  const defaultTitle = t('Time In Range')
 
-  const [title, setTitle] = useState(() => getDefaultTitle())
+  const [title, setTitle] = useState(() => defaultTitle)
 
   useEffect(() => {
-    setTitle(getDefaultTitle())
-  }, [getDefaultTitle])
+    setTitle(defaultTitle)
+  }, [defaultTitle])
 
-  const annotations = useMemo<string[]>(() => {
-    const annotations = []
-    switch (type) {
-      case CBGStatType.TimeInRange:
-        annotations.push(
-          t('time-in-range-cgm-one-day'),
-          t('compute-oneday-time-in-range')
-        )
-        break
-      case CBGStatType.ReadingsInRange:
-      default:
-        annotations.push(t('readings-in-range-bgm-daily-average', { smbgLabel: t('BGM') }))
-        break
-    }
-
-    if (bgType === DatumType.Smbg) {
-      annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
-        total: data.total,
-        smbgLabel: t('BGM')
-      }))
-    }
-
-    return annotations
-  }, [bgType, data.total, t, type])
+  const annotations = [
+    t('time-in-range-cgm-one-day'),
+    t('compute-oneday-time-in-range')
+  ]
 
   const onStatMouseover = (id: StatLevel, barTitle: string, hasValues: boolean): void => {
     if (hasValues) {
@@ -114,41 +79,39 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
   }
 
   const onMouseLeave = (): void => {
-    setTitle(getDefaultTitle())
+    setTitle(defaultTitle)
     setHoveredStatId(null)
   }
 
   const dataArray = useMemo<CBGPercentageData[]>(() => {
-    const titleType = type === CBGStatType.ReadingsInRange ? TITLE_TYPE_READINGS : TITLE_TYPE_TIME
-
     return [
       {
         id: StatLevel.VeryLow,
         value: ensureNumeric(data.veryLow),
-        title: t(`${titleType} Below Range`)
+        title: t('Time Below Range')
       },
       {
         id: StatLevel.Low,
         value: ensureNumeric(data.low),
-        title: t(`${titleType} Below Range`)
+        title: t('Time Below Range')
       },
       {
         id: StatLevel.Target,
         value: ensureNumeric(data.target),
-        title: t(`${titleType} In Range`)
+        title: t('Time In Range')
       },
       {
         id: StatLevel.High,
         value: ensureNumeric(data.high),
-        title: t(`${titleType} Above Range`)
+        title: t('Time Above Range')
       },
       {
         id: StatLevel.VeryHigh,
         value: ensureNumeric(data.veryHigh),
-        title: t(`${titleType} Above Range`)
+        title: t('Time Above Range')
       }
     ]
-  }, [data.high, data.low, data.target, data.veryHigh, data.veryLow, t, type])
+  }, [data.high, data.low, data.target, data.veryHigh, data.veryLow, t])
 
   const total = data.total
 
@@ -158,7 +121,7 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
       throw Error(`Could not find stat with id ${id}`)
     }
     return {
-      type,
+      type: CBGStatType.TimeInRange,
       id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
       onMouseEnter: onStatMouseover,

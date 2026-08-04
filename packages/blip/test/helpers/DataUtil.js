@@ -43,15 +43,6 @@ export default class DataUtil {
       total: 0
     })
 
-    this.getReadingsInRangeData = sinon.stub().returns({
-      veryLow: 0,
-      low: 0,
-      high: 0,
-      veryHigh: 0,
-      target: 0,
-      total: 0
-    })
-
     this.getSensorUsage = sinon.stub().returns({
       sensorUsage: Number.NaN,
       total: 0

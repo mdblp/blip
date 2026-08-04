@@ -236,7 +236,6 @@ describe('print data utils', () => {
       }
       generatePDFStats(data, dataUtils)
       expect(dataUtils.getTimeInRangeData.calledOnce).to.be.true
-      expect(dataUtils.getReadingsInRangeData.calledOnce).to.be.true
       expect(dataUtils.getBasalBolusData.calledOnce).to.be.true
       expect(dataUtils.getTimeInAutoData.calledOnce).to.be.true
       expect(dataUtils.getCarbsData.calledOnce).to.be.true
