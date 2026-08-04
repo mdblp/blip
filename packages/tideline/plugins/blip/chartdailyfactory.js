@@ -489,7 +489,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     emitter,
     tidelineData,
     onElementHover: options.onNoteHover,
-    onElementOut: options.onTooltipOut,
+    onElementOut: options.onTooltipOut
   }))
 
   // add timechange images to messages pool

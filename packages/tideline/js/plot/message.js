@@ -103,7 +103,6 @@ function plotMessage(pool, opts = {}) {
   }
 
   message.updateMessageInPool = function (selection) {
-    console.log('UpdateMessageInPool')
     opts.xScale = pool.xScale().copy()
 
     selection.select('image')
@@ -182,7 +181,6 @@ function plotMessage(pool, opts = {}) {
   })
 
   message.highlightXPosition = (d) => {
-    console.log('highlightXPosition')
     if (!d) {
       return
     }
