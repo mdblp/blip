@@ -86,14 +86,6 @@ function plotMessage(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
 
     selection
-      .append('rect')
-      .classed('d3-rect-message hidden', true)
-      .attr('x', message.highlightXPosition)
-      .attr('y', message.highlightYPosition)
-      .attr('width', opts.size + opts.highlightWidth * 2)
-      .attr('height', opts.size + opts.highlightWidth * 2)
-
-    selection
       .append('image')
       .classed('d3-image d3-message', true)
       .attr('href', noteIcon) // updated from xlink:href to href
@@ -120,15 +112,12 @@ function plotMessage(pool, opts = {}) {
       event.stopPropagation() // silence the click-and-drag listener
 
       opts.emitter.emit('messageThread', datum.id)
-      d3.select(this).selectAll('.d3-rect-message').classed('hidden', false)
     })
   }
 
   message.updateMessageInPool = function (selection) {
+    console.log('UpdateMessageInPool')
     opts.xScale = pool.xScale().copy()
-
-    selection.select('rect.d3-rect-message')
-      .attr('x', message.highlightXPosition)
 
     selection.select('image')
       .attr('x', message.xPosition)
@@ -209,6 +198,7 @@ function plotMessage(pool, opts = {}) {
   })
 
   message.highlightXPosition = (d) => {
+    console.log('highlightXPosition')
     if (!d) {
       return
     }
