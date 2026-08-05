@@ -30,7 +30,7 @@ import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum
 import type Cbg from '../../models/medical/datum/cbg.model'
 import type Smbg from '../../models/medical/datum/smbg.model'
 import { DEFAULT_BG_BOUNDS } from '../../models/medical/medical-data-options.model'
-import { BgClass } from '../../models/statistics/enum/bg-class.enum'
+import { BG_CLASS_TIGHT_RANGE, BgClass, BgClassWithTightRange } from '../../models/statistics/enum/bg-class.enum'
 import { ClassificationType } from '../../models/statistics/enum/bg-classification.enum'
 import type {
   AverageGlucoseStatistics,
@@ -82,15 +82,15 @@ export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificat
   return BgClass.Target
 }
 
-export function classifyBgValueWithTightRange(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): string {
+export function classifyBgValueWithTightRange(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): BgClassWithTightRange {
   const classification = classifyBgValue(bgBounds, bgValue, classificationType)
   if (classification !== BgClass.Target) {
-    return classification
+    return classification as BgClassWithTightRange
   }
 
   const units = bgBounds.veryLowThreshold === DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow ? MGDL_UNITS : MMOLL_UNITS
   if (isInTightRange(bgValue, units)) {
-    return 'tightRange'
+    return BG_CLASS_TIGHT_RANGE
   }
   return BgClass.Target
 }

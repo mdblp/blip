@@ -80,7 +80,7 @@ export { AlarmLevel } from './domains/models/medical/datum/enums/alarm-level.enu
 export { type Basal } from './domains/models/medical/datum/basal.model'
 export { BasalDeliveryType } from './domains/models/medical/datum/enums/basal-delivery-type.enum'
 export { type BgBounds, type CbgRangeStatistics } from './domains/models/statistics/glycemia-statistics.model'
-export { BgClass } from './domains/models/statistics/enum/bg-class.enum'
+export { BgClass, BgClassWithTightRange, BG_CLASS_TIGHT_RANGE } from './domains/models/statistics/enum/bg-class.enum'
 export { type BgType, type BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/bg.model'
 export { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype.enum'
 export { CGMName } from './domains/models/medical/datum/enums/cgm-name.enum'
