@@ -21,6 +21,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering
 - YLP-3864 SBOM generation in pipeline
 - Remove "Readings In Range" stat support
+- Fix CBG in tight range color on Daily view
 
 ## 3.10.0 - 2026-06-25
 ### Added
