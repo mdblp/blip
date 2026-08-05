@@ -86,7 +86,10 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
         {t('note')}
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box
+          sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+          data-testid="notes-thread"
+        >
           {notes.map(((note: MessageNote, index: number) => (
             <Box
               sx={{
@@ -133,6 +136,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
         <Button
           variant="outlined"
           onClick={onClose}
+          data-testid="close-button"
         >
           {t('button-close')}
         </Button>
