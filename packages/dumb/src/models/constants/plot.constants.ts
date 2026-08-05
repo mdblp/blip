@@ -79,6 +79,7 @@ export const CSS_CLASSES = {
   BG_VERY_LOW: 'd3-bg-very-low',
   BG_LOW: 'd3-bg-low',
   BG_TARGET: 'd3-bg-target',
+  BG_TIGHT_RANGE: 'd3-bg-tight-range',
   BG_HIGH: 'd3-bg-high',
   BG_VERY_HIGH: 'd3-bg-very-high',
   BG_LOW_FOCUS: 'd3-bg-low-focus',
