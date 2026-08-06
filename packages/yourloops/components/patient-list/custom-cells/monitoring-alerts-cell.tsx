@@ -177,7 +177,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         <AlertIcon
           Icon={HyperglycemiaIcon}
           isActive={conditions[0]}
-          testId="Hyperglycemia-icon"
+          testId="hyperglycemia-icon"
           className={classes.marginLeftIcon}
           onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, conditions[1])}
           sharedTooltip={sharedTooltip}
@@ -197,7 +197,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         <AlertIcon
           Icon={HypoglycemiaIcon}
           isActive={conditions[0]}
-          testId="Hypoglycemia-icon"
+          testId="hypoglycemia-icon"
           className={classes.marginLeftIcon}
           onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, conditions[2])}
           sharedTooltip={sharedTooltip}
