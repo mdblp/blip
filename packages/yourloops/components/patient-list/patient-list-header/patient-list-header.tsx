@@ -49,7 +49,7 @@ import TeamUtils from '../../../lib/team/team.util'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 import { FiltersDialogSlot } from './modal-management-display'
 import { PatientListHeaderInit } from './patient-list-header-init'
-import { PatientListSearchTooltip } from './patient-list-search-tooltip'
+import { SearchBar } from './patient-list-search-tooltip'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -62,12 +62,9 @@ interface PatientListHeaderProps {
 const useStyles = makeStyles()((theme) => {
   const TAB_HEIGHT = theme.spacing(6)
   return {
-    customTextField: {
+    customTextFieldSpecific: {
       marginRight: theme.spacing(2),
       width: '350px',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'inherit !important'
-      }
     },
     resetButton: {
       cursor: 'pointer',
@@ -107,10 +104,10 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             alignItems: "center"
           }}>
           <Box>
-            <PatientListSearchTooltip
+            <SearchBar
               inputSearch = {inputSearch}
               setInputSearch = {setInputSearch}
-              className = {classes.customTextField}
+              classNameSpecific = {classes.customTextFieldSpecific}
             />
             {init.isUserHcp &&
               <Tooltip title={init.filterButtonTooltipTitle}>
