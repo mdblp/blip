@@ -183,7 +183,7 @@ export const testTrendsWeekDayFilter = async () => {
 }
 
 export const testNotesFailure = async () => {
- await checkNoteAddCommentFailure()
+  await checkNoteAddCommentFailure()
 }
 
 const checkNotes = async (date: Date) => {

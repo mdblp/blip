@@ -25,9 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import dayjs from 'dayjs'
+import { when } from 'jest-when'
+import { DeviceSystem } from 'medical-domain'
+import { act } from 'react'
+import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
+import { User } from '../../../../../lib/auth'
+import { ConfigService } from '../../../../../lib/config/config.service'
+import DataApi from '../../../../../lib/data/data.api'
+import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
+import { t } from '../../../../../lib/language'
 import { NotesApi } from '../../../../../lib/notes/notes.api'
-import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   checkBolusChartYAxisForSmallBoluses,
   checkGlucoseChartYAxis,
@@ -36,43 +47,30 @@ import {
   checkTimeChangeIndicator,
   checkTimeInRangeDefaultStats
 } from '../../../assert/daily-view.assert'
-import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
-import { renderPage } from '../../../utils/render'
-import {
-  checkAverageGlucoseStatWidget,
-  checkStandardDeviationStatWidget
-} from '../../../assert/stats.assert'
-import { screen, within } from '@testing-library/react'
-import { act } from 'react'
-import userEvent from '@testing-library/user-event'
-import dayjs from 'dayjs'
-import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
-import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
-import DataApi from '../../../../../lib/data/data.api'
-import { User } from '../../../../../lib/auth'
-import { when } from 'jest-when'
+import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
+import { checkAverageGlucoseStatWidget, checkStandardDeviationStatWidget } from '../../../assert/stats.assert'
 import { patient2Info, patientPregnancyInfo } from '../../../data/patient.api.data'
-import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import {
-  testDailyViewChartsDblg1,
-  testDailyViewChartsDblg2,
-  testDailyViewTooltipsAndValuesMgdl,
-  testDailyViewTooltipsForDblg2,
-  testDailyViewTooltipsForRecentSoftware, testNotesFailure
-} from '../../../use-cases/patient-data-visualisation'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import {
   getCompleteDailyViewData,
   getCompleteDailyViewDataDblg2,
   getTargetValueChangesData,
   getTimezoneChangeData
 } from '../../../mock/complete-daily-view-data'
-import { t } from '../../../../../lib/language'
-import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
-import { DeviceSystem } from 'medical-domain'
-import { ConfigService } from '../../../../../lib/config/config.service'
+import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
-import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import {
+  testDailyViewChartsDblg1,
+  testDailyViewChartsDblg2,
+  testDailyViewTooltipsAndValuesMgdl,
+  testDailyViewTooltipsForDblg2,
+  testDailyViewTooltipsForRecentSoftware,
+  testNotesFailure
+} from '../../../use-cases/patient-data-visualisation'
+import { renderPage } from '../../../utils/render'
 
 /**
  * @see https://github.com/testing-library/react-testing-library/issues/651

@@ -359,8 +359,8 @@ export const checkNoteAddCommentSuccess = async () => {
 
   await userEvent.click(submitButton)
 
-  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Comment added successfully')
+  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
 }
 
 export const checkNoteAddCommentFailure = async () => {
@@ -373,8 +373,8 @@ export const checkNoteAddCommentFailure = async () => {
   const submitButton = within(dialog).getByRole('button', { name: 'Post' })
   await userEvent.click(submitButton)
 
-  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred, please try again later.')
+  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
 }
 
 const checkDailyViewChartsCommon = () => {

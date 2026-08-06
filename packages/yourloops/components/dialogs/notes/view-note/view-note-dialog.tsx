@@ -84,7 +84,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
   }
 
   const isSubmitDisabled = (comment: string): boolean => {
-    return comment === '' || comment.trim().length === 0
+    return comment.trim().length === 0
   }
 
   const onClickSubmit = async (comment: string) => {
@@ -94,7 +94,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
       parentmessage: parentNote.id,
       userid: user.id,
       groupid: parentNote.groupid,
-      messagetext: comment,
+      messagetext: comment.trim(),
       timestamp: new Date().toISOString()
     } as MessageNote
 
@@ -104,7 +104,6 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
       await NotesApi.postMessageThread(newNoteComment)
       alert.success(t('note-comment-add-success'))
     } catch (err) {
-      console.log('Error found here')
       const errorMessage = errorTextFromException(err)
       logError(errorMessage, 'add-note-comment')
 
