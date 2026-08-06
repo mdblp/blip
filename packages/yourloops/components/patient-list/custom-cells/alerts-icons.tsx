@@ -67,7 +67,7 @@ export const AlertIcon: React.FC<AlertIconProps> = (props) => {
       title={
         <>
           {messages.map((msg, index) => (
-            <Box key={index}>{msg}</Box>
+            <Box key={String(msg)}>{msg}</Box>
           ))}
           {sharedTooltip && <Box>{sharedTooltip}</Box>}
         </>
