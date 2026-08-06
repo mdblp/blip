@@ -257,6 +257,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                               notes={messageThread}
                               timePrefs={timePrefs}
                               onClose={closeMessageBox}
+                              onSubmitComment={replyToMessage}
                             />
                           }
                         </>
