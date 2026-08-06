@@ -25,56 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import React, { type FunctionComponent } from 'react'
+import { useTranslation } from 'react-i18next'
+import Tooltip from '@mui/material/Tooltip'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import SearchIcon from '@mui/icons-material/Search'
 
-import Link from '@mui/material/Link'
-import React from 'react'
-import { makeStyles } from 'tss-react/mui'
-import { commonStyleFooter } from './shared/footer-style'
-
-const footerLinkMobileStyle = makeStyles()(() => {
-  return {
-    linkMobile: {
-      textAlign: 'center',
-      display: 'inline-block'
-    }
-  }
-})
-
-interface FooterLinkProps {
-  id: string
-  href?: string
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  isExternal?: boolean
-  children: React.ReactNode
+interface PatientListHeaderProps {
+  inputSearch: string
+  setInputSearch: (value: string) => void
+  className: string
 }
 
-export const FooterLink : React.FC<FooterLinkProps> = (props) => {
-  const {
-    id,
-    href,
-    onClick,
-    isExternal,
-    children
-  } = props
-  const { classes: linkMobileClasses } = footerLinkMobileStyle()
-  const { classes: commonClasses } = commonStyleFooter();
-
-  const classes = {
-    ...linkMobileClasses,
-    ...commonClasses,
-  }
+export const PatientListSearchTooltip: FunctionComponent<PatientListHeaderProps> = (props) => {
+  const { t } = useTranslation()
+  const { inputSearch, setInputSearch, className } = props
 
   return (
-    <Link
-      id={id}
-      href={href}
-      onClick={onClick}
-      className={`${classes.linkMobile} ${classes.commonLink}`}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'nofollow' : undefined}
-    >
-      {children}
-    </Link>
+    <Tooltip title={t('patient-list-search-tooltip')}>
+      <TextField
+        aria-label={t('patient-list-search-tooltip')}
+        placeholder={t('patient-list-search-placeholder')}
+        value={inputSearch}
+        className={className}
+        slotProps={{
+          input: {
+            endAdornment:
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>,
+            sx: { height: '42px', borderRadius: '24px' }
+          },
+          htmlInput: {
+            'aria-label': t('aria-search'),
+            'data-testid': 'search-patient-bar'
+          }
+        }}
+        onChange={event => {
+          setInputSearch(event.target.value)
+        }}
+      />
+    </Tooltip>
   )
 }
-

@@ -25,27 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useRef, useState } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
 import IconButton from '@mui/material/IconButton'
 import FilterList from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import { InvitePatientDialog } from '../../patient/invite-patient-dialog/invite-patient-dialog'
-import TeamCodeDialog from '../../patient/team-code-dialog'
-import { type Team } from '../../../lib/team'
-import { useAuth } from '../../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
-import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
-import { PatientFiltersPopover } from '../patient-filters-popover'
+import { FiltersDialogSlot } from './modal-management-display'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
-import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
+import { PatientListHeaderInit } from './patient-list-header-init'
+import { PatientListSearchTooltip } from './patient-list-search-tooltip'
 
 interface PatientListHeaderProps {
   inputSearch: string
@@ -73,34 +66,11 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
   const { inputSearch, setInputSearch } = props
   const theme = useTheme()
   const { t } = useTranslation()
-  const { user } = useAuth()
   const { classes } = useStyles()
-  const { filters } = usePatientListContext()
-  const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
-  const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
-  const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { teamId } = useParams()
   const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
 
-  const filtersRef = useRef<HTMLButtonElement>(null)
-
-  const isUserHcp = user.isUserHcp()
-
-  const filterButtonTooltipTitle = isUserHcp && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
-
-  const onAddPatientSuccessful = (team: Team): void => {
-    setShowAddPatientDialog(false)
-    setTeamCodeDialogSelectedTeam(team)
-  }
-
-  const openFiltersDialog = (): void => {
-    setFiltersDialogOpen(true)
-    AnalyticsApi.trackClick('patient-list-filters', ElementType.Button)
-  }
-
-  const closeFiltersDialog = (): void => {
-    setFiltersDialogOpen(false)
-  }
+  const init = PatientListHeaderInit();
 
   return (
     <React.Fragment>
@@ -120,42 +90,23 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
             width: '100%'
           }}>
           <Box sx={{ flexShrink: 1, marginRight: theme.spacing(1) }}>
-            <Tooltip title={t('patient-list-search-tooltip')}>
-              <TextField
-                aria-label={t('patient-list-search-tooltip')}
-                placeholder={t('patient-list-search-placeholder')}
-                value={inputSearch}
-                className={classes.customTextField}
-                slotProps={{
-                  input: {
-                    endAdornment:
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>,
-                    sx: { height: '42px', borderRadius: '24px' }
-                  },
-                  htmlInput: {
-                    'aria-label': t('aria-search'),
-                    'data-testid': 'search-patient-bar'
-                  }
-                }}
-                onChange={event => {
-                  setInputSearch(event.target.value)
-                }}
-              />
-            </Tooltip>
+            <PatientListSearchTooltip
+              inputSearch = {inputSearch}
+              setInputSearch = {setInputSearch}
+              className = {classes.customTextField}
+            />
           </Box>
-          {isUserHcp &&
+          {init.isUserHcp &&
             <>
               <Tooltip
-                title={filterButtonTooltipTitle}
+                title={init.filterButtonTooltipTitle}
               >
                 <IconButton
                   size="large"
-                  onClick={openFiltersDialog}
-                  disabled={filters.pendingEnabled}
+                  onClick={init.openFiltersDialog}
+                  disabled={init.filters.pendingEnabled}
                   data-testid="filters-button"
-                  ref={filtersRef}
+                  ref={init.filtersRef}
                   className={classes.patientListHeaderButton}
                   sx={{ border: '1px solid' }}
                 >
@@ -171,7 +122,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
                   disabled={isSelectedTeamPrivate}
                   data-testid="add-patient-button"
                   onClick={() => {
-                    setShowAddPatientDialog(true)
+                    init.setShowAddPatientDialog(true)
                   }}
                   className={classes.patientListHeaderButton}
                   sx={{ backgroundColor: 'var(--info-color-main)' }}
@@ -183,33 +134,17 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
           }
         </Box>
       </Box>
-      {
-        showAddPatientDialog &&
-        <InvitePatientDialog
-          onAddPatientSuccessful={onAddPatientSuccessful}
-          onClose={() => {
-            setShowAddPatientDialog(false)
-          }}
-        />
-      }
-      {
-        teamCodeDialogSelectedTeam &&
-        <TeamCodeDialog
-          code={teamCodeDialogSelectedTeam.code}
-          name={teamCodeDialogSelectedTeam.name}
-          onClose={() => {
-            setTeamCodeDialogSelectedTeam(null)
-          }}
-        />
-      }
-      {
-        isFiltersDialogOpen &&
-        <PatientFiltersPopover
-          anchorEl={filtersRef.current}
-          onClose={closeFiltersDialog}
-          isSelectedTeamPrivate={isSelectedTeamPrivate}
-        />
-      }
+      <FiltersDialogSlot
+        isFiltersDialogOpen={init.isFiltersDialogOpen}
+        teamCodeDialogSelectedTeam={init.teamCodeDialogSelectedTeam}
+        anchorEl={init.filtersRef.current}
+        onPatientFiltersClose={init.closeFiltersDialog}
+        isSelectedTeamPrivate={isSelectedTeamPrivate}
+        setTeamCodeDialogSelectedTeam={init.setTeamCodeDialogSelectedTeam}
+        showAddPatientDialog={init.showAddPatientDialog}
+        setShowAddPatientDialog={init.setShowAddPatientDialog}
+        onAddPatientSuccessful={init.onAddPatientSuccessful}
+      />
     </React.Fragment>
   )
 }

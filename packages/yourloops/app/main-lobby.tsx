@@ -166,11 +166,11 @@ export const MainLobby: FC = () => {
                   </Routes>
                 </Box>
               </SnackbarContextProvider>
-              {isMobile ? <FooterMobile /> : <Footer /> }
-                </ThemeProvider>
-                </TssCacheProvider>
-                </CacheProvider>
-              }
-            </React.Fragment>
-            )
-            }
+              {isMobile ? <FooterMobile /> : <Footer />}
+            </ThemeProvider>
+          </TssCacheProvider>
+        </CacheProvider>
+      }
+    </React.Fragment>
+  )
+}

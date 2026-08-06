@@ -195,12 +195,12 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         field: PatientListColumn.MonitoringAlerts,
-        headerName: isMobile ? t('alert') : t('monitoring-alerts'),
+        headerName: isMobile ? t('alerts') : t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         sortComparator: sortByMonitoringAlertsCount,
         headerAlign: isMobile ? 'center' : 'left',
         width: isMobile ? undefined : 150,
-        flex: isMobile ? 0.4 : undefined,
+        flex: isMobile ? 0.6 : undefined,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
           const isLoading = !patient.monitoringAlertsParameters || !patient.monitoringAlerts
@@ -223,16 +223,30 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         description: t('time-in-range-tooltip'),
         headerAlign: isMobile ? 'center' : 'left',
         align: isMobile ? 'center' : 'left',
-        flex: isMobile ? 0.4 : undefined,
-        valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
-        renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
+        flex: isMobile ? 0.6 : undefined,
+        valueFormatter: (value: number | null): string => {
+          if (value === null || value === undefined) return t('no-data'); // Ou 'no data'
+          return PatientUtils.formatPercentageValue(value)
+        },
+        renderCell: (params: GridRenderCellParams<GridRowModel, number | null>) => {
           const value = params.value
-          return isNumberValueDefined(value)
-            ? PatientUtils.formatPercentageValue(params.value)
-            : <Skeleton data-testid="time-in-range-cell-skeleton"
-                        variant="rounded"
-                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
-                        height={SKELETON_HEIGHT_PX} />
+
+          if (value === undefined) {
+            return (
+              <Skeleton
+                data-testid="something-cell-skeleton"
+                variant="rounded"
+                width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                height={SKELETON_HEIGHT_PX}
+              />
+            )
+          }
+
+          if (!isNumberValueDefined(value) || value === null) {
+            return t('no-data')
+          }
+
+          return PatientUtils.formatPercentageValue(value)
         }
       },
       {

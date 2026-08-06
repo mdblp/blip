@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { PatientListHeader } from './patient-list-header'
+import { PatientListHeader } from './patient-list-header/patient-list-header'
 import { PatientListHeaderMobile } from './patient-list-header/patient-list-header-mobile'
 import { usePatientListHook } from './patient-list.hook'
 import { PatientListTabs } from './models/enums/patient-list.enum'

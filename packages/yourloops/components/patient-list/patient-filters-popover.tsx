@@ -68,6 +68,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientListContext()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isWeb = useMediaQuery(theme.breakpoints.up('sm'))
   const { classes } = useStyles()
 
   const [filters, setFilters] = useState<PatientsFilters>(patientsFiltersContext)
@@ -94,7 +95,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
           marginX: theme.spacing(3),
           marginTop: theme.spacing(3)
         }}>
-        {!isMobile &&
+        {isWeb &&
           <>
             <Typography variant="h6" className={classes.title}>{t('personal-settings')}</Typography>
             <PatientListOptionToggle
@@ -113,7 +114,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
 
         {!isSelectedTeamPrivate &&
           <>
-            {!isMobile &&
+            {isWeb &&
               <>
                 <Typography variant="h6" className={classes.title}>{t('lead-clinicians')}</Typography>
                 <PatientListOptionToggle
@@ -174,7 +175,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
                 AnalyticsApi.trackClick('patient-filters-data-not-transmitted', ElementType.Toggle)
               }}
             />
-            {!isMobile &&
+            {isWeb &&
               <>
                 <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
                 <PatientListOptionToggle

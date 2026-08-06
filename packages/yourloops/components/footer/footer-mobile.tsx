@@ -26,61 +26,41 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
-import { useLocation } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import LanguageIcon from '@mui/icons-material/Language'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
-import { useAuth } from '../../lib/auth'
-import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
 import { getCurrentLang } from '../../lib/language'
 import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
-import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 import { PatientView } from '../../enum/patient-view.enum'
-import { useTheme } from '@mui/material/styles'
 import { FooterLink } from './footer-link-mobile'
+import { useSharedVariables } from "./shared/init-footer"
+import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../lib/auth'
+import { useTheme } from '@mui/material/styles'
+import { useLocation } from 'react-router-dom'
+import { commonStyleFooter } from './shared/footer-style'
 
-export const footerStyle = makeStyles<{ isLongLanguage: boolean }>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
+export const footerMobileStyle = makeStyles<{ isLongLanguage?: boolean }>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
   return {
     allLines: {
-      alignItems: 'center',
-      display: 'flex',
       justifyContent: 'center',
       marginBottom: theme.spacing(2),
       wordBreak: isLongLanguage ? 'break-word' : 'normal'
     },
-    container: {
-      alignItems: 'center',
-      backgroundColor: 'var(--footer-background-color)',
-      color: theme.palette.grey[700],
-      display: 'flex',
-      flexShrink: 0,
-      fontSize: '12px',
-      zIndex: theme.zIndex.drawer + 1,
-      marginTop: theme.spacing(3),
+    containerMobile: {
       paddingTop: theme.spacing(3),
       paddingBottom: theme.spacing(1),
       minHeight: theme.spacing(14),
       flexDirection: 'column'
     },
-    icon: {
-      alignSelf: 'center',
-      color: theme.palette.grey[600],
-      marginRight: '18px',
-      width: '20px',
-      marginBottom: '3px'
-    },
-    languageSeparator: {
-      alignSelf: 'center'
-    },
-    separator: {
+    separatorMobile: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1)
     }
@@ -97,25 +77,13 @@ export const FooterMobile: FunctionComponent = () => {
 
   const isLongLanguage = (currentLanguage === LanguageCode.De) || (currentLanguage === LanguageCode.Nl)
 
-  const { classes } = footerStyle( { isLongLanguage })
+  const { classes: mobileClasses } = footerMobileStyle({ isLongLanguage });
+  const { classes: commonClasses } = commonStyleFooter();
 
-  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCode.Ja
-
-  const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
-  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
-  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
-
-  const handleShowCookieBanner = (): void => {
-    if (typeof window.openAxeptioCookies === 'function') {
-      window.openAxeptioCookies()
-    }
-  }
-
-  const metricsPdfDocument = (title: string) => {
-    return () => {
-      metrics.send('pdf_document', 'view_document', title)
-    }
-  }
+  const classes = {
+    ...commonClasses,
+    ...mobileClasses,
+  };
 
   const PATIENT_VIEW_URL_MAPPING: Record<PatientView, string> = {
     [PatientView.Daily]: 'daily',
@@ -129,26 +97,36 @@ export const FooterMobile: FunctionComponent = () => {
     pathname.includes(viewValue)
   )
 
+  const {
+    shouldDisplayMedicalDeviceWarning,
+    cookiesPolicyUrl,
+    privacyPolicyUrl,
+    termsOfUseUrl,
+    handleShowCookieBanner,
+    metricsPdfDocument
+  } = useSharedVariables()
+
   return (
-    <Container id="footer-links-container" data-testid="footer" className={classes.container} maxWidth={false}>
+    <Container id="footer-links-container" data-testid="footer" className={`${classes.containerMobile} ${classes.containerCommon}
+    ${classes.commonBoxAndContainer}`} maxWidth={false}>
       {shouldDisplayMedicalDeviceWarning &&
-        <Box className={classes.allLines}>{t('not-a-medical-device')}</Box>
+        <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>{t('not-a-medical-device')}</Box>
       }
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
           ? <>
-            <Box className={classes.allLines} >
+            <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`} >
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
             </Box>
-            <Box id="footer-accompanying-documents-box" className={classes.allLines}>
+            <Box id="footer-accompanying-documents-box" className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
               <AccompanyingDocumentLinks user={user} />
             </Box>
           </>
-          : <Box id="footer-accompanying-documents-box" className={classes.allLines}>
+          : <Box id="footer-accompanying-documents-box" className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
             <AccompanyingDocumentLinks user={user} />
           </Box>
         }
-      <Box className={classes.allLines}>
+      <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
         <FooterLink
           id="footer-link-url-privacy-policy"
           href={privacyPolicyUrl}
@@ -157,7 +135,7 @@ export const FooterMobile: FunctionComponent = () => {
         >
           {t('privacy-policy')}
         </FooterLink>
-        <Box className={classes.separator}>|</Box>
+        <Box className={classes.separatorMobile}>|</Box>
         <FooterLink
           id="footer-link-url-terms"
           href={termsOfUseUrl}
@@ -167,14 +145,14 @@ export const FooterMobile: FunctionComponent = () => {
           {t('terms-of-use')}
         </FooterLink>
       </Box>
-      <Box className={classes.allLines}>
+      <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
         <FooterLink
           id="footer-link-cookies-management"
           onClick={handleShowCookieBanner}
         >
           {t('cookies-management')}
         </FooterLink>
-        <Box className={classes.separator}>|</Box>
+        <Box className={classes.separatorMobile}>|</Box>
         <FooterLink
           id="footer-link-url-cookies-policy"
           href={cookiesPolicyUrl}
@@ -183,7 +161,7 @@ export const FooterMobile: FunctionComponent = () => {
         >
           {t('cookies-policy')}
         </FooterLink>
-        <Box className={classes.separator}>|</Box>
+        <Box className={classes.separatorMobile}>|</Box>
         <FooterLink
           id="footer-link-contact-mailto"
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
