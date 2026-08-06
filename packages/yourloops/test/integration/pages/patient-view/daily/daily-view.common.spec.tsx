@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { NotesApi } from '../../../../../lib/notes/notes.api'
 import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import {
@@ -58,7 +59,7 @@ import {
   testDailyViewChartsDblg2,
   testDailyViewTooltipsAndValuesMgdl,
   testDailyViewTooltipsForDblg2,
-  testDailyViewTooltipsForRecentSoftware
+  testDailyViewTooltipsForRecentSoftware, testNotesFailure
 } from '../../../use-cases/patient-data-visualisation'
 import {
   getCompleteDailyViewData,
@@ -99,6 +100,7 @@ describe('Daily view for anyone', () => {
   afterEach(() => {
     window.ResizeObserver = ResizeObserver
     jest.restoreAllMocks()
+    jest.useRealTimers()
   })
 
   describe('with all kind of data', () => {
@@ -106,12 +108,30 @@ describe('Daily view for anyone', () => {
       mockDataAPI()
       mockNotesApi(NOTES_THREAD)
 
+      const now = new Date()
+      jest.useFakeTimers({
+        now,
+        doNotFake: ['nextTick', 'queueMicrotask', 'setImmediate', 'clearImmediate', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout']
+      })
+
       await act(async () => {
         renderPage(dailyRoute)
       })
 
-      await testDailyViewTooltipsAndValuesMgdl()
+      await testDailyViewTooltipsAndValuesMgdl(now)
       testDailyViewChartsDblg1()
+    })
+
+    it('should handle update errors', async () => {
+      mockDataAPI()
+      mockNotesApi(NOTES_THREAD)
+      jest.spyOn(NotesApi, 'postMessageThread').mockRejectedValue(new Error('error'))
+
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
+
+      await testNotesFailure()
     })
   })
 

@@ -41,6 +41,8 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../../../lib/auth'
 import { getInitials } from '../../../../lib/auth/user.util'
 import { MessageNote } from '../../../../lib/data/models/message-note.model'
+import metrics from '../../../../lib/metrics'
+import { NotesApi } from '../../../../lib/notes/notes.api'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../utils/snackbar'
@@ -50,7 +52,6 @@ interface ViewNoteDialogProps {
   notes: MessageNote[]
   timePrefs: TimePrefs
   onClose: () => void
-  onSubmitComment: (comment: MessageNote) => void
 }
 
 const AVATAR_MEDIUM_SIZE = '40px'
@@ -60,7 +61,7 @@ const MEDIUM_FONT_SIZE = '20px'
 const SMALL_FONT_SIZE = '16px'
 
 export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
-  const { notes, timePrefs, onClose, onSubmitComment } = props
+  const { notes, timePrefs, onClose } = props
   const { t } = useTranslation('main')
   const { user } = useAuth()
   const alert = useAlert()
@@ -82,7 +83,11 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
     return isMainNote(index) ? AVATAR_MEDIUM_SIZE : AVATAR_SMALL_SIZE
   }
 
-  const onClickSubmit = (comment: string) => {
+  const isSubmitDisabled = (comment: string): boolean => {
+    return comment === '' || comment.trim().length === 0
+  }
+
+  const onClickSubmit = async (comment: string) => {
     const parentNote = notes[0]
 
     const newNoteComment = {
@@ -94,15 +99,18 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
     } as MessageNote
 
     try {
-      onSubmitComment(newNoteComment)
-      onClose()
+      metrics.send('note', 'reply_note')
 
+      await NotesApi.postMessageThread(newNoteComment)
       alert.success(t('note-comment-add-success'))
     } catch (err) {
+      console.log('Error found here')
       const errorMessage = errorTextFromException(err)
       logError(errorMessage, 'add-note-comment')
 
       alert.error(t('error-occurred'))
+    } finally {
+      onClose()
     }
   }
 
@@ -115,14 +123,14 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
       maxWidth="sm"
       data-testid="view-note-dialog"
     >
-      <DialogTitle>
+      <DialogTitle data-testid="view-note-title">
         {t('note')}
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }} data-testid="view-note-content">
           <Box
             sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
-            data-testid="notes-thread"
+            data-testid="view-note-thread"
           >
             {notes.map(((note: MessageNote, index: number) => (
               <Box
@@ -165,7 +173,10 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
               </Box>
             )))}
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+            data-testid="view-note-add-comment"
+          >
             <Typography variant="caption" sx={{ color: 'var(--text-color-secondary)' }}>
               <span>{getDateTime(new Date().toISOString())}</span>
             </Typography>
@@ -173,6 +184,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
               variant="outlined"
               sx={{ width: '100%' }}
               placeholder={t('Type a comment here ...')}
+              aria-label={t('note-comment-input')}
               value={comment}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setComment(event.target.value)
@@ -181,7 +193,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
           </Box>
         </Box>
       </DialogContent>
-      <DialogActions>
+      <DialogActions data-testid="view-note-actions">
         <Button
           variant="outlined"
           onClick={onClose}
@@ -193,6 +205,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
           variant="contained"
           onClick={() => onClickSubmit(comment)}
           data-testid="submit-button"
+          disabled={isSubmitDisabled(comment)}
         >
           {t('button-post')}
         </Button>

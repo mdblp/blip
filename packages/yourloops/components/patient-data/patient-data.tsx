@@ -137,7 +137,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     editMessage,
     handleMessageCreation,
     messageThread,
-    replyToMessage
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
@@ -245,7 +244,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                               user={user}
                               patient={patient}
                               onClose={closeMessageBox}
-                              onSave={createMessageDatetime ? createNewMessage : replyToMessage}
+                              onSave={createNewMessage}
                               onEdit={editMessage}
                               timePrefs={timePrefs}
                               trackMetric={metrics.send}
@@ -257,7 +256,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                               notes={messageThread}
                               timePrefs={timePrefs}
                               onClose={closeMessageBox}
-                              onSubmitComment={replyToMessage}
                             />
                           }
                         </>

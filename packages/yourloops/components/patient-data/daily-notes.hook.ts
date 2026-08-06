@@ -46,7 +46,6 @@ interface UseDailyNotesReturn {
   editMessage: (message: MessageNote) => Promise<void>
   handleMessageCreation: (message: MessageNote) => Promise<void>
   messageThread: MessageNote[]
-  replyToMessage: (message: MessageNote) => Promise<string>
   showMessageCreation: (datetime: Moment | null) => void
   showMessageThread: (messageId: string) => Promise<void>
 }
@@ -94,12 +93,6 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
     setMessageThread(messages)
   }
 
-  const replyToMessage = async (message: MessageNote): Promise<string> => {
-    const id = await NotesApi.postMessageThread(message)
-    metrics.send('note', 'reply_note')
-    return id
-  }
-
   return {
     messageThread,
     createMessageDatetime,
@@ -109,6 +102,5 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
     createNewMessage,
     handleMessageCreation,
     editMessage,
-    replyToMessage
   }
 }

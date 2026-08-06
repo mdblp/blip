@@ -551,6 +551,7 @@
   "not-a-medical-device": "Not a medical device",
   "not-logged-in": "You are not logged in",
   "note-comment-add-success": "Comment added successfully",
+  "note-comment-input": "New comment",
   "notification": "Notification",
   "notification-caregiver-invite-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",
   "notification-hcp-invite-by-team": "<strong>{{firstName}} {{lastName}}</strong> invites you to join <strong>{{careteam}}</strong>.",
