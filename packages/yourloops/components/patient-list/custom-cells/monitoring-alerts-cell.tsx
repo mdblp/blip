@@ -158,7 +158,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         <AlertIcon
           Icon={TimeSpentOufOfRangeIcon}
           isActive={conditions[0]}
-          testId="time-spent-out-of-range-icon-tooltip"
+          testId="time-spent-out-of-range-icon"
           onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, conditions[0])}
           sharedTooltip={sharedTooltip}
           messages={[
