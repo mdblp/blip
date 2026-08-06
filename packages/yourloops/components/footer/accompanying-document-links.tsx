@@ -31,12 +31,20 @@ import { Link as RouterLink } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { type User } from '../../lib/auth'
-import { footerStyle } from './footer'
+import { footerWebStyle } from './footer'
+import { footerMobileStyle } from './footer-mobile'
 import { ExternalFilesService } from '../../lib/external-files/external-files.service'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
+import { commonStyleFooter } from './shared/footer-style'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
   const { t } = useTranslation('yourloops')
-  const { classes: { link, separator } } = footerStyle()
+  const themeMobile = useTheme()
+  const { classes: { separator } } = footerWebStyle()
+  const { classes: { separatorMobile } } = footerMobileStyle({})
+  const { classes: { commonLink } } = commonStyleFooter();
+  const isMobile = useMediaQuery(themeMobile.breakpoints.down('sm'));
 
   const trainingUrl = ExternalFilesService.getTrainingUrl(user?.role)
 
@@ -46,18 +54,18 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
         data-testid="product-labelling-link"
         component={RouterLink}
         to="/product-labelling"
-        className={link}
+        className={commonLink}
       >
         {t('product-labelling')}
       </Link>
-      <Box className={separator}>|</Box>
+      <Box className={isMobile ? separatorMobile : separator}>|</Box>
 
       <Link
-        data-testid="training-link"
+        data-testid="training-Link"
         target="_blank"
         href={trainingUrl}
         rel="nofollow"
-        className={link}
+        className={commonLink}
       >
         {t('training')}
       </Link>

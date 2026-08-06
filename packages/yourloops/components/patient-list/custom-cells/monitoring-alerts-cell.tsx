@@ -209,7 +209,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         </Tooltip>
       }
 
-      { (!isMobile || isNonDataTransmissionAlertActive) &&
+      {(!isMobile || isNonDataTransmissionAlertActive) &&
         <Tooltip
           title={
             <>
@@ -226,6 +226,14 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             onClick={buildAlertClickHandler(MonitoringAlertType.DataNotTransmitted, isNonDataTransmissionAlertActive)}
           />
         </Tooltip>
+      }
+
+      {(isMobile
+        && !isTimeSpentAwayFromTargetAlertActive
+        && !isFrequencyOfHyperglycemiaAlertActive
+        && !isFrequencyOfSevereHypoglycemiaAlertActive
+        && !isNonDataTransmissionAlertActive)
+        && <span>{t('no-alerts')}</span>
       }
 
       <AcknowledgeMonitoringAlertDialog

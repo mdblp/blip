@@ -89,43 +89,24 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
   const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
 
   const [displayedColumns, setDisplayedColumns] = useState<GridColumnVisibilityModel>({
-    [PatientListColumn.Flag]: true,
-    [PatientListColumn.System]: getColumnPreference(PatientListColumn.System),
+    [PatientListColumn.Flag]: !isMobile,
+    [PatientListColumn.System]: isMobile ? false : getColumnPreference(PatientListColumn.System),
     [PatientListColumn.Patient]: true,
     // Here we're not using the const DATE_OF_BIRTH_HIDDEN because it breaks test, if you have time try to replace
     // ConfigService.getDateOfBirthHidden by DATE_OF_BIRTH_HIDDEN and fix the according test in patient profile view hcp spec test file
-    [PatientListColumn.DateOfBirth]: ConfigService.getDateOfBirthHidden() ? false : getColumnPreference(PatientListColumn.DateOfBirth),
-    [PatientListColumn.Age]: getColumnPreference(PatientListColumn.Age),
-    [PatientListColumn.Gender]: getColumnPreference(PatientListColumn.Gender),
-    [PatientListColumn.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumn.MonitoringAlerts) : false,
-    [PatientListColumn.LastDataUpdate]: getColumnPreference(PatientListColumn.LastDataUpdate),
-    [PatientListColumn.Messages]: isUserHcp ? getColumnPreference(PatientListColumn.Messages) : false,
-    [PatientListColumn.TimeInRange]: getColumnPreference(PatientListColumn.TimeInRange),
-    [PatientListColumn.GlucoseManagementIndicator]: getColumnPreference(PatientListColumn.GlucoseManagementIndicator),
-    [PatientListColumn.BelowRange]: getColumnPreference(PatientListColumn.BelowRange),
-    [PatientListColumn.Variance]: getColumnPreference(PatientListColumn.Variance),
-    [PatientListColumn.Actions]: true,
-    [PatientListColumn.PatientProfile]: getColumnPreference(PatientListColumn.PatientProfile),
-    [PatientListColumn.Clinicians]: getColumnPreference(PatientListColumn.Clinicians),
-    ...(isMobile
-      && {
-        [PatientListColumn.Flag]: false,
-        [PatientListColumn.System]: false,
-        [PatientListColumn.Patient]: true,
-        [PatientListColumn.DateOfBirth]: false,
-        [PatientListColumn.Age]: false,
-        [PatientListColumn.Gender]: false,
-        [PatientListColumn.MonitoringAlerts]: isUserHcp,
-        [PatientListColumn.LastDataUpdate]: false,
-        [PatientListColumn.Messages]: false,
-        [PatientListColumn.TimeInRange]: true,
-        [PatientListColumn.GlucoseManagementIndicator]: false,
-        [PatientListColumn.BelowRange]: false,
-        [PatientListColumn.Variance]: false,
-        [PatientListColumn.Actions]: false,
-        [PatientListColumn.PatientProfile]: false,
-        [PatientListColumn.Clinicians]: false
-      })// Version Mobile
+    [PatientListColumn.DateOfBirth]: ConfigService.getDateOfBirthHidden() || isMobile ? false : getColumnPreference(PatientListColumn.DateOfBirth),
+    [PatientListColumn.Age]: isMobile ? false : getColumnPreference(PatientListColumn.Age),
+    [PatientListColumn.Gender]: isMobile ? false : getColumnPreference(PatientListColumn.Gender),
+    [PatientListColumn.MonitoringAlerts]: isMobile || (isUserHcp ? getColumnPreference(PatientListColumn.MonitoringAlerts) : false),
+    [PatientListColumn.LastDataUpdate]:isMobile ? false :  getColumnPreference(PatientListColumn.LastDataUpdate),
+    [PatientListColumn.Messages]: !isMobile && (isUserHcp ? getColumnPreference(PatientListColumn.Messages) : false),
+    [PatientListColumn.TimeInRange]: isMobile ? true : getColumnPreference(PatientListColumn.TimeInRange),
+    [PatientListColumn.GlucoseManagementIndicator]: isMobile ? false : getColumnPreference(PatientListColumn.GlucoseManagementIndicator),
+    [PatientListColumn.BelowRange]: isMobile ? false :  getColumnPreference(PatientListColumn.BelowRange),
+    [PatientListColumn.Variance]: isMobile ? false : getColumnPreference(PatientListColumn.Variance),
+    [PatientListColumn.Actions]: !isMobile,
+    [PatientListColumn.PatientProfile]: isMobile ? false : getColumnPreference(PatientListColumn.PatientProfile),
+    [PatientListColumn.Clinicians]: isMobile ? false : getColumnPreference(PatientListColumn.Clinicians),
   })
 
   const buildColumnsPreferencesArray = (columnsVisibilityModel: GridColumnVisibilityModel): string[] => {

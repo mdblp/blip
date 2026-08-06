@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientsFilters } from './patients-filters.model'
-import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
+import { makeStyles } from 'tss-react/mui';
 
-export interface PatientListContextResult {
-  displayedColumns: GridColumnVisibilityModel
-  filters: PatientsFilters
-  hasAnyNonPendingFiltersEnabled: boolean
-  updatePatientsFilters: (filters: PatientsFilters) => void
-  updatePendingFilter: (pendingEnabled: boolean) => void
-  resetFilters: () => void
-  saveColumnsPreferences: (updatedColumnsModel: GridColumnVisibilityModel) => Promise<void>
-}
+export const commonStyleFooter = makeStyles()((theme) => ({
+  commonLink: {
+    color: theme.palette.grey[700],
+    fontWeight: 400
+  },
+  commonBoxAndContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  containerCommon: {
+    backgroundColor: 'var(--footer-background-color)',
+    color: theme.palette.grey[700],
+    flexShrink: 0,
+    fontSize: '12px',
+    zIndex: theme.zIndex.drawer + 1,
+    marginTop: theme.spacing(3)
+  },
+  icon: {
+    alignSelf: 'center',
+    color: theme.palette.grey[600],
+    marginRight: '18px',
+    width: '20px',
+    marginBottom: '3px'
+  },
+}));
