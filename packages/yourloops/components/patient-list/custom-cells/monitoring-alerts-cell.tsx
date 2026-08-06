@@ -159,7 +159,6 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           Icon={TimeSpentOufOfRangeIcon}
           isActive={conditions[0]}
           testId="time-spent-out-of-range-icon-tooltip"
-          className={classes.marginLeftIcon}
           onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, conditions[0])}
           sharedTooltip={sharedTooltip}
           messages={[
@@ -178,7 +177,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         <AlertIcon
           Icon={HyperglycemiaIcon}
           isActive={conditions[0]}
-          testId="Hyperglycemia-tooltip"
+          testId="Hyperglycemia-icon"
           className={classes.marginLeftIcon}
           onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, conditions[1])}
           sharedTooltip={sharedTooltip}
@@ -198,7 +197,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         <AlertIcon
           Icon={HypoglycemiaIcon}
           isActive={conditions[0]}
-          testId="Hypoglycemia-tooltip"
+          testId="Hypoglycemia-icon"
           className={classes.marginLeftIcon}
           onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, conditions[2])}
           sharedTooltip={sharedTooltip}
