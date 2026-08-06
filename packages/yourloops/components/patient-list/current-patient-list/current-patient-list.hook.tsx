@@ -224,29 +224,16 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerAlign: isMobile ? 'center' : 'left',
         align: isMobile ? 'center' : 'left',
         flex: isMobile ? 0.6 : undefined,
-        valueFormatter: (value: number | null): string => {
-          if (value === null || value === undefined) return t('no-data'); // Ou 'no data'
-          return PatientUtils.formatPercentageValue(value)
-        },
-        renderCell: (params: GridRenderCellParams<GridRowModel, number | null>) => {
+        valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
+        renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
           const value = params.value
 
-          if (value === undefined) {
-            return (
-              <Skeleton
-                data-testid="something-cell-skeleton"
-                variant="rounded"
-                width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
-                height={SKELETON_HEIGHT_PX}
-              />
-            )
-          }
-
-          if (!isNumberValueDefined(value) || value === null) {
-            return t('no-data')
-          }
-
-          return PatientUtils.formatPercentageValue(value)
+          return isNumberValueDefined(value)
+            ? PatientUtils.formatPercentageValue(params.value)
+            : <Skeleton data-testid="time-in-range-cell-skeleton"
+                        variant="rounded"
+                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                        height={SKELETON_HEIGHT_PX} />
         }
       },
       {

@@ -68,7 +68,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientListContext()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const isWeb = useMediaQuery(theme.breakpoints.up('sm'))
+  const isWeb = !isMobile
   const { classes } = useStyles()
 
   const [filters, setFilters] = useState<PatientsFilters>(patientsFiltersContext)
