@@ -30,11 +30,11 @@ import { Box, SvgIconProps, Tooltip } from '@mui/material';
 
 export interface AlertIconProps {
   isActive: boolean;
-  messages?: ReactNode[];
-  sharedTooltip?: ReactNode;
-  onClick?: (event: React.MouseEvent<SVGSVGElement>) => void;
+  messages: ReactNode[];
+  sharedTooltip: ReactNode;
+  onClick: (event: React.MouseEvent<SVGSVGElement>) => void;
   className?: string;
-  testId?: string;
+  testId: string;
   Icon: ElementType | ReactElement;
 }
 
