@@ -31,16 +31,28 @@ import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
+import { makeStyles } from 'tss-react/mui'
 
 interface PatientListHeaderProps {
   inputSearch: string
   setInputSearch: (value: string) => void
-  className: string
+  classNameSpecific: string
 }
 
-export const PatientListSearchTooltip: FunctionComponent<PatientListHeaderProps> = (props) => {
+const useStyles = makeStyles()(() => {
+  return {
+    customTextFieldCommon: {
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'inherit !important'
+      }
+    }
+  }
+})
+
+export const SearchBar: FunctionComponent<PatientListHeaderProps> = (props) => {
   const { t } = useTranslation()
-  const { inputSearch, setInputSearch, className } = props
+  const { inputSearch, setInputSearch, classNameSpecific } = props
+  const { classes } = useStyles()
 
   return (
     <Tooltip title={t('patient-list-search-tooltip')}>
@@ -48,7 +60,7 @@ export const PatientListSearchTooltip: FunctionComponent<PatientListHeaderProps>
         aria-label={t('patient-list-search-tooltip')}
         placeholder={t('patient-list-search-placeholder')}
         value={inputSearch}
-        className={className}
+        className={`${classes.customTextFieldCommon} ${classNameSpecific}`}
         slotProps={{
           input: {
             endAdornment:

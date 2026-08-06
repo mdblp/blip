@@ -38,7 +38,7 @@ import { FiltersDialogSlot } from './modal-management-display'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
 import { PatientListHeaderInit } from './patient-list-header-init'
-import { PatientListSearchTooltip } from './patient-list-search-tooltip'
+import { SearchBar } from './patient-list-search-tooltip'
 
 interface PatientListHeaderProps {
   inputSearch: string
@@ -47,11 +47,8 @@ interface PatientListHeaderProps {
 
 const useStyles = makeStyles()((theme) => {
   return {
-    customTextField: {
+    customTextFieldSpecific: {
       width: 'auto',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'inherit !important'
-      }
     },
     patientListHeaderButton: {
       padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
@@ -90,10 +87,10 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
             width: '100%'
           }}>
           <Box sx={{ flexShrink: 1, marginRight: theme.spacing(1) }}>
-            <PatientListSearchTooltip
+            <SearchBar
               inputSearch = {inputSearch}
               setInputSearch = {setInputSearch}
-              className = {classes.customTextField}
+              classNameSpecific = {classes.customTextFieldSpecific}
             />
           </Box>
           {init.isUserHcp &&
