@@ -182,7 +182,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, conditions[1])}
           sharedTooltip={sharedTooltip}
           messages={[
-            t('hyperglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate }),
+            t('hyperglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate }),
             t('hyperglycemia-tooltip2', {
               veryHighBg,
               threshold: monitoringAlertsParameters.hyperThreshold,
@@ -202,7 +202,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, conditions[2])}
           sharedTooltip={sharedTooltip}
           messages={[
-            t('hypoglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate }),
+            t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate }),
             t('hypoglycemia-tooltip2', {
               veryLowBg,
               threshold: monitoringAlertsParameters.hypoThreshold,
