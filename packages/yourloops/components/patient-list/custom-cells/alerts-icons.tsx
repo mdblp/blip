@@ -28,14 +28,19 @@
 import React, { ComponentType, ElementType, ReactElement, ReactNode } from 'react';
 import { Box, SvgIconProps, Tooltip } from '@mui/material';
 
+export type TooltipMessage = {
+  id: string | number;
+  content: ReactNode;
+}
+
 export interface AlertIconProps {
-  isActive: boolean;
-  messages: ReactNode[];
-  sharedTooltip: ReactNode;
-  onClick: (event: React.MouseEvent<SVGSVGElement>) => void;
-  className?: string;
-  testId: string;
-  Icon: ElementType | ReactElement;
+  isActive: boolean
+  messages: TooltipMessage[]
+  sharedTooltip: ReactNode
+  onClick: (event: React.MouseEvent<SVGSVGElement>) => void
+  className?: string
+  testId: string
+  Icon: ElementType | ReactElement
 }
 
 export const AlertIcon: React.FC<AlertIconProps> = (props) => {
@@ -66,8 +71,8 @@ export const AlertIcon: React.FC<AlertIconProps> = (props) => {
     <Tooltip
       title={
         <>
-          {messages.map((msg, index) => (
-            <Box key={String(msg)}>{msg}</Box>
+          {messages.map(({ id, content }) => (
+            <Box key={id}>{content}</Box>
           ))}
           {sharedTooltip && <Box>{sharedTooltip}</Box>}
         </>

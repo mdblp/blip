@@ -162,13 +162,19 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, conditions[0])}
           sharedTooltip={sharedTooltip}
           messages={[
-            t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate }),
-            t('time-out-of-range-target-tooltip2', {
-              min,
-              max,
-              threshold: monitoringAlertsParameters.outOfRangeThreshold,
-              unit
-            })
+            {
+              id: 'time-out-of-range-target-tooltip1',
+              content: t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate }),
+            },
+            {
+              id: 'time-out-of-range-target-tooltip2',
+              content: t('time-out-of-range-target-tooltip2', {
+                min,
+                max,
+                threshold: monitoringAlertsParameters.outOfRangeThreshold,
+                unit
+              }),
+            },
           ]}
         />
       }
@@ -182,12 +188,18 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, conditions[1])}
           sharedTooltip={sharedTooltip}
           messages={[
-            t('hyperglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate }),
-            t('hyperglycemia-tooltip2', {
-              veryHighBg,
-              threshold: monitoringAlertsParameters.hyperThreshold,
-              unit
-            })
+            {
+              id: 'hyperglycemia-tooltip1',
+              content: t('hyperglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate }),
+            },
+            {
+              id: 'hyperglycemia-tooltip2',
+              content: t('hyperglycemia-tooltip2', {
+                veryHighBg,
+                threshold: monitoringAlertsParameters.hyperThreshold,
+                unit
+              }),
+            },
           ]}
         />
       }
@@ -202,12 +214,18 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, conditions[2])}
           sharedTooltip={sharedTooltip}
           messages={[
-            t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate }),
-            t('hypoglycemia-tooltip2', {
-              veryLowBg,
-              threshold: monitoringAlertsParameters.hypoThreshold,
-              unit
-            })
+            {
+              id: 'hypoglycemia-tooltip1',
+              content: t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate }),
+            },
+            {
+              id: 'hypoglycemia-tooltip2',
+              content: t('hypoglycemia-tooltip2', {
+                veryLowBg,
+                threshold: monitoringAlertsParameters.hypoThreshold,
+                unit
+              }),
+            },
           ]}
         />
       }
@@ -222,8 +240,14 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           onClick={buildAlertClickHandler(MonitoringAlertType.DataNotTransmitted, conditions[3])}
           sharedTooltip={sharedTooltip}
           messages={[
-            t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate }),
-            t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })
+            {
+              id: 'data-not-transmitted-tooltip1',
+              content: t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate }),
+            },
+            {
+              id: 'data-not-transmitted-tooltip2',
+              content: t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold }),
+            },
           ]}
         />
       }
