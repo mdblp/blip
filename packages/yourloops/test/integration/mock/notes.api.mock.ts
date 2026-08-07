@@ -62,4 +62,5 @@ export const NOTES_THREAD = [noteData, noteAnswerData]
 
 export const mockNotesApi = (notesThread: MessageNote[] = []) => {
   jest.spyOn(NotesApi, 'getMessageThread').mockResolvedValue(notesThread)
+  jest.spyOn(NotesApi, 'postMessageThread').mockResolvedValue('note-id')
 }
