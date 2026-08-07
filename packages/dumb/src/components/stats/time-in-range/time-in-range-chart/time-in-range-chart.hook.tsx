@@ -32,6 +32,7 @@ import { BgPrefs } from '../../../../models/blood-glucose.model'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
 import { ensureNumeric } from '../../stats.util'
 import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
+import { getFormattedDuration, getTimeInRangePercentages } from './time-in-range.util'
 
 export interface TimeInRangeChartHookProps {
   data: TimeInRangeData
@@ -115,6 +116,8 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
 
   const total = data.total
 
+  const timeInRangePercentages = getTimeInRangePercentages(dataArray, total)
+
   const getCBGPercentageBarProps = (id: string): CBGPercentageBarProps => {
     const stat = dataArray.find(timeInRange => timeInRange.id === id)
     if (!stat) {
@@ -126,8 +129,9 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
       onMouseEnter: onStatMouseover,
       title: stat.title,
-      total,
-      value: stat.value
+      duration: getFormattedDuration(stat.value),
+      hasValues: total > 0,
+      percentage: timeInRangePercentages.find(percentageItem => percentageItem.id === stat.id)?.percentage ?? 0
     }
   }
 

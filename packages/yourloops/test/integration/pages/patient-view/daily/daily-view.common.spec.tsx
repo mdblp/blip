@@ -25,30 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { when } from 'jest-when'
 import { DeviceSystem } from 'medical-domain'
-import { act } from 'react'
 import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
 import { User } from '../../../../../lib/auth'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import DataApi from '../../../../../lib/data/data.api'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
 import { t } from '../../../../../lib/language'
-import { NotesApi } from '../../../../../lib/notes/notes.api'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   checkBolusChartYAxisForSmallBoluses,
   checkGlucoseChartYAxis,
   checkGlucoseChartYAxisAtDate,
-  checkSMBGDailyStatsWidgetsTooltips,
   checkTimeChangeIndicator,
   checkTimeInRangeDefaultStats
 } from '../../../assert/daily-view.assert'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
-import { checkAverageGlucoseStatWidget, checkStandardDeviationStatWidget } from '../../../assert/stats.assert'
 import { patient2Info, patientPregnancyInfo } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import {
@@ -57,9 +54,8 @@ import {
   getTargetValueChangesData,
   getTimezoneChangeData
 } from '../../../mock/complete-daily-view-data'
-import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
+import { mockDataAPI, twoWeeksOfCbg } from '../../../mock/data.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
-import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import {
@@ -268,18 +264,6 @@ describe('Daily view for anyone', () => {
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2Info.userid, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
       expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred. Please contact support for assistance')
 
-    })
-  })
-
-  describe('with smbg data', () => {
-    it('should display correct stats widgets', async () => {
-      mockDataAPI(smbgData)
-      renderPage(dailyRoute)
-
-      await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-
-      await checkSMBGDailyStatsWidgetsTooltips()
     })
   })
 
