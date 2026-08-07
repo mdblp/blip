@@ -139,7 +139,9 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
                   gap: 1,
                   marginLeft: isMainNote(index) ? 0 : 3
                 }}
-                key={note.id}>
+                key={note.id}
+                data-testid="note-thread-item"
+              >
                 <Avatar
                   sx={{
                     bgcolor: 'var(--dark-blue-main)',
@@ -176,7 +178,11 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
             sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
             data-testid="view-note-add-comment"
           >
-            <Typography variant="caption" sx={{ color: 'var(--text-color-secondary)' }}>
+            <Typography
+              variant="caption"
+              sx={{ color: 'var(--text-color-secondary)' }}
+              data-testid="new-comment-date"
+            >
               <span>{getDateTime(new Date().toISOString())}</span>
             </Typography>
             <TextField
