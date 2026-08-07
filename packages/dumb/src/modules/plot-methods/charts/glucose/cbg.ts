@@ -25,19 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
-import { BgClass, BgClasses, BgUnit, type Cbg, ClassificationType, MGDL_UNITS } from 'medical-domain'
+import {
+  BG_CLASS_TIGHT_RANGE,
+  BgClass,
+  BgClasses,
+  BgClassWithTightRange,
+  BgUnit,
+  type Cbg,
+  ClassificationType,
+  classifyBgValueWithTightRange,
+  defaultBgClasses,
+  MGDL_UNITS
+} from 'medical-domain'
+import { CSS_CLASSES, PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 import { type Pool } from '../../../../models/pool.model'
 import { getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { convertBgClassesToBgBounds, getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { CSS_CLASSES, PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.Cbg)
@@ -83,11 +93,16 @@ export const plotCbg = (
   const bgUnits = options.bgUnits
   const bgClasses = options.bgClasses
 
-  const bgBounds = convertBgClassesToBgBounds(bgClasses, bgUnits)
-
   // Helper function: Categorize glucose value into BG class
-  const categorize = (d: Cbg): BgClass => {
-    return getBgClass(bgBounds, d.value, ClassificationType.FiveWay)
+  const categorize = (d: Cbg): BgClassWithTightRange => {
+    const finalBgBounds = {
+      veryLowThreshold: bgClasses.veryLow ? bgClasses.veryLow : defaultBgClasses[bgUnits].veryLow,
+      targetLowerBound: bgClasses.low ? bgClasses.low : defaultBgClasses[bgUnits].low,
+      targetUpperBound: bgClasses.target ? bgClasses.target : defaultBgClasses[bgUnits].target,
+      veryHighThreshold: bgClasses.high ? bgClasses.high : defaultBgClasses[bgUnits].high
+    }
+
+    return classifyBgValueWithTightRange(finalBgBounds, d.value, ClassificationType.FiveWay)
   }
 
   return (selection: PlotSelection<Cbg>): void => {
@@ -169,12 +184,14 @@ export const plotCbg = (
       const cbgVeryLow = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.VeryLow)
       const cbgLow = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.Low)
       const cbgTarget = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.Target)
+      const cbgTightRange = cbgGroups.filter(d => categorize(d) === BG_CLASS_TIGHT_RANGE)
       const cbgHigh = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.High)
       const cbgVeryHigh = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.VeryHigh)
 
       cbgVeryLow.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_VERY_LOW}`, true)
       cbgLow.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_LOW}`, true)
       cbgTarget.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_TARGET}`, true)
+      cbgTightRange.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_TIGHT_RANGE}`, true)
       cbgHigh.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_HIGH}`, true)
       cbgVeryHigh.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_VERY_HIGH}`, true)
 
@@ -196,6 +213,7 @@ export const plotCbg = (
               d3Select.classed(CSS_CLASSES.BG_LOW_FOCUS, true)
               break
             case BgClass.Target:
+            case BG_CLASS_TIGHT_RANGE:
               d3Select.classed(CSS_CLASSES.BG_TARGET_FOCUS, true)
               break
             case BgClass.High:

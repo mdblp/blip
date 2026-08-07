@@ -16,11 +16,13 @@ It is based on Tidepool Blip 1.27.
 - YLP-3945 Adapting the second level of navigation to mobile format
 - YLP-4042 Display G7 Pairing code instead of Firmware version on Device view
 - YLP-4046 Improve the display of the parameter changes tooltip on Daily view
+- YLP-4047 Use smart rounding for TIR percentage values
 - YLP-4061 View note - new UI
 
 ### Engineering
 - YLP-3864 SBOM generation in pipeline
 - Remove "Readings In Range" stat support
+- Fix CBG in tight range color on Daily view
 
 ## 3.10.0 - 2026-06-25
 ### Added

@@ -39,7 +39,6 @@ describe('Time in range chart hook', () => {
   const targetStatValue = 150
   const lowStatValue = 250
   const veryLowStatValue = 50
-  const total = 1000
 
   const createCBGTimeData = (id: StatLevel, title: string, value: number): CBGPercentageData => {
     return { id, title, value }
@@ -56,7 +55,7 @@ describe('Time in range chart hook', () => {
     target: targetStatValue,
     low: lowStatValue,
     veryLow: veryLowStatValue,
-    total: 1000
+    total: 750
   }
 
   const defaultProps: TimeInRangeChartHookProps = {
@@ -88,36 +87,51 @@ describe('Time in range chart hook', () => {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...veryHighStat
+        duration: '0m',
+        percentage: 13,
+        hasValues: true,
+        id: veryHighStat.id,
+        title: veryHighStat.title
       },
       highStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...highStat
+        duration: '0m',
+        percentage: 27,
+        hasValues: true,
+        id: highStat.id,
+        title: highStat.title
       },
       targetStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...targetStat
+        duration: '0m',
+        percentage: 20,
+        hasValues: true,
+        id: targetStat.id,
+        title: targetStat.title
       },
       lowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...lowStat
+        duration: '0m',
+        percentage: 33,
+        hasValues: true,
+        id: lowStat.id,
+        title: lowStat.title
       },
       veryLowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total,
-        ...veryLowStat
+        duration: '0m',
+        percentage: 7,
+        hasValues: true,
+        id: veryLowStat.id,
+        title: veryLowStat.title
       }
     })
   })
