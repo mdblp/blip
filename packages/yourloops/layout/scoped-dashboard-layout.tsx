@@ -32,6 +32,7 @@ import { DashboardLayout } from './dashboard-layout'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
 export const ScopedDashboardLayout: FunctionComponent = () => {
+
   return (
     <DashboardLayout>
       <PatientListProvider>

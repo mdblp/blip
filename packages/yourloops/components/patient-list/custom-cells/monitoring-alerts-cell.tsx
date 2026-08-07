@@ -27,13 +27,11 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import Box from '@mui/material/Box'
-import Tooltip from '@mui/material/Tooltip'
 import { useAuth } from '../../../lib/auth'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { TimeSpentOufOfRangeIcon } from '../../icons/diabeloop/time-spent-ouf-of-range-icon'
-import { NoDataIcon } from '../../icons/diabeloop/no-data-icon'
 import { HypoglycemiaIcon } from '../../icons/diabeloop/hypoglycemia-icon'
 import { HyperglycemiaIcon } from '../../icons/diabeloop/hyperglycemia-icon'
 import { convertBG } from '../../../lib/units/units.util'
@@ -44,6 +42,10 @@ import {
   MonitoringAlertType
 } from '../ack-monitoring-alert-dialog/ack-monitoring-alert-dialog'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { makeStyles } from 'tss-react/mui'
+import Tooltip from '@mui/material/Tooltip'
+import { NoDataIcon } from '../../icons/diabeloop/no-data-icon'
 
 interface MonitoringAlertsCellProps {
   patient: Patient
@@ -60,10 +62,21 @@ interface MonitoringAlertsTooltips {
   veryHighBg: number
 }
 
+const useStyles = makeStyles()((theme) => {
+  return {
+    marginLeftIcon: {
+      marginLeft: theme.spacing(1)
+    }
+  }
+})
+
 export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ patient }) => {
   const { t } = useTranslation()
   const theme = useTheme()
   const { user } = useAuth()
+  const { classes } = useStyles()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isWeb = !isMobile
 
   const { monitoringAlerts, monitoringAlertsParameters } = patient
   const unit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
@@ -85,7 +98,16 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     }
   }
 
-  const { timeSpentAwayFromTargetRate, frequencyOfSevereHypoglycemiaRate, frequencyOfHyperglycemiaRate, nonDataTransmissionRate, min, max, veryLowBg, veryHighBg } = buildTooltipValues()
+  const {
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+    frequencyOfHyperglycemiaRate,
+    nonDataTransmissionRate,
+    min,
+    max,
+    veryLowBg,
+    veryHighBg
+  } = buildTooltipValues()
 
   const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
   const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
@@ -95,6 +117,14 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [currentAlertType, setCurrentAlertType] = useState<MonitoringAlertType>(MonitoringAlertType.Hyperglycemia)
+
+  const conditions = [
+    isTimeSpentAwayFromTargetAlertActive,
+    isFrequencyOfHyperglycemiaAlertActive,
+    isFrequencyOfSevereHypoglycemiaAlertActive,
+    isNonDataTransmissionAlertActive
+  ]
+  const noConditionsMet = conditions.every(condition => !condition)
 
   const handleAlertIconClick = (event: React.MouseEvent, alertType: MonitoringAlertType): void => {
     event.stopPropagation()
@@ -107,7 +137,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     if (!isActive) {
       return undefined
     }
-    return (e: React.MouseEvent) => { handleAlertIconClick(e, alertType) }
+    return (e: React.MouseEvent) => {
+      handleAlertIconClick(e, alertType)
+    }
   }
 
   const handleDialogClose = (): void => {
@@ -115,75 +147,114 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   }
 
   return (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center', flexWrap: 'wrap' }}>
-      <Tooltip
-        title={
-          <>
-            <Box>{t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate })}</Box>
-            <Box>{t('time-out-of-range-target-tooltip2', { min, max, threshold: monitoringAlertsParameters.outOfRangeThreshold, unit })}</Box>
-            <Box>{sharedTooltip}</Box>
-          </>
-        }
-        data-testid="time-spent-out-of-range-icon-tooltip"
-      >
-        <TimeSpentOufOfRangeIcon
-          sx={{ cursor: isTimeSpentAwayFromTargetAlertActive ? 'pointer' : 'default' }}
-          color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
-          data-testid="time-spent-out-of-range-icon"
-          onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, isTimeSpentAwayFromTargetAlertActive)}
-        />
-      </Tooltip>
+    <Box sx={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      flexWrap: 'wrap'
+    }}>
+      {(isWeb || conditions[0]) &&
+        <Tooltip
+          title={
+            <>
+              <Box>{t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate })}</Box>
+              <Box>{t('time-out-of-range-target-tooltip2', {
+                min,
+                max,
+                threshold: monitoringAlertsParameters.outOfRangeThreshold,
+                unit
+              })}</Box>
+              <Box>{sharedTooltip}</Box>
+            </>
+          }
+          data-testid="time-spent-out-of-range-icon-tooltip"
+        >
+          <TimeSpentOufOfRangeIcon
+            sx={{ cursor: isTimeSpentAwayFromTargetAlertActive ? 'pointer' : 'default' }}
+            color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
+            data-testid="time-spent-out-of-range-icon"
+            onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, isTimeSpentAwayFromTargetAlertActive)}
+          />
+        </Tooltip>
+      }
+      {
+        (isWeb || conditions[1]) &&
+        <Tooltip
+          title={
+            <>
+              <Box>{t('hyperglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate })}</Box>
+              <Box>{t('hyperglycemia-tooltip2', {
+                veryHighBg,
+                threshold: monitoringAlertsParameters.hyperThreshold,
+                unit
+              })}</Box>
+              <Box>{sharedTooltip}</Box>
+            </>
+          }
+        >
+          <HyperglycemiaIcon
+            sx={{ cursor: isFrequencyOfHyperglycemiaAlertActive ? 'pointer' : 'default' }}
+            className = {classes.marginLeftIcon}
+            color={isFrequencyOfHyperglycemiaAlertActive ? 'warning' : 'disabled'}
+            data-testid="hyperglycemia-icon"
+            onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, isFrequencyOfHyperglycemiaAlertActive)}
+          />
+        </Tooltip>
+      }
 
-      <Tooltip
-        title={
-          <>
-            <Box>{t('hyperglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate })}</Box>
-            <Box>{t('hyperglycemia-tooltip2', { veryHighBg, threshold: monitoringAlertsParameters.hyperThreshold, unit })}</Box>
-            <Box>{sharedTooltip}</Box>
-          </>
-        }
-      >
-        <HyperglycemiaIcon
-          sx={{ marginLeft: theme.spacing(1), cursor: isFrequencyOfHyperglycemiaAlertActive ? 'pointer' : 'default' }}
-          color={isFrequencyOfHyperglycemiaAlertActive ? 'warning' : 'disabled'}
-          data-testid="hyperglycemia-icon"
-          onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, isFrequencyOfHyperglycemiaAlertActive)}
-        />
-      </Tooltip>
+      {
+        (isWeb || conditions[2]) &&
+        <Tooltip
+          title={
+            <>
+              <Box>{t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate })}</Box>
+              <Box>{t('hypoglycemia-tooltip2', {
+                veryLowBg,
+                threshold: monitoringAlertsParameters.hypoThreshold,
+                unit
+              })}</Box>
+              <Box>{sharedTooltip}</Box>
+            </>
+          }
+        >
+          <HypoglycemiaIcon
+            sx={{ cursor: isFrequencyOfSevereHypoglycemiaAlertActive ? 'pointer' : 'default' }}
+            className = {classes.marginLeftIcon}
+            color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
+            data-testid="hypoglycemia-icon"
+            onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, isFrequencyOfSevereHypoglycemiaAlertActive)}
+          />
+        </Tooltip>
+      }
 
-      <Tooltip
-        title={
-          <>
-            <Box>{t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate })}</Box>
-            <Box>{t('hypoglycemia-tooltip2', { veryLowBg, threshold: monitoringAlertsParameters.hypoThreshold, unit })}</Box>
-            <Box>{sharedTooltip}</Box>
-          </>
-        }
-      >
-        <HypoglycemiaIcon
-          sx={{ marginLeft: theme.spacing(1), cursor: isFrequencyOfSevereHypoglycemiaAlertActive ? 'pointer' : 'default' }}
-          color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
-          data-testid="hypoglycemia-icon"
-          onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, isFrequencyOfSevereHypoglycemiaAlertActive)}
-        />
-      </Tooltip>
+      {
+        (isWeb || conditions[3]) &&
+        <Tooltip
+          title={
+            <>
+              <Box>{t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
+              <Box>{t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
+              <Box>{sharedTooltip}</Box>
+            </>
+          }
+        >
+          <NoDataIcon
+            sx={{ cursor: isNonDataTransmissionAlertActive ? 'pointer' : 'default' }}
+            className = {classes.marginLeftIcon}
+            color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
+            data-testid="no-data-icon"
+            onClick={buildAlertClickHandler(MonitoringAlertType.DataNotTransmitted, isNonDataTransmissionAlertActive)}
+          />
+        </Tooltip>
+      }
 
-      <Tooltip
-        title={
-          <>
-            <Box>{t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
-            <Box>{t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
-            <Box>{sharedTooltip}</Box>
-          </>
-        }
-      >
-        <NoDataIcon
-          sx={{ marginLeft: theme.spacing(1), cursor: isNonDataTransmissionAlertActive ? 'pointer' : 'default' }}
-          color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
-          data-testid="no-data-icon"
-          onClick={buildAlertClickHandler(MonitoringAlertType.DataNotTransmitted, isNonDataTransmissionAlertActive)}
-        />
-      </Tooltip>
+      {
+        isMobile && noConditionsMet ? (
+          <span>{t('no-alerts')}</span>
+        ) : null
+      }
 
       <AcknowledgeMonitoringAlertDialog
         open={isDialogOpen}

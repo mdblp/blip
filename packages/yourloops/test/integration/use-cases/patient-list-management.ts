@@ -57,6 +57,17 @@ import {
   checkRemovePatientErrorCaregiver,
   goBackToPatientsList
 } from '../assert/patient-list.assert'
+import {
+  checkAckMonitoringAlertDialogCloseOnAnalyseMobile,
+  checkAckMonitoringAlertDialogContentMobile, checkAckMonitoringAlertHyperglycemiaMobile,
+  checkAckMonitoringAlertHypoglycemiaMobile,
+  checkAckMonitoringAlertNoDataMobile,
+  checkAckMonitoringAlertTimeOutOfRangeMobile,
+  checkPatientListFiltersMobile,
+  checkPatientListHeaderForHcpMobile,
+  checkPatientListHideShowColumnsMobile,
+  goBackToPatientsListMobile
+} from '../assert/patient-list-mobile.assert'
 import { Router } from '../models/router.model'
 
 export const testPatientListForHcp = async () => {
@@ -70,6 +81,12 @@ export const testPatientListForHcp = async () => {
   await checkPatientListHideShowColumns()
   await checkPatientListPendingTab()
   await checkPatientListCurrentTab()
+}
+
+export const testPatientListForHcpMobile = async () => {
+  await checkPatientListHeaderForHcpMobile()
+  await checkPatientListFiltersMobile()
+  await checkPatientListHideShowColumnsMobile()
 }
 
 export const testPatientListContentForHcp = async () => {
@@ -98,8 +115,23 @@ export const testAckMonitoringAlerts = async (router: Router) => {
   await checkAckMonitoringAlertHyperglycemia()
 }
 
+export const testAckMonitoringAlertsMobile = async (router: Router) => {
+  await checkAckMonitoringAlertNoDataMobile()
+  await checkAckMonitoringAlertDialogContentMobile()
+  await checkAckMonitoringAlertDialogCloseOnAnalyseMobile(router)
+  await goBackToPatientsListMobile(router)
+  await checkAckMonitoringAlertHypoglycemiaMobile()
+  await checkAckMonitoringAlertTimeOutOfRangeMobile()
+  await checkAckMonitoringAlertNoDataMobile()
+  await checkAckMonitoringAlertHyperglycemiaMobile()
+}
+
 export const testAckMonitoringAlertsWithError = async () => {
   await checkAckMonitoringAlertHypoglycemia(true)
+}
+
+export const testAckMonitoringAlertsWithErrorMobile = async () => {
+  await checkAckMonitoringAlertHypoglycemiaMobile(true)
 }
 
 export const testDataGridTranslations = async () => {

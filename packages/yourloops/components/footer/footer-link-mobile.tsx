@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
-import { checkRegisterButton, checkSignupInformationPageContent } from '../assert/signup-information.assert'
 
-export const testSignupInformation = async (loginWithRedirectMock: jest.Mock) => {
-  checkFooterForUserNotLoggedIn(false, true)
-  await checkSignupInformationPageContent()
-  await checkRegisterButton(loginWithRedirectMock)
+import Link from '@mui/material/Link'
+import React from 'react'
+import { makeStyles } from 'tss-react/mui'
+import { commonStyleFooter } from './shared/footer-style'
+
+const footerLinkMobileStyle = makeStyles()(() => {
+  return {
+    linkMobile: {
+      textAlign: 'center',
+      display: 'inline-block'
+    }
+  }
+})
+
+interface FooterLinkProps {
+  id: string
+  href?: string
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  isExternal?: boolean
+  children: React.ReactNode
 }
+
+export const FooterLink : React.FC<FooterLinkProps> = (props) => {
+  const {
+    id,
+    href,
+    onClick,
+    isExternal,
+    children
+  } = props
+  const { classes: linkMobileClasses } = footerLinkMobileStyle()
+  const { classes: commonClasses } = commonStyleFooter();
+
+  const classes = {
+    ...linkMobileClasses,
+    ...commonClasses,
+  }
+
+  return (
+    <Link
+      id={id}
+      href={href}
+      onClick={onClick}
+      className={`${classes.linkMobile} ${classes.commonLink}`}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'nofollow' : undefined}
+    >
+      {children}
+    </Link>
+  )
+}
+

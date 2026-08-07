@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
-import { checkRegisterButton, checkSignupInformationPageContent } from '../assert/signup-information.assert'
+import { makeStyles } from 'tss-react/mui';
 
-export const testSignupInformation = async (loginWithRedirectMock: jest.Mock) => {
-  checkFooterForUserNotLoggedIn(false, true)
-  await checkSignupInformationPageContent()
-  await checkRegisterButton(loginWithRedirectMock)
-}
+export const commonStyleFooter = makeStyles()((theme) => ({
+  commonLink: {
+    color: theme.palette.grey[700],
+    fontWeight: 400
+  },
+  commonBoxAndContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  containerCommon: {
+    backgroundColor: 'var(--footer-background-color)',
+    color: theme.palette.grey[700],
+    flexShrink: 0,
+    fontSize: '12px',
+    zIndex: theme.zIndex.drawer + 1,
+    marginTop: theme.spacing(3)
+  },
+  icon: {
+    alignSelf: 'center',
+    color: theme.palette.grey[600],
+    marginRight: '18px',
+    width: '20px',
+    marginBottom: '3px'
+  },
+}));
