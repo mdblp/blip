@@ -26,7 +26,7 @@
  */
 
 
-import React from 'react'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GenericListCard } from '../../components/device/generic-list-card'
 import { useUserAccountPageState } from './user-account-page-context'
@@ -34,16 +34,28 @@ import { makeStyles } from 'tss-react/mui'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom';
+import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
+import myDiabbyLogo from '*.svg'
+import glookoLogo from '*.svg'
+import { getRemoteMonitoringToolLabel } from './sections/data-sharing-section/remote-monitoring.util'
+
+interface UserAccountMenuMobileCardsProps {
+  consents: ExternalConsent[]
+  patientId: string
+  refresh: () => void
+}
 
 export const cardStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
     cards: {
-      margin: theme.spacing(2),
-    },
+      margin: theme.spacing(2)
+    }
   }
 })
 
-export const UserAccountMenuMobileCards = () => {
+export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (props) => {
+  const { consents, patientId, refresh } = props
   const { t } = useTranslation()
   const { userAccountForm } = useUserAccountPageState()
   const { classes } = cardStyle()
@@ -55,13 +67,30 @@ export const UserAccountMenuMobileCards = () => {
       { label: t('country'), value: userAccountForm.country },
       { label: t('gender'), value: userAccountForm.sex },
       { label: t('units'), value: userAccountForm.units },
-      { label: t('language'), value: userAccountForm.lang },
+      { label: t('language'), value: userAccountForm.lang }
     ]
   }
+
+  const getRemoteMonitoringToolLogo = (consentName: PartnerName) => {
+    switch (consentName) {
+      case PartnerName.MyDiabby:
+        return myDiabbyLogo
+      case PartnerName.GlookoXT:
+        return glookoLogo
+      default:
+        return ''
+    }
+  }
+
   const getTableLinesSharing = (): { value: string, label: string }[] => {
     return [
-      { label: t('glooko-xt'), value: null },
+      { label: t('glooko-xt'), value: null }
     ]
+    {
+      consents.map((consent: ExternalConsent) => (
+        { label: getRemoteMonitoringToolLabel(consent.partnerName), value: null }
+      )
+    }
   }
   return (
     <>
@@ -77,7 +106,7 @@ export const UserAccountMenuMobileCards = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 0.5,
+              gap: 0.5
             }}
           >
             {t('view-more')}
@@ -90,7 +119,7 @@ export const UserAccountMenuMobileCards = () => {
         title={t('data-sharing')}
         tableLines={getTableLinesSharing()}
         data-testid="user-account-menu-mobile-data-sharing"
-        className = {classes.cards}
+        className={classes.cards}
         headerAction={
           <Link
             component={RouterLink}
@@ -99,7 +128,7 @@ export const UserAccountMenuMobileCards = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 0.5,
+              gap: 0.5
             }}
           >
             {t('view-more')}
