@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { NotesApi } from '../../../../../lib/notes/notes.api'
 import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
