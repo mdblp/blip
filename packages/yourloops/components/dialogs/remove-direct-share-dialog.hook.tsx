@@ -31,7 +31,7 @@ import DirectShareApi from '../../lib/share/direct-share.api'
 import { type User } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import { type OnCloseRemoveDirectShareDialog, type UserToRemove } from './remove-direct-share-dialog'
-import { type Notification } from '../../lib/notifications/models/notification.model'
+import { InAppNotification } from '../../lib/notifications/models/notification.model'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
@@ -50,10 +50,11 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
     const isCurrentUserCaregiver = currentUser.isUserCaregiver()
 
     try {
-      const invitation = sentInvitations.find((invitation: Notification) => invitation.email === userToRemove.email)
+      const invitation = sentInvitations.find((invitation: InAppNotification) => invitation.payload["email"] === userToRemove.email)
 
       if (invitation) {
-        await cancel(invitation.id, invitation.target.id, userToRemove.email)
+        //TODO: add why ?
+        await cancel(invitation.id, invitation.payload["careTeamId"] as string, userToRemove.email)
       } else {
         const patientId = isCurrentUserCaregiver ? userToRemove.id : currentUser.id
         const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id
