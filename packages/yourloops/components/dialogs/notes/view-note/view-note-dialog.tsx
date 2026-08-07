@@ -184,6 +184,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
               sx={{ width: '100%' }}
               placeholder={t('Type a comment here ...')}
               aria-label={t('note-comment-input')}
+              data-testid="new-comment-input"
               value={comment}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setComment(event.target.value)
