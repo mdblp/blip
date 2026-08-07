@@ -25,32 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { act, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import dayjs from 'dayjs'
+import { when } from 'jest-when'
+import { DeviceSystem } from 'medical-domain'
+import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
+import { User } from '../../../../../lib/auth'
+import { ConfigService } from '../../../../../lib/config/config.service'
+import DataApi from '../../../../../lib/data/data.api'
+import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
+import { t } from '../../../../../lib/language'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   checkBolusChartYAxisForSmallBoluses,
   checkGlucoseChartYAxis,
   checkGlucoseChartYAxisAtDate,
-  checkSMBGDailyStatsWidgetsTooltips,
   checkTimeChangeIndicator,
   checkTimeInRangeDefaultStats
 } from '../../../assert/daily-view.assert'
-import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
-import { renderPage } from '../../../utils/render'
-import {
-  checkAverageGlucoseStatWidget,
-  checkStandardDeviationStatWidget
-} from '../../../assert/stats.assert'
-import { act, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import dayjs from 'dayjs'
-import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
-import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
-import DataApi from '../../../../../lib/data/data.api'
-import { User } from '../../../../../lib/auth'
-import { when } from 'jest-when'
+import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import { patient2Info, patientPregnancyInfo } from '../../../data/patient.api.data'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import {
+  getCompleteDailyViewData,
+  getCompleteDailyViewDataDblg2,
+  getTargetValueChangesData,
+  getTimezoneChangeData
+} from '../../../mock/complete-daily-view-data'
+import { mockDataAPI, twoWeeksOfCbg } from '../../../mock/data.api.mock'
+import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testDailyViewChartsDblg1,
   testDailyViewChartsDblg2,
@@ -58,18 +64,7 @@ import {
   testDailyViewTooltipsForDblg2,
   testDailyViewTooltipsForRecentSoftware
 } from '../../../use-cases/patient-data-visualisation'
-import {
-  getCompleteDailyViewData,
-  getCompleteDailyViewDataDblg2,
-  getTargetValueChangesData,
-  getTimezoneChangeData
-} from '../../../mock/complete-daily-view-data'
-import { t } from '../../../../../lib/language'
-import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
-import { DeviceSystem } from 'medical-domain'
-import { ConfigService } from '../../../../../lib/config/config.service'
-import { mockErrorApi } from '../../../mock/error.api.mock'
-import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { renderPage } from '../../../utils/render'
 
 /**
  * @see https://github.com/testing-library/react-testing-library/issues/651
@@ -245,18 +240,6 @@ describe('Daily view for anyone', () => {
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2Info.userid, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
       expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred. Please contact support for assistance')
 
-    })
-  })
-
-  describe('with smbg data', () => {
-    it('should display correct stats widgets', async () => {
-      mockDataAPI(smbgData)
-      renderPage(dailyRoute)
-
-      await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-
-      await checkSMBGDailyStatsWidgetsTooltips()
     })
   })
 

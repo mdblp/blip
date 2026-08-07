@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,9 +26,9 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import styles from './cbg-percentage-bar.css'
 import { type CBGStatType, type StatLevel } from '../../../../models/stats.model'
-import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
+import stylesColors from '../../common/cbg-colors.css'
+import styles from './cbg-percentage-bar.css'
 
 export interface CBGPercentageBarProps {
   type: CBGStatType
@@ -36,28 +36,30 @@ export interface CBGPercentageBarProps {
   isDisabled: boolean
   onMouseEnter: (id: StatLevel, title: string, hasValues: boolean) => void
   title: string
-  total: number
-  value: number
+  percentage: number
+  duration: string
+  hasValues: boolean
   isReducedSize?: boolean
 }
 
 const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
-  const { type, id, isDisabled, onMouseEnter, title, total, value, isReducedSize } = props
+  const { type, id, isDisabled, onMouseEnter, title, percentage, duration, hasValues, isReducedSize } = props
 
-  const {
-    barClasses,
-    barValue,
-    hasValues,
-    percentage,
-    percentageClasses,
-    rectangleClasses
-  } = useCBGPercentageBar({ type, id, isDisabled, total, value, isReducedSize })
+  const rectangleBackgroundClass = isDisabled ? styles['disabled-rectangle'] : stylesColors[`${id}-background`]
+  const rectangleShapeClass = isReducedSize ? styles['rectangle-reduced'] : styles.rectangle
+  const rectangleClasses = `${rectangleShapeClass} ${rectangleBackgroundClass}`
+
+  const durationBackgroundClasses =  isDisabled ? styles['disabled-duration'] : stylesColors[`${id}-duration-background`]
+  const barClasses = `${styles['bar-value']} ${durationBackgroundClasses}`
+
+  const labelClass = isDisabled ? styles['disabled-label'] : stylesColors[`${id}-color`]
+  const percentageClasses = `${styles['percentage-value']} ${labelClass}`
 
   return (
     <div
       data-testid={`cbg-percentage-stat-${id}-${type}`}
       className={styles.stat}
-      onMouseEnter={() => { onMouseEnter(id, title, total !== 0) }}
+      onMouseEnter={() => { onMouseEnter(id, title, hasValues) }}
     >
       <div className={styles.bar}>
         {hasValues &&
@@ -65,7 +67,7 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
         }
         <div className={styles.line} />
         <div className={barClasses}>
-          {barValue}
+          {duration}
         </div>
       </div>
       {hasValues
