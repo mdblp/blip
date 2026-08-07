@@ -486,7 +486,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // add message images to messages pool
   poolMessages.addPlotType({ type: 'message' }, plotMessage(poolMessages, {
     size: 30,
-    emitter
+    emitter,
+    tidelineData,
+    onElementHover: options.onNoteHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // add timechange images to messages pool

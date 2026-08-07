@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type ReservoirChange } from 'medical-domain'
-import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
-import colors from '../../../styles/colors.css'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+import { sortBy } from 'lodash'
+import { MessageNote } from '../data/models/message-note.model'
+import HttpService from '../http/http.service'
 
-export const ReservoirTooltip: FC<DailyTooltipProps<ReservoirChange>> = (props) => {
-  const { datum: reservoir, position, side, timePrefs } = props
-  const { t } = useTranslation()
+const NOTES_URL = '/message/v1'
 
-  const label = getReservoirChangeTitle(reservoir)
+export class NotesApi {
+  static async getMessageThread(messageId: string): Promise<MessageNote[]> {
+    const { data } = await HttpService.get<MessageNote[]>({ url: `${NOTES_URL}/thread/${messageId}` })
+    return sortBy(data, (message: MessageNote) => Date.parse(message.timestamp))
+  }
 
-  return (
-    <Tooltip
-      position={position}
-      side={side}
-      title={t('Pump')}
-      backgroundColor={colors.greyBackground}
-      dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
-      offset={DEFAULT_TOOLTIP_OFFSET}
-      content={
-        <div className={commonStyles.containerFlex}>
-          <TooltipLine label={label} isBold />
-        </div>
-      }
-    />
-  )
+  static async postMessageThread(message: MessageNote): Promise<string> {
+    const { data } = await HttpService.post<{ id: string }, MessageNote>({
+      url: `${NOTES_URL}/send`,
+      payload: message
+    })
+    return data.id
+  }
+
+  static async editMessage(message: MessageNote): Promise<void> {
+    await HttpService.put<void, MessageNote>({
+      url: `${NOTES_URL}/edit`,
+      payload: message
+    })
+  }
 }

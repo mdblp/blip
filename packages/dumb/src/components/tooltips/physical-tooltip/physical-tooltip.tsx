@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { DurationUnit, type DurationValue, type PhysicalActivity, PhysicalActivityName } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { formatInputTime } from '../../../utils/format/format.util'
-import colors from '../../../styles/colors.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
-import {
-  DurationUnit,
-  type DurationValue,
-  type PhysicalActivity,
-  PhysicalActivityName,
-  type TimePrefs
-} from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
+import { formatInputTime } from '../../../utils/format/format.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface PhysicalTooltipProps {
-  physicalActivity: PhysicalActivity
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) => {
-  const { physicalActivity, position, side, timePrefs } = props
+export const PhysicalTooltip: FunctionComponent<DailyTooltipProps<PhysicalActivity>> = (props) => {
+  const { datum: physicalActivity, position, side, timePrefs } = props
   const { t } = useTranslation()
 
   const getDurationInMinutes = (): DurationValue => {

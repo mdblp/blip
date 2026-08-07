@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BaseDatum from './basics/base-datum.model'
-import { type DatumType } from './enums/datum-type.enum'
+import { TimePrefs } from 'medical-domain'
+import { Position } from '../components/tooltips/common/tooltip/tooltip'
+import { TooltipSide } from './enums/tooltip-side.enum'
 
-type Message = BaseDatum & {
-  type: DatumType.Message
-  userid: string
-  groupid: string
-  messageText: string
-  parentMessage: string | null
-  user: {
-    fullName: string
-  }
+export interface DailyTooltipProps<T> {
+  datum: T
+  position: Position
+  side: TooltipSide
+  timePrefs: TimePrefs
 }
-
-export default Message
