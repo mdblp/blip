@@ -44,8 +44,8 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
   const themeMobile = useTheme()
   const { classes: { separator } } = footerWebStyle()
   const { classes: { separatorMobile } } = footerMobileStyle({})
-  const { classes: { commonLink } } = commonStyleFooter();
-  const isMobile = useMediaQuery(themeMobile.breakpoints.down('sm'));
+  const { classes: { commonLink } } = commonStyleFooter()
+  const isMobile = useMediaQuery(themeMobile.breakpoints.down('sm'))
 
   const trainingUrl = ExternalFilesService.getTrainingUrl(user?.role)
 

@@ -34,6 +34,7 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import LanguageIcon from '@mui/icons-material/Language'
 import Tooltip from '@mui/material/Tooltip'
+import config from '../../lib/config/config'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
 import LanguageSelector from '../language-select'
@@ -256,7 +257,7 @@ export const Footer: FunctionComponent = () => {
               style = {`${classes.commonLink} ${classes.appVersionLink}`}
               isExternal
             >
-              {t('contact')}
+              <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
             </FooterLink>
           </Tooltip>
           <span className={classes.bySpan}>by </span>

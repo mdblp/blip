@@ -34,7 +34,7 @@ interface FooterLinkProps {
   dataTestId?: string
   style?: string
   href?: string
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void
   isExternal?: boolean
   children: React.ReactNode
 }
