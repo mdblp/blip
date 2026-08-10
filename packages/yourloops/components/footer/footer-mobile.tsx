@@ -130,6 +130,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-url-privacy-policy"
           href={privacyPolicyUrl}
+          style = {`${classes.linkMobile} ${classes.commonLink}`}
           onClick={metricsPdfDocument('privacy_policy')}
           isExternal
         >
@@ -139,6 +140,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-url-terms"
           href={termsOfUseUrl}
+          style = {`${classes.linkMobile} ${classes.commonLink}`}
           onClick={metricsPdfDocument('terms')}
           isExternal
         >
@@ -149,6 +151,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-cookies-management"
           onClick={handleShowCookieBanner}
+          style = {`${classes.linkMobile} ${classes.commonLink}`}
         >
           {t('cookies-management')}
         </FooterLink>
@@ -156,6 +159,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-url-cookies-policy"
           href={cookiesPolicyUrl}
+          style = {`${classes.linkMobile} ${classes.commonLink}`}
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           isExternal
         >
@@ -164,6 +168,7 @@ export const FooterMobile: FunctionComponent = () => {
         <Box className={classes.separatorMobile}>|</Box>
         <FooterLink
           id="footer-link-contact-mailto"
+          style = {`${classes.linkMobile} ${classes.commonLink}`}
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('mailto-contact')}
         >

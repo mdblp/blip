@@ -32,6 +32,10 @@ export const commonStyleFooter = makeStyles()((theme) => ({
     color: theme.palette.grey[700],
     fontWeight: 400
   },
+  linkMobile: {
+    textAlign: 'center',
+    display: 'inline-block'
+  },
   commonBoxAndContainer: {
     display: 'flex',
     alignItems: 'center'

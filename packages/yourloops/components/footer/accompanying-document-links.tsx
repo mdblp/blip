@@ -37,6 +37,7 @@ import { ExternalFilesService } from '../../lib/external-files/external-files.se
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { commonStyleFooter } from './shared/footer-style'
+import { FooterLink } from './footer-link-mobile'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
   const { t } = useTranslation('yourloops')
@@ -60,15 +61,14 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
       </Link>
       <Box className={isMobile ? separatorMobile : separator}>|</Box>
 
-      <Link
-        data-testid="training-Link"
-        target="_blank"
+      <FooterLink
+        dataTestId="training-Link"
         href={trainingUrl}
-        rel="nofollow"
-        className={commonLink}
+        style = {commonLink}
+        isExternal
       >
         {t('training')}
-      </Link>
+      </FooterLink>
     </React.Fragment>
   )
 }

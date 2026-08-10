@@ -28,23 +28,11 @@
 
 import Link from '@mui/material/Link'
 import React from 'react'
-import { makeStyles } from 'tss-react/mui'
-import { commonStyleFooter } from './shared/footer-style'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-
-const footerLinkMobileStyle = makeStyles()(() => {
-  return {
-    linkMobile: {
-      textAlign: 'center',
-      display: 'inline-block'
-    }
-  }
-})
 
 interface FooterLinkProps {
-  id: string
+  id?: string
   dataTestId?: string
+  style?: string
   href?: string
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   isExternal?: boolean
@@ -54,27 +42,21 @@ interface FooterLinkProps {
 export const FooterLink : React.FC<FooterLinkProps> = (props) => {
   const {
     id,
+    dataTestId,
+    style,
     href,
     onClick,
     isExternal,
     children
   } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { classes: linkMobileClasses } = footerLinkMobileStyle()
-  const { classes: commonClasses } = commonStyleFooter();
-
-  const classes = {
-    ...linkMobileClasses,
-    ...commonClasses,
-  }
 
   return (
     <Link
       id={id}
       href={href}
+      className={style}
       onClick={onClick}
-      className={isMobile ? `${classes.linkMobile} ${classes.commonLink}` : classes.commonLink}
+      data-testid={dataTestId}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'nofollow' : undefined}
     >
