@@ -26,60 +26,42 @@
  */
 
 
-import Link from '@mui/material/Link'
-import React from 'react'
-import { makeStyles } from 'tss-react/mui'
-import { commonStyleFooter } from './shared/footer-style'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import metrics from '../../../lib/metrics'
+import { LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
+import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
+import { getCurrentLang } from '../../../lib/language'
 
-const footerLinkMobileStyle = makeStyles()(() => {
-  return {
-    linkMobile: {
-      textAlign: 'center',
-      display: 'inline-block'
+export const useFooterHook = () => {
+
+  const currentLanguage = getCurrentLang()
+
+  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCode.Ja
+
+  const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
+  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
+  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
+  const releaseNotesUrl = ExternalFilesService.getReleaseNotesUrl()
+
+  const handleShowCookieBanner = (): void => {
+    if (typeof window.openAxeptioCookies === 'function') {
+      window.openAxeptioCookies()
     }
   }
-})
 
-interface FooterLinkProps {
-  id: string
-  dataTestId?: string
-  href?: string
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  isExternal?: boolean
-  children: React.ReactNode
-}
-
-export const FooterLink : React.FC<FooterLinkProps> = (props) => {
-  const {
-    id,
-    href,
-    onClick,
-    isExternal,
-    children
-  } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { classes: linkMobileClasses } = footerLinkMobileStyle()
-  const { classes: commonClasses } = commonStyleFooter();
-
-  const classes = {
-    ...linkMobileClasses,
-    ...commonClasses,
+  const metricsPdfDocument = (title: string) => {
+    return () => {
+      metrics.send('pdf_document', 'view_document', title)
+    }
   }
 
-  return (
-    <Link
-      id={id}
-      href={href}
-      onClick={onClick}
-      className={isMobile ? `${classes.linkMobile} ${classes.commonLink}` : classes.commonLink}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'nofollow' : undefined}
-    >
-      {children}
-    </Link>
-  )
+  return {
+    shouldDisplayMedicalDeviceWarning,
+    cookiesPolicyUrl,
+    privacyPolicyUrl,
+    termsOfUseUrl,
+    releaseNotesUrl,
+    handleShowCookieBanner,
+    metricsPdfDocument
+  }
 }
 

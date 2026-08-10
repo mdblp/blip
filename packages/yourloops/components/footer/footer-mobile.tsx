@@ -40,7 +40,7 @@ import { getCurrentLang } from '../../lib/language'
 import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { PatientView } from '../../enum/patient-view.enum'
 import { FooterLink } from './footer-link-mobile'
-import { useSharedVariables } from "./shared/init-footer"
+import { useFooterHook } from "./shared/footer.hook"
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
@@ -77,13 +77,13 @@ export const FooterMobile: FunctionComponent = () => {
 
   const isLongLanguage = (currentLanguage === LanguageCode.De) || (currentLanguage === LanguageCode.Nl)
 
-  const { classes: mobileClasses } = footerMobileStyle({ isLongLanguage });
-  const { classes: commonClasses } = commonStyleFooter();
+  const { classes: mobileClasses } = footerMobileStyle({ isLongLanguage })
+  const { classes: commonClasses } = commonStyleFooter()
 
   const classes = {
     ...commonClasses,
     ...mobileClasses,
-  };
+  }
 
   const PATIENT_VIEW_URL_MAPPING: Record<PatientView, string> = {
     [PatientView.Daily]: 'daily',
@@ -104,7 +104,7 @@ export const FooterMobile: FunctionComponent = () => {
     termsOfUseUrl,
     handleShowCookieBanner,
     metricsPdfDocument
-  } = useSharedVariables()
+  } = useFooterHook()
 
   return (
     <Container id="footer-links-container" data-testid="footer" className={`${classes.containerMobile} ${classes.containerCommon}

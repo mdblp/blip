@@ -41,11 +41,12 @@ import config from '../../lib/config/config'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
-import { useSharedVariables } from "./shared/init-footer"
+import { useFooterHook } from "./shared/footer.hook"
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import { useLocation } from 'react-router-dom'
 import { commonStyleFooter } from './shared/footer-style'
+import { FooterLink } from './footer-link-mobile'
 
 export const footerWebStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
@@ -74,7 +75,7 @@ export const footerWebStyle = makeStyles({ name: 'footer-component-styles' })((t
       paddingBlock: '11px',
       [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap'
-      },
+      }
     },
     cookiesManagement: {
       '&:hover': {
@@ -123,14 +124,14 @@ export const footerWebStyle = makeStyles({ name: 'footer-component-styles' })((t
     },
     separator: {
       paddingLeft: '15px',
-      paddingRight: '15px',
+      paddingRight: '15px'
     },
     sideBox: {
       flex: '1'
     },
     supportButton: {
       height: '46px',
-      width: '134px',
+      width: '134px'
     },
     svg: {
       height: '12px',
@@ -149,7 +150,7 @@ export const Footer: FunctionComponent = () => {
 
   const classes = {
     ...webClasses,
-    ...commonClasses,
+    ...commonClasses
   }
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
@@ -163,10 +164,11 @@ export const Footer: FunctionComponent = () => {
     releaseNotesUrl,
     handleShowCookieBanner,
     metricsPdfDocument
-  } = useSharedVariables()
+  } = useFooterHook()
 
   return (
-    <Container id="footer-links-container" data-testid="footer" className={`${classes.containerWeb} ${classes.containerCommon}
+    <Container id="footer-links-container" data-testid="footer"
+               className={`${classes.containerWeb} ${classes.containerCommon}
     ${classes.commonBoxAndContainer}`} maxWidth={false}>
       <Box className={`${classes.sideBox} ${classes.leftBox}`}>
         <Box className={classes.supportButton} />
@@ -186,61 +188,54 @@ export const Footer: FunctionComponent = () => {
             </Box>
             <AccompanyingDocumentLinks user={user} />
           </Box>
-          : <Box id="footer-accompanying-documents-box" className={`${classes.documentBox} ${classes.commonBoxAndContainer}`}>
+          : <Box id="footer-accompanying-documents-box"
+                 className={`${classes.documentBox} ${classes.commonBoxAndContainer}`}>
             <AccompanyingDocumentLinks user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
         }
 
-        <Link
+        <FooterLink
           id="footer-link-url-privacy-policy"
-          target="_blank"
           href={privacyPolicyUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
-          className={classes.commonLink}
+          isExternal
         >
           {t('privacy-policy')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-url-terms"
-          target="_blank"
           href={termsOfUseUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('terms')}
-          className={classes.commonLink}
+          isExternal
         >
           {t('terms-of-use')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-cookies-management"
-          className={`${classes.commonLink} ${classes.cookiesManagement}`}
           onClick={handleShowCookieBanner}
         >
           {t('cookies-management')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-url-cookies-policy"
-          target="_blank"
           href={cookiesPolicyUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
-          className={classes.commonLink}
+          isExternal
         >
           {t('cookies-policy')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-contact-mailto"
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
-          onClick={metricsPdfDocument('yourloops-mailto-contact')}
-          className={classes.commonLink}
+          onClick={metricsPdfDocument('mailto-contact')}
         >
           {t('contact')}
-        </Link>
+        </FooterLink>
       </Box>
       <Box className={`${classes.sideBox} ${classes.rightBox}`}>
         <Box>
@@ -264,14 +259,14 @@ export const Footer: FunctionComponent = () => {
           </Tooltip>
           <span className={classes.bySpan}>by </span>
         </Box>
-        <Link
+        <FooterLink
           id="footer-link-url-diabeloop"
-          target="_blank"
-          href={diabeloopExternalUrls.support} rel="nofollow"
+          href={diabeloopExternalUrls.support}
+          isExternal
         >
           <img src={diabeloopLogo} alt={t('alt-img-logo')} className={`${classes.svg} ${classes.diabeloopLogo}`} />
           <img src={diabeloopLabel} alt={t('alt-img-logo')} className={classes.svg} />
-        </Link>
+        </FooterLink>
       </Box>
     </Container>
   )

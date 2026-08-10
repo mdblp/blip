@@ -155,7 +155,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       alignContent: 'center',
       flexWrap: 'wrap'
     }}>
-      {(isWeb || conditions[0]) &&
+      {(isWeb || isTimeSpentAwayFromTargetAlertActive) &&
         <Tooltip
           title={
             <>
@@ -180,7 +180,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         </Tooltip>
       }
       {
-        (isWeb || conditions[1]) &&
+        (isWeb || isFrequencyOfHyperglycemiaAlertActive) &&
         <Tooltip
           title={
             <>
@@ -205,7 +205,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       }
 
       {
-        (isWeb || conditions[2]) &&
+        (isWeb || isFrequencyOfSevereHypoglycemiaAlertActive) &&
         <Tooltip
           title={
             <>
@@ -230,7 +230,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       }
 
       {
-        (isWeb || conditions[3]) &&
+        (isWeb || isNonDataTransmissionAlertActive) &&
         <Tooltip
           title={
             <>

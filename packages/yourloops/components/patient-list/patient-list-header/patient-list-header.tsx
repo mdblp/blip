@@ -48,7 +48,7 @@ import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 import { FiltersDialogSlot } from './modal-management-display'
-import { PatientListHeaderInit } from './patient-list-header-init'
+import { usePatientListHeaderHook } from './patient-list-header.hook'
 import { SearchBar } from './patient-list-search-tooltip'
 
 interface PatientListHeaderProps {
@@ -89,7 +89,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { teamId } = useParams()
   const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
 
-  const init = PatientListHeaderInit();
+  const init = usePatientListHeaderHook()
 
   return (
     <React.Fragment>
