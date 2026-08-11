@@ -1,1 +1,12 @@
-{}
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "to-replace",
+      "package_name": "to.replace",
+      "sha256_cert_fingerprints": [
+        "your-finger-print-here"
+      ]
+    }
+  }
+]
