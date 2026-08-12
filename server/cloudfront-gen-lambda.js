@@ -21,6 +21,7 @@ const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
 const assetlinksJson = require('../public/mobile-apps/assetlinks.json')
+const appleAppSiteAssociation = require('../public/mobile-apps/apple-app-site-association.json')
 
 const SETTINGS_MEMO_FOLDER = 'parameter-memo'
 
@@ -232,6 +233,7 @@ function genOutputFile() {
   const configHash = `sha512-${hashForConfig.digest('base64')}`
 
   const assetLinksJsonStringified = JSON.stringify(assetlinksJson, null, 2)
+  const appleAppSiteAssociationStringified = JSON.stringify(appleAppSiteAssociation, null, 2)
   console.log('Using assetlinks:', assetLinksJsonStringified)
 
   const templateParameters = {
@@ -241,7 +243,8 @@ function genOutputFile() {
     CONFIG_JS: configJs,
     CONFIG_JS_MD5: configMd5,
     CONFIG_HASH: configHash,
-    ASSETLINKS_JSON: assetLinksJsonStringified,
+    ANDROID_ASSETLINKS_JSON: assetLinksJsonStringified,
+    IOS_ASSETLINKS_JSON: appleAppSiteAssociationStringified,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
