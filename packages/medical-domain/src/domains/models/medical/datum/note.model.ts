@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type ReservoirChange } from 'medical-domain'
-import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
-import colors from '../../../styles/colors.css'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+import type BaseDatum from './basics/base-datum.model'
+import { type DatumType } from './enums/datum-type.enum'
 
-export const ReservoirTooltip: FC<DailyTooltipProps<ReservoirChange>> = (props) => {
-  const { datum: reservoir, position, side, timePrefs } = props
-  const { t } = useTranslation()
-
-  const label = getReservoirChangeTitle(reservoir)
-
-  return (
-    <Tooltip
-      position={position}
-      side={side}
-      title={t('Pump')}
-      backgroundColor={colors.greyBackground}
-      dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
-      offset={DEFAULT_TOOLTIP_OFFSET}
-      content={
-        <div className={commonStyles.containerFlex}>
-          <TooltipLine label={label} isBold />
-        </div>
-      }
-    />
-  )
+type Note = BaseDatum & {
+  type: DatumType.Note
+  userid: string
+  groupid: string
+  messageText: string
+  parentMessage: string | null
+  user: {
+    fullName: string
+  }
 }
+
+export default Note

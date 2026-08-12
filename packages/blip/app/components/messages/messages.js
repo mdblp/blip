@@ -53,20 +53,6 @@ class Messages extends React.Component {
       <Message
         key={message.id}
         theNote={message}
-        imageSize="large"
-        onSaveEdit={this.getSaveEdit(message.userid)}
-        timePrefs={this.props.timePrefs}
-        trackMetric={this.props.trackMetric}
-      />
-    )
-  }
-
-  renderComment(message) {
-    return (
-      <Message
-        key={message.id}
-        theNote={message}
-        imageSize="small"
         onSaveEdit={this.getSaveEdit(message.userid)}
         timePrefs={this.props.timePrefs}
         trackMetric={this.props.trackMetric}
@@ -77,12 +63,7 @@ class Messages extends React.Component {
   renderThread() {
     if (this.isMessageThread()) {
       const { messages } = this.state
-      const thread = _.map(messages, (message) => {
-        if (_.isEmpty(message.parentmessage)) {
-          return this.renderNote(message)
-        }
-        return this.renderComment(message)
-      })
+      const thread = _.map(messages, (message) => this.renderNote(message))
 
       return <div className="messages-thread">{thread}</div>
     }

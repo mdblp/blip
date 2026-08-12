@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import type Cbg from './datum/cbg.model'
 import type ConfidentialMode from './datum/confidential-mode.model'
 import type DeviceParameterChange from './datum/device-parameter-change.model'
 import type Meal from './datum/meal.model'
-import type Message from './datum/message.model'
+import type Note from './datum/note.model'
 import type PhysicalActivity from './datum/physical-activity.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
@@ -55,7 +55,7 @@ interface MedicalData {
   eatingShortlyEvents: EatingShortlyEvent[]
   iob: Iob[]
   meals: Meal[]
-  messages: Message[]
+  messages: Note[]
   nightModes: NightMode[]
   physicalActivities: PhysicalActivity[]
   pumpSettings: PumpSettings[]

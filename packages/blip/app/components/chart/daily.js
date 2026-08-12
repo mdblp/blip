@@ -14,15 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import PropTypes from 'prop-types'
-import React from 'react'
-import _ from 'lodash'
+import Box from '@mui/material/Box'
 import bows from 'bows'
-import moment from 'moment-timezone'
-import ReactResizeDetector from 'react-resize-detector'
-import i18next from 'i18next'
-import { chartDailyFactory } from 'tideline'
-import { TimeService } from 'medical-domain'
 import {
   AlarmEventTooltip,
   BasalTooltip,
@@ -34,6 +27,7 @@ import {
   EventsSuperpositionPopover,
   IobTooltip,
   NightModeTooltip,
+  NoteTooltip,
   ParameterTooltip,
   PhysicalTooltip,
   RescueCarbsTooltip,
@@ -42,13 +36,20 @@ import {
   WarmUpTooltip,
   ZenModeTooltip
 } from 'dumb'
-import Box from '@mui/material/Box'
+import i18next from 'i18next'
+import _ from 'lodash'
+import { TimeService } from 'medical-domain'
+import moment from 'moment-timezone'
+import PropTypes from 'prop-types'
+import React from 'react'
+import ReactResizeDetector from 'react-resize-detector'
+import { chartDailyFactory } from 'tideline'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
-import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
-import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
-import metrics from 'yourloops/lib/metrics'
+import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api'
+import metrics from 'yourloops/lib/metrics'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -84,6 +85,7 @@ class DailyChart extends React.Component {
     onWarmUpHover: PropTypes.func.isRequired,
     onAlarmEventHover: PropTypes.func.isRequired,
     onNightModeHover: PropTypes.func.isRequired,
+    onNoteHover: PropTypes.func.isRequired,
     onZenModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
@@ -114,6 +116,7 @@ class DailyChart extends React.Component {
       'onWarmUpHover',
       'onAlarmEventHover',
       'onNightModeHover',
+      'onNoteHover',
       'onTimeChangeHover',
       'onZenModeHover',
       'onTooltipOut',
@@ -438,6 +441,7 @@ class Daily extends React.Component {
                   onConfidentialHover={this.handleConfidentialHover}
                   onIobHover={this.handleIobHover}
                   onNightModeHover={this.handleNightModeHover}
+                  onNoteHover={this.handleNoteHover}
                   onTimeChangeHover={this.handleTimeChangeHover}
                   onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}
@@ -584,7 +588,7 @@ class Daily extends React.Component {
       'daily-basal', 'daily-bolus', 'daily-smbg', 'daily-cbg',
       'daily-carb', 'daily-eating-shortly', 'daily-iob', 'daily-reservoir-change',
       'daily-physical-activity', 'daily-parameter', 'daily-warmup', 'daily-alarm-event',
-      'daily-night-mode', 'daily-time-change', 'daily-zen-mode', 'daily-confidential'
+      'daily-night-mode', 'daily-note', 'daily-time-change', 'daily-zen-mode', 'daily-confidential'
     ]
     hoverTypes.forEach(type => AnalyticsApi.cancelHover(type))
 
@@ -596,7 +600,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BasalTooltip
-        basal={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -613,7 +617,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BolusTooltip
-        bolus={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -631,7 +635,7 @@ class Daily extends React.Component {
     const tooltip = (
       <BloodGlucoseTooltip
         isSmbg={true}
-        data={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -648,7 +652,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BloodGlucoseTooltip
-        data={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -665,7 +669,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <RescueCarbsTooltip
-        food={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -681,7 +685,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EatingShortlyTooltip
-        eatingShortly={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -697,7 +701,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <IobTooltip
-        data={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -713,7 +717,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ReservoirTooltip
-        reservoir={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -729,7 +733,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <PhysicalTooltip
-        physicalActivity={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -746,7 +750,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ParameterTooltip
-        parameter={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -768,7 +772,7 @@ class Daily extends React.Component {
         }}
         side={datum.side}
         timePrefs={datum.timePrefs}
-        warmup={datum.data} />)
+        datum={datum.data} />)
     this.setState({ tooltip })
   }
 
@@ -777,7 +781,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <AlarmEventTooltip
-        alarmEvent={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -795,7 +799,23 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <NightModeTooltip
-        nightMode={datum.data}
+        datum={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleNoteHover = (datum) => {
+    AnalyticsApi.trackHover('daily-note')
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <NoteTooltip
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -811,7 +831,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <TimeChangeTooltip
-        timeChange={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -827,7 +847,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ZenModeTooltip
-        zenMode={datum.data}
+        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left

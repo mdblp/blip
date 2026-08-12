@@ -121,7 +121,6 @@
   "Prescribed by Loop Mode": "Loop mode",
   "Printed on: ": "Printed on: ",
   "Product": "Product",
-  "Profile": "Profile",
   "Pump": "Pump",
   "Pump version": "Pump version",
   "Recommended": "Recommended",
@@ -219,7 +218,7 @@
   "minutes": "minutes",
   "month": "month",
   "months": "months",
-  "note": "note",
+  "note": "Note",
   "pdf-date-range": "Date range: {{range}}",
   "pdf-footer-center-text": "Diabeloop - {{appURL}}",
   "second": "second",
@@ -232,7 +231,6 @@
   "wheel-label-on": "ON",
   "year": "year",
   "years": "years",
-  "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} days in view",
   "{{title}} (cont.)": "{{title}} (cont.)"
 }

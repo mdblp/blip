@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type ReservoirChange } from 'medical-domain'
-import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
-import colors from '../../../styles/colors.css'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+import { MessageNote } from '../../../lib/data/models/message-note.model'
+import { NotesApi } from '../../../lib/notes/notes.api'
+import { loggedInUserFullName, loggedInUserId, userTimFullName, userTimId } from './auth0.hook.mock'
+import { NOTE_ID } from './data.api.mock'
 
-export const ReservoirTooltip: FC<DailyTooltipProps<ReservoirChange>> = (props) => {
-  const { datum: reservoir, position, side, timePrefs } = props
-  const { t } = useTranslation()
+const noteData = {
+  "id": NOTE_ID,
+  "timezone": "Europe/Paris",
+  "createdtime": "2022-08-08T12:00:00.000Z",
+  "modifiedtime": "2022-08-08T12:00:00.000Z",
+  "timestamp": "2022-08-08T12:00:00.000Z",
+  "groupid": "b3549d738546",
+  "userid": loggedInUserId,
+  "messagetext": "This day was very stressful",
+  "user": {
+    "fullName": loggedInUserFullName
+  }
+}
 
-  const label = getReservoirChangeTitle(reservoir)
+const noteAnswerData = {
+  "id": "68f5db7c612ea9466ce8c28c",
+  "groupid": "b3549d738546",
+  "userid": userTimId,
+  "parentmessage": "68f5d86d612ea9466ce8c28b",
+  "messagetext": "Really? What happened?",
+  "timestamp": "2022-08-08T15:00:00.000Z",
+  "createdtime": "2022-08-08T15:00:00.000Z",
+  "modifiedtime": "2022-08-08T15:00:00.000Z",
+  "user": {
+    "fullName": userTimFullName
+  }
+}
 
-  return (
-    <Tooltip
-      position={position}
-      side={side}
-      title={t('Pump')}
-      backgroundColor={colors.greyBackground}
-      dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
-      offset={DEFAULT_TOOLTIP_OFFSET}
-      content={
-        <div className={commonStyles.containerFlex}>
-          <TooltipLine label={label} isBold />
-        </div>
-      }
-    />
-  )
+export const NOTES_THREAD = [noteData, noteAnswerData]
+
+export const mockNotesApi = (notesThread: MessageNote[] = []) => {
+  jest.spyOn(NotesApi, 'getMessageThread').mockResolvedValue(notesThread)
 }
