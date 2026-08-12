@@ -30,3 +30,8 @@ export enum NotificationType {
   careTeamProInvitation,
   directInvitation,
 }
+
+export enum NotificationMetricType {
+  shareData = 'share_data',
+  joinTeam = 'join_team'
+}
