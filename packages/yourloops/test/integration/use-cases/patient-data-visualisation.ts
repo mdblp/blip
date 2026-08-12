@@ -38,7 +38,9 @@ import {
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
   checkEventsSuperposition,
-  checkNotesView,
+  checkNoteAddCommentFailure,
+  checkNoteAddCommentSuccess,
+  checkNoteView,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
 import {
@@ -120,14 +122,14 @@ export const testEmptyMedicalFilesWidgetForHcp = async () => {
   await checkEmptyMedicalFilesWidgetForHcp()
 }
 
-export const testDailyViewTooltipsAndValuesMgdl = async () => {
+export const testDailyViewTooltipsAndValuesMgdl = async (nowDate: Date) => {
   await checkTotalCarbsStatContent()
 
   // Check the tooltips and data on the chart
   await checkDailyTidelineContainerTooltipsMgdl()
   await checkDailyStatsWidgetsTooltips()
   await checkEventsSuperposition()
-  await checkNotesView()
+  await checkNotes(nowDate)
 
   // Check the time in range stats widgets
   await checkDailyTimeInRangeStatsWidgetsMgdl()
@@ -170,7 +172,6 @@ export const testDailyViewTooltipsAndValuesMmolL = async () => {
   await checkStandardDeviationStatWidget('(2-10)mmol/L4')
 }
 
-
 export const testTrendsWeekDayFilter = async () => {
   // Start by asserting data before removing Mondays from the stats
   await checkPatientStatisticsTrendsView()
@@ -179,4 +180,13 @@ export const testTrendsWeekDayFilter = async () => {
   await checkPatientStatisticsTrendsViewNoMonday()
   // Reactivate Monday
   await userEvent.click(screen.getByTestId('day-filter-monday'))
+}
+
+export const testNotesFailure = async () => {
+  await checkNoteAddCommentFailure()
+}
+
+const checkNotes = async (date: Date) => {
+  await checkNoteView(date)
+  await checkNoteAddCommentSuccess()
 }
