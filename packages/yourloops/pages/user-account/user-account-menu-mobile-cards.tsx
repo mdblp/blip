@@ -33,30 +33,39 @@ import { useUserAccountPageState } from './user-account-page-context'
 import { makeStyles } from 'tss-react/mui'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
-import myDiabbyLogo from '*.svg'
-import glookoLogo from '*.svg'
+import myDiabbyLogo from 'my-diabby-app-icon.svg'
+import glookoLogo from 'glooko-app-icon.svg'
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
 import { getRemoteMonitoringToolLabel } from './sections/data-sharing-section/remote-monitoring.util'
+import { useAuth } from '../../lib/auth'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
-  patientId: string
-  refresh: () => void
 }
 
 export const cardStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
     cards: {
       margin: theme.spacing(2)
+    },
+    links: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.5
     }
   }
 })
 
 export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (props) => {
-  const { consents, patientId, refresh } = props
+  const { consents } = props
+  const { user } = useAuth()
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { userAccountForm } = useUserAccountPageState()
   const { classes } = cardStyle()
 
@@ -66,6 +75,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
       { label: t('last-name'), value: userAccountForm.lastName },
       { label: t('country'), value: userAccountForm.country },
       { label: t('gender'), value: userAccountForm.sex },
+      { label: t('email'), value: user.email },
       { label: t('units'), value: userAccountForm.units },
       { label: t('language'), value: userAccountForm.lang }
     ]
@@ -82,16 +92,22 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
     }
   }
 
-  const getTableLinesSharing = (): { value: string, label: string }[] => {
-    return [
-      { label: t('glooko-xt'), value: null }
-    ]
-    {
-      consents.map((consent: ExternalConsent) => (
-        { label: getRemoteMonitoringToolLabel(consent.partnerName), value: null }
-      )
-    }
+  const getTableLinesSharing = (): { label: string; value: string }[] => {
+    return consents.map((consent: ExternalConsent) => ({
+      label: (
+        <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Avatar
+            variant="square"
+            src={getRemoteMonitoringToolLogo(consent.partnerName)}
+            alt={getRemoteMonitoringToolLabel(consent.partnerName)}
+          />
+          <span>{consent.partnerName}</span>
+        </Box>
+      ),
+      value: ''
+    })) as unknown as { label: string; value: string }[]
   }
+
   return (
     <>
       <GenericListCard
@@ -101,13 +117,10 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
         data-testid="user-account-menu-mobile-account"
         headerAction={
           <Link
-            href="/ma-page"
+            className={classes.links}
+            component="button"
+            onClick={() => navigate(AppUserRoute.UserMenuAccountSection)}
             underline="none"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5
-            }}
           >
             {t('view-more')}
             <KeyboardArrowRightIcon fontSize="small" />
@@ -122,14 +135,10 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
         className={classes.cards}
         headerAction={
           <Link
-            component={RouterLink}
-            to="/account"
+            className={classes.links}
+            component="button"
+            onClick={() => navigate(AppUserRoute.UserMenuDataSharingSection)}
             underline="none"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5
-            }}
           >
             {t('view-more')}
             <KeyboardArrowRightIcon fontSize="small" />
