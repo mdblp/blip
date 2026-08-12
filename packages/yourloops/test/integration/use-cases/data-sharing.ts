@@ -41,8 +41,23 @@ import {
   checkUserAccountMenuVisible
 } from '../assert/data-sharing.assert'
 
+import {
+  checkUserAccountMenuCardsVisible,
+  checkUserAccountMenuCardsNotVisible,
+  checkUserAccountMenuCard
+} from '../assert/user-account-menu-mobile.assert'
+
 export const testUserAccountMenuNotVisible = (): void => {
   checkUserAccountMenuNotVisible()
+}
+
+export const testUserAccountMenuVisibleMobile = (): void => {
+  checkUserAccountMenuCardsVisible()
+  checkUserAccountMenuCard()
+}
+
+export const testUserAccountMenuNotVisibleMobile = (): void => {
+  checkUserAccountMenuCardsNotVisible()
 }
 
 export const testDataSharingContentNoData = async (): Promise<void> => {

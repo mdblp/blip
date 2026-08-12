@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Devices = '/devices',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  Preferences = '/preferences',
-  PatientProfile = '/patient-profile',
-  Teams = '/teams',
-  Trends = '/trends',
-  UserAccount = '/user-account',
-  UserMenu = '/user-menu',
-  UserMenuAccountSection = '/user-menu/account',
-  UserMenuDataSharingSection = '/user-menu/data-sharing'
+import { screen } from '@testing-library/react'
+
+export const checkUserAccountMenuCardsVisible = (): void => {
+  expect(screen.queryByTestId('user-account-menu-mobile-account')).toBeVisible()
+  expect(screen.queryByTestId('user-account-menu-mobile-data-sharing')).toBeVisible()
 }
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  DblCommunication = '/dbl-communication',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
+export const checkUserAccountMenuCardsNotVisible = (): void => {
+  expect(screen.queryByTestId('user-account-menu-mobile-account')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('user-account-menu-mobile-account-data-sharing')).not.toBeInTheDocument()
 }
+
+export const checkUserAccountMenuCard = (): void => {
+  expect(screen.getByText('First name')).toBeVisible()
+  expect(screen.getByText('Last name')).toBeVisible()
+  expect(screen.getByText('Country')).toBeVisible()
+  expect(screen.getByText('Gender')).toBeVisible()
+  expect(screen.getByText('Email')).toBeVisible()
+  expect(screen.getByText('Units')).toBeVisible()
+  expect(screen.getByText('Language')).toBeVisible()
+}
+

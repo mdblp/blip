@@ -33,19 +33,15 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorTextFromException } from '../../lib/utils'
 import { logError } from '../../utils/error.util'
-import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 
 export const UserAccountMenuMobile = () => {
   const { t } = useTranslation()
-  const { user } = useAuth()
   const alert = useAlert()
 
   const [consents, setConsents] = useState([])
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-
-  const userId = user.id
 
   const fetchExternalConsents = useCallback(() => {
     setRefreshInProgress(true)
@@ -78,8 +74,6 @@ export const UserAccountMenuMobile = () => {
         :
         <UserAccountMenuMobileCards
           consents={consents}
-          patientId={userId}
-          refresh={fetchExternalConsents}
         />
       }
     </UserAccountPageContextProvider>
