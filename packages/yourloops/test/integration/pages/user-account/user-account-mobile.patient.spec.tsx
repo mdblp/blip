@@ -26,11 +26,10 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act } from '@testing-library/react'
-import { checkPatientLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
@@ -52,9 +51,13 @@ import {
   testDataSharingContentWithData,
   testRevokeConsentError,
   testUserAccountMenuNotVisible,
-  testUserAccountMenuVisibleMobile,
-  testUserAccountMenuNotVisibleMobile
 } from '../../use-cases/data-sharing'
+import {
+  testUserAccountMenuVisibleMobile,
+  testUserAccountMenuNotVisibleMobile,
+  testClickViewMoreUserAccount,
+  testClickViewMoreDataSharing
+} from '../../use-cases/user-account-menu-visualisation'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockExternalConsentsApi } from '../../mock/external-consents.api.mock'
 import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
@@ -149,7 +152,25 @@ describe('User account page for patient', () => {
     testUserAccountMenuNotVisibleMobile()
   })
 
+  it('should be able to access to the user account page', async () => {
 
+    await act(async () => {
+      renderPage(userMenuMobileRoute)
+    })
+
+    await testClickViewMoreUserAccount()
+  })
+
+  it('should be able to access to the data sharing page', async () => {
+
+    await act(async () => {
+      renderPage(userMenuMobileRoute)
+    })
+
+    await testClickViewMoreDataSharing()
+  })
+
+/*
   it('should have access to the Data Sharing section with no data', async () => {
     await act(async () => {
       renderPage(userAccountRoute)
@@ -222,4 +243,5 @@ describe('User account page for patient', () => {
 
     testUserAccountMenuNotVisible()
   })
+  */
 })

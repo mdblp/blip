@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
 export const checkUserAccountMenuCardsVisible = (): void => {
   expect(screen.queryByTestId('user-account-menu-mobile-account')).toBeVisible()
@@ -46,4 +47,26 @@ export const checkUserAccountMenuCard = (): void => {
   expect(screen.getByText('Units')).toBeVisible()
   expect(screen.getByText('Language')).toBeVisible()
 }
+
+export const checkClickViewMoreUserAccount = async (): Promise<void> => {
+  const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-account'))
+  await userEvent.click(viewMoreUserAccount.getByText('View more'))
+  const userAccountTitle = await screen.findByText('User account');
+  expect(userAccountTitle).toBeInTheDocument();
+
+}
+
+export const checkClickViewMoreDataSharing = async (): Promise<void> => {
+  screen.debug(screen.getByTestId('user-account-menu-mobile-data-sharing'));
+  const containerElement = screen.getByTestId('user-account-menu-mobile-data-sharing')
+  const container = within(containerElement);
+
+  const viewMoreButton = await container.findByText('View more');
+  await userEvent.click(viewMoreButton);
+
+  // On cherche le titre SPÉCIFIQUEMENT à l'intérieur de ce composant-là :
+  const specTitle = await container.findByText('Remote monitoring tools');
+  expect(specTitle).toBeVisible();
+}
+
 
