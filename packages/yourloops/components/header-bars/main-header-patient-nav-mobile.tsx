@@ -59,7 +59,7 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
   const { user } = useAuth()
 
   const goBack = (): void => {
-    navigate('/')
+    navigate(-1)
   }
 
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
