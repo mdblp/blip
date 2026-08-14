@@ -28,12 +28,16 @@
 import {
   checkUserAccountMenuCardsVisible,
   checkUserAccountMenuCardsNotVisible,
-  checkUserAccountMenuCard, checkClickViewMoreUserAccount, checkClickViewMoreDataSharing
+  checkUserAccountMenuCardForAccount,
+  checkClickViewMoreUserAccount,
+  checkClickViewMoreDataSharing,
+  checkUserAccountMenuCardForDataSharing
 } from '../assert/user-account-menu-mobile.assert'
 
 export const testUserAccountMenuVisibleMobile = (): void => {
   checkUserAccountMenuCardsVisible()
-  checkUserAccountMenuCard()
+  checkUserAccountMenuCardForAccount()
+  checkUserAccountMenuCardForDataSharing()
 }
 
 export const testUserAccountMenuNotVisibleMobile = (): void => {
