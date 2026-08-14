@@ -43,15 +43,8 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { Unit } from 'medical-domain'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
-import { testPatientUserInfoUpdate } from '../../use-cases/user-account-management'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { buildPatient } from '../../data/patient-builder.data'
-import {
-  testDataSharingContentNoData,
-  testDataSharingContentWithData,
-  testRevokeConsentError,
-  testUserAccountMenuNotVisible,
-} from '../../use-cases/data-sharing'
 import {
   testUserAccountMenuVisibleMobile,
   testUserAccountMenuNotVisibleMobile,
@@ -112,6 +105,20 @@ describe('User account page for patient', () => {
 
   it('should render the menu page if the patient is french', async () => {
 
+    const consents = [
+      {
+        partnerId: 'partnerId1',
+        partnerName: PartnerName.GlookoXT,
+        consentDate: '2026-05-13T04:15:59.159Z'
+      },
+      {
+        partnerId: 'partnerId2',
+        partnerName: PartnerName.MyDiabby,
+        consentDate: '2026-05-19T14:15:59.159Z'
+      }
+    ]
+    jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue(consents)
+
     await act(async () => {
       renderPage(userMenuMobileRoute)
     })
@@ -119,7 +126,7 @@ describe('User account page for patient', () => {
     await testUserAccountMenuVisibleMobile()
   })
 
-  it('should not render the menu page if the patient is french', async () => {
+  it('should not render the menu page if the patient is not french', async () => {
     const settingsWithDeCountry: Settings = {
       a1c: {
         rawdate: '2020-01-01',
@@ -152,96 +159,13 @@ describe('User account page for patient', () => {
     testUserAccountMenuNotVisibleMobile()
   })
 
-  it('should be able to access to the user account page', async () => {
-
+  it('should be able to access the pages linked by the cards', async () => {
     await act(async () => {
       renderPage(userMenuMobileRoute)
     })
 
-    await testClickViewMoreUserAccount()
+    testClickViewMoreUserAccount()
+    testClickViewMoreDataSharing()
   })
 
-  it('should be able to access to the data sharing page', async () => {
-
-    await act(async () => {
-      renderPage(userMenuMobileRoute)
-    })
-
-    await testClickViewMoreDataSharing()
-  })
-
-/*
-  it('should have access to the Data Sharing section with no data', async () => {
-    await act(async () => {
-      renderPage(userAccountRoute)
-    })
-
-    await testDataSharingContentNoData()
-  })
-
-  it('should have access to the Data Sharing section with consents', async () => {
-    const preferencesWithEnLanguage: Preferences = { displayLanguageCode: LanguageCode.En }
-    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
-      profile: account,
-      settings,
-      preferences: preferencesWithEnLanguage
-    })
-
-    const consents = [
-      {
-        partnerId: 'partnerId1',
-        partnerName: PartnerName.GlookoXT,
-        consentDate: '2026-05-13T04:15:59.159Z'
-      },
-      {
-        partnerId: 'partnerId2',
-        partnerName: PartnerName.MyDiabby,
-        consentDate: '2026-05-19T14:15:59.159Z'
-      }
-    ]
-    jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue(consents)
-
-    await act(async () => {
-      renderPage(userAccountRoute)
-    })
-
-    await testDataSharingContentWithData()
-
-    jest.spyOn(ExternalConsentsApi, 'revokeConsent').mockRejectedValueOnce(new Error('Revoke consent error'))
-    await testRevokeConsentError()
-  })
-
-  it('should not have access to the Data Sharing section if the patient does not have the FR country', async () => {
-    const settingsWithDeCountry: Settings = {
-      a1c: {
-        rawdate: '2020-01-01',
-        date: 'date should not be used in this scenario',
-        value: '7.5'
-      },
-      country: CountryCode.Germany,
-      units: { bg: Unit.MilligramPerDeciliter }
-    }
-
-    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
-      profile: {
-        firstName: 'Elie',
-        lastName: 'Coptere',
-        fullName: 'Elie Coptere',
-        email: 'fake@email.com',
-        termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-        privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-        trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
-        ...account
-      } as UserAccount,
-      settings: settingsWithDeCountry,
-      preferences
-    })
-
-    await act(async () => {
-      renderPage(userAccountRoute)
-    })
-
-    testUserAccountMenuNotVisible()
-  })
-  */
 })

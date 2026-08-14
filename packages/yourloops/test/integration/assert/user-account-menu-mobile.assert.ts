@@ -38,7 +38,7 @@ export const checkUserAccountMenuCardsNotVisible = (): void => {
   expect(screen.queryByTestId('user-account-menu-mobile-account-data-sharing')).not.toBeInTheDocument()
 }
 
-export const checkUserAccountMenuCard = (): void => {
+export const checkUserAccountMenuCardForAccount = (): void => {
   expect(screen.getByText('First name')).toBeVisible()
   expect(screen.getByText('Last name')).toBeVisible()
   expect(screen.getByText('Country')).toBeVisible()
@@ -48,25 +48,26 @@ export const checkUserAccountMenuCard = (): void => {
   expect(screen.getByText('Language')).toBeVisible()
 }
 
+export const checkUserAccountMenuCardForDataSharing = (): void => {
+  expect(screen.getByText('GLOOKO_XT')).toBeVisible()
+  expect(screen.getByText('MY_DIABBY')).toBeVisible()
+}
+
 export const checkClickViewMoreUserAccount = async (): Promise<void> => {
   const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-account'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
   const userAccountTitle = await screen.findByText('User account');
   expect(userAccountTitle).toBeInTheDocument();
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  await userEvent.click(header.getByTestId('back-button'))
 
 }
 
 export const checkClickViewMoreDataSharing = async (): Promise<void> => {
-  screen.debug(screen.getByTestId('user-account-menu-mobile-data-sharing'));
-  const containerElement = screen.getByTestId('user-account-menu-mobile-data-sharing')
-  const container = within(containerElement);
-
-  const viewMoreButton = await container.findByText('View more');
-  await userEvent.click(viewMoreButton);
-
-  // On cherche le titre SPÉCIFIQUEMENT à l'intérieur de ce composant-là :
-  const specTitle = await container.findByText('Remote monitoring tools');
-  expect(specTitle).toBeVisible();
+  const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-data-sharing'))
+  await userEvent.click(viewMoreUserAccount.getByText('View more'))
+  const userDataSharingPageTitle = await screen.findByText('Remote monitoring tools');
+  expect(userDataSharingPageTitle).toBeInTheDocument();
 }
 
 
