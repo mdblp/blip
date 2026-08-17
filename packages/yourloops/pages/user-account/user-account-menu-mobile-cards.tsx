@@ -33,7 +33,7 @@ import { useUserAccountPageState } from './user-account-page-context'
 import { makeStyles } from 'tss-react/mui'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link } from '@mui/material'
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 import myDiabbyLogo from 'my-diabby-app-icon.svg'
