@@ -59,6 +59,7 @@ import IconButton from '@mui/material/IconButton'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { getUserName } from '../../lib/auth/user.util'
 import { useMenuStyles } from './menu-style';
+import { CountryCode } from '../../lib/auth/models/country.model'
 
 const classes = makeStyles()(() => ({
   typography: {
@@ -84,6 +85,7 @@ function UserMenu(): JSX.Element {
   const { firstName, fullName, lastName } = user
   const userName = getUserName(firstName, lastName, fullName)
   const menuClass = isMobile ? menuItemMobile : undefined
+  const shouldDisplayUserMenu = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
@@ -109,7 +111,7 @@ function UserMenu(): JSX.Element {
 
   const onClickSettings = (): void => {
     {
-      isMobile && user.isUserPatient() ? navigate(AppUserRoute.UserMenu) : navigate(AppUserRoute.UserAccount)
+      shouldDisplayUserMenu ? navigate(AppUserRoute.UserMenu) : navigate(AppUserRoute.UserAccount)
     }
     closeMenu()
   }
