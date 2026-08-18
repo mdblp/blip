@@ -121,6 +121,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
             component="button"
             onClick={() => navigate(AppUserRoute.UserMenuAccountSection)}
             underline="none"
+            data-testid="link-account"
           >
             {t('view-more')}
             <KeyboardArrowRightIcon fontSize="small" />
@@ -139,6 +140,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
             component="button"
             onClick={() => navigate(AppUserRoute.UserMenuDataSharingSection)}
             underline="none"
+            data-testid="link-data-sharing"
           >
             {t('view-more')}
             <KeyboardArrowRightIcon fontSize="small" />
