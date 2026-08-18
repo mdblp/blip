@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import CardHeader from '@mui/material/CardHeader'
 import { useTranslation } from 'react-i18next'
 import CardContent from '@mui/material/CardContent'
@@ -39,12 +39,9 @@ export const DataSharingSection: FC = () => {
   const { t } = useTranslation()
   const { user } = useAuth()
 
-  const [consents, setConsents] = useState([])
-  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-
   const userId = user.id
 
-  const fetchExternalConsents = useDataSharingHook({ setConsents, setRefreshInProgress })
+  const { consents, refreshInProgress, fetchExternalConsents } = useDataSharingHook()
 
   return (
     <>

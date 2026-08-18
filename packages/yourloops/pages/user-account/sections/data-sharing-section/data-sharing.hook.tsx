@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
@@ -33,16 +33,12 @@ import { ExternalConsentsApi } from '../../../../lib/external-consents/external-
 import { ExternalConsent } from '../../../../lib/external-consents/models/external-consent.model'
 import { useAlert } from '../../../../components/utils/snackbar'
 
-interface DataSharingHookProps {
-  setConsents: React.Dispatch<React.SetStateAction<ExternalConsent[]>>
-  setRefreshInProgress: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export const useDataSharingHook = (props : DataSharingHookProps) => {
+export const useDataSharingHook = () => {
   const { t } = useTranslation()
   const alert = useAlert()
 
-  const { setConsents, setRefreshInProgress } = props
+  const [consents, setConsents] = useState([])
+  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
   const fetchExternalConsents = useCallback(() => {
     setRefreshInProgress(true)
@@ -68,7 +64,8 @@ export const useDataSharingHook = (props : DataSharingHookProps) => {
     fetchExternalConsents()
   }, [fetchExternalConsents]);
 
-  return (
-    fetchExternalConsents
-  )
+  return {
+    consents,
+    refreshInProgress,
+    fetchExternalConsents }
 }

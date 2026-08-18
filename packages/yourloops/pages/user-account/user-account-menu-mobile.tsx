@@ -27,45 +27,13 @@
 
 import { UserAccountPageContextProvider } from './user-account-page-context'
 import { UserAccountMenuMobileCards } from './user-account-menu-mobile-cards'
-import { ExternalConsentsApi } from '../../lib/external-consents/external-consents.api'
-import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { errorTextFromException } from '../../lib/utils'
-import { logError } from '../../utils/error.util'
-import { useAlert } from '../../components/utils/snackbar'
+import React from 'react'
 import SpinningLoader from '../../components/loaders/spinning-loader'
+import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
 
 export const UserAccountMenuMobile = () => {
-  const { t } = useTranslation()
-  const alert = useAlert()
 
-  const [consents, setConsents] = useState([])
-  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-
-  const fetchExternalConsents = useCallback(() => {
-    setRefreshInProgress(true)
-
-    ExternalConsentsApi.getConsents()
-      .then((consents: ExternalConsent[]) => {
-        setConsents(consents)
-        return consents
-      })
-      .catch((reason: unknown) => {
-        const message = errorTextFromException(reason)
-        logError(message, 'fetch-external-consents')
-
-        alert.error(t('error-http-40x'))
-        setConsents([])
-      })
-      .finally(() => {
-        setRefreshInProgress(false)
-      })
-  }, [t, alert])
-
-  useEffect(() => {
-    fetchExternalConsents()
-  }, [fetchExternalConsents]);
+  const { consents, refreshInProgress } = useDataSharingHook()
 
   return (
     <UserAccountPageContextProvider>
