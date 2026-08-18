@@ -110,9 +110,7 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSettings = (): void => {
-    {
-      shouldDisplayUserMenu ? navigate(AppUserRoute.UserMenu) : navigate(AppUserRoute.UserAccount)
-    }
+    shouldDisplayUserMenu ? navigate(AppUserRoute.UserMenu) : navigate(AppUserRoute.UserAccount)
     closeMenu()
   }
 

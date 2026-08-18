@@ -25,43 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useState } from 'react'
-import CardHeader from '@mui/material/CardHeader'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import { useAuth } from '../../../../lib/auth'
-import SpinningLoader from '../../../../components/loaders/spinning-loader'
-import { RemoteMonitoringTools } from './remote-monitoring-tools'
-import { useDataSharingHook } from './data-sharing.hook'
+import { errorTextFromException } from '../../../../lib/utils'
+import { logError } from '../../../../utils/error.util'
+import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
+import { ExternalConsent } from '../../../../lib/external-consents/models/external-consent.model'
+import { useAlert } from '../../../../components/utils/snackbar'
 
-export const DataSharingSection: FC = () => {
+interface DataSharingHookProps {
+  setConsents: React.Dispatch<React.SetStateAction<ExternalConsent[]>>
+  setRefreshInProgress: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const useDataSharingHook = (props : DataSharingHookProps) => {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const alert = useAlert()
 
-  const [consents, setConsents] = useState([])
-  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
+  const { setConsents, setRefreshInProgress } = props
 
-  const userId = user.id
+  const fetchExternalConsents = useCallback(() => {
+    setRefreshInProgress(true)
 
-  const fetchExternalConsents = useDataSharingHook({ setConsents, setRefreshInProgress })
+    ExternalConsentsApi.getConsents()
+      .then((consents: ExternalConsent[]) => {
+        setConsents(consents)
+        return consents
+      })
+      .catch((reason: unknown) => {
+        const message = errorTextFromException(reason)
+        logError(message, 'fetch-external-consents')
+
+        alert.error(t('error-http-40x'))
+        setConsents([])
+      })
+      .finally(() => {
+        setRefreshInProgress(false)
+      })
+  }, [t, alert, setConsents, setRefreshInProgress])
+
+  useEffect(() => {
+    fetchExternalConsents()
+  }, [fetchExternalConsents]);
 
   return (
-    <>
-      <CardHeader title={t('data-sharing')} data-testid="data-sharing-title" />
-
-      <CardContent>
-        <Typography variant="h6" sx={{ marginBottom: 2 }}>{t('remote-monitoring-tools')}</Typography>
-
-        {refreshInProgress
-          ? <SpinningLoader className="centered-spinning-loader" />
-          : <RemoteMonitoringTools
-            consents={consents}
-            patientId={userId}
-            refresh={fetchExternalConsents}
-          />
-        }
-      </CardContent>
-    </>
+    fetchExternalConsents
   )
 }
