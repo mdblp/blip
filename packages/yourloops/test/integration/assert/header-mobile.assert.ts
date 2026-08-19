@@ -108,9 +108,7 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
 
   await userEvent.click(header.getByTestId('notification-icon'))
   expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument()
-  await userEvent.click(header.getByTestId('back-button'))
-
-  expect(header.queryByTestId('team-selection-tab')).toBeVisible()
+  await userEvent.click(header.getByTestId('main-header-logo-link'))
 
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)
   await checkUserMenu(header, headerInfo.loggedInUserFullName)
@@ -123,7 +121,7 @@ export const checkCaregiverHeaderMobile = async (fullName: string) => {
   expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
 
   await userEvent.click(header.getByTestId("notification-icon"))
-  await userEvent.click(header.getByTestId("back-button"))
+  await userEvent.click(header.getByTestId("main-header-logo-link"))
 
   await checkUserMenu(header, fullName)
   checkHeader(header)
@@ -137,7 +135,7 @@ export const checkPatientHeaderMobile = async (fullName: string) => {
   expect(bottomPartHeader.getByTestId("download-report-mobile")).toBeVisible()
 
   await userEvent.click(header.getByTestId("notification-icon"))
-  await userEvent.click(header.getByTestId("back-button"))
+  await userEvent.click(header.getByTestId("main-header-logo-link"))
 
   await checkUserMenu(header, fullName)
   checkHeader(header)
@@ -151,7 +149,7 @@ export const checkHCPAndCaregiverHeaderPatientViewMobile = async (fullName: stri
   expect(bottomPartHeader.getByTestId("back-button")).toBeVisible()
 
   await userEvent.click(header.getByTestId("notification-icon"))
-  await userEvent.click(header.getByTestId("back-button"))
+  await userEvent.click(header.getByTestId("main-header-logo-link"))
 
   await checkUserMenu(header, fullName)
   checkHeader(header)
