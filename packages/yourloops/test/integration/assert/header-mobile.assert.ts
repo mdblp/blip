@@ -110,6 +110,9 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
   expect(header.queryByTestId('team-selection-tab')).not.toBeInTheDocument()
   await userEvent.click(header.getByTestId('main-header-logo-link'))
 
+  await userEvent.click(header.getByTestId('notification-icon'))
+  await userEvent.click(header.getByTestId('back-button'))
+
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)
   await checkUserMenu(header, headerInfo.loggedInUserFullName)
   checkHeader(header)
@@ -123,6 +126,9 @@ export const checkCaregiverHeaderMobile = async (fullName: string) => {
   //Go to notification tab and go back using the back button
   await userEvent.click(header.getByTestId("notification-icon"))
   await userEvent.click(header.getByTestId("main-header-logo-link"))
+
+  await userEvent.click(header.getByTestId('notification-icon'))
+  await userEvent.click(header.getByTestId('back-button'))
 
   await checkUserMenu(header, fullName)
   checkHeader(header)
@@ -139,6 +145,9 @@ export const checkPatientHeaderMobile = async (fullName: string) => {
   await userEvent.click(header.getByTestId("notification-icon"))
   await userEvent.click(header.getByTestId("main-header-logo-link"))
 
+  await userEvent.click(header.getByTestId('notification-icon'))
+  await userEvent.click(header.getByTestId('back-button'))
+
   await checkUserMenu(header, fullName)
   checkHeader(header)
 }
@@ -150,9 +159,11 @@ export const checkHCPAndCaregiverHeaderPatientViewMobile = async (fullName: stri
   expect(bottomPartHeader.getByTestId("download-report-mobile")).toBeVisible()
   expect(bottomPartHeader.getByTestId("back-button")).toBeVisible()
 
-  //Go to notification tab and go back using the back button
   await userEvent.click(header.getByTestId("notification-icon"))
   await userEvent.click(header.getByTestId("main-header-logo-link"))
+
+  await userEvent.click(header.getByTestId('notification-icon'))
+  await userEvent.click(header.getByTestId('back-button'))
 
   await checkUserMenu(header, fullName)
   checkHeader(header)
