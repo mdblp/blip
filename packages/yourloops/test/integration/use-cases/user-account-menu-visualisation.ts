@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Devices = '/devices',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  Preferences = '/preferences',
-  PatientProfile = '/patient-profile',
-  Teams = '/teams',
-  Trends = '/trends',
-  UserAccount = '/user-account',
-  UserMenu = '/user-menu',
-  UserMenuAccountSection = '/user-menu/account',
-  UserMenuDataSharingSection = '/user-menu/data-sharing'
+import {
+  checkUserAccountMenuCardsVisible,
+  checkUserAccountMenuCardsNotVisible,
+  checkUserAccountMenuCardForAccount,
+  checkClickViewMoreUserAccount,
+  checkClickViewMoreDataSharing,
+  checkUserAccountMenuCardForDataSharing
+} from '../assert/user-account-menu-mobile.assert'
+
+export const testUserAccountMenuVisibleMobile = (): void => {
+  checkUserAccountMenuCardsVisible()
+  checkUserAccountMenuCardForAccount()
+  checkUserAccountMenuCardForDataSharing()
 }
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  DblCommunication = '/dbl-communication',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
+export const testUserAccountMenuNotVisibleMobile = (): void => {
+  checkUserAccountMenuCardsNotVisible()
+}
+
+export const testClickViewMoreUserAccount = (): void => {
+  checkClickViewMoreUserAccount()
+}
+
+export const testClickViewMoreDataSharing = (): void => {
+  checkClickViewMoreDataSharing()
 }

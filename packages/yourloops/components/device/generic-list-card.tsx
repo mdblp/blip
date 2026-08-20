@@ -34,11 +34,14 @@ import { useTheme } from '@mui/material/styles'
 import React, { type FC } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import { TableLine } from './table-line'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface GenericListCardProps {
   title: string,
   tableLines: { label: string; value: string }[]
   ['data-testid']?: string
+  ['className']?: string
+  headerAction?: React.ReactNode;
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -59,18 +62,21 @@ const useStyles = makeStyles()((theme) => ({
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { title, tableLines } = props
+  const { title, tableLines, headerAction } = props
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Card
       variant="outlined"
-      sx={{ marginBottom: theme.spacing(5) }}
+      sx={{ marginBottom: isMobile ? undefined : theme.spacing(5) }}
       data-testid={props['data-testid']}
+      className = {props['className']}
     >
       <CardHeader
         title={title}
         className={classes.cardHeader}
         disableTypography
+        action={headerAction}
       />
       <CardContent className={classes.cardContent}>
         <List disablePadding>
