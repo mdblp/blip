@@ -46,10 +46,10 @@ import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { buildPatient } from '../../data/patient-builder.data'
 import {
-  testUserAccountMenuVisibleMobile,
-  testUserAccountMenuNotVisibleMobile,
+  testClickViewMoreDataSharing,
   testClickViewMoreUserAccount,
-  testClickViewMoreDataSharing
+  testUserAccountMenuNotVisibleMobile,
+  testUserAccountMenuVisibleMobile
 } from '../../use-cases/user-account-menu-visualisation'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockExternalConsentsApi } from '../../mock/external-consents.api.mock'

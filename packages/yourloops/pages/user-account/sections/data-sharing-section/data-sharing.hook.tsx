@@ -67,5 +67,6 @@ export const useDataSharingHook = () => {
   return {
     consents,
     refreshInProgress,
-    fetchExternalConsents }
+    fetchExternalConsents
+  }
 }
