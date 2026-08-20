@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
-import { checkRegisterButton, checkSignupInformationPageContent } from '../assert/signup-information.assert'
 
-export const testSignupInformation = async (loginWithRedirectMock: jest.Mock) => {
-  checkFooterForUserNotLoggedIn(false, true)
-  await checkSignupInformationPageContent()
-  await checkRegisterButton(loginWithRedirectMock)
+import metrics from '../../../lib/metrics'
+import { LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
+import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
+import { getCurrentLang } from '../../../lib/language'
+
+export const useFooterHook = () => {
+
+  const currentLanguage = getCurrentLang()
+
+  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCode.Ja
+
+  const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
+  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
+  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
+  const releaseNotesUrl = ExternalFilesService.getReleaseNotesUrl()
+
+  const handleShowCookieBanner = (): void => {
+    if (typeof window.openAxeptioCookies === 'function') {
+      window.openAxeptioCookies()
+    }
+  }
+
+  const metricsPdfDocument = (title: string) => {
+    return () => {
+      metrics.send('pdf_document', 'view_document', title)
+    }
+  }
+
+  return {
+    shouldDisplayMedicalDeviceWarning,
+    cookiesPolicyUrl,
+    privacyPolicyUrl,
+    termsOfUseUrl,
+    releaseNotesUrl,
+    handleShowCookieBanner,
+    metricsPdfDocument
+  }
 }
+
