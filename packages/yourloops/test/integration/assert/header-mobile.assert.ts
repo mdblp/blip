@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, within, waitFor } from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, waitFor, within } from '@testing-library/react'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
@@ -106,13 +106,11 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
 
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
     expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
-  }
-  else if (headerInfo.homePageBoolean) {
+  } else if (headerInfo.homePageBoolean) {
     expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
     expect(header.queryByTestId('back-button')).not.toBeInTheDocument()
     expect(header.queryByTestId('team-selection-tab')).toBeVisible()
-  }
-  else {
+  } else {
     expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument()
   }
 
