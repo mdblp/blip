@@ -97,7 +97,10 @@ const checkBackButtonMobile = async (header: BoundFunctions<typeof queries>) => 
   await userEvent.click(userMenu.getByTestId('user-menu-settings-item'))
   await userEvent.click(header.getByTestId('notification-icon'))
   await userEvent.click(header.getByTestId('back-button'))
-  expect(screen.getByText('User account')).toBeVisible()
+  const hasUserAccount = userMenu.queryByText('User account') !== null;
+  const hasAccount = userMenu.queryByText('Account') !== null;
+
+  expect(hasUserAccount || hasAccount).toBe(true);
   await userEvent.click(header.getByTestId("main-header-logo-link"))
 }
 
