@@ -244,7 +244,7 @@ export const checkPasswordChangeRequestFailed = async (email: string): Promise<v
   expect(changePasswordInfoLabel).toBeVisible()
 
   const changePasswordConfirmButton = screen.getByRole('button', { name: 'Confirm' })
-  expect (changePasswordConfirmButton).toBeEnabled()
+  expect(changePasswordConfirmButton).toBeEnabled()
 
   await userEvent.click(changePasswordConfirmButton)
 
