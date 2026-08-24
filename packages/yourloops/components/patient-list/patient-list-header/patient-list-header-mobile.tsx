@@ -34,11 +34,11 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Tooltip from '@mui/material/Tooltip'
-import { FiltersDialogSlot } from './modal-management-display'
+import { FiltersDialogSlot } from './filters-dialog-slot'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
 import { usePatientListHeaderHook } from './patient-list-header.hook'
-import { SearchBar } from './patient-list-search-tooltip'
+import { PatientListSearchBar } from './patient-list-search-bar'
 
 interface PatientListHeaderProps {
   inputSearch: string
@@ -87,7 +87,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
             width: '100%'
           }}>
           <Box sx={{ flexShrink: 1, marginRight: theme.spacing(1) }}>
-            <SearchBar
+            <PatientListSearchBar
               inputSearch = {inputSearch}
               setInputSearch = {setInputSearch}
               classNameSpecific = {classes.customTextFieldSpecific}

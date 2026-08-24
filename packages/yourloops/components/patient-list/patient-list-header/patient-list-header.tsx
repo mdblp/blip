@@ -47,9 +47,9 @@ import { ColumnSelectorPopover } from '../column-selector-popover'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../../lib/team/team.util'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
-import { FiltersDialogSlot } from './modal-management-display'
+import { FiltersDialogSlot } from './filters-dialog-slot'
 import { usePatientListHeaderHook } from './patient-list-header.hook'
-import { SearchBar } from './patient-list-search-tooltip'
+import { PatientListSearchBar } from './patient-list-search-bar'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -89,7 +89,22 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { teamId } = useParams()
   const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
 
-  const init = usePatientListHeaderHook()
+  const {
+    isUserHcp,
+    filterButtonTooltipTitle,
+    openFiltersDialog,
+    setShowAddPatientDialog,
+    columnSettingsButtonTooltipTitle,
+    columnsRef,
+    filtersRef,
+    filters,
+    isFiltersDialogOpen,
+    teamCodeDialogSelectedTeam,
+    closeFiltersDialog,
+    setTeamCodeDialogSelectedTeam,
+    showAddPatientDialog,
+    onAddPatientSuccessful
+  } = usePatientListHeaderHook()
 
   return (
     <React.Fragment>
@@ -104,22 +119,22 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             alignItems: "center"
           }}>
           <Box>
-            <SearchBar
+            <PatientListSearchBar
               inputSearch = {inputSearch}
               setInputSearch = {setInputSearch}
               classNameSpecific = {classes.customTextFieldSpecific}
             />
-            {init.isUserHcp &&
-              <Tooltip title={init.filterButtonTooltipTitle}>
+            {isUserHcp &&
+              <Tooltip title={filterButtonTooltipTitle}>
                 <span>
                   <Button
                     variant="outlined"
                     size="large"
                     color="inherit"
                     endIcon={<FilterList />}
-                    onClick={init.openFiltersDialog}
-                    disabled={init.filters.pendingEnabled}
-                    ref={init.filtersRef}
+                    onClick={openFiltersDialog}
+                    disabled={filters.pendingEnabled}
+                    ref={filtersRef}
                   >
                     {t('filters')}
                   </Button>
@@ -128,7 +143,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             }
           </Box>
           <Box>
-            {init.isUserHcp &&
+            {isUserHcp &&
               <Tooltip
                 title={isSelectedTeamPrivate ? t('add-new-patient-disabled-info') : ''}
                 placement="left"
@@ -141,7 +156,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                     disableElevation
                     disabled={isSelectedTeamPrivate}
                     onClick={() => {
-                      init.setShowAddPatientDialog(true)
+                      setShowAddPatientDialog(true)
                     }}
                   >
                     {t('button-add-new-patient')}
@@ -149,7 +164,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 </span>
               </Tooltip>
             }
-            <Tooltip title={init.columnSettingsButtonTooltipTitle}>
+            <Tooltip title={columnSettingsButtonTooltipTitle}>
                 <span>
                   <Button
                     data-testid="column-settings-button"
@@ -157,8 +172,8 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                     variant="outlined"
                     color="inherit"
                     sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
-                    ref={init.columnsRef}
-                    disabled={init.filters.pendingEnabled}
+                    ref={columnsRef}
+                    disabled={filters.pendingEnabled}
                     onClick={() => {
                       setIsColumnSelectorOpened(true)
                       AnalyticsApi.trackClick('patient-list-column-settings', ElementType.Button)
@@ -190,7 +205,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            {init.isUserHcp && !isSelectedTeamPrivate &&
+            {isUserHcp && !isSelectedTeamPrivate &&
               <Tab
                 data-testid="patient-list-pending-tab"
                 icon={<HourglassEmptyIcon />}
@@ -209,25 +224,25 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               />
             }
           </Tabs>
-          {init.isUserHcp &&
+          {isUserHcp &&
             <PatientListHeaderFiltersLabel patientsDisplayedCount={patientsDisplayedCount} />
           }
         </Box>
       </Box>
       <FiltersDialogSlot
-        isFiltersDialogOpen={init.isFiltersDialogOpen}
-        teamCodeDialogSelectedTeam={init.teamCodeDialogSelectedTeam}
-        anchorEl={init.filtersRef.current}
-        onPatientFiltersClose={init.closeFiltersDialog}
+        isFiltersDialogOpen={isFiltersDialogOpen}
+        teamCodeDialogSelectedTeam={teamCodeDialogSelectedTeam}
+        anchorEl={filtersRef.current}
+        onPatientFiltersClose={closeFiltersDialog}
         isSelectedTeamPrivate={isSelectedTeamPrivate}
-        setTeamCodeDialogSelectedTeam={init.setTeamCodeDialogSelectedTeam}
-        showAddPatientDialog={init.showAddPatientDialog}
-        setShowAddPatientDialog={init.setShowAddPatientDialog}
-        onAddPatientSuccessful={init.onAddPatientSuccessful}
+        setTeamCodeDialogSelectedTeam={setTeamCodeDialogSelectedTeam}
+        showAddPatientDialog={showAddPatientDialog}
+        setShowAddPatientDialog={setShowAddPatientDialog}
+        onAddPatientSuccessful={onAddPatientSuccessful}
       />
       {isColumnSelectorOpened &&
         <ColumnSelectorPopover
-          anchorEl={init.columnsRef.current}
+          anchorEl={columnsRef.current}
           isSelectedTeamPrivate={isSelectedTeamPrivate}
           onClose={() => {
             setIsColumnSelectorOpened(false)

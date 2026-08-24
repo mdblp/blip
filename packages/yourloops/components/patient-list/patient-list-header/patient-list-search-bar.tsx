@@ -33,7 +33,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import { makeStyles } from 'tss-react/mui'
 
-interface PatientListHeaderProps {
+interface PatientListSearchBarProps {
   inputSearch: string
   setInputSearch: (value: string) => void
   classNameSpecific: string
@@ -49,7 +49,7 @@ const useStyles = makeStyles()(() => {
   }
 })
 
-export const SearchBar: FunctionComponent<PatientListHeaderProps> = (props) => {
+export const PatientListSearchBar: FunctionComponent<PatientListSearchBarProps> = (props) => {
   const { t } = useTranslation()
   const { inputSearch, setInputSearch, classNameSpecific } = props
   const { classes } = useStyles()
