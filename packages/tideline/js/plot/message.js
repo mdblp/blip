@@ -98,7 +98,7 @@ function plotMessage(pool, opts = {}) {
     selection.on('click', function (event, datum) {
       event.stopPropagation() // silence the click-and-drag listener
 
-      opts.emitter.emit('messageThread', datum.id)
+      opts.emitter.emit('noteThread', datum.id)
     })
   }
 

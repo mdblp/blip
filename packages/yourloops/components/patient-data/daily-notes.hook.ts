@@ -45,22 +45,23 @@ interface UseDailyNotesReturn {
   createNewMessage: (message: MessageNote) => Promise<string>
   editMessage: (message: MessageNote) => Promise<void>
   handleMessageCreation: (message: MessageNote) => Promise<void>
-  messageThread: MessageNote[]
+  clickedNoteId: string
   showMessageCreation: (datetime: Moment | null) => void
-  showMessageThread: (messageId: string) => Promise<void>
+  showNoteThread: (noteId: string) => Promise<void>
+  hideNoteThread: () => void
+  handleNoteUpdated: (note: MessageNote) => void
 }
 
 export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn => {
   const { dailyChartRef, medicalData, dailyDate } = props
-  const [messageThread, setMessageThread] = useState<MessageNote[]>(undefined)
   const [createMessageDatetime, setCreateMessageDatetime] = useState<string>(undefined)
+  const [clickedNoteId, setClickedNoteId] = useState<string>(undefined)
 
   const createNewMessage = async (message: MessageNote): Promise<string> => {
     return await NotesApi.postMessageThread(message)
   }
 
   const closeMessageBox = (): void => {
-    setMessageThread(undefined)
     setCreateMessageDatetime(undefined)
   }
 
@@ -88,19 +89,28 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
     setCreateMessageDatetime(mDate.toISOString())
   }
 
-  const showMessageThread = async (messageId: string): Promise<void> => {
-    const messages = await NotesApi.getMessageThread(messageId)
-    setMessageThread(messages)
+  const showNoteThread = async (noteId: string): Promise<void> => {
+    setClickedNoteId(noteId)
+  }
+
+  const hideNoteThread = (): void => {
+    setClickedNoteId(undefined)
+  }
+
+  const handleNoteUpdated = (note: MessageNote) => {
+    dailyChartRef.current.editMessage(note)
   }
 
   return {
-    messageThread,
     createMessageDatetime,
+    clickedNoteId,
     closeMessageBox,
     showMessageCreation,
-    showMessageThread,
+    showNoteThread,
+    hideNoteThread,
     createNewMessage,
     handleMessageCreation,
     editMessage,
+    handleNoteUpdated,
   }
 }

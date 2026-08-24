@@ -25,62 +25,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import { formatLocalizedFromUTC, getLongDayHourFormat } from 'dumb'
 import { TimePrefs } from 'medical-domain'
-import moment from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../../../../lib/auth'
-import { getInitials } from '../../../../lib/auth/user.util'
-import { MessageNote } from '../../../../lib/data/models/message-note.model'
-import metrics from '../../../../lib/metrics'
-import { NotesApi } from '../../../../lib/notes/notes.api'
-import { errorTextFromException } from '../../../../lib/utils'
-import { logError } from '../../../../utils/error.util'
-import { useAlert } from '../../../utils/snackbar'
-import styles from './view-note-dialog.css'
+import { useAuth } from '../../../../../lib/auth'
+import { MessageNote } from '../../../../../lib/data/models/message-note.model'
+import metrics from '../../../../../lib/metrics'
+import { NotesApi } from '../../../../../lib/notes/notes.api'
+import { errorTextFromException } from '../../../../../lib/utils'
+import { logError } from '../../../../../utils/error.util'
+import SpinningLoader from '../../../../loaders/spinning-loader'
+import { NoteThreadItem } from '../../../../notes/note-thread-item/note-thread-item'
+import { useAlert } from '../../../../utils/snackbar'
 
 interface ViewNoteDialogProps {
   notes: MessageNote[]
   timePrefs: TimePrefs
   onClose: () => void
+  onClickEdit: (note: MessageNote) => void
 }
 
-const AVATAR_MEDIUM_SIZE = '40px'
-const AVATAR_SMALL_SIZE = '32px'
-
-const MEDIUM_FONT_SIZE = '20px'
-const SMALL_FONT_SIZE = '16px'
-
-export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
-  const { notes, timePrefs, onClose } = props
+export const ViewNoteDialogContent: FC<ViewNoteDialogProps> = (props) => {
+  const { notes, timePrefs, onClose, onClickEdit } = props
   const { t } = useTranslation('main')
   const { user } = useAuth()
+  const userId = user.id
   const alert = useAlert()
   const [comment, setComment] = React.useState('')
 
   const getDateTime = (timestamp: string) => {
-    const format = t('MMM D, YYYY h:mm a')
-    const timezone = timePrefs.timezoneName || 'UTC'
-    const momentObject = moment.isMoment(timestamp) ? timestamp : moment.utc(timestamp)
-
-    return momentObject.tz(timezone).format(format)
+    const format = getLongDayHourFormat()
+    return formatLocalizedFromUTC(timestamp, timePrefs, format)
   }
 
   const isMainNote = (index: number): boolean => {
     return index === 0
-  }
-
-  const getSize = (index: number): string => {
-    return isMainNote(index) ? AVATAR_MEDIUM_SIZE : AVATAR_SMALL_SIZE
   }
 
   const isSubmitDisabled = (comment: string): boolean => {
@@ -92,7 +79,7 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
 
     const newNoteComment = {
       parentmessage: parentNote.id,
-      userid: user.id,
+      userid: userId,
       groupid: parentNote.groupid,
       messagetext: comment.trim(),
       timestamp: new Date().toISOString()
@@ -113,15 +100,12 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
     }
   }
 
+  const isAuthor = (authorId: string): boolean => {
+    return authorId === userId
+  }
+
   return (
-    <Dialog
-      open={true}
-      onClose={onClose}
-      role="dialog"
-      fullWidth={true}
-      maxWidth="sm"
-      data-testid="view-note-dialog"
-    >
+    <>
       <DialogTitle data-testid="view-note-title">
         {t('note')}
       </DialogTitle>
@@ -131,47 +115,16 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
             sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
             data-testid="view-note-thread"
           >
+            {notes.length === 0 && <SpinningLoader />}
             {notes.map(((note: MessageNote, index: number) => (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 1,
-                  marginLeft: isMainNote(index) ? 0 : 3
-                }}
+              <NoteThreadItem
                 key={note.id}
-                data-testid="note-thread-item"
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: 'var(--dark-blue-main)',
-                    width: getSize(index),
-                    height: getSize(index),
-                    fontSize: isMainNote(index) ? MEDIUM_FONT_SIZE : SMALL_FONT_SIZE
-                  }}
-                >
-                  {getInitials(note.user.fullName)}
-                </Avatar>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Typography variant="caption" sx={{ px: 2, color: 'var(--text-color-secondary)' }}>
-                    <span className={styles.bold}>{note.user.fullName}</span>
-                    <span> - {getDateTime(note.timestamp)}</span>
-                  </Typography>
-                  <Box>
-                    <Box
-                      sx={{
-                        backgroundColor: 'var(--info-color-10)',
-                        borderRadius: '24px',
-                        px: 2,
-                        py: 1,
-                        width: 'fit-content'
-                      }}
-                    >
-                      <Typography variant="body2">{note.messagetext}</Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
+                note={note}
+                isMainNote={isMainNote(index)}
+                isAuthor={isAuthor(note.userid)}
+                getDateTime={getDateTime}
+                onClickEdit={onClickEdit}
+              />
             )))}
           </Box>
           <Box
@@ -216,6 +169,6 @@ export const ViewNoteDialog: FC<ViewNoteDialogProps> = (props) => {
           {t('button-post')}
         </Button>
       </DialogActions>
-    </Dialog>
+    </>
   )
 }
