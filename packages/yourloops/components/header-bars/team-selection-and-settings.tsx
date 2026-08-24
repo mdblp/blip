@@ -37,6 +37,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const classes = makeStyles()((theme) => ({
   settingsButton: {
@@ -58,9 +60,11 @@ export const TeamSelectionAndSettings = () => {
   const { t } = useTranslation('yourloops')
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
   const navigate = useNavigate()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const goToCareTeamSettings = (): void => {
-    navigate(`${AppUserRoute.Teams}/${teamId}`)
+    navigate(isMobile ? `${AppUserRoute.Teams}/${teamId}/sections-overview` : `${AppUserRoute.Teams}/${teamId}`)
   }
 
   return (
