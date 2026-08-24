@@ -39,7 +39,7 @@ import { type AppRoute } from '../../models/enums/routes.enum'
 import { getCurrentLang } from '../../lib/language'
 import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { PatientView } from '../../enum/patient-view.enum'
-import { FooterLink } from './footer-link-mobile'
+import { FooterLink } from './footer-link'
 import { useFooterHook } from "./shared/footer.hook"
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'

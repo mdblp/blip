@@ -45,7 +45,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import { useLocation } from 'react-router-dom'
 import { commonStyleFooter } from './shared/footer-style'
-import { FooterLink } from './footer-link-mobile'
+import { FooterLink } from './footer-link'
 
 export const footerWebStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
