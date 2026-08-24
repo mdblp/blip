@@ -10,6 +10,7 @@ const zlib = require('zlib');
 const path = require('path');
 
 const ANDROID_ASSETLINKS_URI = '/.well-known/assetlinks.json'
+const IOS_ASSETLINKS_URI = '/.well-known/apple-app-site-association'
 const INDEX_HTML_URI = 'index.html'
 const CONFIG_JS_URI = `config.{{ CONFIG_JS_MD5 }}.js`
 const VERSION_URI = 'version'
@@ -24,7 +25,22 @@ exports.handler = async (event, context, callback) => {
   const filename = path.basename(request.uri);
 
   if (requestURI === ANDROID_ASSETLINKS_URI) {
-    const assetLinksJson = `{{ ASSETLINKS_JSON }}`;
+    const assetLinksJson = `{{ ANDROID_ASSETLINKS_JSON }}`;
+    const response = {
+      status: 200,
+      statusDescription: 'OK',
+      headers: {
+        'cache-control': [{ key: 'Cache-Control', value: 'max-age=3600' }],
+        'content-type': [{ key: 'Content-Type', value: 'application/json' }],
+        'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
+      },
+      body: assetLinksJson
+    };
+    return callback(null, response);
+  }
+
+  if (requestURI === IOS_ASSETLINKS_URI) {
+    const assetLinksJson = `{{ IOS_ASSETLINKS_JSON }}`;
     const response = {
       status: 200,
       statusDescription: 'OK',
