@@ -24,6 +24,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3864 SBOM generation in pipeline
 - Remove "Readings In Range" stat support
 - Fix CBG in tight range color on Daily view
+- YLP-4086 publish `.well-known/apple-app-site-association` for iOS deep linking
 
 ## 3.10.0 - 2026-06-25
 ### Added

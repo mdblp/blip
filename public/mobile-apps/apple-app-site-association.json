@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [{
+      "appIDs": ["TEAMID.packageName"],
+      "components": [
+        { "/": "/verify-email-result" }
+      ]
+    }]
+  }
+}
