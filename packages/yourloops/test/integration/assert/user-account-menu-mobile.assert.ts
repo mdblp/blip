@@ -56,8 +56,8 @@ export const checkUserAccountMenuCardForDataSharing = (): void => {
 export const checkClickViewMoreUserAccount = async (): Promise<void> => {
   const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-account'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
-  const userAccountTitle = await screen.findByText('User account');
-  expect(userAccountTitle).toBeInTheDocument();
+  const userAccountTitle = await screen.findByText('User account')
+  expect(userAccountTitle).toBeInTheDocument()
   const header = within(await screen.findByTestId('app-main-header-mobile'))
   await userEvent.click(header.getByTestId('back-button'))
 
@@ -66,8 +66,8 @@ export const checkClickViewMoreUserAccount = async (): Promise<void> => {
 export const checkClickViewMoreDataSharing = async (): Promise<void> => {
   const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-data-sharing'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
-  const userDataSharingPageTitle = await screen.findByText('Remote monitoring tools');
-  expect(userDataSharingPageTitle).toBeInTheDocument();
+  const userDataSharingPageTitle = await screen.findByText('Remote monitoring tools')
+  expect(userDataSharingPageTitle).toBeInTheDocument()
 }
 
 

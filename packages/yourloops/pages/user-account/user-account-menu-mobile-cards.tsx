@@ -92,7 +92,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
     }
   }
 
-  const getTableLinesSharing = (): { label: string; value: string }[] => {
+  const getTableLinesSharing = (): { label: string, value: string }[] => {
     return consents.map((consent: ExternalConsent) => ({
       label: (
         <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -105,7 +105,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
         </Box>
       ),
       value: ''
-    })) as unknown as { label: string; value: string }[]
+    })) as unknown as { label: string, value: string }[]
   }
 
   return (
