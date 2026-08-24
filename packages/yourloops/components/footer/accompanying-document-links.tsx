@@ -62,7 +62,7 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
       <Box className={isMobile ? separatorMobile : separator}>|</Box>
 
       <FooterLink
-        dataTestId="training-Link"
+        dataTestId="training-link"
         href={trainingUrl}
         style = {commonLink}
         isExternal
