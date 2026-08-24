@@ -67,7 +67,20 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
   const { teamId } = useParams()
   const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
 
-  const init = usePatientListHeaderHook()
+  const {
+    isUserHcp,
+    filterButtonTooltipTitle,
+    openFiltersDialog,
+    setShowAddPatientDialog,
+    filtersRef,
+    filters,
+    isFiltersDialogOpen,
+    teamCodeDialogSelectedTeam,
+    closeFiltersDialog,
+    setTeamCodeDialogSelectedTeam,
+    showAddPatientDialog,
+    onAddPatientSuccessful
+  } = usePatientListHeaderHook()
 
   return (
     <React.Fragment>
@@ -93,17 +106,17 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
               classNameSpecific = {classes.customTextFieldSpecific}
             />
           </Box>
-          {init.isUserHcp &&
+          {isUserHcp &&
             <>
               <Tooltip
-                title={init.filterButtonTooltipTitle}
+                title={filterButtonTooltipTitle}
               >
                 <IconButton
                   size="large"
-                  onClick={init.openFiltersDialog}
-                  disabled={init.filters.pendingEnabled}
+                  onClick={openFiltersDialog}
+                  disabled={filters.pendingEnabled}
                   data-testid="filters-button"
-                  ref={init.filtersRef}
+                  ref={filtersRef}
                   className={classes.patientListHeaderButton}
                   sx={{ border: '1px solid' }}
                 >
@@ -119,7 +132,7 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
                   disabled={isSelectedTeamPrivate}
                   data-testid="add-patient-button"
                   onClick={() => {
-                    init.setShowAddPatientDialog(true)
+                    setShowAddPatientDialog(true)
                   }}
                   className={classes.patientListHeaderButton}
                   sx={{ backgroundColor: 'var(--info-color-main)' }}
@@ -132,15 +145,15 @@ export const PatientListHeaderMobile: FunctionComponent<PatientListHeaderProps> 
         </Box>
       </Box>
       <FiltersDialogSlot
-        isFiltersDialogOpen={init.isFiltersDialogOpen}
-        teamCodeDialogSelectedTeam={init.teamCodeDialogSelectedTeam}
-        anchorEl={init.filtersRef.current}
-        onPatientFiltersClose={init.closeFiltersDialog}
+        isFiltersDialogOpen={isFiltersDialogOpen}
+        teamCodeDialogSelectedTeam={teamCodeDialogSelectedTeam}
+        anchorEl={filtersRef.current}
+        onPatientFiltersClose={closeFiltersDialog}
         isSelectedTeamPrivate={isSelectedTeamPrivate}
-        setTeamCodeDialogSelectedTeam={init.setTeamCodeDialogSelectedTeam}
-        showAddPatientDialog={init.showAddPatientDialog}
-        setShowAddPatientDialog={init.setShowAddPatientDialog}
-        onAddPatientSuccessful={init.onAddPatientSuccessful}
+        setTeamCodeDialogSelectedTeam={setTeamCodeDialogSelectedTeam}
+        showAddPatientDialog={showAddPatientDialog}
+        setShowAddPatientDialog={setShowAddPatientDialog}
+        onAddPatientSuccessful={onAddPatientSuccessful}
       />
     </React.Fragment>
   )
