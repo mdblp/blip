@@ -27,6 +27,7 @@
 
 import * as coreLocales from '@mui/material/locale'
 import * as dataGridLocales from '@mui/x-data-grid/locales'
+import * as datePickerLocales from '@mui/x-date-pickers/locales'
 import { createTheme, type Theme } from '@mui/material/styles'
 import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'
 import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
@@ -200,8 +201,7 @@ export function getTheme(languageCode: LanguageCode): Theme {
       }
     },
     coreLocales[muiLocale],
-    // Translations for @mui/x-date-pickers package: not used in our codebase
-    undefined,
+    datePickerLocales[muiLocale],
     dataGridLocales[muiLocale]
   )
 }

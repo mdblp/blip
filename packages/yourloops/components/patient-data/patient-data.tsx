@@ -32,12 +32,14 @@ import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
+import DailyNotes from 'blip/app/components/messages'
 import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { useAuth } from '../../lib/auth'
 import { ConfigService } from '../../lib/config/config.service'
+import { MessageNote } from '../../lib/data/models/message-note.model'
 import { validatePartner } from '../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 import metrics from '../../lib/metrics'
@@ -50,7 +52,7 @@ import { PatientProfileView } from '../../pages/patient-view/patient-profile/pat
 import { logError } from '../../utils/error.util'
 import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
-import { ViewNoteDialog } from '../dialogs/notes/view-note/view-note-dialog'
+import { ManageNoteDialog } from '../dialogs/notes/manage-note/manage-note-dialog'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
 import SpinningLoader from '../loaders/spinning-loader'
 import { PrintReportDialog } from '../pdf/print-report-dialog'
@@ -61,7 +63,6 @@ import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
 import { getPageTitleByPatientView } from './patient-data.utils'
-import DailyNotes from 'blip/app/components/messages'
 
 interface PatientDataProps {
   patient: Patient
@@ -130,13 +131,15 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   } = usePatientData({ patient })
   const {
     showMessageCreation,
-    showMessageThread,
+    showNoteThread,
+    hideNoteThread,
     closeMessageBox,
     createNewMessage,
     createMessageDatetime,
     editMessage,
     handleMessageCreation,
-    messageThread,
+    clickedNoteId,
+    handleNoteUpdated
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
@@ -230,7 +233,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           loading={refreshingData}
                           onClickRefresh={refreshData}
                           onCreateMessage={showMessageCreation}
-                          onShowMessageThread={showMessageThread}
+                          onShowNoteThread={showNoteThread}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
                           isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
@@ -239,7 +242,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           {createMessageDatetime &&
                             <DailyNotes
                               createDatetime={createMessageDatetime}
-                              messages={messageThread}
                               onNewMessage={handleMessageCreation}
                               user={user}
                               patient={patient}
@@ -250,12 +252,12 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                               trackMetric={metrics.send}
                             />
                           }
-                          {
-                            messageThread && messageThread.length > 0 &&
-                            <ViewNoteDialog
-                              notes={messageThread}
+                          {clickedNoteId &&
+                            <ManageNoteDialog
+                              mainNoteId={clickedNoteId}
                               timePrefs={timePrefs}
-                              onClose={closeMessageBox}
+                              onClose={hideNoteThread}
+                              onMainNoteEdited={handleNoteUpdated}
                             />
                           }
                         </>
