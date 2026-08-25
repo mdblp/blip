@@ -26,44 +26,37 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
-import { useLocation } from 'react-router-dom'
 
 import diabeloopLabel from 'diabeloop-label.svg'
 import diabeloopLogo from 'diabeloop-logo.svg'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import LanguageIcon from '@mui/icons-material/Language'
-import Link from '@mui/material/Link'
 import Tooltip from '@mui/material/Tooltip'
+import config from '../../lib/config/config'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
-import { useAuth } from '../../lib/auth'
-import config from '../../lib/config/config'
-import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
-import { getCurrentLang } from '../../lib/language'
-import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
-import { ExternalFilesService } from '../../lib/external-files/external-files.service'
+import { useFooterHook } from "./shared/footer.hook"
+import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../lib/auth'
+import { useLocation } from 'react-router-dom'
+import { commonStyleFooter } from './shared/footer-style'
+import { FooterLink } from './footer-link'
 
-export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
+export const footerWebStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
     appVersionLink: {
       marginLeft: theme.spacing(1)
     },
     bySpan: {
       paddingLeft: '12px',
-      paddingRight: '12px',
-      [theme.breakpoints.down('sm')]: {
-        paddingRight: '0'
-      }
+      paddingRight: '12px'
     },
     centerBox: {
-      alignItems: 'center',
-      display: 'flex',
       justifyContent: 'center',
       paddingLeft: '15px',
       paddingRight: '15px',
@@ -75,26 +68,13 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
         order: 1,
         textAlign: 'center',
         width: '100%'
-      },
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'space-around',
-        marginLeft: '10px',
-        marginRight: '10px'
       }
     },
-    container: {
-      alignItems: 'center',
-      backgroundColor: 'var(--footer-background-color)',
-      color: theme.palette.grey[700],
-      display: 'flex',
-      flexShrink: 0,
-      fontSize: '12px',
+    containerWeb: {
       paddingBlock: '11px',
-      zIndex: theme.zIndex.drawer + 1,
       [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap'
-      },
-      marginTop: theme.spacing(3)
+      }
     },
     cookiesManagement: {
       '&:hover': {
@@ -104,56 +84,23 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     diabeloopLogo: {
       paddingRight: '3px'
     },
-    diabeloopLink: {
-      [theme.breakpoints.down('sm')]: {
-        marginTop: '12px'
-      }
-    },
     firstLine: {
-      display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
       marginBottom: '6px',
       width: '100%',
       [theme.breakpoints.down('md')]: {
         marginBottom: '0'
-      },
-      [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap'
       }
     },
     firstLineElement: {
-      display: 'flex',
       height: '20px',
-      alignItems: 'center',
       [theme.breakpoints.down('md')]: {
         marginTop: '10px',
         marginBottom: '17px'
-      },
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '15px',
-        marginTop: '0',
-        width: '100%',
-        justifyContent: 'center'
       }
-    },
-    icon: {
-      alignSelf: 'center',
-      color: theme.palette.grey[600],
-      marginRight: '18px',
-      width: '20px',
-      marginBottom: '3px'
     },
     documentBox: {
-      display: 'flex',
-      height: '20px',
-      alignItems: 'center',
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '15px',
-        marginTop: '0',
-        width: '100%',
-        justifyContent: 'center'
-      }
+      height: '20px'
     },
     languageSeparator: {
       alignSelf: 'center'
@@ -164,16 +111,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
         order: 2
       }
     },
-    link: {
-      color: theme.palette.grey[700],
-      fontWeight: 400,
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '15px',
-        marginLeft: '0.5rem',
-        marginRight: '0.5rem',
-        textAlign: 'center'
-      }
-    },
     medicalDeviceWarning: {
       paddingRight: theme.spacing(4)
     },
@@ -182,30 +119,18 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       justifyContent: 'right',
       [theme.breakpoints.down('md')]: {
         order: 3
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'flex',
-        flexDirection: 'column',
-        textAlign: 'right'
       }
     },
     separator: {
       paddingLeft: '15px',
-      paddingRight: '15px',
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-        visibility: 'hidden'
-      }
+      paddingRight: '15px'
     },
     sideBox: {
       flex: '1'
     },
     supportButton: {
       height: '46px',
-      width: '134px',
-      [theme.breakpoints.down('sm')]: {
-        marginTop: '10px'
-      }
+      width: '134px'
     },
     svg: {
       height: '12px',
@@ -219,33 +144,31 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
 })
 
 export const Footer: FunctionComponent = () => {
+  const { classes: webClasses } = footerWebStyle();
+  const { classes: commonClasses } = commonStyleFooter();
+
+  const classes = {
+    ...webClasses,
+    ...commonClasses
+  }
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { pathname } = useLocation()
-  const { classes } = footerStyle()
 
-  const currentLanguage = getCurrentLang()
-  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCode.Ja
-
-  const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
-  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
-  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
-  const releaseNotesUrl = ExternalFilesService.getReleaseNotesUrl()
-
-  const handleShowCookieBanner = (): void => {
-    if (typeof window.openAxeptioCookies === 'function') {
-      window.openAxeptioCookies()
-    }
-  }
-
-  const metricsPdfDocument = (title: string) => {
-    return () => {
-      metrics.send('pdf_document', 'view_document', title)
-    }
-  }
+  const {
+    shouldDisplayMedicalDeviceWarning,
+    cookiesPolicyUrl,
+    privacyPolicyUrl,
+    termsOfUseUrl,
+    releaseNotesUrl,
+    handleShowCookieBanner,
+    metricsPdfDocument
+  } = useFooterHook()
 
   return (
-    <Container id="footer-links-container" data-testid="footer" className={classes.container} maxWidth={false}>
+    <Container id="footer-links-container" data-testid="footer"
+               className={`${classes.containerWeb} ${classes.containerCommon}
+    ${classes.commonBoxAndContainer}`} maxWidth={false}>
       <Box className={`${classes.sideBox} ${classes.leftBox}`}>
         <Box className={classes.supportButton} />
       </Box>
@@ -254,71 +177,69 @@ export const Footer: FunctionComponent = () => {
         <Box className={classes.medicalDeviceWarning}>{t('not-a-medical-device')}</Box>
       }
 
-      <Box className={classes.centerBox}>
+      <Box className={`${classes.centerBox} ${classes.commonBoxAndContainer}`}>
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
-          ? <Box className={classes.firstLine}>
-            <Box className={classes.firstLineElement}>
+          ? <Box className={`${classes.firstLine} ${classes.commonBoxAndContainer}`}>
+            <Box className={`${classes.firstLineElement} ${classes.commonBoxAndContainer}`}>
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
             </Box>
             <AccompanyingDocumentLinks user={user} />
           </Box>
-          : <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
+          : <Box id="footer-accompanying-documents-box"
+                 className={`${classes.documentBox} ${classes.commonBoxAndContainer}`}>
             <AccompanyingDocumentLinks user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
         }
 
-        <Link
+        <FooterLink
           id="footer-link-url-privacy-policy"
-          target="_blank"
           href={privacyPolicyUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
-          className={classes.link}
+          style = {classes.commonLink}
+          isExternal
         >
           {t('privacy-policy')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-url-terms"
-          target="_blank"
           href={termsOfUseUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('terms')}
-          className={classes.link}
+          style = {classes.commonLink}
+          isExternal
         >
           {t('terms-of-use')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-cookies-management"
-          className={`${classes.link} ${classes.cookiesManagement}`}
           onClick={handleShowCookieBanner}
+          style = {classes.commonLink}
         >
           {t('cookies-management')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-url-cookies-policy"
-          target="_blank"
           href={cookiesPolicyUrl}
-          rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
-          className={classes.link}
+          style = {classes.commonLink}
+          isExternal
         >
           {t('cookies-policy')}
-        </Link>
+        </FooterLink>
         <Box className={classes.separator}>|</Box>
-        <Link
+        <FooterLink
           id="footer-link-contact-mailto"
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
-          onClick={metricsPdfDocument('yourloops-mailto-contact')}
-          className={classes.link}
+          onClick={metricsPdfDocument('mailto-contact')}
+          style = {classes.commonLink}
         >
           {t('contact')}
-        </Link>
+        </FooterLink>
       </Box>
       <Box className={`${classes.sideBox} ${classes.rightBox}`}>
         <Box>
@@ -329,28 +250,27 @@ export const Footer: FunctionComponent = () => {
             aria-label={t('tooltip-release-notes')}
             placement="right-start"
           >
-            <Link
-              data-testid="footer-link-url-release-notes"
-              target="_blank"
+            <FooterLink
+              dataTestId="footer-link-url-release-notes"
               href={releaseNotesUrl}
-              rel="nofollow"
               onClick={metricsPdfDocument('release_notes')}
-              className={`${classes.link} ${classes.appVersionLink}`}
+              style = {`${classes.commonLink} ${classes.appVersionLink}`}
+              isExternal
             >
               <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
-            </Link>
+            </FooterLink>
           </Tooltip>
           <span className={classes.bySpan}>by </span>
         </Box>
-        <Link
+        <FooterLink
           id="footer-link-url-diabeloop"
-          className={classes.diabeloopLink}
-          target="_blank"
-          href={diabeloopExternalUrls.support} rel="nofollow"
+          href={diabeloopExternalUrls.support}
+          style = {classes.commonLink}
+          isExternal
         >
           <img src={diabeloopLogo} alt={t('alt-img-logo')} className={`${classes.svg} ${classes.diabeloopLogo}`} />
           <img src={diabeloopLabel} alt={t('alt-img-logo')} className={classes.svg} />
-        </Link>
+        </FooterLink>
       </Box>
     </Container>
   )
