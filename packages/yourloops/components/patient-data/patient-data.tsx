@@ -135,7 +135,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     closeMessageBox,
     createNewMessage,
     createMessageDatetime,
-    editMessage,
     handleMessageCreation,
     clickedNoteId,
     handleNoteUpdated
@@ -246,7 +245,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                               patient={patient}
                               onClose={closeMessageBox}
                               onSave={createNewMessage}
-                              onEdit={editMessage}
                               timePrefs={timePrefs}
                               trackMetric={metrics.send}
                             />

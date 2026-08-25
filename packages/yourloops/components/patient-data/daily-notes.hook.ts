@@ -43,7 +43,6 @@ interface UseDailyNotesReturn {
   closeMessageBox: () => void
   createMessageDatetime: string
   createNewMessage: (message: MessageNote) => Promise<string>
-  editMessage: (message: MessageNote) => Promise<void>
   handleMessageCreation: (message: MessageNote) => Promise<void>
   clickedNoteId: string
   showMessageCreation: (datetime: Moment | null) => void
@@ -63,16 +62,6 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
 
   const closeMessageBox = (): void => {
     setCreateMessageDatetime(undefined)
-  }
-
-  const editMessage = async (message: MessageNote): Promise<void> => {
-    await NotesApi.editNote(message)
-    metrics.send('note', 'edit_note')
-
-    if (!message.parentmessage) {
-      // Daily timeline view only cares for top-level note
-      dailyChartRef.current.editMessage(message)
-    }
   }
 
   const handleMessageCreation = async (message: MessageNote): Promise<void> => {
@@ -110,7 +99,6 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
     hideNoteThread,
     createNewMessage,
     handleMessageCreation,
-    editMessage,
     handleNoteUpdated,
   }
 }
