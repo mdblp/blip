@@ -557,6 +557,7 @@
   "note-comment-edit-success": "Note comment edited successfully",
   "note-comment-input": "New comment",
   "note-edit": "Edit note",
+  "note-edit-input": "Note edition",
   "note-edit-success": "Note edited successfully",
   "notification": "Notification",
   "notification-caregiver-invite-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",
