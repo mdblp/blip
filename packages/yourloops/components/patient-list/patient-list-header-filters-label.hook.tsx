@@ -26,6 +26,8 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface PatientListHeaderFiltersLabelHookProps {
   allNonPendingPatientsForSelectedTeamCount: number
@@ -47,17 +49,22 @@ export const usePatientListHeaderFiltersLabelHook = (props: PatientListHeaderFil
   } = props
   const { t } = useTranslation()
 
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   const getFiltersLabel = (): string | undefined => {
     if (pendingFilterEnabled) {
       return t('filter-pending', { patientsFilteredCount: patientsDisplayedCount })
     }
-    if (hasAnyNonPendingFiltersEnabled) {
-      return t('filters-activated', {
-        patientsFilteredCount: patientsDisplayedCount,
-        totalNumberOfPatients: allNonPendingPatientsForSelectedTeamCount
-      })
+    if (!isMobile) {
+      if (hasAnyNonPendingFiltersEnabled) {
+        return t('filters-activated', {
+          patientsFilteredCount: patientsDisplayedCount,
+          totalNumberOfPatients: allNonPendingPatientsForSelectedTeamCount
+        })
+      }
+      return t('filters-deactivated', { totalNumberOfPatients: patientsDisplayedCount })
     }
-    return t('filters-deactivated', { totalNumberOfPatients: patientsDisplayedCount })
   }
 
   return { filtersLabel: getFiltersLabel() }

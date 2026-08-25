@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
-import { checkRegisterButton, checkSignupInformationPageContent } from '../assert/signup-information.assert'
 
-export const testSignupInformation = async (loginWithRedirectMock: jest.Mock) => {
-  checkFooterForUserNotLoggedIn(false, true)
-  await checkSignupInformationPageContent()
-  await checkRegisterButton(loginWithRedirectMock)
+import Link from '@mui/material/Link'
+import React from 'react'
+
+interface FooterLinkProps {
+  id?: string
+  dataTestId?: string
+  style?: string
+  href?: string
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void
+  isExternal?: boolean
+  children: React.ReactNode
 }
+
+export const FooterLink : React.FC<FooterLinkProps> = (props) => {
+  const {
+    id,
+    dataTestId,
+    style,
+    href,
+    onClick,
+    isExternal,
+    children
+  } = props
+
+  return (
+    <Link
+      id={id}
+      href={href}
+      className={style}
+      onClick={onClick}
+      data-testid={dataTestId}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'nofollow' : undefined}
+    >
+      {children}
+    </Link>
+  )
+}
+

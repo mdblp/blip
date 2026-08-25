@@ -26,7 +26,8 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { PatientListHeader } from './patient-list-header'
+import { PatientListHeader } from './patient-list-header/patient-list-header'
+import { PatientListHeaderMobile } from './patient-list-header/patient-list-header-mobile'
 import { usePatientListHook } from './patient-list.hook'
 import { PatientListTabs } from './models/enums/patient-list.enum'
 import { GlobalStyles } from 'tss-react'
@@ -40,12 +41,14 @@ import {
 } from './current-patient-list/private-team-or-caregiver-patient-list/private-team-or-caregiver-patient-list'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 export const PatientListPage: FunctionComponent = () => {
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
   const { teamId } = paramHook as { teamId: string }
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const {
     selectedTab,
@@ -62,13 +65,20 @@ export const PatientListPage: FunctionComponent = () => {
   return (
     <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
-      <PatientListHeader
-        selectedTab={selectedTab}
-        inputSearch={inputSearch}
-        patientsDisplayedCount={patients.length}
-        onChangingTab={onChangingTab}
-        setInputSearch={setInputSearch}
-      />
+      {isMobile ?
+        <PatientListHeaderMobile
+          inputSearch={inputSearch}
+          setInputSearch={setInputSearch}
+        />
+        :
+        <PatientListHeader
+          selectedTab={selectedTab}
+          inputSearch={inputSearch}
+          patientsDisplayedCount={patients.length}
+          onChangingTab={onChangingTab}
+          setInputSearch={setInputSearch}
+        />
+      }
 
       {selectedTab === PatientListTabs.Current && isCaregiverUserOrPrivateTeam &&
         <PrivateTeamOrCaregiverPatientList patients={patients} />
