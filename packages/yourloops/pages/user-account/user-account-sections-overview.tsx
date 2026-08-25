@@ -26,12 +26,12 @@
  */
 
 import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountMenuMobileCards } from './user-account-menu-mobile-cards'
+import { UserAccountSectionsOverviewCards } from './user-account-sections-overview-cards'
 import React from 'react'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
 
-export const UserAccountMenuMobile = () => {
+export const UserAccountSectionsOverview = () => {
 
   const { consents, refreshInProgress } = useDataSharingHook()
 
@@ -40,7 +40,7 @@ export const UserAccountMenuMobile = () => {
       {refreshInProgress
         ? <SpinningLoader className="centered-spinning-loader" />
         :
-        <UserAccountMenuMobileCards
+        <UserAccountSectionsOverviewCards
           consents={consents}
         />
       }

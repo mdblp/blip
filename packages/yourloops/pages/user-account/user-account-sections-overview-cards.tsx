@@ -61,7 +61,7 @@ export const cardStyle = makeStyles({ name: 'footer-component-styles' })((theme)
   }
 })
 
-export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (props) => {
+export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProps> = (props) => {
   const { consents } = props
   const { user } = useAuth()
   const { t } = useTranslation()
@@ -119,7 +119,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
           <Link
             className={classes.links}
             component="button"
-            onClick={() => navigate(AppUserRoute.UserMenuAccountSection)}
+            onClick={() => navigate(AppUserRoute.AccountSection)}
             underline="none"
             data-testid="link-account"
           >
@@ -138,7 +138,7 @@ export const UserAccountMenuMobileCards: FC<UserAccountMenuMobileCardsProps> = (
           <Link
             className={classes.links}
             component="button"
-            onClick={() => navigate(AppUserRoute.UserMenuDataSharingSection)}
+            onClick={() => navigate(AppUserRoute.DataSharingSection)}
             underline="none"
             data-testid="link-data-sharing"
           >

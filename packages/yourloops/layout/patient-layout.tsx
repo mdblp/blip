@@ -41,7 +41,7 @@ import { useAuth } from '../lib/auth'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { UserAccountMenuMobile } from '../pages/user-account/user-account-menu-mobile'
+import { UserAccountSectionsOverview } from '../pages/user-account/user-account-sections-overview'
 import { AccountSection } from '../pages/user-account/sections/account-section/account-section'
 import { DataSharingSection } from '../pages/user-account/sections/data-sharing-section/data-sharing-section'
 import { CountryCode } from '../lib/auth/models/country.model'
@@ -51,7 +51,7 @@ export const PatientLayout: FC = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user } = useAuth()
-  const shouldDisplayMobileVersion = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
+  const shouldDisplayDataSharingSection = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
 
   return (
     <TeamContextProvider>
@@ -59,15 +59,15 @@ export const PatientLayout: FC = () => {
         <Routes>
           <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
           <Route path={AppUserRoute.UserAccount}
-                 element={shouldDisplayMobileVersion
-                   ? (<Navigate to={AppUserRoute.UserMenu} replace />)
+                 element={shouldDisplayDataSharingSection
+                   ? (<Navigate to={AppUserRoute.UserAccountSectionsOverview} replace />)
                    : (<UserAccountPage />)}
           />
-          {shouldDisplayMobileVersion && (
+          {shouldDisplayDataSharingSection && (
             <Route>
-              <Route path={AppUserRoute.UserMenu} element={<UserAccountMenuMobile />} />
-              <Route path={AppUserRoute.UserMenuAccountSection} element={<AccountSection />} />
-              <Route path={AppUserRoute.UserMenuDataSharingSection} element={<DataSharingSection />} />
+              <Route path={AppUserRoute.UserAccountSectionsOverview} element={<UserAccountSectionsOverview />} />
+              <Route path={AppUserRoute.AccountSection} element={<AccountSection />} />
+              <Route path={AppUserRoute.DataSharingSection} element={<DataSharingSection />} />
             </Route>
           )}
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />

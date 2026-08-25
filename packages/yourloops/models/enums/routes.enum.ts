@@ -44,9 +44,9 @@ export enum AppUserRoute {
   Teams = '/teams',
   Trends = '/trends',
   UserAccount = '/user-account',
-  UserMenu = '/user-menu',
-  UserMenuAccountSection = '/user-menu/account',
-  UserMenuDataSharingSection = '/user-menu/data-sharing'
+  UserAccountSectionsOverview = '/user-account-sections-overview',
+  AccountSection = '/user-account-sections-overview/account',
+  DataSharingSection = '/user-account-sections-overview/data-sharing'
 }
 
 export enum AppRoute {

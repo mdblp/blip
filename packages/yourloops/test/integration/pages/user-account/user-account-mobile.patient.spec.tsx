@@ -59,7 +59,7 @@ import { mockMobileScreen } from '../../mock/mobile-screen.mock'
 
 describe('User account page for patient', () => {
   const userAccountRoute = AppUserRoute.UserAccount
-  const userMenuMobileRoute = AppUserRoute.UserMenu
+  const userAccountSectionsOverview = AppUserRoute.UserAccountSectionsOverview
 
   const account: UserAccount = {
     email: 'yann.blanc@example.com',
@@ -120,7 +120,7 @@ describe('User account page for patient', () => {
     jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue(consents)
 
     await act(async () => {
-      renderPage(userMenuMobileRoute)
+      renderPage(userAccountSectionsOverview)
     })
 
     await testUserAccountMenuVisibleMobile()
@@ -161,7 +161,7 @@ describe('User account page for patient', () => {
 
   it('should be able to access the pages linked by the cards', async () => {
     await act(async () => {
-      renderPage(userMenuMobileRoute)
+      renderPage(userAccountSectionsOverview)
     })
 
     testClickViewMoreUserAccount()
