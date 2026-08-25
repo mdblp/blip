@@ -48,7 +48,7 @@ export const ManageNoteDialog: FC<ManageNoteDialogProps> = (props) => {
   const dataTestId = editingNote ? 'edit-note-dialog' : 'view-note-dialog'
 
   const refreshThread = useCallback(async () => {
-    const updatedNotes = await NotesApi.getMessageThread(mainNoteId)
+    const updatedNotes = await NotesApi.getNoteThread(mainNoteId)
     setNoteThread(updatedNotes)
   }, [mainNoteId])
 

@@ -91,7 +91,7 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
     try {
       metrics.send('note', 'edit_note')
 
-      await NotesApi.editMessage(editedNote)
+      await NotesApi.editNote(editedNote)
       alert.success(editionSuccessLabel)
 
       if (isMainNote) {
@@ -118,6 +118,15 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
             <DateTimePicker
               value={noteDateTime}
               onChange={(newDateTime: Moment) => setNoteDateTime(newDateTime)}
+              slotProps={{
+                textField: {
+                  slotProps: {
+                    htmlInput: {
+                      'data-testid': 'edit-note-datetime-input'
+                    } as React.InputHTMLAttributes<HTMLInputElement>
+                  }
+                }
+              }}
             />
           }
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }} data-testid="edit-note-content">

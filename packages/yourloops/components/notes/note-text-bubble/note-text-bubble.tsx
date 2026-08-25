@@ -30,6 +30,7 @@ import { Menu } from '@mui/material'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import React, { FC, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface NoteCommentProps {
   textMessage: string
@@ -39,8 +40,9 @@ interface NoteCommentProps {
 
 const MENU_CLOSE_DELAY_MS = 100
 
-export const NoteComment: FC<NoteCommentProps> = (props) => {
+export const NoteTextBubble: FC<NoteCommentProps> = (props) => {
   const { textMessage, isEditable, onClickEdit } = props
+  const { t } = useTranslation('main')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -69,10 +71,12 @@ export const NoteComment: FC<NoteCommentProps> = (props) => {
       }}
       onMouseEnter={cancelClose}
       onMouseLeave={scheduleClose}
+      data-testid="note-text-bubble"
     >
       <Typography variant="body2">{textMessage}</Typography>
 
       <Menu
+        data-testid="note-text-bubble-menu"
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
@@ -107,6 +111,8 @@ export const NoteComment: FC<NoteCommentProps> = (props) => {
                 backgroundColor: 'var(--info-color-10)'
               }
             }}
+            role="button"
+            aria-label={t('button-edit')}
             onClick={onClickEdit}
           >
             <EditOutlined />

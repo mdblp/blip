@@ -31,7 +31,7 @@ import Typography from '@mui/material/Typography'
 import React, { FC } from 'react'
 import { getInitials } from '../../../lib/auth/user.util'
 import { MessageNote } from '../../../lib/data/models/message-note.model'
-import { NoteComment } from '../note-comment/note-comment'
+import { NoteTextBubble } from '../note-text-bubble/note-text-bubble'
 import styles from './note-thread-item.css'
 
 interface NoteThreadItemProps {
@@ -80,7 +80,7 @@ export const NoteThreadItem: FC<NoteThreadItemProps> = (props) => {
           <span className={styles.bold}>{note.user.fullName}</span>
           <span> - {getDateTime(note.timestamp)}</span>
         </Typography>
-        <NoteComment
+        <NoteTextBubble
           textMessage={note.messagetext}
           isEditable={isAuthor}
           onClickEdit={() => onClickEdit(note)}
