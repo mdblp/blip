@@ -58,7 +58,7 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   const [clickedNoteId, setClickedNoteId] = useState<string>(undefined)
 
   const createNewMessage = async (message: MessageNote): Promise<string> => {
-    return await NotesApi.postMessageThread(message)
+    return await NotesApi.createNote(message)
   }
 
   const closeMessageBox = (): void => {
@@ -66,7 +66,7 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   }
 
   const editMessage = async (message: MessageNote): Promise<void> => {
-    await NotesApi.editMessage(message)
+    await NotesApi.editNote(message)
     metrics.send('note', 'edit_note')
 
     if (!message.parentmessage) {

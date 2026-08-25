@@ -32,12 +32,14 @@ import HttpService from '../http/http.service'
 const NOTES_URL = '/message/v1'
 
 export class NotesApi {
-  static async getMessageThread(messageId: string): Promise<MessageNote[]> {
-    const { data } = await HttpService.get<MessageNote[]>({ url: `${NOTES_URL}/thread/${messageId}` })
-    return sortBy(data, (message: MessageNote) => Date.parse(message.timestamp))
+  static async getNoteThread(noteId: string): Promise<MessageNote[]> {
+    const { data } = await HttpService.get<MessageNote[]>({
+      url: `${NOTES_URL}/thread/${noteId}`
+    })
+    return sortBy(data, (note: MessageNote) => Date.parse(note.timestamp))
   }
 
-  static async postMessageThread(message: MessageNote): Promise<string> {
+  static async createNote(message: MessageNote): Promise<string> {
     const { data } = await HttpService.post<{ id: string }, MessageNote>({
       url: `${NOTES_URL}/send`,
       payload: message
@@ -45,10 +47,10 @@ export class NotesApi {
     return data.id
   }
 
-  static async editMessage(message: MessageNote): Promise<void> {
+  static async editNote(note: MessageNote): Promise<void> {
     await HttpService.put<void, MessageNote>({
       url: `${NOTES_URL}/edit`,
-      payload: message
+      payload: note
     })
   }
 }

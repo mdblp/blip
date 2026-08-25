@@ -29,7 +29,6 @@ import { BoundFunctions, fireEvent, queries, screen, within } from '@testing-lib
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import { getTranslation } from '../../utils/i18n'
-import { loggedInUserFullName, loggedInUserInitials, userTimFullName, userTimInitials } from '../mock/auth0.hook.mock'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
@@ -301,71 +300,6 @@ export const checkEventsSuperposition = async () => {
   const reservoirChangeContent = 'Cartridge change3:15 pm'
 
   expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContentMultipleOccurrences}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
-}
-
-export const checkNoteView = async (nowDate: Date) => {
-  const note = screen.getByTestId(`note_group_${NOTE_ID}`)
-  const displayedDate = moment.utc(nowDate.toISOString()).tz('Europe/Paris').format('MMM D, YYYY h:mm a')
-
-  expect(note).toBeVisible()
-  fireEvent.click(note)
-
-  const dialog = await screen.findByTestId('view-note-dialog')
-
-  expect(dialog).toBeVisible()
-  expect(within(dialog).getByTestId('view-note-title')).toHaveTextContent('Note')
-  expect(within(dialog).getByTestId('view-note-thread')).toHaveTextContent(`${loggedInUserInitials}${loggedInUserFullName} - Aug 8, 2022 2:00 pmThis day was very stressful${userTimInitials}${userTimFullName} - Aug 8, 2022 5:00 pmReally? What happened?`)
-  expect(within(dialog).getByTestId('view-note-add-comment')).toHaveTextContent(displayedDate)
-  expect(within(dialog).getByPlaceholderText('Type a comment here ...')).toBeVisible()
-  expect(within(dialog).getByTestId('view-note-actions')).toHaveTextContent('ClosePost')
-  expect(within(dialog).getByRole('button', { name: 'Post' })).toBeDisabled()
-
-  await userEvent.click(within(dialog).getByTestId('close-button'))
-  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
-}
-
-export const checkNoteAddCommentSuccess = async () => {
-  const note = screen.getByTestId(`note_group_${NOTE_ID}`)
-  fireEvent.click(note)
-
-  const dialog = await screen.findByTestId('view-note-dialog')
-  expect(dialog).toBeVisible()
-  const commentInput = within(dialog).getByRole('textbox')
-  expect(commentInput).toBeVisible()
-
-  const submitButton = within(dialog).getByRole('button', { name: 'Post' })
-  expect(submitButton).toBeDisabled()
-
-  await userEvent.type(commentInput, ' ')
-  expect(submitButton).toBeDisabled()
-
-  await userEvent.type(commentInput, 'New comment on this note')
-  expect(submitButton).toBeEnabled()
-
-  await userEvent.clear(commentInput)
-  expect(submitButton).toBeDisabled()
-
-  await userEvent.type(commentInput, 'New comment on this note')
-  expect(submitButton).toBeEnabled()
-
-  await userEvent.click(submitButton)
-
-  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Comment added successfully')
-  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
-}
-
-export const checkNoteAddCommentFailure = async () => {
-  const note = screen.getByTestId(`note_group_${NOTE_ID}`)
-  fireEvent.click(note)
-
-  const dialog = await screen.findByTestId('view-note-dialog')
-  await userEvent.type(within(dialog).getByRole('textbox'), 'New comment on this note')
-
-  const submitButton = within(dialog).getByRole('button', { name: 'Post' })
-  await userEvent.click(submitButton)
-
-  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred, please try again later.')
-  expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
 }
 
 const checkDailyViewChartsCommon = () => {

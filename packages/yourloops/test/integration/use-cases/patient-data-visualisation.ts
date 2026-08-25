@@ -38,9 +38,6 @@ import {
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
   checkEventsSuperposition,
-  checkNoteAddCommentFailure,
-  checkNoteAddCommentSuccess,
-  checkNoteView,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
 import {
@@ -54,6 +51,16 @@ import {
   checkEmptyMedicalFilesWidgetForPatient
 } from '../assert/medical-widget.assert'
 import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
+import {
+  checkNoteAddCommentFailure,
+  checkNoteAddCommentSuccess,
+  checkNoteCommentEditContent,
+  checkNoteCommentEditSuccess,
+  checkNoteEditContent,
+  checkNoteEditFailure,
+  checkNoteEditSuccess,
+  checkNoteView
+} from '../assert/notes.assert'
 import { checkPatientNavBarForCaregiver, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
 import {
   checkPatientStatistics,
@@ -184,9 +191,14 @@ export const testTrendsWeekDayFilter = async () => {
 
 export const testNotesFailure = async () => {
   await checkNoteAddCommentFailure()
+  await checkNoteEditFailure()
 }
 
 const checkNotes = async (date: Date) => {
   await checkNoteView(date)
+  await checkNoteEditContent()
+  await checkNoteCommentEditContent()
   await checkNoteAddCommentSuccess()
+  await checkNoteEditSuccess()
+  await checkNoteCommentEditSuccess()
 }

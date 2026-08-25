@@ -88,7 +88,7 @@ export const ViewNoteDialogContent: FC<ViewNoteDialogProps> = (props) => {
     try {
       metrics.send('note', 'reply_note')
 
-      await NotesApi.postMessageThread(newNoteComment)
+      await NotesApi.createNote(newNoteComment)
       alert.success(t('note-comment-add-success'))
     } catch (err) {
       const errorMessage = errorTextFromException(err)
