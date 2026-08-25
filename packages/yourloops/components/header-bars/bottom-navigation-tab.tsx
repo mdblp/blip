@@ -67,7 +67,8 @@ export const BottomNavigationTab: React.FC<BottomNavigationTabProps> = (props) =
     value,
     dataTestId,
     isSelected,
-    onChangePatientView
+    onChangePatientView,
+    ...otherProps
   } = props
   const { classes } = styles()
   const { t } = useTranslation('yourloops')
@@ -89,7 +90,7 @@ export const BottomNavigationTab: React.FC<BottomNavigationTabProps> = (props) =
 
   return (
     <BottomNavigationAction
-      {...props}
+      {...otherProps}
       value={value}
       icon={getIcon(value)}
       className={classes.bottomNavAction}

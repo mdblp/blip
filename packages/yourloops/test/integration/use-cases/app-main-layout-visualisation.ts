@@ -64,29 +64,32 @@ export interface AppMainLayoutParams {
 
 export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
   await checkHcpHeader(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForHcp( false, appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testAppMainLayoutForHcpMobile = async (appMainLayoutParams: AppMainLayoutHcpMobileParams) => {
   await checkHcpHeaderMobile(appMainLayoutParams.headerInfoMobile)
+  checkFooterForHcp(true, appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForCaregiver( false, appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testAppMainLayoutForCaregiverMobile = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkCaregiverHeaderMobile(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForCaregiver( true, appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
+  checkFooterForPatient( false, appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testAppMainLayoutForPatientMobile = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkPatientHeaderMobile(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForPatient( true, appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
 export const testBannerLanguageUpdate = async () => {

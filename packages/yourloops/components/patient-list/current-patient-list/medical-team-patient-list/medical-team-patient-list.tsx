@@ -43,6 +43,8 @@ import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
 import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
 import AnalyticsApi, { ElementType } from '../../../../lib/analytics/analytics.api'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface MedicalTeamPatientListProps {
   patients: Patient[]
@@ -61,6 +63,8 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
   const { refreshInProgress } = usePatientsContext()
   const { width } = useWindowDimensions()
   const gridApiRef = useGridApiRef()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumn.Patient, sort: 'asc' }])
@@ -93,10 +97,12 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
           columnVisibilityModel={displayedColumns}
           sortModel={sortModel}
           onSortModelChange={handleSortChange}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
           onRowClick={onRowClick}
-          pageSizeOptions={[5, 10, 25]}
+          paginationModel={isMobile ? undefined : paginationModel}
+          onPaginationModelChange={isMobile ? undefined : setPaginationModel}
+          pageSizeOptions={isMobile ? undefined : [5, 10, 25]}
+          pagination={isMobile ? undefined : true}
+          hideFooter={isMobile}
           sx={{
             borderRadius: 0,
             '& .MuiDataGrid-cell:hover': { cursor: 'pointer' }

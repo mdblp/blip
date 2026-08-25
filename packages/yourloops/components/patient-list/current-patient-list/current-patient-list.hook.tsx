@@ -58,6 +58,8 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../utils/sort-comparators.util'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -82,6 +84,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   const { getFlagPatients } = useAuth()
   const navigate = useNavigate()
   const noDataLabel = t('N/A')
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const flaggedPatients = getFlagPatients()
   const sortedPatients = PatientUtils.computeFlaggedPatients(patients, flaggedPatients).sort(sortByUserName)
@@ -134,7 +138,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         field: PatientListColumn.Patient,
         headerName: t('patient'),
         hideable: false,
-        width: 250,
+        width: isMobile ? undefined : 250,
+        flex: isMobile ? 1 : undefined,
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
@@ -190,10 +195,12 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         field: PatientListColumn.MonitoringAlerts,
-        headerName: t('monitoring-alerts'),
+        headerName: isMobile ? t('alerts') : t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         sortComparator: sortByMonitoringAlertsCount,
-        width: 150,
+        headerAlign: isMobile ? 'center' : 'left',
+        width: isMobile ? undefined : 150,
+        flex: isMobile ? 0.6 : undefined,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
           const isLoading = !patient.monitoringAlertsParameters || !patient.monitoringAlerts
@@ -214,11 +221,13 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         field: PatientListColumn.TimeInRange,
         headerName: t('time-in-range'),
         description: t('time-in-range-tooltip'),
-        headerAlign: 'left',
-        align: 'left',
+        headerAlign: isMobile ? 'center' : 'left',
+        align: isMobile ? 'center' : 'left',
+        flex: isMobile ? 0.6 : undefined,
         valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
         renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
           const value = params.value
+
           return isNumberValueDefined(value)
             ? PatientUtils.formatPercentageValue(params.value)
             : <Skeleton data-testid="time-in-range-cell-skeleton"
@@ -318,7 +327,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         }
       }
     ]
-  }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel])
+  }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel, isMobile])
 
   const onRowClick = (params: GridRowParams): void => {
     navigate(`${params.id}${AppUserRoute.Dashboard}`)
