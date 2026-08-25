@@ -47,6 +47,7 @@ import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { HyperglycemiaIcon } from '../icons/diabeloop/hyperglycemia-icon'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface PatientsFiltersDialogProps {
   anchorEl: Element
@@ -66,6 +67,8 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
   const { t } = useTranslation()
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientListContext()
   const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isWeb = !isMobile
   const { classes } = useStyles()
 
   const [filters, setFilters] = useState<PatientsFilters>(patientsFiltersContext)
@@ -80,6 +83,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
       open
       anchorEl={anchorEl}
       onClose={onClose}
+      data-testid="filters-popover"
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'left'
@@ -91,31 +95,41 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
           marginX: theme.spacing(3),
           marginTop: theme.spacing(3)
         }}>
-        <Typography variant="h6" className={classes.title}>{t('personal-settings')}</Typography>
-        <PatientListOptionToggle
-          ariaLabel={t('filter-flagged')}
-          checked={filters.manualFlagEnabled}
-          icon={<FlagIcon />}
-          label={t('manual-flag')}
-          onToggleChange={() => {
-            setFilters({ ...filters, manualFlagEnabled: !filters.manualFlagEnabled })
-            AnalyticsApi.trackClick('patient-filters-flagged', ElementType.Toggle)
-          }}
-        />
+        {isWeb &&
+          <>
+            <Typography variant="h6" className={classes.title}>{t('personal-settings')}</Typography>
+            <PatientListOptionToggle
+              ariaLabel={t('filter-flagged')}
+              checked={filters.manualFlagEnabled}
+              icon={<FlagIcon />}
+              label={t('manual-flag')}
+              disabled={isMobile}
+              onToggleChange={() => {
+                setFilters({ ...filters, manualFlagEnabled: !filters.manualFlagEnabled })
+                AnalyticsApi.trackClick('patient-filters-flagged', ElementType.Toggle)
+              }}
+            />
+          </>
+        }
 
         {!isSelectedTeamPrivate &&
           <>
-            <Typography variant="h6" className={classes.title}>{t('lead-clinicians')}</Typography>
-            <PatientListOptionToggle
-              ariaLabel={t('filter-my-patients')}
-              checked={filters.myPatientsEnabled}
-              icon={<StethoscopeIcon />}
-              label={t('my-patients')}
-              onToggleChange={() => {
-                setFilters({ ...filters, myPatientsEnabled: !filters.myPatientsEnabled })
-                AnalyticsApi.trackClick('patient-filters-my-patients', ElementType.Toggle)
-              }}
-            />
+            {isWeb &&
+              <>
+                <Typography variant="h6" className={classes.title}>{t('lead-clinicians')}</Typography>
+                <PatientListOptionToggle
+                  ariaLabel={t('filter-my-patients')}
+                  checked={filters.myPatientsEnabled}
+                  icon={<StethoscopeIcon />}
+                  label={t('my-patients')}
+                  disabled={isMobile}
+                  onToggleChange={() => {
+                    setFilters({ ...filters, myPatientsEnabled: !filters.myPatientsEnabled })
+                    AnalyticsApi.trackClick('patient-filters-my-patients', ElementType.Toggle)
+                  }}
+                />
+              </>
+            }
 
             <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
             <PatientListOptionToggle
@@ -154,21 +168,29 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               icon={<NoDataIcon />}
               label={t('data-not-transmitted')}
               onToggleChange={() => {
-                setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })
+                setFilters(prevFilters => ({
+                  ...prevFilters,
+                  dataNotTransferredEnabled: !prevFilters.dataNotTransferredEnabled
+                }))
                 AnalyticsApi.trackClick('patient-filters-data-not-transmitted', ElementType.Toggle)
               }}
             />
-            <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
-            <PatientListOptionToggle
-              ariaLabel={t('filter-unread-messages')}
-              checked={filters.messagesEnabled}
-              icon={<MessageIcon />}
-              label={t('messages')}
-              onToggleChange={() => {
-                setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
-                AnalyticsApi.trackClick('patient-filters-unread-messages', ElementType.Toggle)
-              }}
-            />
+            {isWeb &&
+              <>
+                <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
+                <PatientListOptionToggle
+                  ariaLabel={t('filter-unread-messages')}
+                  checked={filters.messagesEnabled}
+                  icon={<MessageIcon />}
+                  label={t('messages')}
+                  disabled={isMobile}
+                  onToggleChange={() => {
+                    setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
+                    AnalyticsApi.trackClick('patient-filters-unread-messages', ElementType.Toggle)
+                  }}
+                />
+              </>
+            }
           </>
         }
       </Box>
