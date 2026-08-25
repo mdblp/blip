@@ -35,14 +35,12 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
-import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
-import myDiabbyLogo from 'my-diabby-app-icon.svg'
-import glookoLogo from 'glooko-app-icon.svg'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import { getRemoteMonitoringToolLabel } from './sections/data-sharing-section/remote-monitoring.util'
 import { useAuth } from '../../lib/auth'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
@@ -69,6 +67,8 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
   const { userAccountForm } = useUserAccountPageState()
   const { classes } = cardStyle()
 
+  const { getRemoteMonitoringToolLogo } = useDataSharingHook()
+
   const getTableLinesAccount = (): { value: string, label: string }[] => {
     return [
       { label: t('first-name'), value: userAccountForm.firstName },
@@ -79,17 +79,6 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
       { label: t('units'), value: userAccountForm.units },
       { label: t('language'), value: userAccountForm.lang }
     ]
-  }
-
-  const getRemoteMonitoringToolLogo = (consentName: PartnerName) => {
-    switch (consentName) {
-      case PartnerName.MyDiabby:
-        return myDiabbyLogo
-      case PartnerName.GlookoXT:
-        return glookoLogo
-      default:
-        return ''
-    }
   }
 
   const getTableLinesSharing = (): { label: string, value: string }[] => {

@@ -32,6 +32,9 @@ import { logError } from '../../../../utils/error.util'
 import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
 import { ExternalConsent } from '../../../../lib/external-consents/models/external-consent.model'
 import { useAlert } from '../../../../components/utils/snackbar'
+import myDiabbyLogo from 'my-diabby-app-icon.svg'
+import glookoLogo from 'glooko-app-icon.svg'
+import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
 
 export const useDataSharingHook = () => {
   const { t } = useTranslation()
@@ -39,6 +42,17 @@ export const useDataSharingHook = () => {
 
   const [consents, setConsents] = useState([])
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
+
+  const getRemoteMonitoringToolLogo = (consentName: PartnerName) => {
+    switch (consentName) {
+      case PartnerName.MyDiabby:
+        return myDiabbyLogo
+      case PartnerName.GlookoXT:
+        return glookoLogo
+      default:
+        return ''
+    }
+  }
 
   const fetchExternalConsents = useCallback(() => {
     setRefreshInProgress(true)
@@ -67,6 +81,7 @@ export const useDataSharingHook = () => {
   return {
     consents,
     refreshInProgress,
-    fetchExternalConsents
+    fetchExternalConsents,
+    getRemoteMonitoringToolLogo
   }
 }

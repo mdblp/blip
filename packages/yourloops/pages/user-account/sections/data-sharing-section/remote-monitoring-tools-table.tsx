@@ -38,14 +38,12 @@ import { useTranslation } from 'react-i18next'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import { makeStyles } from 'tss-react/mui'
-import myDiabbyLogo from 'my-diabby-app-icon.svg'
-import glookoLogo from 'glooko-app-icon.svg'
-import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { RevokeConsentDialog } from './revoke-consent-dialog'
 import { formatDate } from 'dumb'
 import { getRemoteMonitoringToolLabel } from './remote-monitoring.util'
+import { useDataSharingHook } from './data-sharing.hook'
 
 interface RemoteMonitoringToolsTableProps {
   consents: ExternalConsent[]
@@ -75,23 +73,14 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
   const [consentToRevoke, setConsentToRevoke] = React.useState<ExternalConsent>(null)
   const [showRevokeDialog, setShowRevokeDialog] = React.useState<boolean>(false)
 
+  const { getRemoteMonitoringToolLogo } = useDataSharingHook()
+
   const getFormattedDate = (date: string) => {
     if (!date) {
       return t('N/A')
     }
 
     return formatDate(date)
-  }
-
-  const getRemoteMonitoringToolLogo = (consentName: PartnerName) => {
-    switch (consentName) {
-      case PartnerName.MyDiabby:
-        return myDiabbyLogo
-      case PartnerName.GlookoXT:
-        return glookoLogo
-      default:
-        return ''
-    }
   }
 
   const onClickRevoke = (consent: ExternalConsent) => {
