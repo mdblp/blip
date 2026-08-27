@@ -32,8 +32,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { DateTimePicker } from '@mui/x-date-pickers'
-import { Moment } from 'moment-timezone'
-import moment from 'moment/moment'
+import moment, { type Moment } from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageNote } from '../../../../../lib/data/models/message-note.model'
@@ -89,9 +88,9 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
     }
 
     try {
-      metrics.send('note', 'edit_note')
-
       await NotesApi.editNote(editedNote)
+
+      metrics.send('note', 'edit_note')
       alert.success(editionSuccessLabel)
 
       if (isMainNote) {
