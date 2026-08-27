@@ -26,11 +26,14 @@
  */
 
 import { EditOutlined } from '@mui/icons-material'
-import { Menu } from '@mui/material'
+import { Popper } from '@mui/material'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
+import Paper from '@mui/material/Paper'
 import React, { FC, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { makeStyles } from 'tss-react/mui'
+import IconActionButton from '../../buttons/icon-action'
 
 interface NoteCommentProps {
   textMessage: string
@@ -40,9 +43,21 @@ interface NoteCommentProps {
 
 const MENU_CLOSE_DELAY_MS = 100
 
+const styles = makeStyles({ name: 'note-text-bubble' })(() => {
+  return {
+    iconButton: {
+      padding: '4px',
+      '&:hover': {
+        backgroundColor: 'var(--info-color-10)'
+      }
+    }
+  }
+})
+
 export const NoteTextBubble: FC<NoteCommentProps> = (props) => {
   const { textMessage, isEditable, onClickEdit } = props
   const { t } = useTranslation('main')
+  const { classes } = styles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -50,75 +65,75 @@ export const NoteTextBubble: FC<NoteCommentProps> = (props) => {
     closeTimeout.current = setTimeout(() => setAnchorEl(null), MENU_CLOSE_DELAY_MS)
   }
 
-  const cancelClose = (element?: React.MouseEvent<HTMLElement>) => {
+  const cancelClose = (element?: React.MouseEvent<HTMLElement> | HTMLElement) => {
     if (closeTimeout.current) {
       clearTimeout(closeTimeout.current)
     }
 
     if (element && isEditable) {
-      setAnchorEl(element.currentTarget)
+      if ('currentTarget' in element) {
+        setAnchorEl(element.currentTarget)
+      } else {
+        setAnchorEl(element)
+      }
     }
   }
 
   return (
-    <Box
-      sx={{
-        backgroundColor: 'var(--info-color-10)',
-        borderRadius: '24px',
-        px: 2,
-        py: 1,
-        width: 'fit-content'
-      }}
-      onMouseEnter={cancelClose}
-      onMouseLeave={scheduleClose}
-      data-testid="note-text-bubble"
-    >
-      <Typography variant="body2">{textMessage}</Typography>
-
-      <Menu
-        data-testid="note-text-bubble-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'center',
-          horizontal: 'left'
-        }}
-        // Disable pointer events on the Menu component to allow hover events to pass through
-        sx={{ px: 1, pointerEvents: 'none' }}
-        slotProps={{
-          list: {
-            onMouseEnter: () => cancelClose(),
-            onMouseLeave: scheduleClose
+    <>
+      <Chip
+        label={textMessage}
+        onMouseEnter={cancelClose}
+        onMouseLeave={scheduleClose}
+        onClick={isEditable ? (e) => cancelClose(e.currentTarget) : undefined}
+        tabIndex={isEditable ? 0 : -1}
+        aria-haspopup={isEditable ? 'true' : undefined}
+        aria-expanded={isEditable ? Boolean(anchorEl) : undefined}
+        data-testid="note-text-bubble"
+        sx={{
+          backgroundColor: 'var(--info-color-10)',
+          borderRadius: '24px',
+          height: 'auto',
+          border: 'none',
+          width: 'fit-content',
+          '& .MuiChip-label': {
+            px: 2,
+            py: 1,
+            fontSize: '14px',
+            display: 'block',
+            whiteSpace: 'normal'
           },
-          // Enable pointer events on the Menu's Paper component to allow interaction with the menu items
-          paper: { sx: { pointerEvents: 'auto' } },
+          '&:hover': {
+            backgroundColor: 'var(--info-color-10)'
+          }
         }}
+      />
+
+      <Popper
+        data-testid="note-text-bubble-menu"
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        placement="right-end"
+        disablePortal
+        sx={{ zIndex: (theme) => theme.zIndex.modal }}
       >
-        <Box sx={{ px: 2 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              p: '4px',
-              borderRadius: '24px',
-              color: 'var(--text-color-secondary)',
-              cursor: 'pointer',
-              '&:hover': {
-                backgroundColor: 'var(--info-color-10)'
-              }
-            }}
-            role="button"
-            aria-label={t('button-edit')}
-            onClick={onClickEdit}
-          >
-            <EditOutlined />
+        <Paper
+          elevation={8}
+          onMouseEnter={() => cancelClose()}
+          onMouseLeave={scheduleClose}
+          sx={{ p: 1, pointerEvents: 'auto' }}
+        >
+          <Box sx={{ px: 1 }}>
+            <IconActionButton
+              icon={<EditOutlined />}
+              onClick={onClickEdit}
+              aria-label={t('button-edit')}
+              tooltip={t('button-edit')}
+              className={classes.iconButton}
+            />
           </Box>
-        </Box>
-      </Menu>
-    </Box>
+        </Paper>
+      </Popper>
+    </>
   )
 }

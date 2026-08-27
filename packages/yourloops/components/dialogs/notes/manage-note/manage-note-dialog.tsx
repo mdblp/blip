@@ -28,8 +28,12 @@
 import Dialog from '@mui/material/Dialog'
 import { TimePrefs } from 'medical-domain'
 import React, { FC, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MessageNote } from '../../../../lib/data/models/message-note.model'
 import { NotesApi } from '../../../../lib/notes/notes.api'
+import { errorTextFromException } from '../../../../lib/utils'
+import { logError } from '../../../../utils/error.util'
+import { useAlert } from '../../../utils/snackbar'
 import { EditNoteDialogContent } from './edit-note-content/edit-note-dialog-content'
 import { ViewNoteDialogContent } from './view-note-content/view-note-dialog-content'
 
@@ -42,15 +46,24 @@ interface ManageNoteDialogProps {
 
 export const ManageNoteDialog: FC<ManageNoteDialogProps> = (props) => {
   const { mainNoteId, timePrefs, onClose, onMainNoteEdited } = props
+  const { t } = useTranslation('main')
+  const alert = useAlert()
   const [editingNote, setEditingNote] = React.useState<MessageNote | null>(null)
   const [noteThread, setNoteThread] = React.useState<MessageNote[]>([])
 
   const dataTestId = editingNote ? 'edit-note-dialog' : 'view-note-dialog'
 
   const refreshThread = useCallback(async () => {
-    const updatedNotes = await NotesApi.getNoteThread(mainNoteId)
-    setNoteThread(updatedNotes)
-  }, [mainNoteId])
+    try {
+      const updatedNotes = await NotesApi.getNoteThread(mainNoteId)
+      setNoteThread(updatedNotes)
+    } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'refresh-note-thread')
+      alert.error(t('error-occurred'))
+      onClose()
+    }
+  }, [alert, mainNoteId, onClose, t])
 
   const onCloseEditNote = async () => {
     setEditingNote(null)
@@ -64,6 +77,7 @@ export const ManageNoteDialog: FC<ManageNoteDialogProps> = (props) => {
   return (
     <Dialog
       open={true}
+      onClose={onClose}
       role="dialog"
       fullWidth={true}
       maxWidth="sm"
