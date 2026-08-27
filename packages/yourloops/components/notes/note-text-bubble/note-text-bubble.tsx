@@ -125,6 +125,7 @@ export const NoteTextBubble: FC<NoteCommentProps> = (props) => {
         >
           <Box sx={{ px: 1 }}>
             <IconActionButton
+              data-testid="note-text-bubble-edit-button"
               icon={<EditOutlined />}
               onClick={onClickEdit}
               aria-label={t('button-edit')}
