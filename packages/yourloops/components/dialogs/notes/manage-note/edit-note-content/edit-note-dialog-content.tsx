@@ -133,12 +133,16 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
               variant="outlined"
               sx={{ width: '100%' }}
               aria-label={t('note-edit-input')}
-              data-testid="note-edit-input"
               value={noteComment}
               multiline
               rows={4}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setNoteComment(event.target.value)
+              }}
+              slotProps={{
+                htmlInput: {
+                  'data-testid': 'note-edit-input'
+                }
               }}
             />
           </Box>
