@@ -29,7 +29,6 @@ import MedicalDataService from 'medical-domain'
 import moment, { type Moment } from 'moment-timezone'
 import { type MutableRefObject, useState } from 'react'
 import { type MessageNote } from '../../lib/data/models/message-note.model'
-import { NotesApi } from '../../lib/notes/notes.api'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 
 export interface UseDailyNotesProps {
