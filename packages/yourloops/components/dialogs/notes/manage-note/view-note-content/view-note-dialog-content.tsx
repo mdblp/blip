@@ -141,7 +141,7 @@ export const ViewNoteDialogContent: FC<ViewNoteDialogProps> = (props) => {
             <TextField
               variant="outlined"
               sx={{ width: '100%' }}
-              placeholder={t('Type a comment here ...')}
+              placeholder={t('note-comment-input-placeholder')}
               aria-label={t('note-comment-input')}
               data-testid="new-comment-input"
               value={comment}
