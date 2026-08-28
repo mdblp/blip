@@ -32,7 +32,6 @@ import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
-import DailyNotes from 'blip/app/components/messages'
 import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
@@ -41,7 +40,6 @@ import { useAuth } from '../../lib/auth'
 import { ConfigService } from '../../lib/config/config.service'
 import { validatePartner } from '../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
-import metrics from '../../lib/metrics'
 import { Patient } from '../../lib/patient/models/patient.model'
 import TeamUtils from '../../lib/team/team.util'
 import { errorTextFromException, setPageTitle } from '../../lib/utils'
@@ -51,6 +49,7 @@ import { PatientProfileView } from '../../pages/patient-view/patient-profile/pat
 import { logError } from '../../utils/error.util'
 import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
+import { CreateNoteDialog } from '../dialogs/notes/create-note/create-note-dialog'
 import { ManageNoteDialog } from '../dialogs/notes/manage-note/manage-note-dialog'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
 import SpinningLoader from '../loaders/spinning-loader'
@@ -129,14 +128,13 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     updateChartPrefs
   } = usePatientData({ patient })
   const {
-    showMessageCreation,
-    showNoteThread,
-    hideNoteThread,
-    closeMessageBox,
-    createNewMessage,
+    showCreateNoteDialog,
+    showViewNoteDialog,
+    hideCreateNoteDialog,
+    hideViewNoteDialog,
     createMessageDatetime,
-    handleMessageCreation,
     clickedNoteId,
+    handleNoteCreated,
     handleNoteUpdated
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
 
@@ -193,8 +191,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   onClick={() => {
                     refreshData()
                     AnalyticsApi.trackClick('patient-data-refresh-data', ElementType.Button)
-                  }
-                  }
+                  }}
                   sx={{ marginTop: theme.spacing(1) }}
                   data-testid="no-data-refresh-button"
                 >
@@ -230,30 +227,27 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           msRange={msRange}
                           loading={refreshingData}
                           onClickRefresh={refreshData}
-                          onCreateMessage={showMessageCreation}
-                          onShowNoteThread={showNoteThread}
+                          onCreateMessage={showCreateNoteDialog}
+                          onShowNoteThread={showViewNoteDialog}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
                           isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
                         />
                         <>
                           {createMessageDatetime &&
-                            <DailyNotes
+                            <CreateNoteDialog
                               createDatetime={createMessageDatetime}
-                              onNewMessage={handleMessageCreation}
-                              user={user}
-                              patient={patient}
-                              onClose={closeMessageBox}
-                              onSave={createNewMessage}
+                              patientId={patient.userid}
                               timePrefs={timePrefs}
-                              trackMetric={metrics.send}
+                              onNoteCreated={handleNoteCreated}
+                              onClose={hideCreateNoteDialog}
                             />
                           }
                           {clickedNoteId &&
                             <ManageNoteDialog
                               mainNoteId={clickedNoteId}
                               timePrefs={timePrefs}
-                              onClose={hideNoteThread}
+                              onClose={hideViewNoteDialog}
                               onMainNoteEdited={handleNoteUpdated}
                             />
                           }

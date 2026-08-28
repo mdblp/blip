@@ -26,6 +26,7 @@ import {
   EatingShortlyTooltip,
   EventsSuperpositionPopover,
   IobTooltip,
+  NewNoteTooltip,
   NightModeTooltip,
   NoteTooltip,
   ParameterTooltip,
@@ -84,6 +85,7 @@ class DailyChart extends React.Component {
     onParameterHover: PropTypes.func.isRequired,
     onWarmUpHover: PropTypes.func.isRequired,
     onAlarmEventHover: PropTypes.func.isRequired,
+    onNewNoteHover: PropTypes.func.isRequired,
     onNightModeHover: PropTypes.func.isRequired,
     onNoteHover: PropTypes.func.isRequired,
     onZenModeHover: PropTypes.func.isRequired,
@@ -115,6 +117,7 @@ class DailyChart extends React.Component {
       'onIobHover',
       'onWarmUpHover',
       'onAlarmEventHover',
+      'onNewNoteHover',
       'onNightModeHover',
       'onNoteHover',
       'onTimeChangeHover',
@@ -440,6 +443,7 @@ class Daily extends React.Component {
                   onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onIobHover={this.handleIobHover}
+                  onNewNoteHover={this.handleNewNoteHover}
                   onNightModeHover={this.handleNightModeHover}
                   onNoteHover={this.handleNoteHover}
                   onTimeChangeHover={this.handleTimeChangeHover}
@@ -823,6 +827,16 @@ class Daily extends React.Component {
         side={datum.side}
         timePrefs={datum.timePrefs}
       />)
+    this.setState({ tooltip })
+  }
+
+  handleNewNoteHover = (datum) => {
+    AnalyticsApi.trackHover('daily-new-note')
+    const tooltip = (
+      <NewNoteTooltip
+        anchorElement={datum.element}
+      />
+    )
     this.setState({ tooltip })
   }
 
