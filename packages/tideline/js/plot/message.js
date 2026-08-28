@@ -144,6 +144,7 @@ function plotMessage(pool, opts = {}) {
       .append('image')
       .classed('newNoteIcon', true)
       .attr('id', 'newNoteIcon')
+      .attr('data-testid', 'new-note-button')
       .attr('href', newNoteIcon)
       .attr('x', NEW_NOTE_X)
       .attr('y', NEW_NOTE_Y)

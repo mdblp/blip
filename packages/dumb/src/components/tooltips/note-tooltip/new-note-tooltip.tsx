@@ -45,7 +45,10 @@ export const NewNoteTooltip: FC<NewNoteTooltipProps> = (props) => {
       disableHoverListener
       disableFocusListener
       disableTouchListener
-      slotProps={{ popper: { anchorEl: anchorElement } }}
+      slotProps={{
+        popper: { anchorEl: anchorElement },
+        tooltip: { 'data-testid': 'new-note-tooltip' } as React.HTMLAttributes<HTMLDivElement>
+      }}
     >
       <span />
     </Tooltip>

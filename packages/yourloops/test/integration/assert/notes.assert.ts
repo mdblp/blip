@@ -124,6 +124,56 @@ export const checkNoteAddCommentFailure = async () => {
   expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
 }
 
+export const checkNoteCreateContent = async () => {
+  const newNoteButton = screen.getByTestId('new-note-button')
+
+  await userEvent.hover(newNoteButton)
+  const tooltip = screen.getByTestId('new-note-tooltip')
+  expect(tooltip).toBeVisible()
+  expect(tooltip).toHaveTextContent('New note')
+
+  await userEvent.unhover(newNoteButton)
+  expect(screen.queryByTestId('new-note-tooltip')).not.toBeInTheDocument()
+
+  fireEvent.click(newNoteButton)
+
+  const dialog = await screen.findByTestId('create-note-dialog')
+  expect(dialog).toBeVisible()
+  expect(dialog).toHaveTextContent('New note08/08/2022 12:00 PM​​CancelCreate note')
+  expect(within(dialog).getByPlaceholderText('Type a new note here ...')).toBeVisible()
+
+  const createButton = within(dialog).getByRole('button', { name: 'Create note' })
+  expect(createButton).toBeDisabled()
+
+  // Text field validation
+  const textarea = within(dialog).getByRole('textbox')
+  await userEvent.type(textarea, 'My new note')
+  expect(createButton).toBeEnabled()
+  await userEvent.clear(textarea)
+  expect(createButton).toBeDisabled()
+  await userEvent.type(textarea, ' ')
+  expect(createButton).toBeDisabled()
+  await userEvent.type(textarea, 'My new note')
+  expect(createButton).toBeEnabled()
+
+  // Datetime field validation
+  const dateTimeInput = within(dialog).getByTestId('create-note-datetime-input')
+  await userEvent.type(dateTimeInput, '09/08/2022 02:00 PM')
+  expect(createButton).toBeEnabled()
+  await userEvent.clear(dateTimeInput)
+  expect(createButton).toBeDisabled()
+
+  // Cross-field validation
+  await userEvent.type(dateTimeInput, '09/08/2022 02:00 PM')
+  expect(createButton).toBeEnabled()
+  await userEvent.clear(textarea)
+  await userEvent.type(textarea, ' ')
+  expect(createButton).toBeDisabled()
+
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+  expect(screen.queryByTestId('create-note-dialog')).not.toBeInTheDocument()
+}
+
 export const checkNoteEditContent = async () => {
   const note = screen.getByTestId(`note_group_${NOTE_ID}`)
   fireEvent.click(note)
@@ -249,6 +299,22 @@ export const checkNoteEditSuccess = async () => {
   expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
 }
 
+export const checkNoteCreateSuccess = async () => {
+  const newNoteButton = screen.getByTestId('new-note-button')
+  fireEvent.click(newNoteButton)
+
+  const dialog = await screen.findByTestId('create-note-dialog')
+  expect(dialog).toBeVisible()
+
+  const textarea = within(dialog).getByRole('textbox')
+  await userEvent.type(textarea, 'New note content')
+  const createButton = within(dialog).getByRole('button', { name: 'Create note' })
+  await userEvent.click(createButton)
+
+  expect(screen.queryByTestId('create-note-dialog')).not.toBeInTheDocument()
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Note created successfully')
+}
+
 export const checkNoteCommentEditSuccess = async () => {
   const note = screen.getByTestId(`note_group_${NOTE_ID}`)
   fireEvent.click(note)
@@ -275,6 +341,22 @@ export const checkNoteCommentEditSuccess = async () => {
 
   await userEvent.click(within(dialog).getByTestId('close-button'))
   expect(screen.queryByTestId('view-note-dialog')).not.toBeInTheDocument()
+}
+
+export const checkNoteCreateFailure = async () => {
+  const newNoteButton = screen.getByTestId('new-note-button')
+  fireEvent.click(newNoteButton)
+
+  const dialog = await screen.findByTestId('create-note-dialog')
+  expect(dialog).toBeVisible()
+
+  const textarea = within(dialog).getByRole('textbox')
+  await userEvent.type(textarea, 'New note content')
+  const createButton = within(dialog).getByRole('button', { name: 'Create note' })
+  await userEvent.click(createButton)
+
+  expect(screen.queryByTestId('create-note-dialog')).not.toBeInTheDocument()
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred, please try again later.')
 }
 
 export const checkNoteEditFailure = async () => {
