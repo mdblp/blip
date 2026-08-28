@@ -104,7 +104,7 @@ export const CreateEditNoteContent: FC<CreateEditNoteContentProps> = (props) => 
           }
 
           <TextField
-            placeholder={t('Type a new note here...')}
+            placeholder={t('note-create-input-placeholder')}
             variant="outlined"
             sx={{ width: '100%' }}
             aria-label={t(`note-${idPrefix}-input`)}
