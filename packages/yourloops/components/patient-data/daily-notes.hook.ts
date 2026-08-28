@@ -29,7 +29,6 @@ import MedicalDataService from 'medical-domain'
 import moment, { type Moment } from 'moment-timezone'
 import { type MutableRefObject, useState } from 'react'
 import { type MessageNote } from '../../lib/data/models/message-note.model'
-import metrics from '../../lib/metrics'
 import { NotesApi } from '../../lib/notes/notes.api'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 
@@ -40,14 +39,13 @@ export interface UseDailyNotesProps {
 }
 
 interface UseDailyNotesReturn {
-  closeMessageBox: () => void
+  hideCreateNoteDialog: () => void
   createMessageDatetime: string
-  createNewMessage: (message: MessageNote) => Promise<string>
-  handleMessageCreation: (message: MessageNote) => Promise<void>
+  handleNoteCreated: (message: MessageNote) => Promise<void>
   clickedNoteId: string
-  showMessageCreation: (datetime: Moment | null) => void
-  showNoteThread: (noteId: string) => Promise<void>
-  hideNoteThread: () => void
+  showCreateNoteDialog: (datetime: Moment | null) => void
+  showViewNoteDialog: (noteId: string) => Promise<void>
+  hideViewNoteDialog: () => void
   handleNoteUpdated: (note: MessageNote) => void
 }
 
@@ -56,34 +54,27 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   const [createMessageDatetime, setCreateMessageDatetime] = useState<string>(undefined)
   const [clickedNoteId, setClickedNoteId] = useState<string>(undefined)
 
-  const createNewMessage = async (message: MessageNote): Promise<string> => {
-    return await NotesApi.createNote(message)
-  }
-
-  const closeMessageBox = (): void => {
+  const hideCreateNoteDialog = (): void => {
     setCreateMessageDatetime(undefined)
   }
 
-  const handleMessageCreation = async (message: MessageNote): Promise<void> => {
-    await dailyChartRef.current.createMessage(message)
-    metrics.send('note', 'create_note')
+  const showCreateNoteDialog = (datetime: Moment | null = null): void => {
+    const timezone = medicalData.getTimezoneAt(dailyDate)
+    const momentDatetime = datetime ?? moment.utc(dailyDate).tz(timezone)
+
+    setCreateMessageDatetime(momentDatetime.toISOString())
   }
 
-  const showMessageCreation = (datetime: Moment | null = null): void => {
-    let mDate = datetime
-    if (!datetime) {
-      const timezone = medicalData.getTimezoneAt(dailyDate)
-      mDate = moment.utc(dailyDate).tz(timezone)
-    }
-    setCreateMessageDatetime(mDate.toISOString())
-  }
-
-  const showNoteThread = async (noteId: string): Promise<void> => {
+  const showViewNoteDialog = async (noteId: string): Promise<void> => {
     setClickedNoteId(noteId)
   }
 
-  const hideNoteThread = (): void => {
+  const hideViewNoteDialog = (): void => {
     setClickedNoteId(undefined)
+  }
+
+  const handleNoteCreated = async (note: MessageNote): Promise<void> => {
+    await dailyChartRef.current.createMessage(note)
   }
 
   const handleNoteUpdated = (note: MessageNote) => {
@@ -93,12 +84,11 @@ export const useDailyNotes = (props: UseDailyNotesProps): UseDailyNotesReturn =>
   return {
     createMessageDatetime,
     clickedNoteId,
-    closeMessageBox,
-    showMessageCreation,
-    showNoteThread,
-    hideNoteThread,
-    createNewMessage,
-    handleMessageCreation,
+    hideCreateNoteDialog,
+    showCreateNoteDialog,
+    showViewNoteDialog,
+    hideViewNoteDialog,
+    handleNoteCreated,
     handleNoteUpdated,
   }
 }
