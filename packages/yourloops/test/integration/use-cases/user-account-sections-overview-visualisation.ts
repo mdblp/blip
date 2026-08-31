@@ -26,22 +26,22 @@
  */
 
 import {
-  checkUserAccountMenuCardsVisible,
-  checkUserAccountMenuCardsNotVisible,
-  checkUserAccountMenuCardForAccount,
+  checkUserAccountSectionsOverviewVisible,
+  checkUserAccountSectionsOverviewNotVisible,
+  checkUserAccountSectionCardForAccount,
+  checkUserAccountSectionCardForDataSharing,
   checkClickViewMoreUserAccount,
-  checkClickViewMoreDataSharing,
-  checkUserAccountMenuCardForDataSharing
-} from '../assert/user-account-menu-mobile.assert'
+  checkClickViewMoreDataSharing
+} from '../assert/user-account-sections-overview-mobile.assert'
 
-export const testUserAccountMenuVisibleMobile = (): void => {
-  checkUserAccountMenuCardsVisible()
-  checkUserAccountMenuCardForAccount()
-  checkUserAccountMenuCardForDataSharing()
+export const testUserAccountSectionsOverviewVisibleMobile = (): void => {
+  checkUserAccountSectionsOverviewVisible()
+  checkUserAccountSectionCardForAccount()
+  checkUserAccountSectionCardForDataSharing()
 }
 
-export const testUserAccountMenuNotVisibleMobile = (): void => {
-  checkUserAccountMenuCardsNotVisible()
+export const testUserAccountSectionsOverviewNotVisibleMobile = (): void => {
+  checkUserAccountSectionsOverviewNotVisible()
 }
 
 export const testClickViewMoreUserAccount = (): void => {

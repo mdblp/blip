@@ -48,9 +48,9 @@ import { buildPatient } from '../../data/patient-builder.data'
 import {
   testClickViewMoreDataSharing,
   testClickViewMoreUserAccount,
-  testUserAccountMenuNotVisibleMobile,
-  testUserAccountMenuVisibleMobile
-} from '../../use-cases/user-account-menu-visualisation'
+  testUserAccountSectionsOverviewNotVisibleMobile,
+  testUserAccountSectionsOverviewVisibleMobile
+} from '../../use-cases/user-account-sections-overview-visualisation'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockExternalConsentsApi } from '../../mock/external-consents.api.mock'
 import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
@@ -123,7 +123,7 @@ describe('User account page for patient', () => {
       renderPage(userAccountSectionsOverview)
     })
 
-    await testUserAccountMenuVisibleMobile()
+    await testUserAccountSectionsOverviewVisibleMobile()
   })
 
   it('should not render the menu page if the patient is not french', async () => {
@@ -156,7 +156,7 @@ describe('User account page for patient', () => {
       renderPage(userAccountRoute)
     })
 
-    testUserAccountMenuNotVisibleMobile()
+    testUserAccountSectionsOverviewNotVisibleMobile()
   })
 
   it('should be able to access the pages linked by the cards', async () => {

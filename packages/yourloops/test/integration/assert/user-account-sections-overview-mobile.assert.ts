@@ -28,17 +28,17 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
-export const checkUserAccountMenuCardsVisible = (): void => {
-  expect(screen.queryByTestId('user-account-menu-mobile-account')).toBeVisible()
-  expect(screen.queryByTestId('user-account-menu-mobile-data-sharing')).toBeVisible()
+export const checkUserAccountSectionsOverviewVisible = (): void => {
+  expect(screen.queryByTestId('user-account-overview-mobile-account')).toBeVisible()
+  expect(screen.queryByTestId('user-account-overview-mobile-data-sharing')).toBeVisible()
 }
 
-export const checkUserAccountMenuCardsNotVisible = (): void => {
-  expect(screen.queryByTestId('user-account-menu-mobile-account')).not.toBeInTheDocument()
-  expect(screen.queryByTestId('user-account-menu-mobile-account-data-sharing')).not.toBeInTheDocument()
+export const checkUserAccountSectionsOverviewNotVisible = (): void => {
+  expect(screen.queryByTestId('user-account-overview-mobile-account')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('user-account-overview-mobile-account-data-sharing')).not.toBeInTheDocument()
 }
 
-export const checkUserAccountMenuCardForAccount = (): void => {
+export const checkUserAccountSectionCardForAccount = (): void => {
   expect(screen.getByText('First name')).toBeVisible()
   expect(screen.getByText('Last name')).toBeVisible()
   expect(screen.getByText('Country')).toBeVisible()
@@ -48,13 +48,13 @@ export const checkUserAccountMenuCardForAccount = (): void => {
   expect(screen.getByText('Language')).toBeVisible()
 }
 
-export const checkUserAccountMenuCardForDataSharing = (): void => {
+export const checkUserAccountSectionCardForDataSharing = (): void => {
   expect(screen.getByText('Glooko XT')).toBeVisible()
   expect(screen.getByText('MyDiabby Healthcare')).toBeVisible()
 }
 
 export const checkClickViewMoreUserAccount = async (): Promise<void> => {
-  const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-account'))
+  const viewMoreUserAccount = within(screen.getByTestId('user-account-overview-mobile-account'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
   const userAccountTitle = await screen.findByText('User account')
   expect(userAccountTitle).toBeInTheDocument()
@@ -64,7 +64,7 @@ export const checkClickViewMoreUserAccount = async (): Promise<void> => {
 }
 
 export const checkClickViewMoreDataSharing = async (): Promise<void> => {
-  const viewMoreUserAccount = within(screen.getByTestId('user-account-menu-mobile-data-sharing'))
+  const viewMoreUserAccount = within(screen.getByTestId('user-account-overview-mobile-data-sharing'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
   const userDataSharingPageTitle = await screen.findByText('Remote monitoring tools')
   expect(userDataSharingPageTitle).toBeInTheDocument()

@@ -90,7 +90,7 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
       <GenericListCard
         title={t('account')}
         tableLines={getTableLinesAccount()}
-        data-testid="user-account-menu-mobile-account"
+        data-testid="user-account-overview-mobile-account"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
@@ -101,7 +101,7 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
       <GenericListCard
         title={t('data-sharing')}
         tableLines={getTableLinesSharing()}
-        data-testid="user-account-menu-mobile-data-sharing"
+        data-testid="user-account-overview-mobile-data-sharing"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         hideFallbackValue = {true}
