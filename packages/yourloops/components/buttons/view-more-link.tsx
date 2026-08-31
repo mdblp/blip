@@ -34,7 +34,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { makeStyles } from 'tss-react/mui'
 
 interface ViewMoreLinkProps {
-  dataTestId: String,
+  dataTestId: string,
   targetRoute: AppUserRoute
 }
 

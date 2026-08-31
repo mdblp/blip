@@ -58,14 +58,12 @@ export const TableLine: FC<TableLineProps> = (props) => {
             justifyContent: "space-between"
           }}>
           {remoteMonitoring ?
-            <>
               <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <RemoteMonitoringAvatar src={partner} alt={partner} />
                 <Typography variant="body2" component="span">
                   {t(translationKey)}
                 </Typography>
               </Box>
-            </>
             : <Typography variant="body2">{label}</Typography>
           }
           <Typography variant="body2" className="bold">{value || fallback_value}</Typography>
