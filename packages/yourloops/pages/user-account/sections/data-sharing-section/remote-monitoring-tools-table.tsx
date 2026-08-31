@@ -41,8 +41,8 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { RevokeConsentDialog } from './revoke-consent-dialog'
 import { formatDate } from 'dumb'
-import { getRemoteMonitoringToolLabel } from './remote-monitoring.util'
 import { RemoteMonitoringAvatar } from '../../remote-monitoring-avatar'
+import { useDataSharingHook } from './data-sharing.hook'
 
 interface RemoteMonitoringToolsTableProps {
   consents: ExternalConsent[]
@@ -68,6 +68,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
   const { consents, patientId, refresh } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
+  const { getRemoteMonitoringToolLabel } = useDataSharingHook()
 
   const [consentToRevoke, setConsentToRevoke] = React.useState<ExternalConsent>(null)
   const [showRevokeDialog, setShowRevokeDialog] = React.useState<boolean>(false)
@@ -126,8 +127,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
                     data-testid={`monitoring-tool-row-${consent.partnerName}`}
                   >
                     <TableCell>
-                      <RemoteMonitoringAvatar src={consent.partnerName}
-                                              alt={consent.partnerName} />
+                      <RemoteMonitoringAvatar partnerName={consent.partnerName} />
                     </TableCell>
                     <TableCell>
                     <span className={classes.toolName}>

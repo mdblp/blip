@@ -45,7 +45,7 @@ interface TableLineProps {
 
 export const TableLine: FC<TableLineProps> = (props) => {
   const { label, partner, value, hideDivider, hideFallbackValue = false, remoteMonitoring = false } = props
-  const fallback_value = hideFallbackValue ? '' : '-'
+  const fallbackValue = hideFallbackValue ? '' : '-'
   const { t } = useTranslation();
   const translationKey = label.toLowerCase().replaceAll('_', '-');
 
@@ -59,14 +59,14 @@ export const TableLine: FC<TableLineProps> = (props) => {
           }}>
           {remoteMonitoring ?
               <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <RemoteMonitoringAvatar src={partner} alt={partner} />
+                <RemoteMonitoringAvatar partnerName={partner} />
                 <Typography variant="body2" component="span">
                   {t(translationKey)}
                 </Typography>
               </Box>
             : <Typography variant="body2">{label}</Typography>
           }
-          <Typography variant="body2" className="bold">{value || fallback_value}</Typography>
+          <Typography variant="body2" className="bold">{value || fallbackValue}</Typography>
         </Box>
       </ListItemText>
     </ListItem>

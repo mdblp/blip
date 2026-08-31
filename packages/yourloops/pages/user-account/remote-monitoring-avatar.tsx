@@ -29,22 +29,20 @@ import React, { FC } from 'react'
 import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 import Avatar from '@mui/material/Avatar'
-import { getRemoteMonitoringToolLabel } from './sections/data-sharing-section/remote-monitoring.util'
 
 interface ConsentAvatarProps {
-  src: PartnerName,
-  alt: PartnerName
+  partnerName: PartnerName,
 }
 
 export const RemoteMonitoringAvatar: FC<ConsentAvatarProps> = (props) => {
-  const { src, alt } = props
-  const { getRemoteMonitoringToolLogo } = useDataSharingHook()
+  const { partnerName } = props
+  const { getRemoteMonitoringToolLogo, getRemoteMonitoringToolLabel } = useDataSharingHook()
 
   return (
     <Avatar
       variant="square"
-      src={getRemoteMonitoringToolLogo(src)}
-      alt={getRemoteMonitoringToolLabel(alt)}
+      src={getRemoteMonitoringToolLogo(partnerName)}
+      alt={getRemoteMonitoringToolLabel(partnerName)}
     />
   )
 }

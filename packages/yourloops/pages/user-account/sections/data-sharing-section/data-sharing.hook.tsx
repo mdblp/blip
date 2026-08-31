@@ -43,6 +43,17 @@ export const useDataSharingHook = () => {
   const [consents, setConsents] = useState([])
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
+  const getRemoteMonitoringToolLabel = (name: PartnerName) => {
+    switch (name) {
+      case PartnerName.MyDiabby:
+        return t('my-diabby')
+      case PartnerName.GlookoXT:
+        return t('glooko-xt')
+      default:
+        return name
+    }
+  }
+
   const getRemoteMonitoringToolLogo = (consentName: PartnerName) => {
     switch (consentName) {
       case PartnerName.MyDiabby:
@@ -82,6 +93,7 @@ export const useDataSharingHook = () => {
     consents,
     refreshInProgress,
     fetchExternalConsents,
-    getRemoteMonitoringToolLogo
+    getRemoteMonitoringToolLogo,
+    getRemoteMonitoringToolLabel
   }
 }

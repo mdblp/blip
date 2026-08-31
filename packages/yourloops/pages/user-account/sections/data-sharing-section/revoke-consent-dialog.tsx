@@ -37,7 +37,7 @@ import { ExternalConsentsApi } from '../../../../lib/external-consents/external-
 import { ExternalConsent } from '../../../../lib/external-consents/models/external-consent.model'
 import { useAlert } from '../../../../components/utils/snackbar'
 import Box from '@mui/material/Box'
-import { getRemoteMonitoringToolLabel } from './remote-monitoring.util'
+import { useDataSharingHook } from './data-sharing.hook'
 
 interface RevokeConsentDialogProps {
   patientId: string
@@ -50,6 +50,7 @@ export const RevokeConsentDialog: FC<RevokeConsentDialogProps> = (props) => {
   const { patientId, consent, onClose, onSuccess } = props
   const { t } = useTranslation()
   const alert = useAlert()
+  const { getRemoteMonitoringToolLabel } = useDataSharingHook()
 
   const appName = getRemoteMonitoringToolLabel(consent.partnerName)
 
