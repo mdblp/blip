@@ -233,25 +233,23 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
                         />
-                        <>
-                          {createMessageDatetime &&
-                            <CreateNoteDialog
-                              createDatetime={createMessageDatetime}
-                              patientId={patient.userid}
-                              timePrefs={timePrefs}
-                              onNoteCreated={handleNoteCreated}
-                              onClose={hideCreateNoteDialog}
-                            />
-                          }
-                          {clickedNoteId &&
-                            <ManageNoteDialog
-                              mainNoteId={clickedNoteId}
-                              timePrefs={timePrefs}
-                              onClose={hideViewNoteDialog}
-                              onMainNoteEdited={handleNoteUpdated}
-                            />
-                          }
-                        </>
+                        {createMessageDatetime &&
+                          <CreateNoteDialog
+                            createDatetime={createMessageDatetime}
+                            patientId={patient.userid}
+                            timePrefs={timePrefs}
+                            onNoteCreated={handleNoteCreated}
+                            onClose={hideCreateNoteDialog}
+                          />
+                        }
+                        {clickedNoteId &&
+                          <ManageNoteDialog
+                            mainNoteId={clickedNoteId}
+                            timePrefs={timePrefs}
+                            onClose={hideViewNoteDialog}
+                            onMainNoteEdited={handleNoteUpdated}
+                          />
+                        }
                       </>
                     }
                   />
