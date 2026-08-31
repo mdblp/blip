@@ -133,7 +133,9 @@ export const checkNoteCreateContent = async () => {
   expect(tooltip).toHaveTextContent('New note')
 
   await userEvent.unhover(newNoteButton)
-  expect(screen.queryByTestId('new-note-tooltip')).not.toBeInTheDocument()
+  await waitFor(() => {
+    expect(screen.queryByTestId('new-note-tooltip')).not.toBeInTheDocument()
+  })
 
   fireEvent.click(newNoteButton)
 

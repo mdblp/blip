@@ -43,7 +43,7 @@ interface CreateNoteDialogProps {
   createDatetime: string
   patientId: string
   timePrefs: TimePrefs
-  onNoteCreated: (note: MessageNote) => void
+  onNoteCreated: (note: MessageNote) => Promise<void>
   onClose: () => void
 }
 
@@ -70,7 +70,7 @@ export const CreateNoteDialog: FC<CreateNoteDialogProps> = (props) => {
       alert.success(t('note-create-success'))
 
       note.id = noteId
-      onNoteCreated(note)
+      await onNoteCreated(note)
     } catch (err) {
       const errorMessage = errorTextFromException(err)
       logError(errorMessage, 'create-note')
