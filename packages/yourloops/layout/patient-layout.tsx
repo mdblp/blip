@@ -51,7 +51,7 @@ export const PatientLayout: FC = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user } = useAuth()
-  const shouldDisplayDataSharingSection = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
+  const shouldDisplayUserAccountSectionsOverview = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
 
   return (
     <TeamContextProvider>
@@ -59,15 +59,15 @@ export const PatientLayout: FC = () => {
         <Routes>
           <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
           <Route path={AppUserRoute.UserAccount}
-                 element={shouldDisplayDataSharingSection
+                 element={shouldDisplayUserAccountSectionsOverview
                    ? (<Navigate to={AppUserRoute.UserAccountSectionsOverview} replace />)
                    : (<UserAccountPage />)}
           />
-          {shouldDisplayDataSharingSection && (
+          {shouldDisplayUserAccountSectionsOverview && (
             <Route>
               <Route path={AppUserRoute.UserAccountSectionsOverview} element={<UserAccountSectionsOverview />} />
-              <Route path={AppUserRoute.AccountSection} element={<AccountSection />} />
-              <Route path={AppUserRoute.DataSharingSection} element={<DataSharingSection />} />
+              <Route path={AppUserRoute.UserAccountSection} element={<AccountSection />} />
+              <Route path={AppUserRoute.UserAccountDataSharingSection} element={<DataSharingSection />} />
             </Route>
           )}
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />

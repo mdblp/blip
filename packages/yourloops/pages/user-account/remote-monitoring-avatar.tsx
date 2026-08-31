@@ -25,35 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Box from '@mui/material/Box'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import Typography from '@mui/material/Typography'
-import React, { type FC } from 'react'
+import React, { FC } from 'react'
+import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
+import Avatar from '@mui/material/Avatar'
+import { getRemoteMonitoringToolLabel } from './sections/data-sharing-section/remote-monitoring.util'
 
-interface TableLineProps {
-  label: string
-  value: string | null
-  hideDivider?: boolean
+interface ConsentAvatarProps {
+  src: PartnerName,
+  alt: PartnerName
 }
 
-const FALLBACK_VALUE = '-'
-
-export const TableLine: FC<TableLineProps> = (props) => {
-  const { label, value, hideDivider } = props
+export const RemoteMonitoringAvatar: FC<ConsentAvatarProps> = (props) => {
+  const { src, alt } = props
+  const { getRemoteMonitoringToolLogo } = useDataSharingHook()
 
   return (
-    <ListItem divider={!hideDivider} className="list-item">
-      <ListItemText>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between"
-          }}>
-          <Typography variant="body2">{label}</Typography>
-          <Typography variant="body2" className="bold">{value || FALLBACK_VALUE}</Typography>
-        </Box>
-      </ListItemText>
-    </ListItem>
+    <Avatar
+      variant="square"
+      src={getRemoteMonitoringToolLogo(src)}
+      alt={getRemoteMonitoringToolLabel(alt)}
+    />
   )
 }

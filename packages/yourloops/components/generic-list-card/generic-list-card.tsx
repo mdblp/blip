@@ -35,20 +35,24 @@ import React, { type FC } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import { TableLine } from './table-line'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 
 interface GenericListCardProps {
   title: string,
-  tableLines: { label: string; value: string }[]
+  tableLines: { label: string, value: string }[]
   ['data-testid']?: string
-  ['className']?: string
-  headerAction?: React.ReactNode;
+  ['cardClassName']?: string
+  ['cardHeaderClassName']?: string
+  headerAction?: React.ReactNode
+  hideFallbackValue?: boolean
+  remoteMonitoring?:boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
   cardHeader: {
     backgroundColor: 'var(--primary-color-background)',
     fontSize: theme.typography.fontSize,
-    fontWeight: theme.typography.fontWeightBold
+    fontWeight: theme.typography.fontWeightBold,
   },
   cardContent: {
     fontSize: theme.typography.fontSize,
@@ -62,7 +66,7 @@ const useStyles = makeStyles()((theme) => ({
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { title, tableLines, headerAction } = props
+  const { title, tableLines, headerAction, hideFallbackValue = false, remoteMonitoring = false } = props
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
@@ -70,11 +74,11 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
       variant="outlined"
       sx={{ marginBottom: isMobile ? undefined : theme.spacing(5) }}
       data-testid={props['data-testid']}
-      className = {props['className']}
+      className={props['cardClassName']}
     >
       <CardHeader
         title={title}
-        className={classes.cardHeader}
+        className={`${classes.cardHeader} ${props['cardHeaderClassName']}`}
         disableTypography
         action={headerAction}
       />
@@ -82,7 +86,8 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
         <List disablePadding>
           <Divider component="li" />
           {tableLines.map((item, index, array) => (
-            <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
+            <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1}
+                       hideFallbackValue={hideFallbackValue} remoteMonitoring = {remoteMonitoring} partner={item.label as PartnerName } />
           ))}
         </List>
       </CardContent>

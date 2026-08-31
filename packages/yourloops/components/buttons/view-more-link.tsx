@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Devices = '/devices',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  Preferences = '/preferences',
-  PatientProfile = '/patient-profile',
-  Teams = '/teams',
-  Trends = '/trends',
-  UserAccount = '/user-account',
-  UserAccountSectionsOverview = '/user-account-sections-overview',
-  UserAccountSection = '/user-account-sections-overview/account',
-  UserAccountDataSharingSection = '/user-account-sections-overview/data-sharing'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { Link } from '@mui/material'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { makeStyles } from 'tss-react/mui'
+
+interface ViewMoreLinkProps {
+  dataTestId: String,
+  targetRoute: AppUserRoute
 }
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  DblCommunication = '/dbl-communication',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
+export const linkStyle = makeStyles()(() => {
+  return {
+    links: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.5,
+      color: 'var(--text-color-primary)'
+    }
+  }
+})
+
+export const ViewMoreLink: FC<ViewMoreLinkProps> = (props) => {
+  const { dataTestId, targetRoute } = props
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { classes } = linkStyle()
+
+  return (
+
+    <Link
+      className={classes.links}
+      component="button"
+      onClick={() => navigate(targetRoute)}
+      underline="none"
+      data-testid={dataTestId}
+    >
+      {t('view-more')}
+      <KeyboardArrowRightIcon fontSize="small" />
+    </Link>
+  )
 }

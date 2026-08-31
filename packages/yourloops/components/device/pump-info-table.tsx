@@ -28,7 +28,7 @@
 import { type PumpConfig } from 'medical-domain'
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GenericListCard } from './generic-list-card'
+import { GenericListCard } from '../generic-list-card/generic-list-card'
 
 interface PumpInfoProps {
   pump: PumpConfig

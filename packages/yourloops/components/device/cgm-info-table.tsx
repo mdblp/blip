@@ -30,7 +30,7 @@ import { CGMName } from 'medical-domain'
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatDateWithMomentLongFormat } from '../../lib/utils'
-import { GenericListCard } from './generic-list-card'
+import { GenericListCard } from '../generic-list-card/generic-list-card'
 
 interface CgmInfoProps {
   cgm: CgmConfig

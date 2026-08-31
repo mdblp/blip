@@ -85,7 +85,7 @@ function UserMenu(): JSX.Element {
   const { firstName, fullName, lastName } = user
   const userName = getUserName(firstName, lastName, fullName)
   const menuClass = isMobile ? menuItemMobile : undefined
-  const shouldDisplayDataSharingSection = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
+  const shouldDisplayUserAccountSectionsOverview = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
@@ -110,7 +110,7 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSettings = (): void => {
-    shouldDisplayDataSharingSection ? navigate(AppUserRoute.UserAccountSectionsOverview) : navigate(AppUserRoute.UserAccount)
+    shouldDisplayUserAccountSectionsOverview ? navigate(AppUserRoute.UserAccountSectionsOverview) : navigate(AppUserRoute.UserAccount)
     closeMenu()
   }
 

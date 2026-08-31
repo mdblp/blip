@@ -28,28 +28,27 @@
 
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GenericListCard } from '../../components/device/generic-list-card'
+import { GenericListCard } from '../../components/generic-list-card/generic-list-card'
 import { useUserAccountPageState } from './user-account-page-context'
 import { makeStyles } from 'tss-react/mui'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Link } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
-import Box from '@mui/material/Box'
-import Avatar from '@mui/material/Avatar'
-import { getRemoteMonitoringToolLabel } from './sections/data-sharing-section/remote-monitoring.util'
 import { useAuth } from '../../lib/auth'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { ViewMoreLink } from '../../components/buttons/view-more-link'
+import PatientUtils from '../../lib/patient/patient.util'
+import { getLangName } from '../../lib/language'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
 }
 
-export const cardStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
+export const cardStyle = makeStyles()((theme) => {
   return {
     cards: {
       margin: theme.spacing(2)
+    },
+    cardsHeader: {
+      lineHeight: 1
     },
     links: {
       display: 'flex',
@@ -63,58 +62,39 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
   const { consents } = props
   const { user } = useAuth()
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { userAccountForm } = useUserAccountPageState()
   const { classes } = cardStyle()
 
-  const { getRemoteMonitoringToolLogo } = useDataSharingHook()
+  const getTableLinesAccount = (): { label: string, value: string }[] => {
 
-  const getTableLinesAccount = (): { value: string, label: string }[] => {
     return [
       { label: t('first-name'), value: userAccountForm.firstName },
       { label: t('last-name'), value: userAccountForm.lastName },
       { label: t('country'), value: userAccountForm.country },
-      { label: t('gender'), value: userAccountForm.sex },
+      { label: t('gender'), value: PatientUtils.getGenderLabel(userAccountForm.sex) },
       { label: t('email'), value: user.email },
       { label: t('units'), value: userAccountForm.units },
-      { label: t('language'), value: userAccountForm.lang }
+      { label: t('language'), value: getLangName(userAccountForm.lang) }
     ]
   }
 
-  const getTableLinesSharing = (): { label: string, value: string }[] => {
+  const getTableLinesSharing = (): { label: string; value: string }[] => {
     return consents.map((consent: ExternalConsent) => ({
-      label: (
-        <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Avatar
-            variant="square"
-            src={getRemoteMonitoringToolLogo(consent.partnerName)}
-            alt={getRemoteMonitoringToolLabel(consent.partnerName)}
-          />
-          <span>{consent.partnerName}</span>
-        </Box>
-      ),
+      label: consent.partnerName,
       value: ''
-    })) as unknown as { label: string, value: string }[]
+    }))
   }
 
   return (
     <>
       <GenericListCard
-        className={classes.cards}
         title={t('account')}
         tableLines={getTableLinesAccount()}
         data-testid="user-account-menu-mobile-account"
+        cardClassName={classes.cards}
+        cardHeaderClassName={classes.cardsHeader}
         headerAction={
-          <Link
-            className={classes.links}
-            component="button"
-            onClick={() => navigate(AppUserRoute.AccountSection)}
-            underline="none"
-            data-testid="link-account"
-          >
-            {t('view-more')}
-            <KeyboardArrowRightIcon fontSize="small" />
-          </Link>
+          <ViewMoreLink dataTestId="link-account" targetRoute={AppUserRoute.UserAccountSection} />
         }
       />
 
@@ -122,18 +102,12 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
         title={t('data-sharing')}
         tableLines={getTableLinesSharing()}
         data-testid="user-account-menu-mobile-data-sharing"
-        className={classes.cards}
+        cardClassName={classes.cards}
+        cardHeaderClassName={classes.cardsHeader}
+        hideFallbackValue = {true}
+        remoteMonitoring = {true}
         headerAction={
-          <Link
-            className={classes.links}
-            component="button"
-            onClick={() => navigate(AppUserRoute.DataSharingSection)}
-            underline="none"
-            data-testid="link-data-sharing"
-          >
-            {t('view-more')}
-            <KeyboardArrowRightIcon fontSize="small" />
-          </Link>
+          <ViewMoreLink dataTestId="link-data-sharing" targetRoute={AppUserRoute.UserAccountDataSharingSection} />
         }
       />
     </>
