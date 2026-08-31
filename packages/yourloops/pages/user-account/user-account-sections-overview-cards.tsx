@@ -37,6 +37,7 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { ViewMoreLink } from '../../components/buttons/view-more-link'
 import PatientUtils from '../../lib/patient/patient.util'
 import { getLangName } from '../../lib/language'
+import { CountryCode } from '../../lib/auth/models/country.model'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
@@ -65,12 +66,18 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
   const { userAccountForm } = useUserAccountPageState()
   const { classes } = cardStyle()
 
+  const getCountryEnumKey = (code: CountryCode | undefined): string => {
+    if (!code) return ''
+    const entry = Object.entries(CountryCode).find(([, value]) => value === code)
+    return entry ? entry[0] : ''
+  }
+
   const getTableLinesAccount = (): { label: string, value: string }[] => {
 
     return [
       { label: t('first-name'), value: userAccountForm.firstName },
       { label: t('last-name'), value: userAccountForm.lastName },
-      { label: t('country'), value: userAccountForm.country },
+      { label: t('country'), value: t(`${getCountryEnumKey(userAccountForm.country)}`) },
       { label: t('gender'), value: PatientUtils.getGenderLabel(userAccountForm.sex) },
       { label: t('email'), value: user.email },
       { label: t('units'), value: userAccountForm.units },
