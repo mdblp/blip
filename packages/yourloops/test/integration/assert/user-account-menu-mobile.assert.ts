@@ -49,8 +49,8 @@ export const checkUserAccountMenuCardForAccount = (): void => {
 }
 
 export const checkUserAccountMenuCardForDataSharing = (): void => {
-  expect(screen.getByText('GLOOKO_XT')).toBeVisible()
-  expect(screen.getByText('MY_DIABBY')).toBeVisible()
+  expect(screen.getByText('Glooko XT')).toBeVisible()
+  expect(screen.getByText('MyDiabby Healthcare')).toBeVisible()
 }
 
 export const checkClickViewMoreUserAccount = async (): Promise<void> => {
