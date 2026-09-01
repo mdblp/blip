@@ -29,8 +29,6 @@ import * as d3 from 'd3'
 
 import { MS_IN_DAY } from 'medical-domain'
 
-import Tooltips from './plot/util/tooltips/tooltip'
-
 /**
  * @param {import('events').EventEmitter} emitter
  * @param {OneDayOptions} options
@@ -143,8 +141,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.poolGroup = null
   /** @type {SVGGElement} */
   container.scrollNav = null
-  /** @type {Tooltips|null} */
-  container.tooltips = null
   /** @type {d3.AxisScale<Date>} */
   container.xScale = d3.scaleTime()
   /** @type {MedicalDataService} */
@@ -429,7 +425,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     /** @type {[Date, Date]} Get the new domain (scroll date position) */
     const domain = container.xScale.domain()
 
-    mainGroup.select('#tidelineTooltips').attr('transform', `translate(${translateX},0)`)
     mainGroup.select('#tidelineAnnotations').attr('transform', `translate(${translateX},0)`)
     if (scrollHandleTrigger) {
       mainGroup.select('.scrollThumb').transition().ease(d3.easeLinear).attr('x', (d) => {
@@ -549,13 +544,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     return container
   }
 
-  container.setTooltip = function() {
-    const tooltipGroup = container.mainGroup.append('g')
-    tooltipGroup.attr('id', 'tidelineTooltips')
-    container.tooltips = new Tooltips(container, tooltipGroup).id(tooltipGroup.attr('id'))
-    return container
-  }
-
   /**
    *
    * @param {number | null} epochLocation The date to display (center of view)
@@ -627,7 +615,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     nav.scrollScale = null
     nav.drag = null
     container.xScale = null
-    container.tooltips = null
     container.mainSVG = null
     container.mainGroup = null
     container.poolGroup = null

@@ -63,7 +63,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   let yAxis = null
   /** @type {PlotType[]} */
   let plotTypes = []
-  let tooltips = null
   /** @type {AxisScaleFunc} */
   let defaultAxisScaleFn = null
 
@@ -81,7 +80,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     yScale = null
     yAxis = null
     plotTypes = null
-    tooltips = null
     container = null
   }
 
@@ -277,12 +275,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     return this
   }
 
-
-  this.tooltips = function(f) {
-    if (!arguments.length) return tooltips
-    tooltips = f
-    return this
-  }
 
   /**
    * @param {ScaleContinuousNumeric} scale

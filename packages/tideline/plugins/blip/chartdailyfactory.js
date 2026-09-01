@@ -258,17 +258,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }
 
   chart.arrangePools()
-  chart.setTooltip()
-
-  // add tooltips
-  chart.tooltips.addGroup(poolMessages, {
-    type: 'deviceEvent',
-    shape: 'generic'
-  })
-  chart.tooltips.addGroup(poolMessages, {
-    type: 'message',
-    shape: 'generic'
-  })
 
   // ***
   // Initialize chart with data
