@@ -25,25 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
-import noteIcon from 'note.svg'
+import _ from 'lodash'
 
 import { type Note } from 'medical-domain'
+import noteIcon from 'note.svg'
+import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 import { type Pool } from '../../../../models/pool.model'
 import { drawImage, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.Note)
 
 type NoteOptions = PlotOptions<Note> & {
-  onNoteClick?: (data: { data: Note, rect: DOMRect, htmlEvent: MouseEvent }) => void
+  onNoteClick: (data: { data: Note, rect: DOMRect, htmlEvent: MouseEvent }) => void
 }
 
 const defaults: Partial<NoteOptions> = {
@@ -155,27 +155,21 @@ export const plotNote = (
       // Step 4: Set up event handlers
       noteGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Note) {
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this)
+          })
         })
         .on('mouseout', function (this: SVGGElement) {
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
         .on('click', function (this: SVGGElement, event: MouseEvent, d: Note) {
           event.stopPropagation() // silence the click-and-drag listener
-          if (options.onNoteClick) {
-            options.onNoteClick({
-              data: d,
-              rect: getTooltipContainer(this),
-              htmlEvent: event
-            })
-          }
+          options.onNoteClick({
+            data: d,
+            rect: getTooltipContainer(this),
+            htmlEvent: event
+          })
         })
     })
   }

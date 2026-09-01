@@ -25,19 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 import { type AlarmEvent } from 'medical-domain'
-import { type Pool } from '../../../../models/pool.model'
-import { drawImage, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { getAlarmEventIcon } from '../../../../utils/alarm-event/alarm-event.util'
-import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
 import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/pool.model'
+import { getAlarmEventIcon } from '../../../../utils/alarm-event/alarm-event.util'
+import { drawImage, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.AlarmEvent)
@@ -158,17 +158,13 @@ export const plotAlarmEvent = (
       // Step 4: Set up event handlers
       alarmEventGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: AlarmEvent) {
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this)
+          })
         })
         .on('mouseout', function (this: SVGGElement) {
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
     })
   }

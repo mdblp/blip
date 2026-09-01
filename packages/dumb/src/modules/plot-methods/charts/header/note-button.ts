@@ -28,8 +28,7 @@
 import * as d3 from 'd3'
 import newNoteIcon from 'new-note.svg'
 
-// Fixed position and size of the button in the labels layer, to the left of the timeline
-const NEW_NOTE_BUTTON_POSITION = { x: 0, y: 71 } as const
+// Fixed size of the button in the labels layer, to the left of the timeline
 const NEW_NOTE_BUTTON_SIZE = { width: 36, height: 29 } as const
 
 const NEW_NOTE_ICON_CLASS = 'newNoteIcon'
@@ -37,13 +36,14 @@ const NEW_NOTE_ICON_CLASS = 'newNoteIcon'
 export type NewNoteButtonContainer = d3.Selection<SVGGElement, unknown, HTMLElement, unknown>
 
 export interface NewNoteButtonOptions {
-  onNewNoteClick?: () => void
-  onNewNoteHover?: (data: { element: SVGImageElement }) => void
-  onElementOut?: () => void
+  isDblg2Patient: boolean
+  onNewNoteClick: () => void
+  onNewNoteHover: (data: { element: SVGImageElement }) => void
+  onElementOut: () => void
 }
 
 /**
- * Plot the "create note" button in the diabetes management timeline
+ * Plot the "New note" button in the diabetes management timeline
  *
  * The button is a single, fixed-position affordance (not tied to any data point)
  * that lets the user open the note creation flow. It is rendered once and kept
@@ -57,14 +57,21 @@ export interface NewNoteButtonOptions {
  * plotNewNoteButton(d3.select('#tidelineLabels'), {
  *   onNewNoteHover: (event) => showNewNoteTooltip(event.element),
  *   onElementOut: () => hideTooltip(),
- *   onNewNoteClick: () => openNoteCreation()
+ *   onNewNoteClick: () => openNoteCreation(),
+ *   isDblg2Patient: false
  * })
  * ```
  */
 export const plotNewNoteButton = (
   container: NewNoteButtonContainer,
-  opts: NewNoteButtonOptions = {}
+  opts: NewNoteButtonOptions
 ): void => {
+  // Fixed position of the button in the labels layer, to the left of the timeline
+  const buttonPosition = {
+    x: 0,
+    y: opts.isDblg2Patient ? 52 : 71
+  }
+
   const button = container
     .selectAll<SVGImageElement, null>(`image.${NEW_NOTE_ICON_CLASS}`)
     .data([null])
@@ -73,21 +80,21 @@ export const plotNewNoteButton = (
     .attr('id', NEW_NOTE_ICON_CLASS)
     .attr('data-testid', 'new-note-button')
     .attr('href', newNoteIcon)
-    .attr('x', NEW_NOTE_BUTTON_POSITION.x)
-    .attr('y', NEW_NOTE_BUTTON_POSITION.y)
+    .attr('x', buttonPosition.x)
+    .attr('y', buttonPosition.y)
     .attr('width', NEW_NOTE_BUTTON_SIZE.width)
     .attr('height', NEW_NOTE_BUTTON_SIZE.height)
     .style('cursor', 'pointer')
 
   button
     .on('mouseover', function (this: SVGImageElement) {
-      opts.onNewNoteHover?.({ element: this })
+      opts.onNewNoteHover({ element: this })
     })
     .on('mouseout', () => {
-      opts.onElementOut?.()
+      opts.onElementOut()
     })
     .on('click', () => {
-      opts.onNewNoteClick?.()
+      opts.onNewNoteClick()
     })
 }
 

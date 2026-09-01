@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 import { BgClass, BgClasses, BgUnit, ClassificationType, MGDL_UNITS, type Smbg } from 'medical-domain'
-import { type Pool } from '../../../../models/pool.model'
-import { getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { convertBgClassesToBgBounds, getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
-import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/pool.model'
+import { convertBgClassesToBgBounds, getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
+import { getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.Smbg)
@@ -202,19 +202,15 @@ export const plotSmbg = (
       smbgCircles
         .on('mouseover', function (this: SVGCircleElement, _event: MouseEvent, d: Smbg) {
           highlight.on(d3.select(this))
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this as unknown as SVGGElement),
-              class: categorize(d)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this as unknown as SVGGElement),
+            class: categorize(d)
+          })
         })
         .on('mouseout', function (this: SVGCircleElement) {
           highlight.off()
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
     })
   }

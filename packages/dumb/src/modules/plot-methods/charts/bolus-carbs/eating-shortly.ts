@@ -25,24 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
 import eatingShortlyIcon from 'eating-shortly.svg'
+import _ from 'lodash'
 
 import { type EatingShortlyEvent } from 'medical-domain'
-import { type Pool } from '../../../../models/pool.model'
-import {
-  drawCircle,
-  drawImage,
-  getTooltipContainer,
-  xPos
-} from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
 import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/pool.model'
+import { drawCircle, drawImage, getTooltipContainer, xPos } from '../../../../utils/daily-chart/daily-chart.util'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.EatingShortly)
@@ -181,17 +176,13 @@ export const plotEatingShortly = (
       // Step 4: Set up event handlers
       eatingShortlyGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: EatingShortlyEvent) {
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this)
+          })
         })
         .on('mouseout', function (this: SVGGElement) {
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
     })
   }
