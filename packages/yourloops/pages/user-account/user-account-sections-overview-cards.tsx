@@ -36,7 +36,7 @@ import { useAuth } from '../../lib/auth'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { ViewMoreLink } from '../../components/buttons/view-more-link'
 import PatientUtils from '../../lib/patient/patient.util'
-import { getLangName } from '../../lib/language'
+import { availableCountries, getLangName } from '../../lib/language'
 import { CountryCode } from '../../lib/auth/models/country.model'
 import Box from '@mui/material/Box'
 import { RemoteMonitoringAvatar } from './remote-monitoring-avatar'
@@ -71,17 +71,16 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
   const { classes } = cardStyle()
   const { getRemoteMonitoringToolLabel } = useDataSharingHook()
 
-  const getCountryEnumKey = (code: CountryCode): string => {
-    if (!code) return ''
-    const entry = Object.entries(CountryCode).find(([, value]) => value === code)
-    return entry ? entry[0] : ''
+  const getCountry = (code: CountryCode): string => {
+    const country = availableCountries.find((item) => item.code === code)
+    return country ? country.name : ""
   }
 
   const getTableLinesAccount = (): { label: string, value: string }[] => {
     return [
       { label: t('first-name'), value: userAccountForm.firstName },
       { label: t('last-name'), value: userAccountForm.lastName },
-      { label: t('country'), value: t(`${getCountryEnumKey(userAccountForm.country)}`) },
+      { label: t('country'), value: t(`${getCountry(userAccountForm.country)}`) },
       { label: t('gender'), value: PatientUtils.getGenderLabel(userAccountForm.sex) },
       { label: t('email'), value: user.email },
       { label: t('units'), value: userAccountForm.units },
@@ -116,7 +115,7 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
             <Box component="span" key={consent.partnerId} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <RemoteMonitoringAvatar partnerName={consent.partnerName} />
               <Typography variant="body2" component="span">
-                {t(getRemoteMonitoringToolLabel(consent.partnerName))}
+                {getRemoteMonitoringToolLabel(consent.partnerName)}
               </Typography>
             </Box>
           ))

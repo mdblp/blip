@@ -4,7 +4,7 @@ import ListItemText from '@mui/material/ListItemText'
 import React, { type FC, PropsWithChildren } from 'react'
 
 interface TableLineWithChildrenProps extends PropsWithChildren {
-  hideDivider?: boolean
+  hideDivider: boolean
 }
 
 export const TableLineWithChildren: FC<TableLineWithChildrenProps> = (props) => {

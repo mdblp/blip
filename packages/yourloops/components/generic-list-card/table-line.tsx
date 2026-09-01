@@ -34,7 +34,7 @@ import React, { type FC } from 'react'
 interface TableLineProps {
   label: string
   value: string | null
-  hideDivider?: boolean
+  hideDivider: boolean
 }
 
 export const TableLine: FC<TableLineProps> = (props) => {

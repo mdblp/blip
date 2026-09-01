@@ -65,7 +65,8 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
   const { title, tableLines = [], headerAction, children } = props
-  const isCustom = React.Children.count(children) > 0
+  const childrenCount = React.Children.count(children)
+  const isCustom = childrenCount > 0
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
@@ -84,11 +85,12 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
       <CardContent className={classes.cardContent}>
         <List disablePadding>
           <Divider component="li" />
-          {isCustom ? (React.Children.map(children, (child, index) => (
-              <TableLineWithChildren key={index}>
+          {isCustom ?
+            React.Children.map(children, (child, index) => (
+              <TableLineWithChildren key={index} hideDivider={index === childrenCount - 1} >
                 {child}
               </TableLineWithChildren>
-            ))) :
+            )) :
             tableLines.map((item, index, array) => (
               <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
             ))}
