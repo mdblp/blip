@@ -34,9 +34,9 @@ const NEW_NOTE_BUTTON_SIZE = { width: 36, height: 29 } as const
 
 const NEW_NOTE_ICON_CLASS = 'newNoteIcon'
 
-export type NoteButtonContainer = d3.Selection<SVGGElement, unknown, HTMLElement, unknown>
+export type NewNoteButtonContainer = d3.Selection<SVGGElement, unknown, HTMLElement, unknown>
 
-export interface NoteButtonOptions {
+export interface NewNoteButtonOptions {
   onNewNoteClick?: () => void
   onNewNoteHover?: (data: { element: SVGImageElement }) => void
   onElementOut?: () => void
@@ -54,16 +54,16 @@ export interface NoteButtonOptions {
  *
  * @example
  * ```typescript
- * plotNoteButton(d3.select('#tidelineLabels'), {
+ * plotNewNoteButton(d3.select('#tidelineLabels'), {
  *   onNewNoteHover: (event) => showNewNoteTooltip(event.element),
  *   onElementOut: () => hideTooltip(),
  *   onNewNoteClick: () => openNoteCreation()
  * })
  * ```
  */
-export const plotNoteButton = (
-  container: NoteButtonContainer,
-  opts: NoteButtonOptions = {}
+export const plotNewNoteButton = (
+  container: NewNoteButtonContainer,
+  opts: NewNoteButtonOptions = {}
 ): void => {
   const button = container
     .selectAll<SVGImageElement, null>(`image.${NEW_NOTE_ICON_CLASS}`)

@@ -35,7 +35,7 @@ import {
   plotMeal,
   plotNightMode,
   plotNote,
-  plotNoteButton,
+  plotNewNoteButton,
   plotPhysicalActivity,
   plotRescueCarbs,
   plotReservoirChange,
@@ -485,8 +485,8 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     onNoteClick: ({ data }) => emitter.emit('noteThread', data.id)
   }))
 
-  // add the "create note" button to the chart's labels layer
-  plotNoteButton(d3.select(parentElement).select('#tidelineLabels'), {
+  // add the "New note" button to the chart's labels layer
+  plotNewNoteButton(d3.select(parentElement).select('#tidelineLabels'), {
     onNewNoteHover: options.onNewNoteHover,
     onElementOut: options.onTooltipOut,
     onNewNoteClick: () => emitter.emit('createMessage', null)
