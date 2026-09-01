@@ -26,28 +26,19 @@
  */
 
 import Box from '@mui/material/Box'
-import { useTranslation } from 'react-i18next'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import React, { type FC } from 'react'
-import { RemoteMonitoringAvatar } from '../../pages/user-account/remote-monitoring-avatar'
-import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 
 interface TableLineProps {
   label: string
-  partner?: PartnerName
   value: string | null
   hideDivider?: boolean
-  hideFallbackValue?: boolean
-  remoteMonitoring?:boolean
 }
 
 export const TableLine: FC<TableLineProps> = (props) => {
-  const { label, partner, value, hideDivider, hideFallbackValue = false, remoteMonitoring = false } = props
-  const fallbackValue = hideFallbackValue ? '' : '-'
-  const { t } = useTranslation();
-  const translationKey = label.toLowerCase().replaceAll('_', '-');
+  const { label, value, hideDivider } = props
 
   return (
     <ListItem divider={!hideDivider} className="list-item">
@@ -57,16 +48,8 @@ export const TableLine: FC<TableLineProps> = (props) => {
             display: "flex",
             justifyContent: "space-between"
           }}>
-          {remoteMonitoring ?
-              <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <RemoteMonitoringAvatar partnerName={partner} />
-                <Typography variant="body2" component="span">
-                  {t(translationKey)}
-                </Typography>
-              </Box>
-            : <Typography variant="body2">{label}</Typography>
-          }
-          <Typography variant="body2" className="bold">{value || fallbackValue}</Typography>
+          <Typography variant="body2">{label}</Typography>
+          <Typography variant="body2" className="bold">{value}</Typography>
         </Box>
       </ListItemText>
     </ListItem>

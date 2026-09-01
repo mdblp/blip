@@ -38,6 +38,10 @@ import { ViewMoreLink } from '../../components/buttons/view-more-link'
 import PatientUtils from '../../lib/patient/patient.util'
 import { getLangName } from '../../lib/language'
 import { CountryCode } from '../../lib/auth/models/country.model'
+import Box from '@mui/material/Box'
+import { RemoteMonitoringAvatar } from './remote-monitoring-avatar'
+import Typography from '@mui/material/Typography'
+import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
@@ -65,15 +69,15 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
   const { t } = useTranslation()
   const { userAccountForm } = useUserAccountPageState()
   const { classes } = cardStyle()
+  const { getRemoteMonitoringToolLabel } = useDataSharingHook()
 
-  const getCountryEnumKey = (code: CountryCode | undefined): string => {
+  const getCountryEnumKey = (code: CountryCode): string => {
     if (!code) return ''
     const entry = Object.entries(CountryCode).find(([, value]) => value === code)
     return entry ? entry[0] : ''
   }
 
   const getTableLinesAccount = (): { label: string, value: string }[] => {
-
     return [
       { label: t('first-name'), value: userAccountForm.firstName },
       { label: t('last-name'), value: userAccountForm.lastName },
@@ -83,13 +87,6 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
       { label: t('units'), value: userAccountForm.units },
       { label: t('language'), value: getLangName(userAccountForm.lang) }
     ]
-  }
-
-  const getTableLinesSharing = (): { label: string; value: string }[] => {
-    return consents.map((consent: ExternalConsent) => ({
-      label: consent.partnerName,
-      value: ''
-    }))
   }
 
   return (
@@ -107,16 +104,24 @@ export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProp
 
       <GenericListCard
         title={t('data-sharing')}
-        tableLines={getTableLinesSharing()}
         data-testid="user-account-overview-mobile-data-sharing"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
-        hideFallbackValue = {true}
-        remoteMonitoring = {true}
         headerAction={
           <ViewMoreLink dataTestId="link-data-sharing" targetRoute={AppUserRoute.UserAccountDataSharingSection} />
         }
-      />
+      >
+        {
+          consents.map((consent: ExternalConsent) => (
+            <Box component="span" key={consent.partnerId} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <RemoteMonitoringAvatar partnerName={consent.partnerName} />
+              <Typography variant="body2" component="span">
+                {t(getRemoteMonitoringToolLabel(consent.partnerName))}
+              </Typography>
+            </Box>
+          ))
+        }
+      </GenericListCard>
     </>
   )
 }

@@ -31,28 +31,26 @@ import CardHeader from '@mui/material/CardHeader'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 import { useTheme } from '@mui/material/styles'
-import React, { type FC } from 'react'
+import React, { type FC, PropsWithChildren } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import { TableLine } from './table-line'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
+import { TableLineWithChildren } from './table-line-with-children'
 
-interface GenericListCardProps {
+interface GenericListCardProps extends PropsWithChildren {
   title: string,
-  tableLines: { label: string, value: string }[]
+  tableLines?: { label: string, value: string }[]
   ['data-testid']?: string
   ['cardClassName']?: string
   ['cardHeaderClassName']?: string
   headerAction?: React.ReactNode
-  hideFallbackValue?: boolean
-  remoteMonitoring?:boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
   cardHeader: {
     backgroundColor: 'var(--primary-color-background)',
     fontSize: theme.typography.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: theme.typography.fontWeightBold
   },
   cardContent: {
     fontSize: theme.typography.fontSize,
@@ -66,8 +64,9 @@ const useStyles = makeStyles()((theme) => ({
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { title, tableLines, headerAction, hideFallbackValue = false, remoteMonitoring = false } = props
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { title, tableLines = [], headerAction, children } = props
+  const isCustom = React.Children.count(children) > 0
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Card
@@ -85,10 +84,14 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
       <CardContent className={classes.cardContent}>
         <List disablePadding>
           <Divider component="li" />
-          {tableLines.map((item, index, array) => (
-            <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1}
-                       hideFallbackValue={hideFallbackValue} remoteMonitoring = {remoteMonitoring} partner={item.label as PartnerName } />
-          ))}
+          {isCustom ? (React.Children.map(children, (child, index) => (
+              <TableLineWithChildren key={index}>
+                {child}
+              </TableLineWithChildren>
+            ))) :
+            tableLines.map((item, index, array) => (
+              <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
+            ))}
         </List>
       </CardContent>
     </Card>
