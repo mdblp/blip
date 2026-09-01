@@ -100,6 +100,8 @@ export { plotEventSuperposition } from './modules/plot-methods/charts/events/eve
 export { plotIob } from './modules/plot-methods/charts/active-insulin/iob'
 export { plotMeal } from './modules/plot-methods/charts/bolus-carbs/meal'
 export { plotNightMode } from './modules/plot-methods/charts/events/night-mode'
+export { plotNote } from './modules/plot-methods/charts/header/note'
+export { plotNoteButton } from './modules/plot-methods/charts/header/note-button'
 export { plotPhysicalActivity } from './modules/plot-methods/charts/events/physical-activity'
 export { plotRescueCarbs } from './modules/plot-methods/charts/bolus-carbs/rescue-carbs'
 export { plotReservoirChange } from './modules/plot-methods/charts/events/reservoir-change'

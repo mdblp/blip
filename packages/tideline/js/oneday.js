@@ -771,7 +771,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     // We can assume chart.tidelineData.grouped.message is an array
     const tdMessage = container.tidelineData.medicalData.messages.find((d) => d.id === message.id)
     if (typeof tdMessage === 'object') {
-      container.emitter.emit('messageCreated', tdMessage)
+      // Force a re-render so the new note is picked up by plotNote
+      container.renderPoolsData(true)
       return true
     }
     return false
@@ -780,7 +781,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.editMessage = (message) => {
     const updateMessage = container.tidelineData.editMessage(message)
     if (updateMessage !== null) {
-      container.emitter.emit('messageEdited', updateMessage)
+      // Force a re-render so the edited note is picked up by plotNote
+      container.renderPoolsData(true)
       return true
     }
     return false

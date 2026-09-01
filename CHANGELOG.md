@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-3338 Use weight unit from parameters instead of "kg"
+- YLP-3490 Update notes UI
 - YLP-3842 New design for monitoring alerts configuration
 - YLP-3939 Adapting the main header to mobile format for HCP
 - YLP-3940 Adapting the main header to mobile format for Patients
@@ -19,10 +20,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-4042 Display G7 Pairing code instead of Firmware version on Device view
 - YLP-4046 Improve the display of the parameter changes tooltip on Daily view
 - YLP-4047 Use smart rounding for TIR percentage values
-- YLP-4061 View note - new UI
-- YLP-4062 Create note - new UI
-- YLP-4063 Edit note - new UI
-- YLP-4064 Answer note - new UI
 
 ### Engineering
 - YLP-3864 SBOM generation in pipeline

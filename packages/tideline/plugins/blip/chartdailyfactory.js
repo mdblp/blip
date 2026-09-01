@@ -34,6 +34,8 @@ import {
   plotIob,
   plotMeal,
   plotNightMode,
+  plotNote,
+  plotNoteButton,
   plotPhysicalActivity,
   plotRescueCarbs,
   plotReservoirChange,
@@ -48,7 +50,6 @@ import _ from 'lodash'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
-import plotMessage from '../../js/plot/message'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
 import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
@@ -482,16 +483,25 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     isDaily: true,
     cursor: 'cell'
   }))
+  // clicking the background at a given date starts the note creation flow at that date
+  emitter.on('clickToDate', (date) => {
+    emitter.emit('createMessage', date)
+  })
 
-  // add message images to messages pool
-  poolMessages.addPlotType({ type: 'message' }, plotMessage(poolMessages, {
-    size: 30,
-    emitter,
+  // add note images to messages pool
+  poolMessages.addPlotType({ type: 'message' }, plotNote(poolMessages, {
     tidelineData,
     onElementHover: options.onNoteHover,
     onElementOut: options.onTooltipOut,
-    onNewNoteHover: options.onNewNoteHover
+    onNoteClick: ({ data }) => emitter.emit('noteThread', data.id)
   }))
+
+  // add the "create note" button to the chart's labels layer
+  plotNoteButton(d3.select(parentElement).select('#tidelineLabels'), {
+    onNewNoteHover: options.onNewNoteHover,
+    onElementOut: options.onTooltipOut,
+    onNewNoteClick: () => emitter.emit('createMessage', null)
+  })
 
   // add timechange images to messages pool
   poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeZoneChange(poolMessages, {
