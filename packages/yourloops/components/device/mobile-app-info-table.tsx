@@ -29,7 +29,7 @@ import { type DeviceConfig, type MobileAppConfig } from 'medical-domain'
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatCode } from '../../utils/format.utils'
-import { GenericListCard } from './generic-list-card'
+import { GenericListCard } from '../generic-list-card/generic-list-card'
 
 interface MobileApplicationInfoProps {
   app: MobileAppConfig,

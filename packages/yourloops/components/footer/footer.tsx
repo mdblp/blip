@@ -198,7 +198,7 @@ export const Footer: FunctionComponent = () => {
           id="footer-link-url-privacy-policy"
           href={privacyPolicyUrl}
           onClick={metricsPdfDocument('privacy_policy')}
-          style = {classes.commonLink}
+          style={classes.commonLink}
           isExternal
         >
           {t('privacy-policy')}
@@ -208,7 +208,7 @@ export const Footer: FunctionComponent = () => {
           id="footer-link-url-terms"
           href={termsOfUseUrl}
           onClick={metricsPdfDocument('terms')}
-          style = {classes.commonLink}
+          style={classes.commonLink}
           isExternal
         >
           {t('terms-of-use')}
@@ -217,7 +217,7 @@ export const Footer: FunctionComponent = () => {
         <FooterLink
           id="footer-link-cookies-management"
           onClick={handleShowCookieBanner}
-          style = {classes.commonLink}
+          style={classes.commonLink}
         >
           {t('cookies-management')}
         </FooterLink>
@@ -226,7 +226,7 @@ export const Footer: FunctionComponent = () => {
           id="footer-link-url-cookies-policy"
           href={cookiesPolicyUrl}
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
-          style = {classes.commonLink}
+          style={classes.commonLink}
           isExternal
         >
           {t('cookies-policy')}
@@ -236,7 +236,7 @@ export const Footer: FunctionComponent = () => {
           id="footer-link-contact-mailto"
           href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('mailto-contact')}
-          style = {classes.commonLink}
+          style={classes.commonLink}
         >
           {t('contact')}
         </FooterLink>
@@ -250,22 +250,24 @@ export const Footer: FunctionComponent = () => {
             aria-label={t('tooltip-release-notes')}
             placement="right-start"
           >
-            <FooterLink
-              dataTestId="footer-link-url-release-notes"
-              href={releaseNotesUrl}
-              onClick={metricsPdfDocument('release_notes')}
-              style = {`${classes.commonLink} ${classes.appVersionLink}`}
-              isExternal
-            >
-              <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
-            </FooterLink>
+            <span>
+              <FooterLink
+                dataTestId="footer-link-url-release-notes"
+                href={releaseNotesUrl}
+                onClick={metricsPdfDocument('release_notes')}
+                style={`${classes.commonLink} ${classes.appVersionLink}`}
+                isExternal
+              >
+                <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
+              </FooterLink>
+            </span>
           </Tooltip>
           <span className={classes.bySpan}>by </span>
         </Box>
         <FooterLink
           id="footer-link-url-diabeloop"
           href={diabeloopExternalUrls.support}
-          style = {classes.commonLink}
+          style={classes.commonLink}
           isExternal
         >
           <img src={diabeloopLogo} alt={t('alt-img-logo')} className={`${classes.svg} ${classes.diabeloopLogo}`} />

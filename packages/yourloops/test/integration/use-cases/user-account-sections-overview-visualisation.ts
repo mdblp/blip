@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Country {
-  code: CountryCode
-  name: string
+import {
+  checkUserAccountSectionsOverviewVisible,
+  checkUserAccountSectionsOverviewNotVisible,
+  checkUserAccountSectionCardForAccount,
+  checkUserAccountSectionCardForDataSharing,
+  checkClickViewMoreUserAccount,
+  checkClickViewMoreDataSharing
+} from '../assert/user-account-sections-overview-mobile.assert'
+
+export const testUserAccountSectionsOverviewVisibleMobile = (): void => {
+  checkUserAccountSectionsOverviewVisible()
+  checkUserAccountSectionCardForAccount()
+  checkUserAccountSectionCardForDataSharing()
 }
 
-export enum CountryCode {
-  Austria = 'AT',
-  Belgium = 'BE',
-  France = 'FR',
-  Germany = 'DE',
-  Italy = 'IT',
-  Japan = 'JP',
-  Netherlands = 'NL',
-  Spain = 'SP',
-  Switzerland = 'CH',
-  UnitedKingdom = 'UK',
-  Unknown = ''
+export const testUserAccountSectionsOverviewNotVisibleMobile = (): void => {
+  checkUserAccountSectionsOverviewNotVisible()
 }
 
+export const testClickViewMoreUserAccount = (): void => {
+  checkClickViewMoreUserAccount()
+}
+
+export const testClickViewMoreDataSharing = (): void => {
+  checkClickViewMoreDataSharing()
+}

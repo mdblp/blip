@@ -130,7 +130,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const targetUrl = getTargetUrl(userRole)
 
   const goHome = () => {
-    navigate(targetUrl)
+    navigate(-1)
   }
 
   return (

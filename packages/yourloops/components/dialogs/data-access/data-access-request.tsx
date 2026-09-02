@@ -43,8 +43,8 @@ import { PartnerName } from '../../../lib/external-consents/models/enum/partner-
 import myDiabbyLogo from 'my-diabby-logo.svg'
 import glookoLogo from 'glooko-logo.svg'
 import {
-  getRemoteMonitoringToolLabel
-} from '../../../pages/user-account/sections/data-sharing-section/remote-monitoring.util'
+  useDataSharingHook
+} from '../../../pages/user-account/sections/data-sharing-section/data-sharing.hook'
 
 interface DataAccessRequestProps {
   partnerName: PartnerName
@@ -55,6 +55,7 @@ interface DataAccessRequestProps {
 
 export const DataAccessRequest: FC<DataAccessRequestProps> = (props) => {
   const { partnerName, onAcceptAccess, onDenyAccess, isLoading } = props
+  const { getRemoteMonitoringToolLabel } = useDataSharingHook()
   const { t } = useTranslation()
 
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
