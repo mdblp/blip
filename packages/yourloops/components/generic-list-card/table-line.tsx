@@ -34,8 +34,10 @@ import React, { type FC } from 'react'
 interface TableLineProps {
   label: string
   value: string | null
-  hideDivider: boolean
+  hideDivider?: boolean
 }
+
+const FALLBACK_VALUE = '-'
 
 export const TableLine: FC<TableLineProps> = (props) => {
   const { label, value, hideDivider } = props
@@ -49,7 +51,7 @@ export const TableLine: FC<TableLineProps> = (props) => {
             justifyContent: "space-between"
           }}>
           <Typography variant="body2">{label}</Typography>
-          <Typography variant="body2" className="bold">{value}</Typography>
+          <Typography variant="body2" className="bold">{value || FALLBACK_VALUE}</Typography>
         </Box>
       </ListItemText>
     </ListItem>

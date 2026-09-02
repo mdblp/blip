@@ -41,8 +41,8 @@ interface GenericListCardProps extends PropsWithChildren {
   title: string,
   tableLines?: { label: string, value: string }[]
   ['data-testid']?: string
-  ['cardClassName']?: string
-  ['cardHeaderClassName']?: string
+  cardClassName?: string
+  cardHeaderClassName?: string
   headerAction?: React.ReactNode
 }
 
