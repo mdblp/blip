@@ -26,7 +26,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { GenericListCard } from '../../components/device/generic-list-card'
+import { GenericListCard } from '../../components/generic-list-card/generic-list-card'
 import React from 'react'
 import { makeStyles } from 'tss-react/mui'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -121,7 +121,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
   return (
     <>
       <GenericListCard
-        className={classes.cards}
+        cardClassName={classes.cards}
         title={t('team-information')}
         tableLines={getTableTeamInformation()}
         data-testid="care-team-settings-menu-mobile-team-information"
@@ -140,7 +140,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
       />
 
       <GenericListCard
-        className={classes.cards}
+        cardClassName={classes.cards}
         title={t('members')}
         tableLines={getTableMembers()}
         data-testid="care-team-settings-menu-mobile-members"
@@ -158,7 +158,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         }
       />
       <GenericListCard
-        className={classes.cards}
+        cardClassName={classes.cards}
         title={`${t('alerts')} (${userBgUnit})`}
         tableLines={getTableAlerts()}
         data-testid="care-team-settings-menu-mobile-alerts"
