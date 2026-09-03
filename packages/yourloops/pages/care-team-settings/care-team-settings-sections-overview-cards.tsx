@@ -28,7 +28,6 @@
 import { useTranslation } from 'react-i18next'
 import { GenericListCard } from '../../components/generic-list-card/generic-list-card'
 import React from 'react'
-import { makeStyles } from 'tss-react/mui'
 import { generatePath, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import TeamUtils from '../../lib/team/team.util'
@@ -116,7 +115,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         tableLines={getTableTeamInformation()}
         data-testid="care-team-settings-menu-mobile-team-information"
         headerAction={
-          <ViewMoreLink dataTestId="link-team-members"
+          <ViewMoreLink dataTestId="link-team-info"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
         }
       />
@@ -129,7 +128,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         data-testid="care-team-settings-menu-mobile-members"
         headerAction={
           <ViewMoreLink dataTestId="link-team-members"
-                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
+                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsMembersSection, { teamId })} />
         }
       />
       <GenericListCard
@@ -139,8 +138,8 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         tableLines={getTableAlerts()}
         data-testid="care-team-settings-menu-mobile-alerts"
         headerAction={
-          <ViewMoreLink dataTestId="link-team-members"
-                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
+          <ViewMoreLink dataTestId="link-team-alerts"
+                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
         }
       />
     </>
