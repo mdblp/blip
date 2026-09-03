@@ -35,6 +35,7 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import moment, { type Moment } from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NOTE_TEXT_MAX_CHARACTERS } from './note.constants'
 
 interface NoteFormDialogContentProps {
   title: string
@@ -115,6 +116,7 @@ export const NoteFormDialogContent: FC<NoteFormDialogContentProps> = (props) => 
             }}
             slotProps={{
               htmlInput: {
+                maxLength: NOTE_TEXT_MAX_CHARACTERS,
                 'data-testid': `note-${idPrefix}-input`
               }
             }}

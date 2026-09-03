@@ -45,6 +45,7 @@ import { logError } from '../../../../../utils/error.util'
 import SpinningLoader from '../../../../loaders/spinning-loader'
 import { NoteThreadItem } from '../../../../notes/note-thread-item/note-thread-item'
 import { useAlert } from '../../../../utils/snackbar'
+import { NOTE_TEXT_MAX_CHARACTERS } from '../../note.constants'
 
 interface ViewNoteDialogProps {
   notes: MessageNote[]
@@ -147,6 +148,11 @@ export const ViewNoteDialogContent: FC<ViewNoteDialogProps> = (props) => {
               value={comment}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setComment(event.target.value)
+              }}
+              slotProps={{
+                htmlInput: {
+                  maxLength: NOTE_TEXT_MAX_CHARACTERS,
+                }
               }}
             />
           </Box>
