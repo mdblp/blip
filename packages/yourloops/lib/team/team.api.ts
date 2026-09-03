@@ -57,13 +57,13 @@ interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
 interface ChangeMemberRoleSecondPayload {
   teamId: string
   userId: string
+  email: string
   role: TeamMemberRole.admin | TeamMemberRole.member
 }
 
 interface RemoveMemberArgs {
   teamId: string
   userId: string
-  email: string
 }
 
 interface InviteMemberResult {
@@ -140,22 +140,23 @@ export default class TeamApi {
     await HttpService.delete({ url: `/crew/v1/teams/${teamId}/members/${userId}` })
   }
 
-  static async removeMember({ teamId, userId, email }: RemoveMemberArgs): Promise<void> {
-    await HttpService.delete({
-      url: `confirm/send/team/leave/${teamId}/${userId}`,
-      config: { params: { email } }
-    })
+  static async removeMember({ teamId, userId }: RemoveMemberArgs): Promise<void> {
+    // await HttpService.delete({
+    //   url: `confirm/send/team/leave/${teamId}/${userId}`,
+    //   config: { params: { email } }
+    // })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}/members/${userId}` })
   }
 
   static async changeMemberRole({ teamId, userId, email, role }: ChangeMemberRoleArgs): Promise<void> {
-    await HttpService.put<void, ChangeMemberRoleFirstPayload>({
-      url: `/confirm/send/team/role/${userId}`,
-      payload: { teamId, email, role }
-    })
+    // await HttpService.put<void, ChangeMemberRoleFirstPayload>({
+    //   url: `/confirm/send/team/role/${userId}`,
+    //   payload: { teamId, email, role }
+    // })
 
-    await HttpService.put<void, ChangeMemberRoleSecondPayload>({
-      url: `/crew/v1/teams/${teamId}/members`,
-      payload: { teamId, userId, role }
+    await HttpService.post<void, ChangeMemberRoleSecondPayload>({
+      url: `/crew/v1/teams/${teamId}/members/${userId}/change-role`,
+      payload: { teamId, email, userId, role }
     })
   }
 
