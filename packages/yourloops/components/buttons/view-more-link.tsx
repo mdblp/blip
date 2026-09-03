@@ -25,18 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
-import i18next from 'i18next'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { Link } from '@mui/material'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { makeStyles } from 'tss-react/mui'
 
-const t = i18next.t.bind(i18next)
+interface ViewMoreLinkProps {
+  dataTestId: string,
+  targetRoute: AppUserRoute
+}
 
-export const getRemoteMonitoringToolLabel = (name: PartnerName) => {
-  switch (name) {
-    case PartnerName.MyDiabby:
-      return t('my-diabby')
-    case PartnerName.GlookoXT:
-      return t('glooko-xt')
-    default:
-      return name
+export const linkStyle = makeStyles()(() => {
+  return {
+    links: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.5,
+      color: 'var(--text-color-primary)'
+    }
   }
+})
+
+export const ViewMoreLink: FC<ViewMoreLinkProps> = (props) => {
+  const { dataTestId, targetRoute } = props
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { classes } = linkStyle()
+
+  return (
+
+    <Link
+      className={classes.links}
+      component="button"
+      onClick={() => navigate(targetRoute)}
+      underline="none"
+      data-testid={dataTestId}
+    >
+      {t('view-more')}
+      <KeyboardArrowRightIcon fontSize="small" />
+    </Link>
+  )
 }

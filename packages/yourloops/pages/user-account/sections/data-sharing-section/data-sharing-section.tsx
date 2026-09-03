@@ -25,53 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import CardHeader from '@mui/material/CardHeader'
 import { useTranslation } from 'react-i18next'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import { errorTextFromException } from '../../../../lib/utils'
-import { logError } from '../../../../utils/error.util'
-import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
 import { useAuth } from '../../../../lib/auth'
-import { ExternalConsent } from '../../../../lib/external-consents/models/external-consent.model'
-import { useAlert } from '../../../../components/utils/snackbar'
 import SpinningLoader from '../../../../components/loaders/spinning-loader'
 import { RemoteMonitoringTools } from './remote-monitoring-tools'
+import { useDataSharingHook } from './data-sharing.hook'
 
 export const DataSharingSection: FC = () => {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const alert = useAlert()
-
-  const [consents, setConsents] = useState([])
-  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
   const userId = user.id
 
-  const fetchExternalConsents = useCallback(() => {
-    setRefreshInProgress(true)
-
-    ExternalConsentsApi.getConsents()
-      .then((consents: ExternalConsent[]) => {
-        setConsents(consents)
-        return consents
-      })
-      .catch((reason: unknown) => {
-        const message = errorTextFromException(reason)
-        logError(message, 'fetch-external-consents')
-
-        alert.error(t('error-http-40x'))
-        setConsents([])
-      })
-      .finally(() => {
-        setRefreshInProgress(false)
-      })
-  }, [t, alert])
-
-  useEffect(() => {
-    fetchExternalConsents()
-  }, [fetchExternalConsents]);
+  const { consents, refreshInProgress, fetchExternalConsents } = useDataSharingHook()
 
   return (
     <>

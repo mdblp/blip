@@ -26,7 +26,7 @@
  */
 
 import React, { type FC, type FunctionComponent } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
@@ -37,17 +37,39 @@ import { UserAccountPage } from '../pages/user-account/user-account-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import usePatient from '../lib/patient/patient.hook'
+import { useAuth } from '../lib/auth'
 import { PatientProvider } from '../lib/patient/patient.provider'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { UserAccountSectionsOverview } from '../pages/user-account/user-account-sections-overview'
+import { AccountSection } from '../pages/user-account/sections/account-section/account-section'
+import { DataSharingSection } from '../pages/user-account/sections/data-sharing-section/data-sharing-section'
+import { CountryCode } from '../lib/auth/models/country.model'
 
 export const PatientLayout: FC = () => {
   const { patient } = usePatient()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { user } = useAuth()
+  const shouldDisplayUserAccountSectionsOverview = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
 
   return (
     <TeamContextProvider>
       <DashboardLayout>
         <Routes>
           <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-          <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
+          <Route path={AppUserRoute.UserAccount}
+                 element={shouldDisplayUserAccountSectionsOverview
+                   ? (<Navigate to={AppUserRoute.UserAccountSectionsOverview} replace />)
+                   : (<UserAccountPage />)}
+          />
+          {shouldDisplayUserAccountSectionsOverview && (
+            <Route>
+              <Route path={AppUserRoute.UserAccountSectionsOverview} element={<UserAccountSectionsOverview />} />
+              <Route path={AppUserRoute.UserAccountSection} element={<AccountSection />} />
+              <Route path={AppUserRoute.UserAccountDataSharingSection} element={<DataSharingSection />} />
+            </Route>
+          )}
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
           <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
           <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
