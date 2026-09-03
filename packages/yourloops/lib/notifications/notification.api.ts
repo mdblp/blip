@@ -80,17 +80,17 @@ export default class NotificationApi {
     await NotificationApi.updateInvitation(url, userId, notification)
   }
 
-  static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
-    const payload = {
-      email: inviteeEmail,
-      TeamId: teamId,
-    }
-
-    await HttpService.post<string, {email: string, TeamId: string}>({
-      url: `/crew/v1/teams/${teamId}/members`, // TODO: create the route in crew with payload
-      payload
-    })
-  }
+  // static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
+  //   const payload = {
+  //     email: inviteeEmail,
+  //     TeamId: teamId,
+  //   }
+  //
+  //   await HttpService.post<string, {email: string, TeamId: string}>({
+  //     url: `/crew/v1/teams/${teamId}/members`, // TODO: create the route in crew with payload
+  //     payload
+  //   })
+  // }
 
   static async declineInvitation(userId: string, notification: InAppNotification): Promise<void> {
     let url: string
