@@ -42,26 +42,11 @@ import Box from '@mui/material/Box'
 import { RemoteMonitoringAvatar } from './remote-monitoring-avatar'
 import Typography from '@mui/material/Typography'
 import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { cardStyle } from '../card-style'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
 }
-
-export const cardStyle = makeStyles()((theme) => {
-  return {
-    cards: {
-      margin: theme.spacing(2)
-    },
-    cardsHeader: {
-      lineHeight: 1
-    },
-    links: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 0.5
-    }
-  }
-})
 
 export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProps> = (props) => {
   const { consents } = props

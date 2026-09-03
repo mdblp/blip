@@ -29,9 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { GenericListCard } from '../../components/generic-list-card/generic-list-card'
 import React from 'react'
 import { makeStyles } from 'tss-react/mui'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Link } from '@mui/material'
-import { useNavigate, useParams } from 'react-router-dom'
+import { generatePath, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import TeamUtils from '../../lib/team/team.util'
 import { type Team, type TeamMember, useTeam } from '../../lib/team'
@@ -41,21 +39,10 @@ import { formatCode } from '../../utils/format.utils'
 import { useTeamCreateEdit } from '../../components/team/team-create-edit.hook'
 import { useAlert } from '../../components/utils/snackbar'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
+import { ViewMoreLink } from '../../components/buttons/view-more-link'
 import { Unit } from 'medical-domain'
 import { useAuth } from '../../lib/auth'
-
-export const cardStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
-  return {
-    cards: {
-      margin: theme.spacing(2)
-    },
-    links: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 0.5
-    }
-  }
-})
+import { cardStyle } from '../card-style'
 
 export const CareTeamSettingsSectionsOverviewCards = () => {
   const { getTeam } = useTeam()
@@ -64,7 +51,6 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
   const { teamId } = useParams()
   const team = getTeam(teamId)
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { classes } = cardStyle()
   const { user } = useAuth()
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
@@ -114,7 +100,10 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
 
   const getTableAlerts = (): { value: string, label: string }[] => {
     return [
-      { label: userBgUnit === Unit.MilligramPerDeciliter ? t('default-values-applied') : t('custom-values-applied'), value: '' }
+      {
+        label: userBgUnit === Unit.MilligramPerDeciliter ? t('default-values-applied') : t('custom-values-applied'),
+        value: ''
+      }
     ]
   }
 
@@ -122,57 +111,36 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
     <>
       <GenericListCard
         cardClassName={classes.cards}
+        cardHeaderClassName={classes.cardsHeader}
         title={t('team-information')}
         tableLines={getTableTeamInformation()}
         data-testid="care-team-settings-menu-mobile-team-information"
         headerAction={
-          <Link
-            className={classes.links}
-            component="button"
-            onClick={() => navigate(`${AppUserRoute.Teams}/${teamId}/sections-overview/informations`)}
-            underline="none"
-            data-testid="link-team-info"
-          >
-            {t('view-more')}
-            <KeyboardArrowRightIcon fontSize="small" />
-          </Link>
+          <ViewMoreLink dataTestId="link-team-members"
+                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
         }
       />
 
       <GenericListCard
         cardClassName={classes.cards}
+        cardHeaderClassName={classes.cardsHeader}
         title={t('members')}
         tableLines={getTableMembers()}
         data-testid="care-team-settings-menu-mobile-members"
         headerAction={
-          <Link
-            className={classes.links}
-            component="button"
-            onClick={() => navigate(`${AppUserRoute.Teams}/${teamId}/sections-overview/members`)}
-            underline="none"
-            data-testid="link-team-members"
-          >
-            {t('view-more')}
-            <KeyboardArrowRightIcon fontSize="small" />
-          </Link>
+          <ViewMoreLink dataTestId="link-team-members"
+                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
         }
       />
       <GenericListCard
         cardClassName={classes.cards}
+        cardHeaderClassName={classes.cardsHeader}
         title={`${t('alerts')} (${userBgUnit})`}
         tableLines={getTableAlerts()}
         data-testid="care-team-settings-menu-mobile-alerts"
         headerAction={
-          <Link
-            className={classes.links}
-            component="button"
-            onClick={() => navigate(`${AppUserRoute.Teams}/${teamId}/sections-overview/alerts`)}
-            underline="none"
-            data-testid="link-team-alerts"
-          >
-            {t('view-more')}
-            <KeyboardArrowRightIcon fontSize="small" />
-          </Link>
+          <ViewMoreLink dataTestId="link-team-members"
+                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
         }
       />
     </>

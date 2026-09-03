@@ -25,47 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { Link } from '@mui/material'
-import { AppUserRoute } from '../../models/enums/routes.enum'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { makeStyles } from 'tss-react/mui'
 
-interface ViewMoreLinkProps {
-  dataTestId: string,
-  targetRoute: AppUserRoute | string
-}
-
-export const linkStyle = makeStyles()(() => {
+export const cardStyle = makeStyles()((theme) => {
   return {
+    cards: {
+      margin: theme.spacing(2)
+    },
+    cardsHeader: {
+      lineHeight: 1
+    },
     links: {
       display: 'flex',
       alignItems: 'center',
-      gap: 0.5,
-      color: 'var(--text-color-primary)'
+      gap: 0.5
     }
   }
 })
-
-export const ViewMoreLink: FC<ViewMoreLinkProps> = (props) => {
-  const { dataTestId, targetRoute } = props
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const { classes } = linkStyle()
-
-  return (
-
-    <Link
-      className={classes.links}
-      component="button"
-      onClick={() => navigate(targetRoute)}
-      underline="none"
-      data-testid={dataTestId}
-    >
-      {t('view-more')}
-      <KeyboardArrowRightIcon fontSize="small" />
-    </Link>
-  )
-}
