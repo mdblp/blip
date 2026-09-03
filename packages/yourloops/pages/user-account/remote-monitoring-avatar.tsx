@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Country {
-  code: CountryCode
-  name: string
+import React, { FC } from 'react'
+import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
+import Avatar from '@mui/material/Avatar'
+
+interface ConsentAvatarProps {
+  partnerName: PartnerName,
 }
 
-export enum CountryCode {
-  Austria = 'AT',
-  Belgium = 'BE',
-  France = 'FR',
-  Germany = 'DE',
-  Italy = 'IT',
-  Japan = 'JP',
-  Netherlands = 'NL',
-  Spain = 'SP',
-  Switzerland = 'CH',
-  UnitedKingdom = 'UK',
-  Unknown = ''
-}
+export const RemoteMonitoringAvatar: FC<ConsentAvatarProps> = (props) => {
+  const { partnerName } = props
+  const { getRemoteMonitoringToolLogo, getRemoteMonitoringToolLabel } = useDataSharingHook()
 
+  return (
+    <Avatar
+      variant="square"
+      src={getRemoteMonitoringToolLogo(partnerName)}
+      alt={getRemoteMonitoringToolLabel(partnerName)}
+    />
+  )
+}

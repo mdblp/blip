@@ -35,17 +35,14 @@ import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import Card from '@mui/material/Card'
 import { useTranslation } from 'react-i18next'
-import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import { makeStyles } from 'tss-react/mui'
-import myDiabbyLogo from 'my-diabby-app-icon.svg'
-import glookoLogo from 'glooko-app-icon.svg'
-import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { RevokeConsentDialog } from './revoke-consent-dialog'
 import { formatDate } from 'dumb'
-import { getRemoteMonitoringToolLabel } from './remote-monitoring.util'
+import { RemoteMonitoringAvatar } from '../../remote-monitoring-avatar'
+import { useDataSharingHook } from './data-sharing.hook'
 
 interface RemoteMonitoringToolsTableProps {
   consents: ExternalConsent[]
@@ -71,6 +68,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
   const { consents, patientId, refresh } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
+  const { getRemoteMonitoringToolLabel } = useDataSharingHook()
 
   const [consentToRevoke, setConsentToRevoke] = React.useState<ExternalConsent>(null)
   const [showRevokeDialog, setShowRevokeDialog] = React.useState<boolean>(false)
@@ -81,17 +79,6 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
     }
 
     return formatDate(date)
-  }
-
-  const getRemoteMonitoringToolLogo = (consentName: PartnerName) => {
-    switch (consentName) {
-      case PartnerName.MyDiabby:
-        return myDiabbyLogo
-      case PartnerName.GlookoXT:
-        return glookoLogo
-      default:
-        return ''
-    }
   }
 
   const onClickRevoke = (consent: ExternalConsent) => {
@@ -140,11 +127,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
                     data-testid={`monitoring-tool-row-${consent.partnerName}`}
                   >
                     <TableCell>
-                      <Avatar
-                        variant="square"
-                        src={getRemoteMonitoringToolLogo(consent.partnerName)}
-                        alt={getRemoteMonitoringToolLabel(consent.partnerName)}
-                      />
+                      <RemoteMonitoringAvatar partnerName={consent.partnerName} />
                     </TableCell>
                     <TableCell>
                     <span className={classes.toolName}>

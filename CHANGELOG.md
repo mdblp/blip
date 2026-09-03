@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver
 - YLP-3945 Adapting the second level of navigation to mobile format
+- YLP-3950 Adapting the user account menu for french patient to mobile format
 - YLP-4020 Adapting the patient list content and the footer to mobile format
 - YLP-4042 Display G7 Pairing code instead of Firmware version on Device view
 - YLP-4046 Improve the display of the parameter changes tooltip on Daily view

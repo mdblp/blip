@@ -35,8 +35,8 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import DialogContentText from '@mui/material/DialogContentText'
 import {
-  getRemoteMonitoringToolLabel
-} from '../../../pages/user-account/sections/data-sharing-section/remote-monitoring.util'
+  useDataSharingHook
+} from '../../../pages/user-account/sections/data-sharing-section/data-sharing.hook'
 
 interface DataAccessResultProps {
   partnerName: PartnerName
@@ -49,6 +49,7 @@ interface DataAccessResultProps {
 export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
   const { partnerName, result, callbackUrl, patientId, partnerState } = props
   const { t } = useTranslation()
+  const { getRemoteMonitoringToolLabel } = useDataSharingHook()
 
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
 

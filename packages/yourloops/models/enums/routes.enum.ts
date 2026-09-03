@@ -43,7 +43,10 @@ export enum AppUserRoute {
   PatientProfile = '/patient-profile',
   Teams = '/teams',
   Trends = '/trends',
-  UserAccount = '/user-account'
+  UserAccount = '/user-account',
+  UserAccountSectionsOverview = '/user-account-sections-overview',
+  UserAccountSection = '/user-account-sections-overview/account',
+  UserAccountDataSharingSection = '/user-account-sections-overview/data-sharing'
 }
 
 export enum AppRoute {

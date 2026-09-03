@@ -31,14 +31,19 @@ import CardHeader from '@mui/material/CardHeader'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 import { useTheme } from '@mui/material/styles'
-import React, { type FC } from 'react'
+import React, { type FC, PropsWithChildren } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import { TableLine } from './table-line'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { TableLineWithChildren } from './table-line-with-children'
 
-interface GenericListCardProps {
+interface GenericListCardProps extends PropsWithChildren {
   title: string,
-  tableLines: { label: string; value: string }[]
+  tableLines?: { label: string, value: string }[]
   ['data-testid']?: string
+  cardClassName?: string
+  cardHeaderClassName?: string
+  headerAction?: React.ReactNode
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -59,25 +64,45 @@ const useStyles = makeStyles()((theme) => ({
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { title, tableLines } = props
+  const { title, tableLines = [], headerAction, children } = props
+  const childrenCount = React.Children.count(children)
+  const isCustom = childrenCount > 0
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Card
       variant="outlined"
-      sx={{ marginBottom: theme.spacing(5) }}
+      sx={{ marginBottom: isMobile ? undefined : theme.spacing(5) }}
       data-testid={props['data-testid']}
+      className={props['cardClassName']}
     >
       <CardHeader
         title={title}
-        className={classes.cardHeader}
+        className={`${classes.cardHeader} ${props['cardHeaderClassName']}`}
         disableTypography
+        action={headerAction}
       />
       <CardContent className={classes.cardContent}>
         <List disablePadding>
           <Divider component="li" />
-          {tableLines.map((item, index, array) => (
-            <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
-          ))}
+          {isCustom ?
+            React.Children.map(children, (child, index) => {
+              if (!React.isValidElement(child)) return null;
+
+              const key = child.key ?? `table-line-${index}`
+
+              return (
+                <TableLineWithChildren
+                  key={key}
+                  hideDivider={index === React.Children.count(children) - 1}
+                >
+                  {child}
+                </TableLineWithChildren>
+              )
+            }):
+            tableLines.map((item, index, array) => (
+              <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
+            ))}
         </List>
       </CardContent>
     </Card>

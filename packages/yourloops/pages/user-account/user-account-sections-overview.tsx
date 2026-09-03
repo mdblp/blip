@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Country {
-  code: CountryCode
-  name: string
-}
+import { UserAccountPageContextProvider } from './user-account-page-context'
+import { UserAccountSectionsOverviewCards } from './user-account-sections-overview-cards'
+import React from 'react'
+import SpinningLoader from '../../components/loaders/spinning-loader'
+import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
 
-export enum CountryCode {
-  Austria = 'AT',
-  Belgium = 'BE',
-  France = 'FR',
-  Germany = 'DE',
-  Italy = 'IT',
-  Japan = 'JP',
-  Netherlands = 'NL',
-  Spain = 'SP',
-  Switzerland = 'CH',
-  UnitedKingdom = 'UK',
-  Unknown = ''
-}
+export const UserAccountSectionsOverview = () => {
 
+  const { consents, refreshInProgress } = useDataSharingHook()
+
+  return (
+    <UserAccountPageContextProvider>
+      {refreshInProgress
+        ? <SpinningLoader className="centered-spinning-loader" />
+        :
+        <UserAccountSectionsOverviewCards
+          consents={consents}
+        />
+      }
+    </UserAccountPageContextProvider>
+  )
+}
