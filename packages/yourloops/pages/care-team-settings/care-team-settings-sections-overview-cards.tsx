@@ -43,6 +43,7 @@ import { Unit } from 'medical-domain'
 import { useAuth } from '../../lib/auth'
 import { cardStyle } from '../card-style'
 import Typography from '@mui/material/Typography'
+import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 
 export const CareTeamSettingsSectionsOverviewCards = () => {
   const { getTeam } = useTeam()
@@ -56,7 +57,8 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
   const getNonPatientMembers = (team?: Team): TeamMember[] => {
-    return team ? team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) : []
+    return team ? team.members.filter(teamMember =>
+      (teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) && teamMember.status != UserInviteStatus.Pending) : []
   }
 
   const members = getNonPatientMembers(team)
@@ -146,8 +148,11 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
         }
       >
-        <Typography
-          variant="body2">{userBgUnit === Unit.MilligramPerDeciliter ? t('default-values-applied') : t('custom-values-applied')}</Typography>
+        <Typography variant="body2">
+          {userBgUnit === Unit.MilligramPerDeciliter ?
+            t('default-values-applied') :
+            t('custom-values-applied')}
+        </Typography>
       </GenericListCard>
     </>
   )
