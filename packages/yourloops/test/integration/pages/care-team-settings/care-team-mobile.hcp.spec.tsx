@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockAuth0Hook, userTimFirstName, userTimLastName } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import {
   buildAvailableTeams,
@@ -37,7 +37,7 @@ import {
   testCareTeamSectionsOverviewVisibleMobile,
   testClickViewMoreInfos,
   testClickViewMoreMembers,
-  testClickViewMoreAlerts
+  testClickViewMoreAlerts, testCareTeamSectionCardForAlertCustomMessage
 } from '../../use-cases/care-team-sections-overview-visualisation'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -54,6 +54,10 @@ import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../mock/mobile-screen.mock'
+import { screen } from '@testing-library/react'
+import type { Settings } from '../../../../lib/auth/models/settings.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
+import { Unit } from 'medical-domain'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
@@ -102,16 +106,23 @@ describe('HCP care team settings page', () => {
 
   it('should display the section overview page in mobile version', async () => {
     await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
+    await screen.findByTestId('care-team-settings-menu-mobile-team-information')
+    testCareTeamSectionsOverviewVisibleMobile()
+  })
 
-    await testCareTeamSectionsOverviewVisibleMobile()
+  it('should display another message in the alerts card when the unit value has been changed from default settings', async () => {
+    const settings: Settings = { units: { bg: Unit.MmolPerLiter } }
+    mockUserApi().mockUserDataFetch({ settings : settings })
+    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
+
+    testCareTeamSectionCardForAlertCustomMessage()
   })
 
   it('should be able to access the pages linked by the cards', async () => {
     await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
 
-    await testClickViewMoreInfos()
-    await testClickViewMoreMembers()
-    await testClickViewMoreAlerts()
+    testClickViewMoreInfos()
+    testClickViewMoreMembers()
+    testClickViewMoreAlerts()
   })
-
 })
