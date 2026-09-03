@@ -71,11 +71,11 @@ function NotificationContextImpl(): NotificationContext {
     removeNotification(notification.id)
   }
 
-  const cancel = async (notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> => {
-    await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
-    const invitations = await NotificationApi.getSentInvitations(user.id)
-    setSentInvitations(invitations)
-  }
+  // const cancel = async (notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> => {
+  //   await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
+  //   const invitations = await NotificationApi.getSentInvitations(user.id)
+  //   setSentInvitations(invitations)
+  // }
 
   const refreshSentInvitations = useCallback(async (): Promise<void> => {
     try {
@@ -88,7 +88,6 @@ function NotificationContextImpl(): NotificationContext {
 
   const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
-      // TODO: could be user.username as the back try to find the username based on the userid
       const invitations = await NotificationApi.getReceivedInvitations(user.id)
       setReceivedInvitations(invitations)
     } catch (err) {
@@ -138,7 +137,7 @@ function NotificationContextImpl(): NotificationContext {
     update,
     accept,
     decline,
-    cancel,
+  //   cancel,
   }
 }
 
