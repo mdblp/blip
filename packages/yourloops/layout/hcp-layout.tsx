@@ -91,7 +91,9 @@ const HcpLayout: FunctionComponent = () => {
         <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
         <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
         <Route path={AppUserRoute.CareTeamSettings}
-               element={<CareTeamSettingsPage />}
+               element={isMobile
+                 ? (<Navigate to={AppUserRoute.CareTeamSettingsSectionsOverview} replace />)
+                 : (<CareTeamSettingsPage />)}
         />
         {isMobile && (
           <Route>
