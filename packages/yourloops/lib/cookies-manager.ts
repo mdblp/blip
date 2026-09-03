@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,6 @@ import bows from 'bows'
 
 import config from './config/config'
 import metrics from './metrics'
-import { zendeskAllowCookies, zendeskTrackWidgetOpen } from './zendesk'
 
 const log = bows('Cookies')
 
@@ -42,18 +41,6 @@ function acceptCookiesListener(choices: CookiesComplete): void {
   } else {
     metrics.send('metrics', 'disabled')
   }
-  if (choices.stonly && typeof window.loadStonlyWidget === 'function') {
-    window.loadStonlyWidget()
-  }
-  if (choices.zendesk) {
-    zendeskAllowCookies(true)
-  } else {
-    zendeskAllowCookies(false)
-  }
-
-  if (choices.matomo && choices.zendesk) {
-    zendeskTrackWidgetOpen()
-  }
 }
 
 function initCookiesConsentListener(): void {
@@ -61,7 +48,7 @@ function initCookiesConsentListener(): void {
   const axeptioCb = window._axcb
   log.debug('Waiting for acceptation')
   if (config.COOKIE_BANNER_CLIENT_ID === 'disabled') {
-    acceptCookiesListener({ matomo: true, stonly: true, zendesk: true })
+    acceptCookiesListener({ matomo: true })
   } else if (_.isObject(axeptioCb) && _.isFunction(_.get(axeptioCb, 'push'))) {
     axeptioCb.push((axeptio: AxeptIO) => {
       axeptio.on('cookies:complete', acceptCookiesListener)

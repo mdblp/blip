@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -120,7 +120,7 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSupport = (): void => {
-    window.open(config.SUPPORT_WEB_ADDRESS, '_blank')
+    window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
     closeMenu()
     metrics.send('support', 'click_customer_service')
   }

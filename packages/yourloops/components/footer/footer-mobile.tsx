@@ -25,29 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { makeStyles } from 'tss-react/mui'
+import LanguageIcon from '@mui/icons-material/Language'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-import LanguageIcon from '@mui/icons-material/Language'
+import { useTheme } from '@mui/material/styles'
+import React, { type FunctionComponent } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
+import { makeStyles } from 'tss-react/mui'
+import { PatientView } from '../../enum/patient-view.enum'
+import { useAuth } from '../../lib/auth'
+import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 
-import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
+import { ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
+import { getCurrentLang } from '../../lib/language'
+import metrics from '../../lib/metrics'
+import { type AppRoute } from '../../models/enums/routes.enum'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
-import { type AppRoute } from '../../models/enums/routes.enum'
-import { getCurrentLang } from '../../lib/language'
-import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
-import { PatientView } from '../../enum/patient-view.enum'
 import { FooterLink } from './footer-link'
-import { useFooterHook } from "./shared/footer.hook"
-import { useTranslation } from 'react-i18next'
-import { useAuth } from '../../lib/auth'
-import { useTheme } from '@mui/material/styles'
-import { useLocation } from 'react-router-dom'
 import { commonStyleFooter } from './shared/footer-style'
+import { useFooterHook } from "./shared/footer.hook"
 
-export const footerMobileStyle = makeStyles<{ isLongLanguage?: boolean }>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
+export const footerMobileStyle = makeStyles<{
+  isLongLanguage?: boolean
+}>({ name: 'footer-component-styles' })((theme, { isLongLanguage }) => {
   return {
     allLines: {
       justifyContent: 'center',
@@ -82,7 +85,7 @@ export const FooterMobile: FunctionComponent = () => {
 
   const classes = {
     ...commonClasses,
-    ...mobileClasses,
+    ...mobileClasses
   }
 
   const PATIENT_VIEW_URL_MAPPING: Record<PatientView, string> = {
@@ -90,7 +93,7 @@ export const FooterMobile: FunctionComponent = () => {
     [PatientView.Dashboard]: 'dashboard',
     [PatientView.Devices]: 'devices',
     [PatientView.PatientProfile]: 'patient-profile',
-    [PatientView.Trends]: 'trends',
+    [PatientView.Trends]: 'trends'
   }
 
   const isMatchingPatientView = Object.values(PATIENT_VIEW_URL_MAPPING).some(viewValue =>
@@ -102,35 +105,39 @@ export const FooterMobile: FunctionComponent = () => {
     cookiesPolicyUrl,
     privacyPolicyUrl,
     termsOfUseUrl,
+    helpUrl,
     handleShowCookieBanner,
     metricsPdfDocument
   } = useFooterHook()
 
   return (
-    <Container id="footer-links-container" data-testid="footer" className={`${classes.containerMobile} ${classes.containerCommon}
+    <Container id="footer-links-container" data-testid="footer"
+               className={`${classes.containerMobile} ${classes.containerCommon}
     ${classes.commonBoxAndContainer}`} maxWidth={false}>
       {shouldDisplayMedicalDeviceWarning &&
         <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>{t('not-a-medical-device')}</Box>
       }
-        {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
-          ? <>
-            <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`} >
-              <LanguageIcon className={classes.icon} />
-              <LanguageSelector />
-            </Box>
-            <Box id="footer-accompanying-documents-box" className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
-              <AccompanyingDocumentLinks user={user} />
-            </Box>
-          </>
-          : <Box id="footer-accompanying-documents-box" className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
+      {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
+        ? <>
+          <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
+            <LanguageIcon className={classes.icon} />
+            <LanguageSelector />
+          </Box>
+          <Box id="footer-accompanying-documents-box"
+               className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
             <AccompanyingDocumentLinks user={user} />
           </Box>
-        }
+        </>
+        :
+        <Box id="footer-accompanying-documents-box" className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
+          <AccompanyingDocumentLinks user={user} />
+        </Box>
+      }
       <Box className={`${classes.allLines} ${classes.commonBoxAndContainer}`}>
         <FooterLink
           id="footer-link-url-privacy-policy"
           href={privacyPolicyUrl}
-          style = {`${classes.linkMobile} ${classes.commonLink}`}
+          style={`${classes.linkMobile} ${classes.commonLink}`}
           onClick={metricsPdfDocument('privacy_policy')}
           isExternal
         >
@@ -140,7 +147,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-url-terms"
           href={termsOfUseUrl}
-          style = {`${classes.linkMobile} ${classes.commonLink}`}
+          style={`${classes.linkMobile} ${classes.commonLink}`}
           onClick={metricsPdfDocument('terms')}
           isExternal
         >
@@ -151,7 +158,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-cookies-management"
           onClick={handleShowCookieBanner}
-          style = {`${classes.linkMobile} ${classes.commonLink}`}
+          style={`${classes.linkMobile} ${classes.commonLink}`}
         >
           {t('cookies-management')}
         </FooterLink>
@@ -159,7 +166,7 @@ export const FooterMobile: FunctionComponent = () => {
         <FooterLink
           id="footer-link-url-cookies-policy"
           href={cookiesPolicyUrl}
-          style = {`${classes.linkMobile} ${classes.commonLink}`}
+          style={`${classes.linkMobile} ${classes.commonLink}`}
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           isExternal
         >
@@ -167,12 +174,12 @@ export const FooterMobile: FunctionComponent = () => {
         </FooterLink>
         <Box className={classes.separatorMobile}>|</Box>
         <FooterLink
-          id="footer-link-contact-mailto"
-          style = {`${classes.linkMobile} ${classes.commonLink}`}
-          href={`mailto:${diabeloopExternalUrls.contactEmail}`}
-          onClick={metricsPdfDocument('mailto-contact')}
+          id="footer-link-help"
+          style={`${classes.linkMobile} ${classes.commonLink}`}
+          href={helpUrl}
+          onClick={() => metrics.send('footer', 'click_help')}
         >
-          {t('contact')}
+          {t('help')}
         </FooterLink>
       </Box>
       {isMatchingPatientView &&

@@ -53,7 +53,7 @@ describe('Language', () => {
     window._paq = []
   })
 
-  it('should update zendesk & moment locale on change', async () => {
+  it('should update moment locale on change', async () => {
     await i18n.changeLanguage(LanguageCode.Fr)
     expect(zeSpy).toHaveBeenCalledTimes(1)
     expect(moment.locale()).toBe(LanguageCode.Fr)

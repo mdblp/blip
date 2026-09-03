@@ -39,4 +39,8 @@ export class ConfigService {
   static getDateOfBirthHidden(): boolean {
     return appConfig.DATE_OF_BIRTH_HIDDEN
   }
+
+  static getHelpWebUrl(): string {
+    return appConfig.HELP_WEB_URL
+  }
 }

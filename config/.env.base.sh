@@ -19,12 +19,11 @@ export IDLE_TIMEOUT_MS=1800000
 export EATING_SHORTLY_ENABLED=true
 export METRICS_CLICKODROME_ENABLED=true
 export DATE_OF_BIRTH_HIDDEN=false
+export CONTACT_SUPPORT_WEB_URL='https://example.com/'
+export HELP_WEB_URL='https://example.com/'
 
 
 # External services:
-# URL to HELP system
-export HELP_SCRIPT_URL='disabled'
-export HELP_PAGE_URL='https://diabeloop.zendesk.com'
 # url to web server hosting the asset files
 # such as terms of use, data privacy, etc.
 export ASSETS_URL='https://example.com/'
@@ -33,10 +32,6 @@ export METRICS_SERVICE='disabled'
 # Metrics service Matomo URL (used only when METRICS_SERVICE='matomo'):
 export MATOMO_TRACKER_URL='disabled'
 export MATOMO_TRACKER_SITEID='0'
-export SUPPORT_WEB_ADDRESS='https://example.com/'
-export CONTACT_SUPPORT_WEB_URL='https://example.com/'
-# Stonly service https://stonly.com/ (enabled / disabled):
-export STONLY_WID='disabled'
 # axeptio.eu cookie banner
 export COOKIE_BANNER_CLIENT_ID='disabled'
 # Environement for CloudFront config:
