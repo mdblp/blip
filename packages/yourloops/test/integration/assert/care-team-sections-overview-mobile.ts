@@ -48,12 +48,20 @@ export const checkCareTeamSectionCardForInfos = (): void => {
 }
 
 export const checkCareTeamSectionCardForMembers = (): void => {
+  // Checking that the number of admins is displayed correctly
   expect(screen.getByText('Number of admins')).toBeVisible()
+  expect(screen.getByText('1')).toBeVisible()
+  // Checking that the number of members is displayed correctly
   expect(screen.getByText('Number of members')).toBeVisible()
+  expect(screen.getByText('2')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForAlerts = (): void => {
+export const checkCareTeamSectionCardForAlertsDefault = (): void => {
   expect(screen.getByText('Default values applied.')).toBeVisible()
+}
+
+export const checkCareTeamSectionCardForAlertsCustom = (): void => {
+  expect(screen.getByText('Custom values applied.')).toBeVisible()
 }
 
 export const checkClickViewMoreInfos = async (): Promise<void> => {
