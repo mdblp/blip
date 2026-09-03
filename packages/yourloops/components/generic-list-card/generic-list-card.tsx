@@ -99,9 +99,10 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
                   {child}
                 </TableLineWithChildren>
               )
-            }):
+            }) :
             tableLines.map((item, index, array) => (
-              <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
+              <TableLine key={item.label} label={item.label} value={item.value}
+                         hideDivider={index === array.length - 1} />
             ))}
         </List>
       </CardContent>

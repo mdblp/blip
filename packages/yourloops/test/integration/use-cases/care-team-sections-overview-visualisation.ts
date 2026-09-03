@@ -26,15 +26,15 @@
  */
 
 import {
-  checkCareTeamSectionsOverviewVisible,
-  checkCareTeamSectionsOverviewNotVisible,
+  checkCareTeamSectionCardForAlertsCustom,
+  checkCareTeamSectionCardForAlertsDefault,
   checkCareTeamSectionCardForInfos,
   checkCareTeamSectionCardForMembers,
-  checkCareTeamSectionCardForAlertsDefault,
-  checkCareTeamSectionCardForAlertsCustom,
+  checkCareTeamSectionsOverviewNotVisible,
+  checkCareTeamSectionsOverviewVisible,
+  checkClickViewMoreAlerts,
   checkClickViewMoreInfos,
-  checkClickViewMoreMembers,
-  checkClickViewMoreAlerts
+  checkClickViewMoreMembers
 } from '../assert/care-team-sections-overview-mobile'
 
 export const testCareTeamSectionsOverviewVisibleMobile = (): void => {
@@ -52,7 +52,7 @@ export const testCareTeamSectionCardForAlertCustomMessage = (): void => {
   checkCareTeamSectionCardForAlertsCustom()
 }
 
-  export const testClickViewMoreInfos = (): void => {
+export const testClickViewMoreInfos = (): void => {
   checkClickViewMoreInfos()
 }
 
