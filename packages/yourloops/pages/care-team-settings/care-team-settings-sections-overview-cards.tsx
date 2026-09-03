@@ -42,6 +42,7 @@ import { ViewMoreLink } from '../../components/buttons/view-more-link'
 import { Unit } from 'medical-domain'
 import { useAuth } from '../../lib/auth'
 import { cardStyle } from '../card-style'
+import Typography from '@mui/material/Typography'
 
 export const CareTeamSettingsSectionsOverviewCards = () => {
   const { getTeam } = useTeam()
@@ -57,6 +58,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
   const getNonPatientMembers = (team?: Team): TeamMember[] => {
     return team ? team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) : []
   }
+
   const members = getNonPatientMembers(team)
 
   const adminCount = members.filter((member) => TeamUtils.isUserAdministrator(team, member.userId)).length
@@ -97,6 +99,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
     ]
   }
 
+  /*
   const getTableAlerts = (): { value: string, label: string }[] => {
     return [
       {
@@ -105,6 +108,8 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
       }
     ]
   }
+
+   */
 
   return (
     <>
@@ -135,13 +140,15 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         title={`${t('alerts')} (${userBgUnit})`}
-        tableLines={getTableAlerts()}
         data-testid="care-team-settings-menu-mobile-alerts"
         headerAction={
           <ViewMoreLink dataTestId="link-team-alerts"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
         }
-      />
+      >
+        <Typography
+          variant="body2">{userBgUnit === Unit.MilligramPerDeciliter ? t('default-values-applied') : t('custom-values-applied')}</Typography>
+      </GenericListCard>
     </>
   )
 }
