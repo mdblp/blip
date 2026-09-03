@@ -50,6 +50,7 @@ export const NewNoteTooltip: FC<NewNoteTooltipProps> = (props) => {
         tooltip: { 'data-testid': 'new-note-tooltip' } as React.HTMLAttributes<HTMLDivElement>
       }}
     >
+      {/* Empty element to anchor the tooltip (the real tooltip anchor is given by the `anchorElement` prop) */}
       <span />
     </Tooltip>
   )

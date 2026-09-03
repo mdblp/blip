@@ -36,7 +36,7 @@ import moment, { type Moment } from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface CreateEditNoteContentProps {
+interface NoteFormDialogContentProps {
   title: string
   defaultDateTime: string
   defaultMessage?: string
@@ -51,7 +51,7 @@ enum IdPrefix {
   Edit = 'edit'
 }
 
-export const CreateEditNoteContent: FC<CreateEditNoteContentProps> = (props) => {
+export const NoteFormDialogContent: FC<NoteFormDialogContentProps> = (props) => {
   const { title, defaultDateTime, defaultMessage, timezone, showDateTimePicker, onClickSubmit, onClose } = props
   const { t } = useTranslation('main')
 

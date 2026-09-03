@@ -37,7 +37,7 @@ import { NotesApi } from '../../../../lib/notes/notes.api'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../utils/snackbar'
-import { CreateEditNoteContent } from '../create-edit-note-content'
+import { NoteFormDialogContent } from '../note-form-dialog-content'
 
 interface CreateNoteDialogProps {
   createDatetime: string
@@ -90,7 +90,7 @@ export const CreateNoteDialog: FC<CreateNoteDialogProps> = (props) => {
       maxWidth="sm"
       data-testid="create-note-dialog"
     >
-      <CreateEditNoteContent
+      <NoteFormDialogContent
         title={t('new-note')}
         defaultDateTime={createDatetime}
         timezone={timePrefs.timezoneName}

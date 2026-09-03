@@ -194,17 +194,17 @@ class DailyChart extends React.Component {
 
   bindEvents() {
     const { chart } = this.state
-    chart.emitter.on('createMessage', this.props.onCreateMessage)
+    chart.emitter.on('createNote', this.props.onCreateMessage)
     chart.emitter.on('inTransition', this.props.onTransition)
-    chart.emitter.on('noteThread', this.props.onShowNoteThread)
+    chart.emitter.on('viewNote', this.props.onShowNoteThread)
     chart.emitter.on('navigated', this.props.onDatetimeLocationChange)
   }
 
   unbindEvents() {
     const { chart } = this.state
-    chart.emitter.off('createMessage', this.props.onCreateMessage)
+    chart.emitter.off('createNote', this.props.onCreateMessage)
     chart.emitter.off('inTransition', this.props.onTransition)
-    chart.emitter.off('noteThread', this.props.onShowNoteThread)
+    chart.emitter.off('viewNote', this.props.onShowNoteThread)
     chart.emitter.off('navigated', this.props.onDatetimeLocationChange)
   }
 

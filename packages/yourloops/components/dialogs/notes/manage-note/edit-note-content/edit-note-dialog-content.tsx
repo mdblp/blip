@@ -34,7 +34,7 @@ import { NotesApi } from '../../../../../lib/notes/notes.api'
 import { errorTextFromException } from '../../../../../lib/utils'
 import { logError } from '../../../../../utils/error.util'
 import { useAlert } from '../../../../utils/snackbar'
-import { CreateEditNoteContent } from '../../create-edit-note-content'
+import { NoteFormDialogContent } from '../../note-form-dialog-content'
 
 interface EditNoteDialogProps {
   note: MessageNote
@@ -83,7 +83,7 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
   }
 
   return (
-    <CreateEditNoteContent
+    <NoteFormDialogContent
       title={title}
       defaultDateTime={note.timestamp}
       defaultMessage={note.messagetext}

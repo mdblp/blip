@@ -474,7 +474,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
   // clicking the background at a given date starts the note creation flow at that date
   emitter.on('clickToDate', (date) => {
-    emitter.emit('createMessage', date)
+    emitter.emit('createNote', date)
   })
 
   // add note images to messages pool
@@ -482,7 +482,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     tidelineData,
     onElementHover: options.onNoteHover,
     onElementOut: options.onTooltipOut,
-    onNoteClick: ({ data }) => emitter.emit('noteThread', data.id)
+    onNoteClick: ({ data }) => emitter.emit('viewNote', data.id)
   }))
 
   // add the "New note" button to the chart's labels layer
@@ -490,7 +490,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     isDblg2Patient,
     onNewNoteHover: options.onNewNoteHover,
     onElementOut: options.onTooltipOut,
-    onNewNoteClick: () => emitter.emit('createMessage', null)
+    onNewNoteClick: () => emitter.emit('createNote', null)
   })
 
   // add timechange images to messages pool

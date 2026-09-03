@@ -51,7 +51,7 @@ const defaults: Partial<NoteOptions> = {
 }
 
 /**
- * Plot notes (messages left by patients or caregivers) in the diabetes management timeline
+ * Plot notes (messages left by HCPs, patients or caregivers) in the diabetes management timeline
  *
  * A note is rendered as a clickable icon positioned at the time it was created.
  * Clicking a note opens its thread (the note itself plus any replies), while
