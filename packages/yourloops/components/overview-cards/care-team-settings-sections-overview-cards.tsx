@@ -101,18 +101,6 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
     ]
   }
 
-  /*
-  const getTableAlerts = (): { value: string, label: string }[] => {
-    return [
-      {
-        label: userBgUnit === Unit.MilligramPerDeciliter ? t('default-values-applied') : t('custom-values-applied'),
-        value: ''
-      }
-    ]
-  }
-
-   */
-
   return (
     <>
       <GenericListCard
