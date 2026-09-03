@@ -26,7 +26,7 @@
  */
 
 import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountSectionsOverviewCards } from './user-account-sections-overview-cards'
+import { UserAccountSectionsOverviewCards } from '../../components/overview-cards/user-account-sections-overview-cards'
 import React from 'react'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'

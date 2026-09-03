@@ -29,7 +29,7 @@ import React, { type FC } from 'react'
 import { useTeam } from '../../lib/team'
 import { useParams } from 'react-router-dom'
 import SpinningLoader from '../../components/loaders/spinning-loader'
-import { CareTeamSettingsSectionsOverviewCards } from './care-team-settings-sections-overview-cards'
+import { CareTeamSettingsSectionsOverviewCards } from '../../components/overview-cards/care-team-settings-sections-overview-cards'
 
 export const CareTeamSettingsSectionsOverview: FC = () => {
   const { getTeam } = useTeam()
