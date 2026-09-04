@@ -25,25 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountSectionsOverviewCards } from '../../components/overview-cards/user-account-sections-overview-cards'
-import React from 'react'
-import SpinningLoader from '../../components/loaders/spinning-loader'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import {
+  checkCareTeamSectionCardForAlertsCustom,
+  checkCareTeamSectionCardForAlertsDefault,
+  checkCareTeamSectionCardForInfos,
+  checkCareTeamSectionCardForMembers,
+  checkCareTeamSectionsOverviewNotVisible,
+  checkCareTeamSectionsOverviewVisible,
+  checkClickViewMoreAlerts,
+  checkClickViewMoreInfos,
+  checkClickViewMoreMembers
+} from '../assert/care-team-sections-overview-mobile'
 
-export const UserAccountSectionsOverview = () => {
+export const testCareTeamSectionsOverviewVisibleMobile = (): void => {
+  checkCareTeamSectionsOverviewVisible()
+  checkCareTeamSectionCardForInfos()
+  checkCareTeamSectionCardForMembers()
+  checkCareTeamSectionCardForAlertsDefault()
+}
 
-  const { consents, refreshInProgress } = useDataSharingHook()
+export const testCareTeamSectionsOverviewNotVisibleMobile = (): void => {
+  checkCareTeamSectionsOverviewNotVisible()
+}
 
-  return (
-    <UserAccountPageContextProvider>
-      {refreshInProgress
-        ? <SpinningLoader className="centered-spinning-loader" />
-        :
-        <UserAccountSectionsOverviewCards
-          consents={consents}
-        />
-      }
-    </UserAccountPageContextProvider>
-  )
+export const testCareTeamSectionCardForAlertCustomMessage = (): void => {
+  checkCareTeamSectionCardForAlertsCustom()
+}
+
+export const testClickViewMoreInfos = (): void => {
+  checkClickViewMoreInfos()
+}
+
+export const testClickViewMoreMembers = (): void => {
+  checkClickViewMoreMembers()
+}
+
+export const testClickViewMoreAlerts = (): void => {
+  checkClickViewMoreAlerts()
 }

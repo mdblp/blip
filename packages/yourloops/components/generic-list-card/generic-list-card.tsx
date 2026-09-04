@@ -87,7 +87,7 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
           <Divider component="li" />
           {isCustom ?
             React.Children.map(children, (child, index) => {
-              if (!React.isValidElement(child)) return null;
+              if (!React.isValidElement(child)) return null
 
               const key = child.key ?? `table-line-${index}`
 
@@ -99,9 +99,10 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
                   {child}
                 </TableLineWithChildren>
               )
-            }):
+            }) :
             tableLines.map((item, index, array) => (
-              <TableLine key={item.label} label={item.label} value={item.value} hideDivider={index === array.length - 1} />
+              <TableLine key={item.label} label={item.label} value={item.value}
+                         hideDivider={index === array.length - 1} />
             ))}
         </List>
       </CardContent>

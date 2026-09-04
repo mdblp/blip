@@ -36,13 +36,18 @@ import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { Team, TeamContextProvider, useTeam } from '../lib/team'
 import { ScopedPatientData } from '../components/patient-data/scoped-patient-data'
 import { ScopedDashboardLayout } from './scoped-dashboard-layout'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
+import { CareTeamSettingsSectionsOverview } from '../pages/care-team-settings/care-team-settings-sections-overview'
+import { TeamInformation } from '../components/team/team-information'
+import TeamMembers from '../components/team/team-members'
+import { MonitoringAlertsSection } from '../pages/care-team-settings/sections/monitoring-alerts-section'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
 const HcpCommonLayout: FunctionComponent = () => {
   const { teamId } = useParams()
   const { teams } = useTeam()
-
   const checkRouteIsValid = (): void => {
     const isTeamIdValid = teamId && teams.some((team: Team) => team.id === teamId)
     if (isTeamIdValid) {
@@ -60,8 +65,7 @@ const HcpCommonLayout: FunctionComponent = () => {
 }
 
 const HcpLayout: FunctionComponent = () => {
-  const { teams, getDefaultTeamId } = useTeam()
-
+  const { teams, getDefaultTeamId, getTeam } = useTeam()
   const getFallbackTeamId = useCallback((): string => {
     const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
     const isTeamIdValid = teams.some((team: Team) => team.id === localStorageTeamId)
@@ -76,6 +80,9 @@ const HcpLayout: FunctionComponent = () => {
   const teamId = useMemo(() => {
     return getFallbackTeamId()
   }, [getFallbackTeamId])
+  const team = getTeam(teamId)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Routes>
@@ -83,7 +90,21 @@ const HcpLayout: FunctionComponent = () => {
         <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
         <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
         <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-        <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+        <Route path={AppUserRoute.CareTeamSettings}
+               element={isMobile
+                 ? (<Navigate to={AppUserRoute.CareTeamSettingsSectionsOverview} replace />)
+                 : (<CareTeamSettingsPage />)}
+        />
+        {isMobile && (
+          <Route>
+            <Route path={AppUserRoute.CareTeamSettingsSectionsOverview}
+                   element={<CareTeamSettingsSectionsOverview />} />
+            <Route path={AppUserRoute.CareTeamSettingsInformationsSection} element={<TeamInformation team={team} />} />
+            <Route path={AppUserRoute.CareTeamSettingsMembersSection} element={<TeamMembers team={team} />} />
+            <Route path={AppUserRoute.CareTeamSettingsAlertsSection}
+                   element={<MonitoringAlertsSection team={team} />} />
+          </Route>
+        )}
         <Route
           path="/teams/private"
           element={<Navigate to={`/teams/${teamId}/patients`} replace />}

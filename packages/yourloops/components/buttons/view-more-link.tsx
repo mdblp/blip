@@ -35,7 +35,7 @@ import { makeStyles } from 'tss-react/mui'
 
 interface ViewMoreLinkProps {
   dataTestId: string,
-  targetRoute: AppUserRoute
+  targetRoute: AppUserRoute | string
 }
 
 export const linkStyle = makeStyles()(() => {

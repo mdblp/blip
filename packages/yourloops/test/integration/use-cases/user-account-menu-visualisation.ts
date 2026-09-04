@@ -25,25 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountSectionsOverviewCards } from '../../components/overview-cards/user-account-sections-overview-cards'
-import React from 'react'
-import SpinningLoader from '../../components/loaders/spinning-loader'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import {
+  checkUserAccountMenuCardsVisible,
+  checkUserAccountMenuCardsNotVisible,
+  checkUserAccountMenuCardForAccount,
+  checkClickViewMoreUserAccount,
+  checkClickViewMoreDataSharing,
+  checkUserAccountMenuCardForDataSharing
+} from '../assert/user-account-menu-mobile.assert'
 
-export const UserAccountSectionsOverview = () => {
+export const testUserAccountMenuVisibleMobile = (): void => {
+  checkUserAccountMenuCardsVisible()
+  checkUserAccountMenuCardForAccount()
+  checkUserAccountMenuCardForDataSharing()
+}
 
-  const { consents, refreshInProgress } = useDataSharingHook()
+export const testUserAccountMenuNotVisibleMobile = (): void => {
+  checkUserAccountMenuCardsNotVisible()
+}
 
-  return (
-    <UserAccountPageContextProvider>
-      {refreshInProgress
-        ? <SpinningLoader className="centered-spinning-loader" />
-        :
-        <UserAccountSectionsOverviewCards
-          consents={consents}
-        />
-      }
-    </UserAccountPageContextProvider>
-  )
+export const testClickViewMoreUserAccount = (): void => {
+  checkClickViewMoreUserAccount()
+}
+
+export const testClickViewMoreDataSharing = (): void => {
+  checkClickViewMoreDataSharing()
 }

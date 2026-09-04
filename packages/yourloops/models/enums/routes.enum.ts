@@ -28,6 +28,10 @@
 export enum AppUserRoute {
   Caregivers = '/caregivers',
   CareTeamSettings = '/teams/:teamId',
+  CareTeamSettingsSectionsOverview = '/teams/:teamId/sections-overview',
+  CareTeamSettingsInformationsSection = '/teams/:teamId/sections-overview/informations',
+  CareTeamSettingsMembersSection = '/teams/:teamId/sections-overview/members',
+  CareTeamSettingsAlertsSection = '/teams/:teamId/sections-overview/alerts',
   PrivatePatientsList = '/teams/private/patients',
   PatientsList = '/teams/:teamId/patients',
   PatientView = '/teams/:teamId/patients/:patientId/*',
