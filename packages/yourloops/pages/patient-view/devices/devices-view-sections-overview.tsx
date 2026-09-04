@@ -26,11 +26,16 @@
  */
 
 import { DeviceViewSectionsOverviewCards } from './devices-view-sections-overview-cards'
-import React from 'react'
+import React, { type FC } from 'react'
+import { PumpSettings } from 'medical-domain'
 
-export const DeviceViewSectionsOverview = () => {
+interface DeviceViewSectionsOverviewProps {
+  pumpSettings: PumpSettings
+}
+
+export const DeviceViewSectionsOverview: FC<DeviceViewSectionsOverviewProps> = ({ pumpSettings }) => {
 
   return (
-    <DeviceViewSectionsOverviewCards />
+    <DeviceViewSectionsOverviewCards pumpSettings={pumpSettings} />
   )
 }
