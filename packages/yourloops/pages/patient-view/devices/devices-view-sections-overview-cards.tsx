@@ -25,13 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GenericListCard } from '../../../components/generic-list-card/generic-list-card'
 import { makeStyles } from 'tss-react/mui'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { ViewMoreLink } from '../../../components/buttons/view-more-link'
 import Typography from '@mui/material/Typography'
+import { DblParameter, PumpSettings } from 'medical-domain'
+
+interface DeviceViewSectionsOverviewCardsProps {
+  pumpSettings: PumpSettings
+}
 
 export const cardStyle = makeStyles()((theme) => {
   return {
@@ -49,15 +54,32 @@ export const cardStyle = makeStyles()((theme) => {
   }
 })
 
-export const DeviceViewSectionsOverviewCards= () => {
+export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCardsProps> = ({ pumpSettings }) => {
   const { t } = useTranslation()
   const { classes } = cardStyle()
+  const { device, pump, parameters, cgm } = pumpSettings.payload
+  const totalDailyInsulin = parameters.find(parameter => parameter.name === DblParameter.TotalDailyInsulin)
+  const targetGlucoseLevel = parameters.find(parameter => parameter.name === DblParameter.TargetGlucoseLevel)
+  const totalHypoglycemiaThreshold = parameters.find(parameter => parameter.name === DblParameter.HypoglycemiaThreshold)
+
+  const getTableLinesCurrentParameters = (): { label: string, value: string }[] => {
+    return [
+      { label: t('system'), value: device?.name },
+      { label: t('Pump'), value: pump?.name },
+      { label: t('CGM'), value: cgm?.manufacturer + " " + cgm?.name },
+      { label: t(`${DblParameter.TotalDailyInsulin}`), value: totalDailyInsulin.value + " " + totalDailyInsulin.unit },
+      { label: t(`${DblParameter.TargetGlucoseLevel}`), value: targetGlucoseLevel.value + " " + targetGlucoseLevel.unit },
+      { label: t(`${DblParameter.HypoglycemiaThreshold}`), value: totalHypoglycemiaThreshold.value + " " + totalHypoglycemiaThreshold.unit },
+    ]
+  }
+
 
   return (
     <>
       <GenericListCard
         title={t('current-parameters')}
         data-testid="device-view-overview-current-parameters"
+        tableLines={getTableLinesCurrentParameters()}
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
