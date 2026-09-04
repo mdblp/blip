@@ -25,29 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkPatientStatistics,
-  checkPatientStatisticsNoData,
-  checkPatientStatisticsTrendsView,
-  checkPatientStatisticsTrendsViewNoMonday,
-  checkPatientStatisticsWithTwoWeeksOldData
-} from '../assert/patient-statistics.assert'
-import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
-import {
-  checkDeviceUsageWidget,
-  checkDeviceUsageWidgetNoData,
-  checkDeviceUsageWidgetWithTwoWeeksOldData
-} from '../assert/device-usage.assert'
-import {
-  checkPatientNavBarForCaregiver,
-  checkPatientNavBarForPatient,
-} from '../assert/patient-nav-bar.assert'
-import {
-  checkEmptyMedicalFilesWidgetForHcp,
-  checkEmptyMedicalFilesWidgetForPatient
-} from '../assert/medical-widget.assert'
-import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
-import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltipsDblg2,
@@ -59,16 +38,35 @@ import {
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
   checkEventsSuperposition,
+  checkNotesView,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
+import {
+  checkDeviceUsageWidget,
+  checkDeviceUsageWidgetNoData,
+  checkDeviceUsageWidgetWithTwoWeeksOldData
+} from '../assert/device-usage.assert'
+import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
+import {
+  checkEmptyMedicalFilesWidgetForHcp,
+  checkEmptyMedicalFilesWidgetForPatient
+} from '../assert/medical-widget.assert'
+import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
+import { checkPatientNavBarForCaregiver, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
+import {
+  checkPatientStatistics,
+  checkPatientStatisticsNoData,
+  checkPatientStatisticsTrendsView,
+  checkPatientStatisticsTrendsViewNoMonday,
+  checkPatientStatisticsWithTwoWeeksOldData
+} from '../assert/patient-statistics.assert'
 import {
   checkAverageGlucoseStatWidget,
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle,
   checkTotalInsulinStatWidget
 } from '../assert/stats.assert'
-import userEvent from '@testing-library/user-event'
-import { screen } from '@testing-library/react'
+import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -129,6 +127,7 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
   await checkDailyTidelineContainerTooltipsMgdl()
   await checkDailyStatsWidgetsTooltips()
   await checkEventsSuperposition()
+  await checkNotesView()
 
   // Check the time in range stats widgets
   await checkDailyTimeInRangeStatsWidgetsMgdl()

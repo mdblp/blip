@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
@@ -86,6 +87,7 @@ describe('Daily view for anyone', () => {
     mockPatientLogin(patient2Info)
     mockErrorApi()
     mockAnalyticsApi()
+    mockNotesApi()
   })
 
   afterEach(() => {
@@ -96,6 +98,8 @@ describe('Daily view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
+      mockNotesApi(NOTES_THREAD)
+
       await act(async () => {
         renderPage(dailyRoute)
       })

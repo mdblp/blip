@@ -15,22 +15,13 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from 'lodash'
-import i18next from 'i18next'
 import bows from 'bows'
-import moment from 'moment-timezone'
 import * as d3 from 'd3'
-
-import format from '../data/util/format'
-import postItImage from '../../img/message/post_it.svg'
-import newNoteImg from '../../img/message/new.png'
-
-const getDateAndTime = (epoch, timezone) => {
-  const mTime = moment.utc(epoch).tz(timezone)
-  const msgDate = format.datestamp(mTime)
-  const msgTime = format.timestamp(mTime)
-  return { msgDate, msgTime }
-}
+import { getTooltipContainer } from 'dumb/dist/src/utils/daily-chart/daily-chart.util'
+import i18next from 'i18next'
+import _ from 'lodash'
+import newNoteIcon from 'new-note.svg'
+import noteIcon from 'note.svg'
 
 function plotMessage(pool, opts = {}) {
   const NEW_NOTE_WIDTH = 36
@@ -54,11 +45,14 @@ function plotMessage(pool, opts = {}) {
   function message(selection) {
     opts.xScale = pool.xScale().copy()
 
-    selection.each(function (currentData) {
+    selection.each(function () {
+      const medicalData = opts.tidelineData.medicalData
+      const notes = pool.filterDataForRender(medicalData.messages)
+
       const messages = d3
         .select(this)
         .selectAll('g.d3-message-group')
-        .data(currentData, (d) => d.id)
+        .data(notes, (d) => d.id)
 
       const messageGroups = messages
         .enter()
@@ -67,10 +61,7 @@ function plotMessage(pool, opts = {}) {
         .attr('id', function (d) {
           return 'message_' + d.id
         })
-        .attr('data-testid', (d) => {
-          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
-          return `message-${msgDate}-${msgTime}`
-        })
+        .attr('data-testid', (d) => `note_group_${d.id}`)
 
       message.addMessageToPool(messageGroups)
 
@@ -82,93 +73,37 @@ function plotMessage(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
 
     selection
-      .append('rect')
-      .classed('d3-rect-message hidden', true)
-      .attr('x', message.highlightXPosition)
-      .attr('y', message.highlightYPosition)
-      .attr('width', opts.size + opts.highlightWidth * 2)
-      .attr('height', opts.size + opts.highlightWidth * 2)
-
-    selection
       .append('image')
       .classed('d3-image d3-message', true)
-      .attr('href', postItImage) // updated from xlink:href to href
+      .attr('href', noteIcon) // updated from xlink:href to href
       .attr('x', message.xPosition)
       .attr('y', message.yPosition)
       .style('cursor', 'pointer')
       .attr('width', opts.size)
       .attr('height', opts.size)
 
-    selection.on('mouseover', message.displayTooltip)
-    selection.on('mouseout', message.removeTooltip)
+    selection.on('mouseover', function (_event, d) {
+      if (opts.onElementHover) {
+        opts.onElementHover({
+          data: d,
+          rect: getTooltipContainer(this)
+        })
+      }
+    })
+    selection.on('mouseout', function () {
+      if (opts.onElementOut) {
+        opts.onElementOut()
+      }
+    })
     selection.on('click', function (event, datum) {
-      log.debug('Message clicked!', datum)
       event.stopPropagation() // silence the click-and-drag listener
+
       opts.emitter.emit('messageThread', datum.id)
-      d3.select(this).selectAll('.d3-rect-message').classed('hidden', false)
     })
-  }
-
-  message.displayTooltip = (event, datum) => {
-    const tooltips = pool.tooltips()
-
-    const tooltip = tooltips.addForeignObjTooltip({
-      cssClass: 'svg-tooltip-message',
-      datum: { ...datum, type: 'message' },
-      shape: 'generic',
-      xPosition: message.xPositionCenter,
-      yPosition: message.yPositionCenter
-    })
-
-    const foGroup = tooltip.foGroup
-    const { msgDate, msgTime } = getDateAndTime(datum.epoch, datum.timezone)
-
-    const htmlDateTime = `<span data-testid="message-from-to" class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
-    const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(datum.user)}:</span>`
-    const htmlValue = `<br><span data-testid="message-text" class="message-text">${format.textPreview(datum.messageText)}</span>`
-
-    foGroup
-      .append('p')
-      .classed('messageTooltip', true)
-      .append('span')
-      .classed('secondary', true)
-      .html(htmlDateTime)
-
-    foGroup
-      .append('p')
-      .classed('messageTooltip', true)
-      .append('span')
-      .classed('secondary', true)
-      .html(htmlName + htmlValue)
-
-    const dims = tooltips.foreignObjDimensions(foGroup)
-
-    const foreignObj = d3.select(foGroup.node().parentNode)
-
-    tooltips.anchorForeignObj(foreignObj, {
-      w: dims.width + opts.tooltipPadding,
-      h: dims.height,
-      x: message.xPositionCenter(datum),
-      y: -dims.height,
-      orientation: {
-        default: 'leftAndDown',
-        leftEdge: 'rightAndDown',
-        rightEdge: 'leftAndDown'
-      },
-      shape: 'generic',
-      edge: tooltip.edge
-    })
-  }
-
-  message.removeTooltip = (event, d) => {
-    d3.select('#tooltip_' + d.id).remove()
   }
 
   message.updateMessageInPool = function (selection) {
     opts.xScale = pool.xScale().copy()
-
-    selection.select('rect.d3-rect-message')
-      .attr('x', message.highlightXPosition)
 
     selection.select('image')
       .attr('x', message.xPosition)
@@ -186,10 +121,7 @@ function plotMessage(pool, opts = {}) {
         .append('g')
         .classed('d3-message-group', true)
         .attr('id', `message_${d.id}`)
-        .attr('data-testid', () => {
-          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
-          return `message-${msgDate}-${msgTime}`
-        })
+        .attr('data-testid', (d) => `note_group_${d.id}`)
         .datum(d)
       message.addMessageToPool(messageGroup)
     })
@@ -214,7 +146,7 @@ function plotMessage(pool, opts = {}) {
       .append('image')
       .classed('newNoteIcon', true)
       .attr('id', 'newNoteIcon')
-      .attr('href', newNoteImg)
+      .attr('href', newNoteIcon)
       .attr('x', NEW_NOTE_X)
       .attr('y', NEW_NOTE_Y)
       .style('cursor', 'pointer')

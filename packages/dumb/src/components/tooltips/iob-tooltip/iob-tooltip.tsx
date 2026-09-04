@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,29 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import colors from '../../../styles/colors.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import { Iob, type TimePrefs } from 'medical-domain'
+import { Iob } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface IobTooltipProps {
-  data: Iob
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const IobTooltip: FunctionComponent<IobTooltipProps> = (props) => {
-  const { data, position, side, timePrefs } = props
+export const IobTooltip: FC<DailyTooltipProps<Iob>> = (props) => {
+  const { datum: iob, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  const formattedValue = formatDecimalNumber(data.value, 2)
+  const formattedValue = formatDecimalNumber(iob.value, 2)
 
   return (
     <Tooltip
@@ -55,12 +48,12 @@ export const IobTooltip: FunctionComponent<IobTooltipProps> = (props) => {
       side={side}
       backgroundColor={colors.blueBackground}
       title={t('active-insulin')}
-      dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(iob, timePrefs)}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlexLarge}>
           <TooltipLine label={t('insulin-on-board')} />
-          <TooltipLine label={t('insulin')} value={formattedValue} units={data.units} isBold />
+          <TooltipLine label={t('insulin')} value={formattedValue} units={iob.units} isBold />
         </div>
       }
     />

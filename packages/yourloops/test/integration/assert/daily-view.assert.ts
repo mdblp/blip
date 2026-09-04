@@ -25,8 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, fireEvent, queries, screen, within } from '@testing-library/react'
+import { BoundFunctions, fireEvent, queries, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import moment from 'moment-timezone'
+import { getTranslation } from '../../utils/i18n'
+import { loggedInUserFullName, loggedInUserInitials, userTimFullName, userTimInitials } from '../mock/auth0.hook.mock'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
@@ -77,6 +80,7 @@ import {
   IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
+  NOTE_ID,
   PARAMETER_ID,
   PARIS_TIMEZONE,
   PEN_BOLUS_ID,
@@ -101,9 +105,7 @@ import {
   ZEN_MODE_ID,
   ZEN_MODE_ID_WITH_GLY
 } from '../mock/data.api.mock'
-import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
-import { getTranslation } from '../../utils/i18n'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
@@ -116,12 +118,12 @@ const MANUAL_BOLUS_TOOLTIP = 'Manual bolus: Total insulin dose delivered (in uni
 const RESCUE_CARBS_TOOLTIP = 'Rescue carbs: All rescue carb entries added together (recommended or taken spontaneously), then divided by the number of days in this view. Computed from 1 rescue carbs.In some cases, a significant amount of rescue carbs may indicate that the algorithm is too aggressive. Other signs that could confirm this hypothesis include frequent hypoglycaemia and a difference of more than 10% between the “Total Daily Insulin” setting and the total daily insulin dose actually delivered.'
 
 const checkTidelineContainerElementTooltip = async (id: string, expectedTextContent: string) => {
-  const carbElement = screen.getByTestId(id)
-  expect(carbElement).toBeVisible()
-  await userEvent.hover(carbElement)
+  const element = screen.getByTestId(id)
+  expect(element).toBeVisible()
+  await userEvent.hover(element)
   const tooltip = screen.getByTestId('tooltip')
   expect(tooltip).toHaveTextContent(expectedTextContent)
-  await userEvent.unhover(carbElement)
+  await userEvent.unhover(element)
 }
 
 export const checkDailyTidelineContainerTooltipsMgdl = async () => {
@@ -129,6 +131,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`poolBG_confidential_group_${CONFIDENTIAL_MODE_ID}`, 'Confidential mode')
   await checkTidelineContainerElementTooltip(`poolBolus_confidential_group_${CONFIDENTIAL_MODE_ID}`, 'Confidential mode')
   await checkTidelineContainerElementTooltip(`poolBasal_confidential_group_${CONFIDENTIAL_MODE_ID}`, 'Confidential mode')
+  await checkTidelineContainerElementTooltip(`note_group_${NOTE_ID}`, 'Note2:00 pmYann BlancThis day was very stressful')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UNDELIVERED_ID}`, `Meal8:25 pmCarbs45gHigh fat mealEntered at ${moment(WIZARD_UNDELIVERED_INPUT_TIME).format('h:mm a')}IOB3.18ULoop modeBolus TypeStandardRecommended25.0UUndelivered2.70UDelivered22.3U`)
   expect(screen.queryByTestId(`wizard_group_${WIZARD_UMM_ID}`)).not.toBeInTheDocument()
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `Meal8:45 pmCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
@@ -298,6 +301,19 @@ export const checkEventsSuperposition = async () => {
   const reservoirChangeContent = 'Cartridge change3:15 pm'
 
   expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContentMultipleOccurrences}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
+}
+
+export const checkNotesView = async () => {
+  const note = screen.getByTestId(`note_group_${NOTE_ID}`)
+  expect(note).toBeVisible()
+
+  fireEvent.click(note)
+
+  await waitFor(() => {
+    const dialog = screen.getByTestId('view-note-dialog')
+    expect(dialog).toBeVisible()
+    expect(dialog).toHaveTextContent(`Note${loggedInUserInitials}${loggedInUserFullName} - Aug 8, 2022 2:00 pmThis day was very stressful${userTimInitials}${userTimFullName} - Aug 8, 2022 5:00 pmReally? What happened?Close`)
+  })
 }
 
 const checkDailyViewChartsCommon = () => {

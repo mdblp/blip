@@ -25,31 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { BgClass, type Cbg, ClassificationType, type Smbg } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import colors from '../../../styles/colors.css'
-import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { formatBgValue } from '../../../utils/format/format.util'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import { type BgPrefs } from '../../../models/blood-glucose.model'
-import { BgClass, type Cbg, ClassificationType, type Smbg, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
+import { formatBgValue } from '../../../utils/format/format.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface BloodGlucoseTooltipProps {
+interface BloodGlucoseTooltipProps extends DailyTooltipProps<Cbg | Smbg> {
   bgPrefs: BgPrefs
-  data: Cbg | Smbg
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
   isSmbg?: boolean
 }
 
 export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = (props) => {
-  const { bgPrefs, data, position, side, timePrefs, isSmbg } = props
+  const { bgPrefs, datum: data, position, side, timePrefs, isSmbg } = props
   const { t } = useTranslation('main')
 
   const formattedValue = formatBgValue(data.value, bgPrefs.bgUnits)

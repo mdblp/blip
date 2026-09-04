@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,26 +27,35 @@
 
 'use strict'
 
+import { Datum, defaultMedicalDataOptions } from '../../../src'
+import { type DatumProcessor } from '../../../src/domains/models/medical/datum.model'
+import { defaultWeekDaysFilter } from '../../../src/domains/models/time/date-filter.model'
+import WeekDays from '../../../src/domains/models/time/enum/weekdays.enum'
 import DatumService from '../../../src/domains/repositories/medical/datum.service'
-import { defaultMedicalDataOptions } from '../../../src/domains/models/medical/medical-data-options.model'
 import BasalService from '../../../src/domains/repositories/medical/datum/basal.service'
 import BolusService from '../../../src/domains/repositories/medical/datum/bolus.service'
 import CbgService from '../../../src/domains/repositories/medical/datum/cbg.service'
 import ConfidentialModeService from '../../../src/domains/repositories/medical/datum/confidential-mode.service'
-import DeviceParameterChangeService from '../../../src/domains/repositories/medical/datum/device-parameter-change.service'
+import DeviceParameterChangeService
+  from '../../../src/domains/repositories/medical/datum/device-parameter-change.service'
 import MealService from '../../../src/domains/repositories/medical/datum/meal.service'
-import MessageService from '../../../src/domains/repositories/medical/datum/message.service'
+import NoteService from '../../../src/domains/repositories/medical/datum/note.service'
 import PumpSettingsService from '../../../src/domains/repositories/medical/datum/pump-settings.service'
 import ReservoirChangeService from '../../../src/domains/repositories/medical/datum/reservoir-change.service'
 import SmbgService from '../../../src/domains/repositories/medical/datum/smbg.service'
 import WarmUpService from '../../../src/domains/repositories/medical/datum/warm-up.service'
 import WizardService from '../../../src/domains/repositories/medical/datum/wizard.service'
 import ZenModeService from '../../../src/domains/repositories/medical/datum/zen-mode.service'
-import { type DatumProcessor } from '../../../src/domains/models/medical/datum.model'
-import type Datum from '../../../src/domains/models/medical/datum.model'
-import { createRandomBasal, createRandomCbg, createRandomConfidentialMode, createRandomPhysicalActivity, createRandomReservoirChange, createRandomSmbg, createRandomWarmUp, createRandomZenMode } from '../../data-generator'
-import { defaultWeekDaysFilter } from '../../../src/domains/models/time/date-filter.model'
-import WeekDays from '../../../src/domains/models/time/enum/weekdays.enum'
+import {
+  createRandomBasal,
+  createRandomCbg,
+  createRandomConfidentialMode,
+  createRandomPhysicalActivity,
+  createRandomReservoirChange,
+  createRandomSmbg,
+  createRandomWarmUp,
+  createRandomZenMode
+} from '../../data-generator'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const knownTypes: Array<{ data: Record<string, unknown>, service: DatumProcessor<any> }> = [
@@ -68,7 +77,7 @@ const knownTypes: Array<{ data: Record<string, unknown>, service: DatumProcessor
   },
   {
     data: { type: 'message' },
-    service: MessageService
+    service: NoteService
   },
   {
     data: { type: 'pumpSettings' },
