@@ -37,7 +37,7 @@ describe('Notes API', () => {
     it('should edit a message', async () => {
       jest.spyOn(HttpService, 'put').mockResolvedValue(undefined)
       const message = { userid: patientId } as MessageNote
-      await NotesApi.editMessage(message)
+      await NotesApi.editNote(message)
       expect(HttpService.put).toHaveBeenCalledWith({
         url: '/message/v1/edit',
         payload: message
@@ -54,7 +54,7 @@ describe('Notes API', () => {
       ]
       jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)
 
-      const response = await NotesApi.getMessageThread(messageId)
+      const response = await NotesApi.getNoteThread(messageId)
       expect(response).toEqual(data)
 
       expect(HttpService.get).toHaveBeenCalledWith({ url: `/message/v1/thread/${messageId}` })
@@ -68,7 +68,7 @@ describe('Notes API', () => {
       const data = { id: messageId }
       jest.spyOn(HttpService, 'post').mockResolvedValue({ data } as AxiosResponse)
 
-      const response = await NotesApi.postMessageThread(message)
+      const response = await NotesApi.createNote(message)
       expect(response).toEqual(messageId)
       expect(HttpService.post).toHaveBeenCalledWith({
         url: '/message/v1/send',

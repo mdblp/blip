@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
-import { AuthContextProvider } from '../../../lib/auth'
-import { MainLobby } from '../../../app/main-lobby'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { render } from '@testing-library/react'
 import React from 'react'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { MainLobby } from '../../../app/main-lobby'
+import { AuthContextProvider } from '../../../lib/auth'
 
 const renderMainLobby = (initialEntry: string) => {
   const router = createMemoryRouter(
     [
       {
         path: '*',
-        element: <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
+        element: <LocalizationProvider dateAdapter={AdapterMoment}>
+          <AuthContextProvider>
+            <MainLobby />
+          </AuthContextProvider>
+        </LocalizationProvider>
       }
     ],
     {

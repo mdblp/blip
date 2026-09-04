@@ -27,7 +27,8 @@
 
 import { MessageNote } from '../../../lib/data/models/message-note.model'
 import { NotesApi } from '../../../lib/notes/notes.api'
-import { loggedInUserFullName, loggedInUserId, userTimFullName, userTimId } from './auth0.hook.mock'
+import { patient2Id } from '../data/patient.api.data'
+import { patient2FullName, userTimFullName, userTimId } from './auth0.hook.mock'
 import { NOTE_ID } from './data.api.mock'
 
 const noteData = {
@@ -37,30 +38,46 @@ const noteData = {
   "modifiedtime": "2022-08-08T12:00:00.000Z",
   "timestamp": "2022-08-08T12:00:00.000Z",
   "groupid": "b3549d738546",
-  "userid": loggedInUserId,
+  "userid": patient2Id,
   "messagetext": "This day was very stressful",
   "user": {
-    "fullName": loggedInUserFullName
+    "fullName": patient2FullName
   }
 }
 
-const noteAnswerData = {
-  "id": "68f5db7c612ea9466ce8c28c",
-  "groupid": "b3549d738546",
-  "userid": userTimId,
-  "parentmessage": "68f5d86d612ea9466ce8c28b",
-  "messagetext": "Really? What happened?",
-  "timestamp": "2022-08-08T15:00:00.000Z",
-  "createdtime": "2022-08-08T15:00:00.000Z",
-  "modifiedtime": "2022-08-08T15:00:00.000Z",
-  "user": {
-    "fullName": userTimFullName
+const noteAnswersData = [
+  {
+    "id": "68f5db7c612ea9466ce8c28c",
+    "groupid": "b3549d738546",
+    "userid": userTimId,
+    "parentmessage": "68f5d86d612ea9466ce8c28b",
+    "messagetext": "Really? What happened?",
+    "timestamp": "2022-08-08T15:00:00.000Z",
+    "createdtime": "2022-08-08T15:00:00.000Z",
+    "modifiedtime": "2022-08-08T15:00:00.000Z",
+    "user": {
+      "fullName": userTimFullName
+    }
+  },
+  {
+    "id": "68f5db7c612ea9466ce8c2zz",
+    "groupid": "b3549d738546",
+    "userid": patient2Id,
+    "parentmessage": "68f5d86d612ea9466ce8c28b",
+    "messagetext": "A lot of things...",
+    "timestamp": "2022-08-08T15:16:00.000Z",
+    "createdtime": "2022-08-08T15:16:00.000Z",
+    "modifiedtime": "2022-08-08T15:16:00.000Z",
+    "user": {
+      "fullName": patient2FullName
+    }
   }
-}
+]
 
-export const NOTES_THREAD = [noteData, noteAnswerData]
+export const NOTES_THREAD = [noteData, ...noteAnswersData]
 
 export const mockNotesApi = (notesThread: MessageNote[] = []) => {
-  jest.spyOn(NotesApi, 'getMessageThread').mockResolvedValue(notesThread)
-  jest.spyOn(NotesApi, 'postMessageThread').mockResolvedValue('note-id')
+  jest.spyOn(NotesApi, 'getNoteThread').mockResolvedValue(notesThread)
+  jest.spyOn(NotesApi, 'createNote').mockResolvedValue('note-id')
+  jest.spyOn(NotesApi, 'editNote').mockResolvedValue()
 }

@@ -234,7 +234,7 @@ Messages.propTypes = {
   patient: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
+  onEdit: PropTypes.func,
   onNewMessage: PropTypes.func,
   timePrefs: PropTypes.shape({
     timezoneName: PropTypes.string.isRequired

@@ -67,9 +67,9 @@ class DailyChart extends React.Component {
     refToAttachResize: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
-    // message handlers
+    // Note handlers
     onCreateMessage: PropTypes.func.isRequired,
-    onShowMessageThread: PropTypes.func.isRequired,
+    onShowNoteThread: PropTypes.func.isRequired,
     // other handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
     onTransition: PropTypes.func.isRequired,
@@ -193,7 +193,7 @@ class DailyChart extends React.Component {
     const { chart } = this.state
     chart.emitter.on('createMessage', this.props.onCreateMessage)
     chart.emitter.on('inTransition', this.props.onTransition)
-    chart.emitter.on('messageThread', this.props.onShowMessageThread)
+    chart.emitter.on('noteThread', this.props.onShowNoteThread)
     chart.emitter.on('navigated', this.props.onDatetimeLocationChange)
   }
 
@@ -201,7 +201,7 @@ class DailyChart extends React.Component {
     const { chart } = this.state
     chart.emitter.off('createMessage', this.props.onCreateMessage)
     chart.emitter.off('inTransition', this.props.onTransition)
-    chart.emitter.off('messageThread', this.props.onShowMessageThread)
+    chart.emitter.off('noteThread', this.props.onShowNoteThread)
     chart.emitter.off('navigated', this.props.onDatetimeLocationChange)
   }
 
@@ -294,7 +294,7 @@ class Daily extends React.Component {
     onClickRefresh: PropTypes.func.isRequired,
     // message handlers
     onCreateMessage: PropTypes.func.isRequired,
-    onShowMessageThread: PropTypes.func.isRequired,
+    onShowNoteThread: PropTypes.func.isRequired,
     // navigation handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
     isEatingShortlyEnabled: PropTypes.bool.isRequired
@@ -421,9 +421,9 @@ class Daily extends React.Component {
                   msRange={msRange}
                   tidelineData={tidelineData}
                   timePrefs={timePrefs}
-                  // message handlers
+                  // Note handlers
                   onCreateMessage={this.props.onCreateMessage}
-                  onShowMessageThread={this.props.onShowMessageThread}
+                  onShowNoteThread={this.props.onShowNoteThread}
                   // other handlers
                   onDatetimeLocationChange={this.handleDatetimeLocationChange}
                   onTransition={this.handleInTransition}
