@@ -25,12 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ZenMode } from 'medical-domain'
+import { BgUnit, ZenMode } from 'medical-domain'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
+import { getConvertedValue } from '../../../utils/blood-glucose/blood-glucose.util'
 import { getDuration } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
@@ -40,10 +41,22 @@ const getFormattedGlycemiaOffset = (offset: number): string => {
   return offset > 0 ? `+${offset}` : offset.toString()
 }
 
-export const ZenModeTooltip: FC<DailyTooltipProps<ZenMode>> = (props) => {
-  const { datum: zenMode, position, side, timePrefs } = props
+interface ZenModeTooltipProps extends DailyTooltipProps<ZenMode> {
+  bgUnit: BgUnit
+}
+
+export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
+  const { datum: zenMode, position, side, timePrefs, bgUnit } = props
   const { t } = useTranslation('main')
   const duration = getDuration(zenMode)
+
+  const { glycemiaTarget } = zenMode
+  const glycemiaTargetUnits = glycemiaTarget?.units
+  const targetGlucoseLevel = glycemiaTarget ? getConvertedValue(glycemiaTarget.value, bgUnit, glycemiaTargetUnits) : undefined
+  const setTarget = glycemiaTarget ? getConvertedValue(glycemiaTarget.initialValue, bgUnit, glycemiaTargetUnits) : undefined
+  const difference = glycemiaTarget
+    ? getFormattedGlycemiaOffset(getConvertedValue(glycemiaTarget.offset, bgUnit, glycemiaTargetUnits))
+    : undefined
 
   return (
     <Tooltip
@@ -54,14 +67,13 @@ export const ZenModeTooltip: FC<DailyTooltipProps<ZenMode>> = (props) => {
       side={side}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={zenMode.glycemiaTarget ? commonStyles.containerFlexLarge : commonStyles.containerFlex}>
-          {zenMode.glycemiaTarget && <>
-            <TooltipLine label={t('target-glucose-level')} value={zenMode.glycemiaTarget.value}
-                         units={zenMode.glycemiaTarget.units} isBold={true} />
-            <TooltipLine label={t('set-target')} value={zenMode.glycemiaTarget.initialValue}
-                         units={zenMode.glycemiaTarget.units} />
-            <TooltipLine label={t('difference')} value={getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset)}
-                         units={zenMode.glycemiaTarget.units} />
+        <div className={glycemiaTarget ? commonStyles.containerFlexLarge : commonStyles.containerFlex}>
+          {glycemiaTarget &&
+            <>
+              <TooltipLine label={t('target-glucose-level')} value={targetGlucoseLevel}
+                           units={bgUnit} isBold={true} />
+              <TooltipLine label={t('set-target')} value={setTarget} units={bgUnit} />
+              <TooltipLine label={t('difference')} value={difference} units={bgUnit} />
             </>
           }
           <TooltipLine label={t('Duration')} value={duration.value} units={t(duration.units)} />

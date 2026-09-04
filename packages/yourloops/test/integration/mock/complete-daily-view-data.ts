@@ -42,7 +42,7 @@ import {
   Unit,
   Wizard,
   WizardInputMealFat,
-  WizardInputMealSource
+  WizardInputMealSource, ZenMode
 } from 'medical-domain'
 import {
   DeviceEventSubtype
@@ -153,6 +153,35 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
     "inputTime": "2022-08-08T08:00:00Z",
     "isoWeekday": WeekDays.Sunday
   }
+
+  const zenModes = data.zenModes
+  const zenModeWithGlycemiaTarget : ZenMode = {
+    "epoch": 1659862800,
+    "displayOffset": -120,
+    "normalTime": "2022-08-07T20:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "guessedTimezone": false,
+    "id": ZEN_MODE_ID_WITH_GLY,
+    "type": DatumType.DeviceEvent,
+    "source": Source.Diabeloop,
+    "subType": DeviceEventSubtype.Zen,
+    "duration": {
+      "units": DurationUnit.Seconds,
+      "value": 7200
+    },
+    "normalEnd": "2022-08-07T08:00:00.000Z",
+    "glycemiaTarget": {
+      "value": 5.0,
+      "initialValue": 6.1,
+      "offset": -1.1,
+      "units": Unit.MmolPerLiter
+    },
+    "epochEnd": 1659862800000,
+    "guid": ZEN_MODE_ID_WITH_GLY,
+    "inputTime": "2022-08-07T08:00:00Z",
+    "isoWeekday": WeekDays.Sunday
+  }
+  data.zenModes = [...zenModes, zenModeWithGlycemiaTarget]
 
   data.pumpSettings[0].payload.mobileApplication = {
     manufacturer: "Diabeloop",
@@ -2002,32 +2031,6 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "inputTime": "2022-08-08T08:00:00Z",
           "isoWeekday": WeekDays.Sunday,
           "glycemiaTarget": null
-        },
-        {
-          "epoch": 1659862800,
-          "displayOffset": -120,
-          "normalTime": "2022-08-07T20:00:00.000Z",
-          "timezone": "Europe/Paris",
-          "guessedTimezone": false,
-          "id": ZEN_MODE_ID_WITH_GLY,
-          "type": DatumType.DeviceEvent,
-          "source": Source.Diabeloop,
-          "subType": DeviceEventSubtype.Zen,
-          "duration": {
-            "units": DurationUnit.Seconds,
-            "value": 7200
-          },
-          "normalEnd": "2022-08-07T08:00:00.000Z",
-          "glycemiaTarget": {
-            "value": 130,
-            "initialValue": 110,
-            "offset": 20,
-            "units": Unit.MilligramPerDeciliter
-          },
-          "epochEnd": 1659949200000,
-          "guid": ZEN_MODE_ID_WITH_GLY,
-          "inputTime": "2022-08-07T08:00:00Z",
-          "isoWeekday": WeekDays.Sunday
         }
       ],
       timezoneChanges: []

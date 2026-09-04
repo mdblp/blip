@@ -26,7 +26,18 @@
  */
 
 import { isNumber } from 'lodash'
-import { type BgBounds, BgClass, type BgClasses, BgUnit, ClassificationType, defaultBgClasses } from 'medical-domain'
+import {
+  type BgBounds,
+  BgClass,
+  type BgClasses,
+  BgUnit,
+  ClassificationType,
+  convertBG,
+  defaultBgClasses,
+  MGDL_UNITS
+} from 'medical-domain'
+
+const DEFAULT_UNIT = MGDL_UNITS
 
 export const convertBgClassesToBgBounds = (bgClasses: BgClasses, bgUnits: BgUnit): BgBounds => {
   return {
@@ -66,4 +77,15 @@ export const getBgClass = (bgBounds: BgBounds, bgValue?: number, classificationT
     return BgClass.VeryHigh
   }
   return BgClass.Target
+}
+
+export const getConvertedValue = (value: number, requiredUnit: BgUnit, valueUnit?: BgUnit): number => {
+  const currentUnit = valueUnit ?? DEFAULT_UNIT
+  if (requiredUnit === currentUnit) {
+    return value
+  }
+
+  const sign = Math.sign(value)
+  const converted = convertBG(Math.abs(value), currentUnit)
+  return sign < 0 ? -converted : converted
 }

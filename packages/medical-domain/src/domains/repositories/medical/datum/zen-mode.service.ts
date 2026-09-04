@@ -44,8 +44,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.Zen,
     guid: rawData.guid as string,
-    inputTime: rawData.inputTime as string,
-    glycemiaTarget: null
+    inputTime: rawData.inputTime as string
   }
   return zenMode
 }
