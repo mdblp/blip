@@ -25,15 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BgUnit, convertBG, MGDL_UNITS } from 'medical-domain'
-import i18next from 'i18next'
-import { isDBLG1, isDBLG2, isDeviceVersionHigherOrEqual } from '../device/device.util'
-import { Device } from '../../models/device.model'
 import alarmEventDeviceIcon from 'device-event.svg'
 import alarmEventHyperIcon from 'hyperglycemia-event.svg'
 import alarmEventHypoIcon from 'hypoglycemia-event.svg'
+import i18next from 'i18next'
+import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BgUnit, MGDL_UNITS } from 'medical-domain'
 import { BgPrefs } from '../../models/blood-glucose.model'
+import { Device } from '../../models/device.model'
 import colors from '../../styles/colors.css'
+import { getConvertedValue } from '../blood-glucose/blood-glucose.util'
+import { isDBLG1, isDBLG2, isDeviceVersionHigherOrEqual } from '../device/device.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -283,11 +284,4 @@ const getDefaultValueByCode = (alarmCode: AlarmCode): number => {
     default:
       return 0
   }
-}
-
-const getConvertedValue = (value: number, requiredUnit: BgUnit, valueUnit?: BgUnit): number => {
-  const currentUnit = valueUnit ?? DEFAULT_UNIT
-  const shouldConvert = requiredUnit !== currentUnit
-
-  return shouldConvert ? convertBG(value, currentUnit) : value
 }

@@ -868,6 +868,7 @@ class Daily extends React.Component {
         }}
         side={datum.side}
         timePrefs={datum.timePrefs}
+        bgUnit={datum.bgPrefs.bgUnits}
       />)
     this.setState({ tooltip })
   }

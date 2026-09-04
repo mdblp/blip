@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import type BaseDatum from './basics/base-datum.model'
 import type Duration from './basics/duration.model'
+import { BgUnit } from './bg.model'
 import { type DatumType } from './enums/datum-type.enum'
 import { DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
@@ -34,14 +35,15 @@ type GlycemiaTarget = {
   offset: number
   value: number
   initialValue: number
-  units: string
+  units: BgUnit
 }
+
 type ZenMode = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.Zen
   guid: string
   inputTime: string
-  glycemiaTarget: GlycemiaTarget | null
+  glycemiaTarget?: GlycemiaTarget
 }
 
 export default ZenMode
