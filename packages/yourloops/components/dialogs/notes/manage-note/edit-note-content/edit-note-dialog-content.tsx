@@ -25,14 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import TextField from '@mui/material/TextField'
-import { DateTimePicker } from '@mui/x-date-pickers'
-import moment, { type Moment } from 'moment-timezone'
+import { type Moment } from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageNote } from '../../../../../lib/data/models/message-note.model'
@@ -41,6 +34,7 @@ import { NotesApi } from '../../../../../lib/notes/notes.api'
 import { errorTextFromException } from '../../../../../lib/utils'
 import { logError } from '../../../../../utils/error.util'
 import { useAlert } from '../../../../utils/snackbar'
+import { CreateEditNoteContent } from '../../create-edit-note-content'
 
 interface EditNoteDialogProps {
   note: MessageNote
@@ -58,33 +52,15 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
   const title = isMainNote ? t('note-edit') : t('note-comment-edit')
   const editionSuccessLabel = isMainNote ? t('note-edit-success') : t('note-comment-edit-success')
 
-  const defaultDateTime = moment.utc(note.timestamp).tz(timezone)
-  const defaultComment = note.messagetext
-
-  const [noteComment, setNoteComment] = React.useState<string>(defaultComment)
-  const [noteDateTime, setNoteDateTime] = React.useState<Moment>(defaultDateTime)
-
-  const isFormValidAndUpdated = (): boolean => {
-    const isDateTimeUpdated = noteDateTime?.toISOString() !== defaultDateTime.toISOString()
-    const isCommentUpdated = noteComment !== defaultComment
-    const isFormUpdated = isMainNote ? isDateTimeUpdated || isCommentUpdated : isCommentUpdated
-
-    const isDateTimeValid = noteDateTime?.isValid()
-    const isCommentValid = noteComment.trim().length > 0
-    const isFormValid = isMainNote ? isDateTimeValid && isCommentValid : isCommentValid
-
-    return isFormUpdated && isFormValid
-  }
-
-  const onClickEdit = async () => {
+  const onClickEdit = async ({ message, datetime }: { message: string; datetime: Moment }) => {
     const editedNote: MessageNote = {
       id: note.id,
       parentmessage: note.parentmessage,
       userid: note.userid,
       user: note.user,
       groupid: note.groupid,
-      messagetext: noteComment,
-      timestamp: noteDateTime.toISOString()
+      messagetext: message,
+      timestamp: datetime.toISOString()
     }
 
     try {
@@ -107,64 +83,14 @@ export const EditNoteDialogContent: FC<EditNoteDialogProps> = (props) => {
   }
 
   return (
-    <>
-      <DialogTitle data-testid="edit-note-title">
-        {title}
-      </DialogTitle>
-      <DialogContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {isMainNote &&
-            <DateTimePicker
-              value={noteDateTime}
-              onChange={(newDateTime: Moment) => setNoteDateTime(newDateTime)}
-              slotProps={{
-                textField: {
-                  slotProps: {
-                    htmlInput: {
-                      'data-testid': 'edit-note-datetime-input'
-                    } as React.InputHTMLAttributes<HTMLInputElement>
-                  }
-                }
-              }}
-            />
-          }
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }} data-testid="edit-note-content">
-            <TextField
-              variant="outlined"
-              sx={{ width: '100%' }}
-              aria-label={t('note-edit-input')}
-              value={noteComment}
-              multiline
-              rows={4}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setNoteComment(event.target.value)
-              }}
-              slotProps={{
-                htmlInput: {
-                  'data-testid': 'note-edit-input'
-                }
-              }}
-            />
-          </Box>
-        </Box>
-      </DialogContent>
-      <DialogActions data-testid="edit-note-actions">
-        <Button
-          variant="outlined"
-          onClick={onClose}
-          data-testid="cancel-button"
-        >
-          {t('button-cancel')}
-        </Button>
-        <Button
-          variant="contained"
-          onClick={onClickEdit}
-          data-testid="edit-button"
-          disabled={!isFormValidAndUpdated()}
-        >
-          {t('button-edit')}
-        </Button>
-      </DialogActions>
-    </>
+    <CreateEditNoteContent
+      title={title}
+      defaultDateTime={note.timestamp}
+      defaultMessage={note.messagetext}
+      timezone={timezone}
+      showDateTimePicker={isMainNote}
+      onClickSubmit={onClickEdit}
+      onClose={onClose}
+    />
   )
 }

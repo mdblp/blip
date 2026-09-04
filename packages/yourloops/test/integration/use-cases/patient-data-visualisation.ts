@@ -56,6 +56,9 @@ import {
   checkNoteAddCommentSuccess,
   checkNoteCommentEditContent,
   checkNoteCommentEditSuccess,
+  checkNoteCreateContent,
+  checkNoteCreateFailure,
+  checkNoteCreateSuccess,
   checkNoteEditContent,
   checkNoteEditFailure,
   checkNoteEditSuccess,
@@ -190,14 +193,17 @@ export const testTrendsWeekDayFilter = async () => {
 }
 
 export const testNotesFailure = async () => {
+  await checkNoteCreateFailure()
   await checkNoteAddCommentFailure()
   await checkNoteEditFailure()
 }
 
 const checkNotes = async (date: Date) => {
   await checkNoteView(date)
+  await checkNoteCreateContent()
   await checkNoteEditContent()
   await checkNoteCommentEditContent()
+  await checkNoteCreateSuccess()
   await checkNoteAddCommentSuccess()
   await checkNoteEditSuccess()
   await checkNoteCommentEditSuccess()

@@ -18,7 +18,6 @@
 import bows from 'bows'
 import * as d3 from 'd3'
 import { getTooltipContainer } from 'dumb/dist/src/utils/daily-chart/daily-chart.util'
-import i18next from 'i18next'
 import _ from 'lodash'
 import newNoteIcon from 'new-note.svg'
 import noteIcon from 'note.svg'
@@ -27,9 +26,8 @@ function plotMessage(pool, opts = {}) {
   const NEW_NOTE_WIDTH = 36
   const NEW_NOTE_HEIGHT = 29
   const NEW_NOTE_X = 0
-  const NEW_NOTE_Y = 45
+  const NEW_NOTE_Y = 71
 
-  const t = i18next.t.bind(i18next)
   const defaults = {
     previewLength: 50,
     tooltipPadding: 20,
@@ -146,6 +144,7 @@ function plotMessage(pool, opts = {}) {
       .append('image')
       .classed('newNoteIcon', true)
       .attr('id', 'newNoteIcon')
+      .attr('data-testid', 'new-note-button')
       .attr('href', newNoteIcon)
       .attr('x', NEW_NOTE_X)
       .attr('y', NEW_NOTE_Y)
@@ -156,22 +155,16 @@ function plotMessage(pool, opts = {}) {
     message.addMessageToPool(newNote)
 
     newNote.on('mouseover', function () {
-      d3.select('#tidelineLabels')
-        .append('text')
-        .classed('newNoteText', true)
-        .attr('x', NEW_NOTE_X + 1)
-        .attr('y', NEW_NOTE_Y + 43)
-        .text(t('New'))
-
-      d3.select('#tidelineLabels')
-        .append('text')
-        .classed('newNoteText', true)
-        .attr('x', NEW_NOTE_X + 1)
-        .attr('y', NEW_NOTE_Y + 56)
-        .text(t('note'))
+      if (opts.onNewNoteHover) {
+        opts.onNewNoteHover({
+          element: this
+        })
+      }
     })
     newNote.on('mouseout', function () {
-      d3.selectAll('#tidelineLabels .newNoteText').remove()
+      if (opts.onElementOut) {
+        opts.onElementOut()
+      }
     })
 
     newNote.on('click', function () {
