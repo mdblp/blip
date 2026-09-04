@@ -20,6 +20,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-4046 Improve the display of the parameter changes tooltip on Daily view
 - YLP-4047 Use smart rounding for TIR percentage values
 - YLP-4061 View note - new UI
+- YLP-4064 Answer note - new UI
 
 ### Engineering
 - YLP-3864 SBOM generation in pipeline
