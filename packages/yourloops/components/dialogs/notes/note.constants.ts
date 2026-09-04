@@ -25,33 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Tooltip from '@mui/material/Tooltip'
-import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
-
-interface NewNoteTooltipProps {
-  anchorElement: Element
-}
-
-export const NewNoteTooltip: FC<NewNoteTooltipProps> = (props) => {
-  const { anchorElement } = props
-  const { t } = useTranslation('main')
-
-  return (
-    <Tooltip
-      title={t('new-note')}
-      open
-      placement="top"
-      disableHoverListener
-      disableFocusListener
-      disableTouchListener
-      slotProps={{
-        popper: { anchorEl: anchorElement },
-        tooltip: { 'data-testid': 'new-note-tooltip' } as React.HTMLAttributes<HTMLDivElement>
-      }}
-    >
-      {/* Empty element to anchor the tooltip (the real tooltip anchor is given by the `anchorElement` prop) */}
-      <span />
-    </Tooltip>
-  )
-}
+export const NOTE_TEXT_MAX_CHARACTERS = 5000

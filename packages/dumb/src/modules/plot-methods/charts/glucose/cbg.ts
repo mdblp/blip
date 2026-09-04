@@ -121,13 +121,11 @@ export const plotCbg = (
     const yPosition = (d: Cbg): number => yScale(d.value)
 
     const addTooltip = (d: Cbg, rect: DOMRect): void => {
-      if (options.onElementHover) {
-        options.onElementHover({
-          data: d,
-          rect: rect,
-          class: categorize(d)
-        })
-      }
+      options.onElementHover({
+        data: d,
+        rect: rect,
+        class: categorize(d)
+      })
     }
 
     /**

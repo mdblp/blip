@@ -34,6 +34,8 @@ import {
   plotIob,
   plotMeal,
   plotNightMode,
+  plotNote,
+  plotNewNoteButton,
   plotPhysicalActivity,
   plotRescueCarbs,
   plotReservoirChange,
@@ -48,7 +50,6 @@ import _ from 'lodash'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
-import plotMessage from '../../js/plot/message'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
 import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
@@ -108,7 +109,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const hasPumpSettings = pumpSettings?.length > 0
   const pumpSettingsPayload = hasPumpSettings ? pumpSettings[0].payload : undefined
 
-  const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettingsPayload.device.name) : false
+  const isDblg2Patient = hasPumpSettings ? isDBLG2(pumpSettingsPayload.device.name) : false
 
   // ***
   // Setup Pools
@@ -148,7 +149,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       }],
       baseline: options.labelBaseline
     }])
-    .heightRatio(isDblg2User ? 0.5 : 0.4)
+    .heightRatio(isDblg2Patient ? 0.5 : 0.4)
     .gutterWeight(1.0)
 
   // blood glucose data pool
@@ -174,7 +175,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
-  const shouldDisplayEatingShortlyLegend = isDblg2User && options.isEatingShortlyEnabled
+  const shouldDisplayEatingShortlyLegend = isDblg2Patient && options.isEatingShortlyEnabled
 
   /** @type {Pool} */
   const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
@@ -235,7 +236,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
 
   let poolIob = null
-  if (isDblg2User) {
+  if (isDblg2Patient) {
     poolIob = new Pool(chart)
     chart.addPool(poolIob)
     const poolIobId = 'poolIob'
@@ -257,17 +258,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }
 
   chart.arrangePools()
-  chart.setTooltip()
-
-  // add tooltips
-  chart.tooltips.addGroup(poolMessages, {
-    type: 'deviceEvent',
-    shape: 'generic'
-  })
-  chart.tooltips.addGroup(poolMessages, {
-    type: 'message',
-    shape: 'generic'
-  })
 
   // ***
   // Initialize chart with data
@@ -450,7 +440,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     onElementOut: options.onTooltipOut
   }))
 
-  if (isDblg2User) {
+  if (isDblg2Patient) {
     // IOB pool
     // setup axis & main y scale
     poolIob?.axisScaleFn(createYAxisIob)
@@ -482,16 +472,26 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     isDaily: true,
     cursor: 'cell'
   }))
+  // clicking the background at a given date starts the note creation flow at that date
+  emitter.on('clickToDate', (date) => {
+    emitter.emit('createNote', date)
+  })
 
-  // add message images to messages pool
-  poolMessages.addPlotType({ type: 'message' }, plotMessage(poolMessages, {
-    size: 30,
-    emitter,
+  // add note images to messages pool
+  poolMessages.addPlotType({ type: 'message' }, plotNote(poolMessages, {
     tidelineData,
     onElementHover: options.onNoteHover,
     onElementOut: options.onTooltipOut,
-    onNewNoteHover: options.onNewNoteHover
+    onNoteClick: ({ data }) => emitter.emit('viewNote', data.id)
   }))
+
+  // add the "New note" button to the chart's labels layer
+  plotNewNoteButton(d3.select(parentElement).select('#tidelineLabels'), {
+    isDblg2Patient,
+    onNewNoteHover: options.onNewNoteHover,
+    onElementOut: options.onTooltipOut,
+    onNewNoteClick: () => emitter.emit('createNote', null)
+  })
 
   // add timechange images to messages pool
   poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeZoneChange(poolMessages, {

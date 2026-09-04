@@ -35,8 +35,9 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import moment, { type Moment } from 'moment-timezone'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NOTE_TEXT_MAX_CHARACTERS } from './note.constants'
 
-interface CreateEditNoteContentProps {
+interface NoteFormDialogContentProps {
   title: string
   defaultDateTime: string
   defaultMessage?: string
@@ -51,7 +52,7 @@ enum IdPrefix {
   Edit = 'edit'
 }
 
-export const CreateEditNoteContent: FC<CreateEditNoteContentProps> = (props) => {
+export const NoteFormDialogContent: FC<NoteFormDialogContentProps> = (props) => {
   const { title, defaultDateTime, defaultMessage, timezone, showDateTimePicker, onClickSubmit, onClose } = props
   const { t } = useTranslation('main')
 
@@ -115,6 +116,7 @@ export const CreateEditNoteContent: FC<CreateEditNoteContentProps> = (props) => 
             }}
             slotProps={{
               htmlInput: {
+                maxLength: NOTE_TEXT_MAX_CHARACTERS,
                 'data-testid': `note-${idPrefix}-input`
               }
             }}

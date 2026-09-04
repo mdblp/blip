@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,8 +28,8 @@
 import * as d3 from 'd3'
 import _ from 'lodash'
 
-import { type WarmUp } from 'medical-domain'
-import warmupIcon from 'warmup-icon.svg'
+import { type Note } from 'medical-domain'
+import noteIcon from 'note.svg'
 import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
 import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
 import { type PlotFunction } from '../../../../models/plot-function.model'
@@ -40,56 +40,44 @@ import { drawImage, getTooltipContainer } from '../../../../utils/daily-chart/da
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 // ID generator for consistent element identification
-const idGen = createIdGenerator(DailyPlotElement.WarmUp)
+const idGen = createIdGenerator(DailyPlotElement.Note)
 
-// Warm-up image dimensions
-const WARM_UP_IMAGE_WIDTH = 40
-
-type WarmUpOptions = PlotOptions<WarmUp> & {
-  warmUps: WarmUp[]
+type NoteOptions = PlotOptions<Note> & {
+  onNoteClick: (data: { data: Note, rect: DOMRect, htmlEvent: MouseEvent }) => void
 }
 
-const defaults: Partial<WarmUpOptions> = {
+const defaults: Partial<NoteOptions> = {
   xScale: null
 }
 
 /**
- * Plot warm-up events in the diabetes management timeline
+ * Plot notes (messages left by HCPs, patients or caregivers) in the diabetes management timeline
  *
- * Warm-up events represent the initialization period for continuous glucose monitoring
- * (CGM) sensors. During the warm-up period:
- * - The sensor is calibrating and stabilizing
- * - No glucose readings are available yet
- * - The sensor is not providing actionable data
- * - Typically lasts 2 hours for most CGM systems
- *
- * This visualization is critical for clinicians to understand:
- * - Gaps in glucose data due to sensor initialization
- * - Sensor change timing and frequency
- * - Data availability periods
- * - When to expect reliable glucose readings
+ * A note is rendered as a clickable icon positioned at the time it was created.
+ * Clicking a note opens its thread (the note itself plus any replies), while
+ * hovering it shows a preview tooltip.
  *
  * @param pool - The rendering pool containing scale and dimensions
- * @param opts - Configuration options including scales, warm-up data, and event handlers
- * @returns A function that renders warm-up events when called with a D3 selection
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders notes when called with a D3 selection
  *
  * @example
  * ```typescript
- * const plot = plotWarmUp(pool, {
+ * const plot = plotNote(pool, {
  *   tidelineData,
- *   warmUps: medicalData.warmUps,
- *   onElementHover: (event) => showTooltip(event.data)
+ *   onElementHover: (event) => showTooltip(event.data),
+ *   onNoteClick: (event) => openNoteThread(event.data)
  * })
  * selection.call(plot)
  * ```
  */
-export const plotWarmUp = (
-  pool: Pool<WarmUp>,
-  opts: Partial<WarmUpOptions> = {}
-): PlotFunction<WarmUp> => {
-  const options = _.defaults(opts, defaults) as WarmUpOptions
+export const plotNote = (
+  pool: Pool<Note>,
+  opts: Partial<NoteOptions> = {}
+): PlotFunction<Note> => {
+  const options = _.defaults(opts, defaults) as NoteOptions
 
-  return (selection: PlotSelection<WarmUp>): void => {
+  return (selection: PlotSelection<Note>): void => {
     // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
@@ -98,68 +86,75 @@ export const plotWarmUp = (
     }
 
     const xScale = options.xScale
-    const height = pool.height() - PLOT_DIMENSIONS.DEFAULT_IMAGE_MARGIN
 
     // Helper functions using closure variables
-    const getXPos = (d: WarmUp): number => xScale(d.epoch)
+    const getImageX = (d: Note): number =>
+      xScale(d.epoch) - PLOT_DIMENSIONS.DEFAULT_SIZE / 2
     const getImageY = (): number =>
       pool.height() / 2 - PLOT_DIMENSIONS.DEFAULT_SIZE / 2
 
     /**
-     * Create new warm-up visual elements
+     * Create new note visual elements
      */
-    const createWarmUpElements = (
-      enter: d3.Selection<d3.EnterElement, WarmUp, SVGGElement, unknown>
-    ): d3.Selection<SVGGElement, WarmUp, SVGGElement, unknown> => {
+    const createNoteElements = (
+      enter: d3.Selection<d3.EnterElement, Note, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, Note, SVGGElement, unknown> => {
       const group = enter
         .append('g')
         .classed(idGen.groupSelector(), true)
         .attr('id', idGen.groupId)
-        .attr('data-testid', (d: WarmUp) => idGen.testId(d))
+        .attr('data-testid', (d: Note) => idGen.testId(d))
+        .style('cursor', 'pointer')
 
-      drawImage(group, getXPos, getImageY(), height, WARM_UP_IMAGE_WIDTH, warmupIcon)
+      drawImage<Note>(
+        group,
+        getImageX,
+        getImageY(),
+        PLOT_DIMENSIONS.DEFAULT_SIZE,
+        PLOT_DIMENSIONS.DEFAULT_SIZE,
+        noteIcon
+      )
 
       return group
     }
 
     /**
-     * Update existing warm-up visual elements
+     * Update existing note visual elements
      */
-    const updateWarmUpElements = (
-      update: d3.Selection<SVGGElement, WarmUp, SVGGElement, unknown>
-    ): d3.Selection<SVGGElement, WarmUp, SVGGElement, unknown> => {
-      update
-        .select('image')
-        .attr('x', getXPos)
+    const updateNoteElements = (
+      update: d3.Selection<SVGGElement, Note, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, Note, SVGGElement, unknown> => {
+      update.select('image')
+        .attr('x', getImageX)
         .attr('y', getImageY())
 
       return update
     }
 
     selection.each(function (this: SVGGElement) {
-      // Step 1: Get filtered warm-up data from pool
-      const warmUpEvents = pool.filterDataForRender(options.warmUps)
+      // Step 1: Get filtered data from pool
+      const notes = pool.filterDataForRender(options.tidelineData.medicalData.messages)
 
       // Step 2: Early exit if no data
-      if (warmUpEvents.length < 1) {
+      if (notes.length < 1) {
         d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
       // Step 3: Data join with enter/update/exit
-      const allWarmUps = d3.select(this)
-        .selectAll<SVGGElement, WarmUp>(`g.${idGen.groupSelector()}`)
-        .data(warmUpEvents, (d: WarmUp) => d.id)
+      const allNotes = d3.select(this)
+        .selectAll<SVGGElement, Note>(`g.${idGen.groupSelector()}`)
+        .data(notes, (d: Note) => d.id)
 
-      const warmUpGroup = allWarmUps.join(
-        createWarmUpElements,
-        updateWarmUpElements,
+      const noteGroup = allNotes.join(
+        createNoteElements,
+        updateNoteElements,
         exit => exit.remove()
       )
 
       // Step 4: Set up event handlers
-      warmUpGroup
-        .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: WarmUp) {
+      noteGroup
+        .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Note) {
           options.onElementHover({
             data: d,
             rect: getTooltipContainer(this)
@@ -168,7 +163,14 @@ export const plotWarmUp = (
         .on('mouseout', function (this: SVGGElement) {
           options.onElementOut()
         })
+        .on('click', function (this: SVGGElement, event: MouseEvent, d: Note) {
+          event.stopPropagation() // silence the click-and-drag listener
+          options.onNoteClick({
+            data: d,
+            rect: getTooltipContainer(this),
+            htmlEvent: event
+          })
+        })
     })
   }
 }
-

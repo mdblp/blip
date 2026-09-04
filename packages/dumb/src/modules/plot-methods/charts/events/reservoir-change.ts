@@ -25,19 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 import { type ReservoirChange } from 'medical-domain'
+import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 import { type Pool } from '../../../../models/pool.model'
 import { drawImage, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { getReservoirChangeIcon } from '../../../../utils/reservoir-change/reservoir-change.util'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { getReservoirChangeIcon } from '../../../../utils/reservoir-change/reservoir-change.util'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.ReservoirChange)
@@ -50,7 +50,7 @@ type ReservoirChangeOptions = PlotOptions<ReservoirChange> & {
 }
 
 const defaults: Partial<ReservoirChangeOptions> = {
-  xScale: null,
+  xScale: null
 }
 
 /**
@@ -161,17 +161,13 @@ export const plotReservoirChange = (
       // Step 4: Set up event handlers
       reservoirGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: ReservoirChange) {
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this)
+          })
         })
         .on('mouseout', function (this: SVGGElement) {
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
     })
   }
