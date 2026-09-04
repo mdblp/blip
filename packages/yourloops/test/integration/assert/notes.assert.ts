@@ -31,6 +31,33 @@ import moment from 'moment-timezone'
 import { patient2FullName, patient2Initials, userTimFullName, userTimInitials } from '../mock/auth0.hook.mock'
 import { NOTE_ID } from '../mock/data.api.mock'
 
+/**
+ * MUI's DateTimePicker propagates focus/filled state to its FormControl context via a passive
+ * effect. That update lands while `userEvent`'s own asyncWrapper has React's act-tracking flag
+ * turned off (by design, to emulate real async browser timing), so React always logs "not
+ * wrapped in act(...)" here regardless of how the call site awaits/wraps userEvent.type -
+ * this is a known MUI/testing-library interaction, not a real missing act(). Filter out just
+ * this specific benign warning so it doesn't drown out real ones.
+ */
+const typeIntoDateTimeField = async (input: HTMLElement, text: string): Promise<void> => {
+  const originalConsoleError = console.error
+  console.error = (...args: unknown[]) => {
+    const [message, componentName] = args
+    const isDateFieldActWarning = typeof message === 'string' &&
+      message.includes('was not wrapped in act(...)') &&
+      typeof componentName === 'string' &&
+      /DateTimeField|FormControl/.test(componentName)
+    if (!isDateFieldActWarning) {
+      originalConsoleError(...args)
+    }
+  }
+  try {
+    await userEvent.type(input, text)
+  } finally {
+    console.error = originalConsoleError
+  }
+}
+
 export const checkNoteView = async (nowDate: Date) => {
   const note = screen.getByTestId(`note_group_${NOTE_ID}`)
   const displayedDate = moment.utc(nowDate.toISOString()).tz('Europe/Paris').format('MMM D, YYYY h:mm a')
@@ -160,13 +187,13 @@ export const checkNoteCreateContent = async () => {
 
   // Datetime field validation
   const dateTimeInput = within(dialog).getByTestId('create-note-datetime-input')
-  await userEvent.type(dateTimeInput, '09/08/2022 02:00 PM')
+  await typeIntoDateTimeField(dateTimeInput, '09/08/2022 02:00 PM')
   expect(createButton).toBeEnabled()
   await userEvent.clear(dateTimeInput)
   expect(createButton).toBeDisabled()
 
   // Cross-field validation
-  await userEvent.type(dateTimeInput, '09/08/2022 02:00 PM')
+  await typeIntoDateTimeField(dateTimeInput, '09/08/2022 02:00 PM')
   expect(createButton).toBeEnabled()
   await userEvent.clear(textarea)
   await userEvent.type(textarea, ' ')
@@ -213,13 +240,13 @@ export const checkNoteEditContent = async () => {
 
   // Datetime field validation
   const dateTimeInput = within(editNoteDialog).getByTestId('edit-note-datetime-input')
-  await userEvent.type(dateTimeInput, '09/08/2022 02:00 PM')
+  await typeIntoDateTimeField(dateTimeInput, '09/08/2022 02:00 PM')
   expect(editButton).toBeEnabled()
-  await userEvent.type(dateTimeInput, '08/08/2022 02:00 PM')
+  await typeIntoDateTimeField(dateTimeInput, '08/08/2022 02:00 PM')
   expect(editButton).toBeDisabled()
 
   // Cross-field validation
-  await userEvent.type(dateTimeInput, '09/08/2022 02:00 PM')
+  await typeIntoDateTimeField(dateTimeInput, '09/08/2022 02:00 PM')
   expect(editButton).toBeEnabled()
   await userEvent.clear(textarea)
   await userEvent.type(textarea, ' ')

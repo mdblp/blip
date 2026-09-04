@@ -38,7 +38,6 @@ import { isDBLG1, isDBLG2, isDeviceVersionHigherOrEqual } from '../device/device
 
 const t = i18next.t.bind(i18next)
 
-const DEFAULT_UNIT = MGDL_UNITS
 const INSIGHT_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 70
 const G6_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 250
 const HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 55
