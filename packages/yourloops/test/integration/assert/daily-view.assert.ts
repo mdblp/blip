@@ -224,7 +224,7 @@ export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
   await checkTidelineContainerElementTooltip(`eatingShortly_group_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
-  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level130mg/dLSet target110mg/dLDifference+20mg/dLDuration2hours')
+  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level90mg/dLSet target110mg/dLDifference-20mg/dLDuration2hours')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {

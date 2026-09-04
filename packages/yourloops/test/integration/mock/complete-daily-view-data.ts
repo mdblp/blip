@@ -171,12 +171,12 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
     },
     "normalEnd": "2022-08-07T08:00:00.000Z",
     "glycemiaTarget": {
-      "value": 7.2,
+      "value": 5.0,
       "initialValue": 6.1,
-      "offset": 1.1,
+      "offset": -1.1,
       "units": Unit.MmolPerLiter
     },
-    "epochEnd": 1659949200000,
+    "epochEnd": 1659862800000,
     "guid": ZEN_MODE_ID_WITH_GLY,
     "inputTime": "2022-08-07T08:00:00Z",
     "isoWeekday": WeekDays.Sunday

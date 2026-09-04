@@ -81,7 +81,11 @@ export const getBgClass = (bgBounds: BgBounds, bgValue?: number, classificationT
 
 export const getConvertedValue = (value: number, requiredUnit: BgUnit, valueUnit?: BgUnit): number => {
   const currentUnit = valueUnit ?? DEFAULT_UNIT
-  const shouldConvert = requiredUnit !== currentUnit
+  if (requiredUnit === currentUnit) {
+    return value
+  }
 
-  return shouldConvert ? convertBG(value, currentUnit) : value
+  const sign = Math.sign(value)
+  const converted = convertBG(Math.abs(value), currentUnit)
+  return sign < 0 ? -converted : converted
 }
