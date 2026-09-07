@@ -178,6 +178,7 @@ export const FooterMobile: FunctionComponent = () => {
           style={`${classes.linkMobile} ${classes.commonLink}`}
           href={helpUrl}
           onClick={() => metrics.send('footer', 'click_help')}
+          isExternal
         >
           {t('help')}
         </FooterLink>

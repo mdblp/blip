@@ -239,6 +239,7 @@ export const Footer: FunctionComponent = () => {
           href={helpUrl}
           onClick={() => metrics.send('footer', 'click_help')}
           style={classes.commonLink}
+          isExternal
         >
           {t('help')}
         </FooterLink>
