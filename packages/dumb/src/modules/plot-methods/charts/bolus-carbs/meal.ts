@@ -25,20 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 import { type Wizard } from 'medical-domain'
-import { Pool } from '../../../../models/pool.model'
-import {
-  drawCircle,
-  drawText,
-  drawVerticalRectangle,
-  getTooltipContainer
-} from '../../../../utils/daily-chart/daily-chart.util'
+import { BolusType } from '../../../../models/enums/bolus-type.enum'
 import { PlotFunction } from '../../../../models/plot-function.model'
-import { PlotSelection } from '../../../../models/plot-selection.model'
 import { PlotOptions } from '../../../../models/plot-options.model'
+import { PlotSelection } from '../../../../models/plot-selection.model'
+import { Pool } from '../../../../models/pool.model'
 import {
   getBolusFromInsulinEvent,
   getBolusType,
@@ -50,7 +45,12 @@ import {
   isMealWithUndelivered,
   isMealWithUnderride
 } from '../../../../utils/bolus/bolus.util'
-import { BolusType } from '../../../../models/enums/bolus-type.enum'
+import {
+  drawCircle,
+  drawText,
+  drawVerticalRectangle,
+  getTooltipContainer
+} from '../../../../utils/daily-chart/daily-chart.util'
 
 const BOLUS_WIDTH = 12
 const HALF_BOLUS_WIDTH = BOLUS_WIDTH / 2
@@ -409,18 +409,14 @@ const setupMealEventHandlers = (
   mealGroup
     .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Wizard) {
       highlight.on(d3.select(this))
-      if (options.onElementHover) {
-        options.onElementHover({
-          data: d,
-          rect: getTooltipContainer(this)
-        })
-      }
+      options.onElementHover({
+        data: d,
+        rect: getTooltipContainer(this)
+      })
     })
     .on('mouseout', function (this: SVGGElement) {
       highlight.off()
-      if (options.onElementOut) {
-        options.onElementOut()
-      }
+      options.onElementOut()
     })
 }
 

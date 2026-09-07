@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import colors from '../../../styles/colors.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { type ReservoirChange, type TimePrefs } from 'medical-domain'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
+import { type ReservoirChange } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface ReservoirTooltipProps {
-  reservoir: ReservoirChange
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
-  const { reservoir, position, side, timePrefs } = props
+export const ReservoirTooltip: FC<DailyTooltipProps<ReservoirChange>> = (props) => {
+  const { datum: reservoir, position, side, timePrefs } = props
   const { t } = useTranslation()
 
   const label = getReservoirChangeTitle(reservoir)

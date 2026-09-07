@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,25 +24,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { WarmUp } from 'medical-domain'
 import React, { FC } from 'react'
-import { TimePrefs, WarmUp } from 'medical-domain'
-import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import colors from '../../../styles/colors.css'
-import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 import commonStyles from '../../../styles/tooltip-common.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface WarmupTooltipProps {
-  warmup: WarmUp
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
-  const { warmup, position, side, timePrefs } = props
+export const WarmUpTooltip: FC<DailyTooltipProps<WarmUp>> = (props) => {
+  const { datum: warmup, position, side, timePrefs } = props
   const endTime = getWarmUpEndTime(warmup.epochEnd, warmup.timezone)
 
   return (

@@ -37,6 +37,7 @@ export enum DailyPlotElement {
   Iob = 'iob',
   Meal = 'meal',
   NightMode = 'nightMode',
+  Note = 'note',
   PhysicalActivity = 'pa',
   RescueCarbs = 'carb',
   ReservoirChange = 'reservoir',

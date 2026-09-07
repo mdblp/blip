@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { sortBy } from 'lodash'
-import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { type GetPatientDataOptions } from './models/get-patient-data-options.model'
-import type User from '../auth/models/user.model'
 import bows from 'bows'
-import { type Patient } from '../patient/models/patient.model'
-import { type MessageNote } from './models/message-note.model'
+import { MedicalData, Unit } from 'medical-domain'
+import type User from '../auth/models/user.model'
+import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
-import { MedicalData, Unit } from 'medical-domain'
-import type { PatientDataRange } from './models/data-range.model'
+import { type Patient } from '../patient/models/patient.model'
 import { CsvReportModel } from './models/csv-report.model'
+import type { PatientDataRange } from './models/data-range.model'
+import { type GetPatientDataOptions } from './models/get-patient-data-options.model'
 
 const log = bows('Data API')
 
@@ -69,13 +67,6 @@ export default class DataApi {
     return data
   }
 
-  static async editMessage(message: MessageNote): Promise<void> {
-    await HttpService.put<void, MessageNote>({
-      url: '/message/v1/edit',
-      payload: message
-    })
-  }
-
   static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<CsvReportModel> {
     const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
     const response = await HttpService.get<Blob>({
@@ -92,18 +83,5 @@ export default class DataApi {
       filename = response.headers[HttpHeaderKeys.contentDisposition].split('filename=')[1];
     }
     return { Data: data, Name: filename }
-  }
-
-  static async getMessageThread(messageId: string): Promise<MessageNote[]> {
-    const { data } = await HttpService.get<MessageNote[]>({ url: `/message/v1/thread/${messageId}` })
-    return sortBy(data, (message: MessageNote) => Date.parse(message.timestamp))
-  }
-
-  static async postMessageThread(message: MessageNote): Promise<string> {
-    const { data } = await HttpService.post<{ id: string }, MessageNote>({
-      url: '/message/v1/send',
-      payload: message
-    })
-    return data.id
   }
 }

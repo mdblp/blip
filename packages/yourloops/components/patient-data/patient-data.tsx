@@ -25,42 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
-import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
-import { Navigate, Route, Routes, useParams } from 'react-router-dom'
-import { AppUserRoute } from '../../models/enums/routes.enum'
-import { PrintReportDialog } from '../pdf/print-report-dialog'
-import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
-import Daily from 'blip/app/components/chart/daily'
-import Trends from 'blip/app/components/chart/trends'
-import SpinningLoader from '../loaders/spinning-loader'
-import { useAlert } from '../utils/snackbar'
-import Typography from '@mui/material/Typography'
+import { AppState } from '@auth0/auth0-react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import Daily from 'blip/app/components/chart/daily'
+import Trends from 'blip/app/components/chart/trends'
+import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { useAuth } from '../../lib/auth'
+import { ConfigService } from '../../lib/config/config.service'
+import { validatePartner } from '../../lib/external-consents/external-consents.util'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
+import { Patient } from '../../lib/patient/models/patient.model'
+import TeamUtils from '../../lib/team/team.util'
+import { errorTextFromException, setPageTitle } from '../../lib/utils'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import { DevicesView } from '../../pages/patient-view/devices/devices-view'
+import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
+import { logError } from '../../utils/error.util'
+import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
+import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
+import { CreateNoteDialog } from '../dialogs/notes/create-note/create-note-dialog'
+import { ManageNoteDialog } from '../dialogs/notes/manage-note/manage-note-dialog'
+import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
+import SpinningLoader from '../loaders/spinning-loader'
+import { PrintReportDialog } from '../pdf/print-report-dialog'
+import { useAlert } from '../utils/snackbar'
+import { useDailyNotes } from './daily-notes.hook'
 import { usePatientData } from './patient-data.hook'
 import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
-import { useDailyNotes } from './daily-notes.hook'
-import metrics from '../../lib/metrics'
-import DailyNotes from 'blip/app/components/messages'
-import { useAuth } from '../../lib/auth'
-import { errorTextFromException, setPageTitle } from '../../lib/utils'
-import TeamUtils from '../../lib/team/team.util'
-import { Patient } from '../../lib/patient/models/patient.model'
 import { getPageTitleByPatientView } from './patient-data.utils'
-import { DevicesView } from '../../pages/patient-view/devices/devices-view'
-import { logError } from '../../utils/error.util'
-import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
-import { ConfigService } from '../../lib/config/config.service'
-import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
-import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
-import { AppState } from '@auth0/auth0-react'
-import { validatePartner } from '../../lib/external-consents/external-consents.util'
-import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 
 interface PatientDataProps {
   patient: Patient
@@ -128,15 +128,14 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     updateChartPrefs
   } = usePatientData({ patient })
   const {
-    showMessageCreation,
-    showMessageThread,
-    closeMessageBox,
-    createNewMessage,
+    showCreateNoteDialog,
+    showViewNoteDialog,
+    hideCreateNoteDialog,
+    hideViewNoteDialog,
     createMessageDatetime,
-    editMessage,
-    handleMessageCreation,
-    messageThread,
-    replyToMessage
+    clickedNoteId,
+    handleNoteCreated,
+    handleNoteUpdated
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
@@ -192,8 +191,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   onClick={() => {
                     refreshData()
                     AnalyticsApi.trackClick('patient-data-refresh-data', ElementType.Button)
-                  }
-                }
+                  }}
                   sx={{ marginTop: theme.spacing(1) }}
                   data-testid="no-data-refresh-button"
                 >
@@ -229,28 +227,29 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           msRange={msRange}
                           loading={refreshingData}
                           onClickRefresh={refreshData}
-                          onCreateMessage={showMessageCreation}
-                          onShowMessageThread={showMessageThread}
+                          onCreateMessage={showCreateNoteDialog}
+                          onShowNoteThread={showViewNoteDialog}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
                           isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
                         />
-                        <>
-                          {(createMessageDatetime || messageThread) &&
-                            <DailyNotes
-                              createDatetime={createMessageDatetime}
-                              messages={messageThread}
-                              onNewMessage={handleMessageCreation}
-                              user={user}
-                              patient={patient}
-                              onClose={closeMessageBox}
-                              onSave={createMessageDatetime ? createNewMessage : replyToMessage}
-                              onEdit={editMessage}
-                              timePrefs={timePrefs}
-                              trackMetric={metrics.send}
-                            />
-                          }
-                        </>
+                        {createMessageDatetime &&
+                          <CreateNoteDialog
+                            createDatetime={createMessageDatetime}
+                            patientId={patient.userid}
+                            timePrefs={timePrefs}
+                            onNoteCreated={handleNoteCreated}
+                            onClose={hideCreateNoteDialog}
+                          />
+                        }
+                        {clickedNoteId &&
+                          <ManageNoteDialog
+                            mainNoteId={clickedNoteId}
+                            timePrefs={timePrefs}
+                            onClose={hideViewNoteDialog}
+                            onMainNoteEdited={handleNoteUpdated}
+                          />
+                        }
                       </>
                     }
                   />

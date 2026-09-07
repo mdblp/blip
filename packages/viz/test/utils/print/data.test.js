@@ -127,7 +127,7 @@ describe('print data utils', () => {
         ],
         confidentialModes: [],
         deviceParametersChanges: [],
-        messages: [],
+        notes: [],
         meals: [
           new types.Food({ deviceTime: '2019-05-26T10:00:01', timezone: 'Europe/Paris' })
         ],

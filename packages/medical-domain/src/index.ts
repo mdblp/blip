@@ -32,7 +32,7 @@ import type ConfidentialMode from './domains/models/medical/datum/confidential-m
 import type DeviceParameterChange from './domains/models/medical/datum/device-parameter-change.model'
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
 import type Meal from './domains/models/medical/datum/meal.model'
-import type Message from './domains/models/medical/datum/message.model'
+import type Note from './domains/models/medical/datum/note.model'
 import type PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
@@ -58,7 +58,7 @@ export {
   DurationUnit,
   type Meal,
   type MedicalData,
-  type Message,
+  type Note,
   type PhysicalActivity,
   Prescriptor,
   PumpManufacturer,

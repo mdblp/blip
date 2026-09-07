@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,8 @@ export interface MessageNote {
   groupid: string
   messagetext: string
   timestamp: string
-  parentmessage: string
+  timezone?: string
+  parentmessage?: string
   user: {
     fullName: string
   }

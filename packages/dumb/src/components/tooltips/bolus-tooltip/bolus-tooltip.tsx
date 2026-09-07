@@ -25,17 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import {
-  type Bolus,
-  BolusSubtype,
-  DatumType,
-  Prescriptor,
-  type TimePrefs,
-  type Wizard,
-  WizardInputMealFat
-} from 'medical-domain'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { type Bolus, BolusSubtype, DatumType, Prescriptor, type Wizard, WizardInputMealFat } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import { BolusType } from '../../../models/enums/bolus-type.enum'
+import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import {
   getBolusFromInsulinEvent,
   getBolusType,
@@ -44,28 +41,16 @@ import {
   getRecommended,
   isInterruptedBolus
 } from '../../../utils/bolus/bolus.util'
-import { BolusType } from '../../../models/enums/bolus-type.enum'
-import { useTranslation } from 'react-i18next'
-import colors from '../../../styles/colors.css'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
-import styles from './bolus-tooltip.css'
-import commonStyles from '../../../styles/tooltip-common.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
-
-interface BolusTooltipProps {
-  bolus: Bolus | Wizard
-  side: TooltipSide
-  position: Position
-  timePrefs: TimePrefs
-}
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+import styles from './bolus-tooltip.css'
 
 const MINIMAL_OVERRIDE = 0.1
 
-export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
-  const { bolus, position, side, timePrefs } = props
+export const BolusTooltip: FC<DailyTooltipProps<Bolus | Wizard>> = (props) => {
+  const { datum: bolus, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   const isWizard = bolus.type === DatumType.Wizard
