@@ -84,6 +84,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const { pathname } = useLocation()
   const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
   const timezone = pumpSettings.timezone
+  const truncate = (str: string, max: number) =>
+    str.length > max ? str.slice(0, max).toString() + "..." : str
 
   const getTableLinesCurrentParameters = (): { label: string, value: string }[] => {
     return [
@@ -109,7 +111,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     <>
       <GenericListCard
         title={t('current-parameters')}
-        data-testid="device-view-overview-current-parameters"
+        data-testid="device-view-overview-card-current-parameters"
         tableLines={getTableLinesCurrentParameters()}
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
@@ -123,7 +125,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
       <GenericListCard
         title={t('safety-basal')}
-        data-testid="device-view-overview-safety-basal"
+        data-testid="device-view-overview-card-safety-basal"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
@@ -140,7 +142,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
       <GenericListCard
         title={t('parameters-history')}
-        data-testid="device-view-overview-parameters-history"
+        data-testid="device-view-overview-card-parameters-history"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
@@ -159,12 +161,12 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
                  className={classes.parameters}
             >
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                {t(`params|${parameter.name}`)}
+                {truncate(t(`params|${parameter.name}`), 10)}
               </Typography>
               <ChangeValue
                 previousValue={parameter.previousValue ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}` : parameter.previousValue}
                 currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
-                withFormatting={true}
+                withFormatting={true} isOverviewCard={true}
               />
             </Box>
           ))}
@@ -173,7 +175,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
       <GenericListCard
         title={t('device-history')}
-        data-testid="device-view-overview-device-history"
+        data-testid="device-view-overview-card-device-history"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
@@ -195,7 +197,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                 {t(`${getTranslationKeyForDeviceChange(device.name)}`)}
               </Typography>
-              <ChangeValue previousValue={device.previousValue} currentValue={device.value} withFormatting={false} />
+              <ChangeValue previousValue={device.previousValue} currentValue={device.value} withFormatting={false} isOverviewCard={true}/>
             </Box>
           ))}
         </Box>
