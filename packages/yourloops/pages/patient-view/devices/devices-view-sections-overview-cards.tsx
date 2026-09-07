@@ -33,6 +33,11 @@ import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { ViewMoreLink } from '../../../components/buttons/view-more-link'
 import Typography from '@mui/material/Typography'
 import { DblParameter, PumpSettings } from 'medical-domain'
+import { formatDateWithMomentLongFormat } from '../../../lib/utils'
+import { useLocation } from 'react-router-dom'
+import { ChangeValue } from '../../../components/device/change-value'
+import { formatParameterValue, getTranslationKeyForDeviceChange } from '../../../components/device/utils/device.utils'
+import Box from '@mui/material/Box'
 
 interface DeviceViewSectionsOverviewCardsProps {
   pumpSettings: PumpSettings
@@ -41,7 +46,8 @@ interface DeviceViewSectionsOverviewCardsProps {
 export const cardStyle = makeStyles()((theme) => {
   return {
     cards: {
-      margin: theme.spacing(2)
+      margin: theme.spacing(2),
+      p: 1, '&:last-child': { pb: 1 }
     },
     cardsHeader: {
       lineHeight: 1
@@ -50,6 +56,18 @@ export const cardStyle = makeStyles()((theme) => {
       display: 'flex',
       alignItems: 'center',
       gap: 0.5
+    },
+    listOfParameters: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 1,
+      flex: 1
+    },
+    parameters: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flex: 1
     }
   }
 })
@@ -57,22 +75,35 @@ export const cardStyle = makeStyles()((theme) => {
 export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCardsProps> = ({ pumpSettings }) => {
   const { t } = useTranslation()
   const { classes } = cardStyle()
-  const { device, pump, parameters, cgm } = pumpSettings.payload
+  const { device, pump, parameters, cgm, history } = pumpSettings.payload
   const totalDailyInsulin = parameters.find(parameter => parameter.name === DblParameter.TotalDailyInsulin)
   const targetGlucoseLevel = parameters.find(parameter => parameter.name === DblParameter.TargetGlucoseLevel)
   const totalHypoglycemiaThreshold = parameters.find(parameter => parameter.name === DblParameter.HypoglycemiaThreshold)
+  const lastParameterChange = history.parameters
+  const lastDeviceChange = history.devices
+  const { pathname } = useLocation()
+  const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
+  const timezone = pumpSettings.timezone
 
   const getTableLinesCurrentParameters = (): { label: string, value: string }[] => {
     return [
       { label: t('system'), value: device?.name },
       { label: t('Pump'), value: pump?.name },
       { label: t('CGM'), value: cgm?.manufacturer + " " + cgm?.name },
-      { label: t(`${DblParameter.TotalDailyInsulin}`), value: totalDailyInsulin.value + " " + totalDailyInsulin.unit },
-      { label: t(`${DblParameter.TargetGlucoseLevel}`), value: targetGlucoseLevel.value + " " + targetGlucoseLevel.unit },
-      { label: t(`${DblParameter.HypoglycemiaThreshold}`), value: totalHypoglycemiaThreshold.value + " " + totalHypoglycemiaThreshold.unit },
+      {
+        label: t(`params|${DblParameter.TotalDailyInsulin}`),
+        value: totalDailyInsulin.value + " " + totalDailyInsulin.unit
+      },
+      {
+        label: t(`params|${DblParameter.TargetGlucoseLevel}`),
+        value: targetGlucoseLevel.value + " " + targetGlucoseLevel.unit
+      },
+      {
+        label: t(`params|${DblParameter.HypoglycemiaThreshold}`),
+        value: totalHypoglycemiaThreshold.value + " " + totalHypoglycemiaThreshold.unit
+      }
     ]
   }
-
 
   return (
     <>
@@ -83,7 +114,10 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
-          <ViewMoreLink dataTestId="link-device-current-parameters" targetRoute={AppUserRoute.DevicesSectionsOverviewCurrentSettings} />
+          <ViewMoreLink
+            dataTestId="link-device-current-parameters"
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewCurrentSettings}`}
+          />
         }
       />
 
@@ -93,7 +127,10 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
-          <ViewMoreLink dataTestId="link-device-basal-safety" targetRoute={AppUserRoute.DevicesSectionsOverviewBasalSafety} />
+          <ViewMoreLink
+            dataTestId="link-device-basal-safety"
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewBasalSafety}`}
+          />
         }
       >
         <Typography variant="body2">
@@ -107,9 +144,32 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
-          <ViewMoreLink dataTestId="link-device-parameters-history" targetRoute={AppUserRoute.DevicesSectionsOverviewSettingsHistory} />
+          <ViewMoreLink
+            dataTestId="link-device-parameters-history"
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewSettingsHistory}`}
+          />
         }
-      />
+      >
+        <Box className={classes.listOfParameters}>
+          <Typography variant="body2">
+            {`${t('last-upload:')} ${formatDateWithMomentLongFormat(new Date(lastParameterChange[0].changeDate), 'llll', timezone)}`}
+          </Typography>
+          {lastParameterChange[0]?.parameters.map((parameter) => (
+            <Box key={parameter.name}
+                 className={classes.parameters}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                {t(`params|${parameter.name}`)}
+              </Typography>
+              <ChangeValue
+                previousValue={parameter.previousValue ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}` : parameter.previousValue}
+                currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
+                withFormatting={true}
+              />
+            </Box>
+          ))}
+        </Box>
+      </GenericListCard>
 
       <GenericListCard
         title={t('device-history')}
@@ -117,10 +177,29 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
-          <ViewMoreLink dataTestId="link-device-device-history" targetRoute={AppUserRoute.DevicesSectionsOverviewDevicesHistory} />
+          <ViewMoreLink
+            dataTestId="link-device-device-history"
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewDevicesHistory}`}
+          />
         }
-      />
+      >
 
+        <Box className={classes.listOfParameters}>
+          <Typography variant="body2">
+            {`${t('last-upload:')} ${formatDateWithMomentLongFormat(new Date(lastDeviceChange[0].changeDate), 'llll', timezone)}`}
+          </Typography>
+          {lastDeviceChange[0]?.devices.map((device) => (
+            <Box key={device.name}
+                 className={classes.parameters}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                {t(`${getTranslationKeyForDeviceChange(device.name)}`)}
+              </Typography>
+              <ChangeValue previousValue={device.previousValue} currentValue={device.value} withFormatting={false} />
+            </Box>
+          ))}
+        </Box>
+      </GenericListCard>
     </>
   )
 }
