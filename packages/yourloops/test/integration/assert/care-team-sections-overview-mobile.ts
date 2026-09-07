@@ -41,6 +41,7 @@ export const checkCareTeamSectionsOverviewNotVisible = (): void => {
 }
 
 export const checkCareTeamSectionCardForInfos = (): void => {
+  expect(screen.getByText('Name')).toBeVisible()
   expect(screen.getByText('Identification code')).toBeVisible()
   expect(screen.getByText('Address')).toBeVisible()
   expect(screen.getByText('City')).toBeVisible()

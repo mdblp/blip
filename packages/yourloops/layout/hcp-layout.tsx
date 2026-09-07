@@ -99,7 +99,7 @@ const HcpLayout: FunctionComponent = () => {
           <Route>
             <Route path={AppUserRoute.CareTeamSettingsSectionsOverview}
                    element={<CareTeamSettingsSectionsOverview />} />
-            <Route path={AppUserRoute.CareTeamSettingsInformationsSection} element={<TeamInformation team={team} />} />
+            <Route path={AppUserRoute.CareTeamSettingsInformationSection} element={<TeamInformation team={team} />} />
             <Route path={AppUserRoute.CareTeamSettingsMembersSection} element={<TeamMembers team={team} />} />
             <Route path={AppUserRoute.CareTeamSettingsAlertsSection}
                    element={<MonitoringAlertsSection team={team} />} />

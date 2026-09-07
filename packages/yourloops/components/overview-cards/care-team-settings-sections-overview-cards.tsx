@@ -32,11 +32,7 @@ import { generatePath, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import TeamUtils from '../../lib/team/team.util'
 import { type Team, type TeamMember, useTeam } from '../../lib/team'
-import { errorTextFromException } from '../../lib/utils'
-import { logError } from '../../utils/error.util'
 import { formatCode } from '../../utils/format.utils'
-import { useTeamCreateEdit } from '../team/team-create-edit.hook'
-import { useAlert } from '../utils/snackbar'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { ViewMoreLink } from '../buttons/view-more-link'
 import { Unit } from 'medical-domain'
@@ -47,8 +43,6 @@ import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status
 
 export const CareTeamSettingsSectionsOverviewCards = () => {
   const { getTeam } = useTeam()
-  const teamHook = useTeam()
-  const alert = useAlert()
   const { teamId } = useParams()
   const team = getTeam(teamId)
   const { t } = useTranslation()
@@ -65,39 +59,22 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
 
   const adminCount = members.filter((member) => TeamUtils.isUserAdministrator(team, member.userId)).length
 
-  const onSaveTeam = async (editedTeam: Partial<Team> | null): Promise<void> => {
-    try {
-      await teamHook.updateTeam(editedTeam as Team)
-      alert.success(t('team-page-success-edit'))
-    } catch (reason: unknown) {
-      const errorMessage = errorTextFromException(reason)
-      logError(errorMessage, 'team-information-edit')
-
-      alert.error(t('team-page-failed-edit'))
-    }
-  }
-
-  const {
-    teamPhone,
-    addrLine1,
-    addrCity
-  } = useTeamCreateEdit({ team, onSaveTeam })
-
   const formattedTeamCode = formatCode(team.code)
 
   const getTableTeamInformation = (): { value: string, label: string }[] => {
     return [
+      { label: t('name'), value: team.name },
       { label: t('identification-code'), value: formattedTeamCode },
-      { label: t('address'), value: addrLine1 },
-      { label: t('city'), value: addrCity },
-      { label: t('phone-number'), value: teamPhone }
+      { label: t('address'), value: team.address.line1 },
+      { label: t('city'), value: team.address.city },
+      { label: t('phone-number'), value: team.phone }
     ]
   }
 
   const getTableMembers = (): { value: string, label: string }[] => {
     return [
-      { label: t('admin-number'), value: `${adminCount}` },
-      { label: t('member-number'), value: `${members.length}` }
+      { label: t('admin-count'), value: adminCount.toString() },
+      { label: t('member-count'), value: members.length.toString() }
     ]
   }
 
@@ -111,7 +88,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         data-testid="care-team-settings-menu-mobile-team-information"
         headerAction={
           <ViewMoreLink dataTestId="link-team-info"
-                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationsSection, { teamId })} />
+                        targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationSection, { teamId })} />
         }
       />
 
