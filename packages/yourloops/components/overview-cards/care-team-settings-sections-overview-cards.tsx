@@ -38,7 +38,6 @@ import { ViewMoreLink } from '../buttons/view-more-link'
 import { Unit } from 'medical-domain'
 import { useAuth } from '../../lib/auth'
 import { cardStyle } from './card-style'
-import Typography from '@mui/material/Typography'
 import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 
 export const CareTeamSettingsSectionsOverviewCards = () => {
@@ -103,21 +102,18 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsMembersSection, { teamId })} />
         }
       />
+
       <GenericListCard
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         title={`${t('alerts')} (${userBgUnit})`}
         data-testid="care-team-settings-menu-mobile-alerts"
+        hasNoContent = {true}
         headerAction={
           <ViewMoreLink dataTestId="link-team-alerts"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
         }
       >
-        <Typography variant="body2">
-          {userBgUnit === Unit.MilligramPerDeciliter ?
-            t('default-values-applied') :
-            t('custom-values-applied')}
-        </Typography>
       </GenericListCard>
     </>
   )

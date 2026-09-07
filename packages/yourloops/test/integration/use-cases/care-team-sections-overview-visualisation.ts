@@ -26,8 +26,6 @@
  */
 
 import {
-  checkCareTeamSectionCardForAlertsCustom,
-  checkCareTeamSectionCardForAlertsDefault,
   checkCareTeamSectionCardForInfos,
   checkCareTeamSectionCardForMembers,
   checkCareTeamSectionsOverviewNotVisible,
@@ -41,15 +39,10 @@ export const testCareTeamSectionsOverviewVisibleMobile = (): void => {
   checkCareTeamSectionsOverviewVisible()
   checkCareTeamSectionCardForInfos()
   checkCareTeamSectionCardForMembers()
-  checkCareTeamSectionCardForAlertsDefault()
 }
 
 export const testCareTeamSectionsOverviewNotVisibleMobile = (): void => {
   checkCareTeamSectionsOverviewNotVisible()
-}
-
-export const testCareTeamSectionCardForAlertCustomMessage = (): void => {
-  checkCareTeamSectionCardForAlertsCustom()
 }
 
 export const testClickViewMoreInfos = (): void => {

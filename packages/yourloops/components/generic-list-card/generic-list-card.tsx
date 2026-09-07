@@ -44,6 +44,7 @@ interface GenericListCardProps extends PropsWithChildren {
   cardClassName?: string
   cardHeaderClassName?: string
   headerAction?: React.ReactNode
+  hasNoContent?: boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -64,7 +65,7 @@ const useStyles = makeStyles()((theme) => ({
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { title, tableLines = [], headerAction, children } = props
+  const { title, tableLines = [], headerAction, children, hasNoContent = false } = props
   const childrenCount = React.Children.count(children)
   const isCustom = childrenCount > 0
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -84,7 +85,7 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
       />
       <CardContent className={classes.cardContent}>
         <List disablePadding>
-          <Divider component="li" />
+          { !hasNoContent && <Divider component="li" /> }
           {isCustom ?
             React.Children.map(children, (child, index) => {
               if (!React.isValidElement(child)) return null

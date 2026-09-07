@@ -29,7 +29,6 @@ import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
-  testCareTeamSectionCardForAlertCustomMessage,
   testCareTeamSectionsOverviewVisibleMobile,
   testClickViewMoreAlerts,
   testClickViewMoreInfos,
@@ -50,8 +49,6 @@ import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../mock/mobile-screen.mock'
-import type { Settings } from '../../../../lib/auth/models/settings.model'
-import { Unit } from 'medical-domain'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
@@ -102,14 +99,6 @@ describe('HCP care team settings page', () => {
     await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
     await screen.findByTestId('care-team-settings-menu-mobile-team-information')
     testCareTeamSectionsOverviewVisibleMobile()
-  })
-
-  it('should display another message in the alerts card when the unit value has been changed from default settings', async () => {
-    const settings: Settings = { units: { bg: Unit.MmolPerLiter } }
-    mockUserApi().mockUserDataFetch({ settings: settings })
-    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
-
-    testCareTeamSectionCardForAlertCustomMessage()
   })
 
   it('should be able to access the pages linked by the cards', async () => {
