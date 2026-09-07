@@ -25,19 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
+import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { SuperpositionEventSeverity } from '../../../../models/enums/superposition-event-severity.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 
 import { type Pool } from '../../../../models/pool.model'
-import { drawCircle, drawText, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
 import { type SuperpositionEvent } from '../../../../models/superposition-event.model'
-import { SuperpositionEventSeverity } from '../../../../models/enums/superposition-event-severity.enum'
+import { drawCircle, drawText, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.EventSuperposition)
@@ -50,7 +50,7 @@ const SEVERITY_CLASS_MAP: Record<SuperpositionEventSeverity, string> = {
 
 type EventSuperpositionOptions = PlotOptions<SuperpositionEvent> & {
   eventSuperpositionItems: SuperpositionEvent[]
-  onEventSuperpositionClick?: (data: {
+  onEventSuperpositionClick: (data: {
     data: SuperpositionEvent
     rect: DOMRect
     htmlEvent: MouseEvent
@@ -185,19 +185,17 @@ export const plotEventSuperposition = (
       )
 
       // Step 4: Set up event handlers
-      if (options.onEventSuperpositionClick) {
-        eventSuperpositionGroup
-          .on('click', function (this: SVGGElement, event: MouseEvent) {
-            if (options.onEventSuperpositionClick) {
-              const datum = d3.select(this).datum() as SuperpositionEvent
-              options.onEventSuperpositionClick({
-                data: datum,
-                rect: getTooltipContainer(this),
-                htmlEvent: event
-              })
-            }
-          })
-      }
+      eventSuperpositionGroup
+        .on('click', function (this: SVGGElement, event: MouseEvent) {
+          if (options.onEventSuperpositionClick) {
+            const datum = d3.select(this).datum() as SuperpositionEvent
+            options.onEventSuperpositionClick({
+              data: datum,
+              rect: getTooltipContainer(this),
+              htmlEvent: event
+            })
+          }
+        })
     })
   }
 }

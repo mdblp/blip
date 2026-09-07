@@ -17,16 +17,6 @@
 
 import i18next from 'i18next'
 
-/**
- * Used to regroup device parameters in one tooltip, when the changes are too close.
- * This is to avoid superpositions of the icons in the daily view.
- * Format: Duration in milliseconds.
- */
-export const AUTOMATED_BASAL_DEVICE_MODELS = {
-  Medtronic: ['1580', '1581', '1582', '1780', '1781', '1782'],
-  Diabeloop: true
-}
-
 export const dateTimeFormats = {
   /** @returns {string} translated 'MMMM D' format */
   get MMMM_D_FORMAT() { return i18next.t('MMMM D') },

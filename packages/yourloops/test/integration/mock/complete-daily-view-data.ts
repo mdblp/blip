@@ -47,9 +47,10 @@ import {
 import {
   DeviceEventSubtype
 } from 'medical-domain/dist/src/domains/models/medical/datum/enums/device-event-subtype.enum'
-import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
 import Intensity from 'medical-domain/dist/src/domains/models/medical/datum/enums/intensity.enum'
+import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
 import { history, historyWithTargetChanges } from '../data/data-api.data'
+import { loggedInUserFullName } from './auth0.hook.mock'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
@@ -108,6 +109,7 @@ import {
   IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
+  NOTE_ID,
   PARIS_TIMEZONE,
   PEN_BOLUS_ID,
   SMBG_ID,
@@ -1603,7 +1605,26 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
       ],
       eatingShortlyEvents: [],
       iob: [],
-      messages: [],
+      messages: [
+        {
+          "id": NOTE_ID,
+          "isoWeekday": WeekDays.Friday,
+          "type": DatumType.Note,
+          "source": Source.Diabeloop,
+          "parentMessage": null,
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "normalTime": "2022-08-08T12:00:00.000Z",
+          "epoch": 1659960000000,
+          "displayOffset": -120,
+          "groupid": "b3549d738546",
+          "userid": "6859071a037cc67501d9f1a1",
+          "messageText": "This day was very stressful",
+          "user": {
+            "fullName": loggedInUserFullName
+          }
+        }
+      ],
       meals: [
         {
           "epoch": 1659960000000,
@@ -2115,7 +2136,7 @@ export const getTargetValueChangesData = (): Data => {
           "normalEnd": "2022-08-08T16:30:01.000Z",
           "epochEnd": 1659976201000,
           "isoWeekday": WeekDays.Sunday
-        },
+        }
       ],
       bolus: [
         {
@@ -2316,7 +2337,7 @@ export const getTargetValueChangesData = (): Data => {
                 "name": DblParameter.TargetGlucoseLevel,
                 "unit": Unit.MilligramPerDeciliter,
                 "value": "120"
-              },
+              }
             ]
           }
         }

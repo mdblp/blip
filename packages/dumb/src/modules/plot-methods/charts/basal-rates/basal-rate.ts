@@ -25,16 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 import { type Basal, BasalDeliveryType } from 'medical-domain'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 import { type Pool } from '../../../../models/pool.model'
 import { getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.Basal)
@@ -184,20 +184,16 @@ function setupBasalEventHandlers(
       d3.select(this).selectAll('.d3-basal.d3-rect-basal')
         .attr('opacity', DEFAULT_OPACITY + DEFAULT_OPACITY_DELTA)
 
-      if (options.onElementHover) {
-        options.onElementHover({
-          data: d,
-          rect: getTooltipContainer(this)
-        })
-      }
+      options.onElementHover({
+        data: d,
+        rect: getTooltipContainer(this)
+      })
     })
     .on('mouseout', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
       d3.select(this).selectAll('.d3-basal.d3-rect-basal')
         .attr('opacity', getMouseOutOpacity(d))
 
-      if (options.onElementOut) {
-        options.onElementOut()
-      }
+      options.onElementOut()
     })
 }
 
@@ -331,7 +327,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
    */
   basal.updatePath = (
     selection: d3.Selection<SVGPathElement, string, SVGGElement, unknown>,
-    data: Basal[],
+    data: Basal[]
   ): void => {
     options.xScale = pool.xScale().copy()
 

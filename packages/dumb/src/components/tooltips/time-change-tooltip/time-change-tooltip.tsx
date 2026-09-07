@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,29 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
-import type { TimePrefs, TimeZoneChange } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import colors from '../../../styles/colors.css'
-import moment from 'moment-timezone'
-import { getDateTimeFormat } from '../../../utils/datetime/datetime.util'
 import Grid from '@mui/material/Grid'
+import type { TimeZoneChange } from 'medical-domain'
+import moment from 'moment-timezone'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { getDateTimeFormat } from '../../../utils/datetime/datetime.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 import styles from './time-change-tooltip.css'
 
-interface TimeChangeTooltipProps {
-  timeChange: TimeZoneChange
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const TimeChangeTooltip: FC<TimeChangeTooltipProps> = (props) => {
-  const { timeChange, position, side, timePrefs } = props
+export const TimeChangeTooltip: FC<DailyTooltipProps<TimeZoneChange>> = (props) => {
+  const { datum: timeChange, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   const previousTimezone = timeChange.from.timeZoneName

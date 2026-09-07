@@ -25,8 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, type ReactNode } from 'react'
-import { BrowserRouter, useNavigate } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
 
 import '@fontsource/roboto/300.css'
@@ -35,11 +33,15 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import 'branding/global.css'
 import 'classes.css'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import React, { type FC, type ReactNode } from 'react'
+import { BrowserRouter, useNavigate } from 'react-router-dom'
+import MetricsLocationListener from '../components/MetricsLocationListener'
+import { AuthContextProvider } from '../lib/auth'
 
 import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
 import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
 
 interface AppState {
   returnTo?: string
@@ -85,9 +87,11 @@ export const Yourloops: FC = () => (
   <BrowserRouter>
     <Auth0ProviderWithNavigate>
       <MetricsLocationListener />
-      <AuthContextProvider>
-        <MainLobby />
-      </AuthContextProvider>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <AuthContextProvider>
+          <MainLobby />
+        </AuthContextProvider>
+      </LocalizationProvider>
     </Auth0ProviderWithNavigate>
   </BrowserRouter>
 )

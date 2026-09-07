@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,7 @@ import CbgService from './datum/cbg.service'
 import ConfidentialModeService from './datum/confidential-mode.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
 import MealService from './datum/meal.service'
-import MessageService from './datum/message.service'
+import NoteService from './datum/note.service'
 import PumpSettingsService from './datum/pump-settings.service'
 import ReservoirChangeService from './datum/reservoir-change.service'
 import SmbgService from './datum/smbg.service'
@@ -51,7 +51,7 @@ import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-even
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Datum => {
   let type = rawData.type
   if (type === undefined && rawData.messagetext) {
-    type = DatumType.Message
+    type = DatumType.Note
   }
   switch (type as DatumType) {
     case DatumType.Basal:
@@ -79,8 +79,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       }
     case DatumType.Food:
       return MealService.normalize(rawData, opts)
-    case DatumType.Message:
-      return MessageService.normalize(rawData, opts)
+    case DatumType.Note:
+      return NoteService.normalize(rawData, opts)
     case DatumType.PhysicalActivity:
       throw new Error(`case DatumType.PhysicalActivity should not have been called`)
     case DatumType.PumpSettings:

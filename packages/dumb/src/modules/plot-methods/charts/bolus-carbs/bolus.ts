@@ -25,20 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 import { type Bolus, BolusSubtype, Prescriptor } from 'medical-domain'
-import { type Pool } from '../../../../models/pool.model'
-import { drawVerticalRectangle, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { getBolusType, isBolusWithDelivered, isBolusWithUndelivered } from '../../../../utils/bolus/bolus.util'
-import { BolusType } from '../../../../models/enums/bolus-type.enum'
-import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
 import { CSS_CLASSES, PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { BolusType } from '../../../../models/enums/bolus-type.enum'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/pool.model'
+import { getBolusType, isBolusWithDelivered, isBolusWithUndelivered } from '../../../../utils/bolus/bolus.util'
+import { drawVerticalRectangle, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.Bolus)
@@ -288,18 +288,14 @@ export const plotBolus = (
       bolusGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Bolus) {
           highlight.on(d3.select(this))
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this)
+          })
         })
         .on('mouseout', function (this: SVGGElement) {
           highlight.off()
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
     })
   }

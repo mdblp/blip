@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import commonStyles from '../../../styles/tooltip-common.css'
-import colors from '../../../styles/colors.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { type Meal, Prescriptor, type TimePrefs } from 'medical-domain'
+import { type Meal, Prescriptor } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface RescueCarbsTooltipProps {
-  food: Meal
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const RescueCarbsTooltip: FunctionComponent<RescueCarbsTooltipProps> = (props) => {
-  const { food, position, side, timePrefs } = props
+export const RescueCarbsTooltip: FC<DailyTooltipProps<Meal>> = (props) => {
+  const { datum: food, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   const actualCarbs = food.nutrition?.carbohydrate?.net || 0

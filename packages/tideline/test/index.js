@@ -20,7 +20,6 @@ import moment from 'moment-timezone'
 
 /* js/data/ */
 import './format.test'
-import './categorize.test'
 
 /* js/plot/ */
 import './commonbolus.test'

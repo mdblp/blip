@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 import { DblParameter, type Iob, type MedicalData } from 'medical-domain'
+import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 import { type Pool } from '../../../../models/pool.model'
 import { getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
 
 
 // ID generator for consistent element identification
@@ -162,12 +162,10 @@ export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlo
           // Increase radius on hover for visual feedback
           d3Select.attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS + PLOT_DIMENSIONS.HOVER_RADIUS_INCREASE)
 
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
+          options.onElementHover({
+            data: d,
+            rect: getTooltipContainer(this)
+          })
         })
         .on('mouseout', function (this: SVGCircleElement) {
           highlight.off()
@@ -175,9 +173,7 @@ export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlo
           d3.select(this)
             .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS)
 
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
+          options.onElementOut()
         })
     })
   }

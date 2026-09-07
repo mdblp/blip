@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import { EatingShortlyEvent, TimePrefs } from 'medical-domain'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import colors from '../../../styles/colors.css'
+import { EatingShortlyEvent } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface EatingShortlyTooltipProps {
-  eatingShortly: EatingShortlyEvent
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const EatingShortlyTooltip: FunctionComponent<EatingShortlyTooltipProps> = (props) => {
-  const { eatingShortly, position, side, timePrefs } = props
+export const EatingShortlyTooltip: FC<DailyTooltipProps<EatingShortlyEvent>> = (props) => {
+  const { datum: eatingShortly, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   return (

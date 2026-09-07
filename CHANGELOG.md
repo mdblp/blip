@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-3338 Use weight unit from parameters instead of "kg"
+- YLP-3490 Update notes UI
 - YLP-3842 New design for monitoring alerts configuration
 - YLP-3867 Remove Zendesk and Stonly
 - YLP-3939 Adapting the main header to mobile format for HCP

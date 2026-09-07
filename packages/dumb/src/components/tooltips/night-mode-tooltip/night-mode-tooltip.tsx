@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type NightMode, TimePrefs } from 'medical-domain'
-import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
+import { type NightMode } from 'medical-domain'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { getDuration } from '../../../utils/datetime/datetime.util'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
-interface NightModeTooltipProps {
-  nightMode: NightMode
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
-  const { nightMode, position, side, timePrefs } = props
+export const NightModeTooltip: FC<DailyTooltipProps<NightMode>> = (props) => {
+  const { datum: nightMode, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   const duration = getDuration(nightMode)

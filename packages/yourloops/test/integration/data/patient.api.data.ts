@@ -25,25 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { DeviceSystem, DiabeticType, Unit } from 'medical-domain'
+import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import {
-  filtersTeamId,
-  monitoringAlertsParameters,
-  monitoringAlertsParametersBgUnitMmol,
-  myFirstTeamId,
-  myFourthTeamId,
-  mySecondTeamId,
-  myThirdTeamId,
-  NEW_TEAM_ID
-} from '../mock/team.api.mock'
-import { Gender } from '../../../lib/auth/models/enums/gender.enum'
-import {
   loggedInUserEmail,
   loggedInUserFullName,
   loggedInUserId,
+  patient2Email,
+  patient2FullName,
   userHugoEmail,
   userHugoFullName,
   userHugoId,
@@ -54,8 +47,17 @@ import {
   userYdrisFullName,
   userYdrisId
 } from '../mock/auth0.hook.mock'
+import {
+  filtersTeamId,
+  monitoringAlertsParameters,
+  monitoringAlertsParametersBgUnitMmol,
+  myFirstTeamId,
+  myFourthTeamId,
+  mySecondTeamId,
+  myThirdTeamId,
+  NEW_TEAM_ID
+} from '../mock/team.api.mock'
 import { buildPatient, buildPatientMetrics } from './patient-builder.data'
-import { DeviceSystem, DiabeticType, Unit } from 'medical-domain'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -237,9 +239,9 @@ export const patient2Info: Patient = buildPatient({
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
-    email: 'patient2@diabeloop.fr',
+    email: patient2Email,
     firstName: 'Patient2',
-    fullName: 'Patient2 Rouis',
+    fullName: patient2FullName,
     lastName: 'Rouis',
     sex: Gender.Female
   },

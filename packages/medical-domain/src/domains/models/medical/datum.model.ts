@@ -31,7 +31,7 @@ import type ConfidentialMode from './datum/confidential-mode.model'
 import type DeviceParameterChange from './datum/device-parameter-change.model'
 import type Fill from './datum/fill.model'
 import type Meal from './datum/meal.model'
-import type Message from './datum/message.model'
+import type Note from './datum/note.model'
 import type PhysicalActivity from './datum/physical-activity.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
@@ -47,7 +47,7 @@ import { TimeZoneChange } from './datum/time-zone-change.model'
 import { NightMode } from './datum/night-mode.model'
 
 export type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
-Message | NightMode | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
+Note | NightMode | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
 ZenMode | TimeZoneChange | WarmUp
 
 interface DatumProcessor<T> {

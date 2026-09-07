@@ -124,6 +124,8 @@ const ignoredTransKeyForYourLoops = [
   'team-members-dialog-rmmember-question',
   'team-members-dialog-rmmember-title',
   'team-modal-create-warning-line2',
+  'note-create-input',
+  'note-edit-input',
   // Generated keys
   'consent-caregiver-privacy-policy',
   'consent-caregiver-terms-of-use',
@@ -362,7 +364,7 @@ async function getFiles(baseDir) {
   let files = await fs.readdir(baseDir)
   const subDirs = []
   for (const filename of files) {
-    if (filename === 'node_modules') {
+    if (filename === 'node_modules' || filename === 'dist') {
       continue
     }
     const fullName = `${baseDir}/${filename}`

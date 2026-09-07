@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
-import { AlarmEvent, TimePrefs } from 'medical-domain'
-import React, { FC } from 'react'
-import { BgPrefs } from '../../../index'
-import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util';
-import styles from './alarm-event-tooltip.css'
 import Divider from '@mui/material/Divider'
 import { useTheme } from '@mui/material/styles'
+import { AlarmEvent } from 'medical-domain'
+import React, { FC } from 'react'
+import { BgPrefs } from '../../../index'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import { Device } from '../../../models/device.model'
 import {
   getAlarmEventDescription,
@@ -41,20 +38,19 @@ import {
   getBackgroundColor,
   getContentTitleByCode
 } from '../../../utils/alarm-event/alarm-event.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util';
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+import styles from './alarm-event-tooltip.css'
 import { AlarmMultipleOccurrences } from './alarm-multiple-occurrences/alarm-multiple-occurrences'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
-interface AlarmEventTooltipProps {
-  alarmEvent: AlarmEvent
-  position: Position
-  side: TooltipSide
+interface AlarmEventTooltipProps extends DailyTooltipProps<AlarmEvent> {
   bgPrefs: BgPrefs
-  timePrefs: TimePrefs
   device: Device
 }
 
 export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
-  const { alarmEvent, bgPrefs, position, side, timePrefs, device } = props
+  const { datum: alarmEvent, bgPrefs, position, side, timePrefs, device } = props
   const theme = useTheme()
 
   const backgroundColor = getBackgroundColor(alarmEvent.alarmEventType)

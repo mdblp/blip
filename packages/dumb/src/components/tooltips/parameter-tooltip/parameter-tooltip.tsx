@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import styles from './parameter-tooltip.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
-import colors from '../../../styles/colors.css'
-import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
-import { ParameterChangeLine } from './parameter-change-line'
+import { type DeviceParameterChange, type Parameter } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
+import colors from '../../../styles/colors.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
+import { ParameterChangeLine } from './parameter-change-line'
+import styles from './parameter-tooltip.css'
 
-interface ParameterTooltipProps {
-  parameter: DeviceParameterChange
-  position: Position
-  side: TooltipSide
-  timePrefs: TimePrefs
-}
-
-export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props) => {
-  const { parameter, position, side, timePrefs } = props
+export const ParameterTooltip: FC<DailyTooltipProps<DeviceParameterChange>> = (props) => {
+  const { datum: parameter, position, side, timePrefs } = props
   const { t } = useTranslation()
 
   return (

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,7 @@ import type ConfidentialMode from '../src/domains/models/medical/datum/confident
 import type Duration from '../src/domains/models/medical/datum/basics/duration.model'
 import type DeviceParameterChange from '../src/domains/models/medical/datum/device-parameter-change.model'
 import type Meal from '../src/domains/models/medical/datum/meal.model'
-import type Message from '../src/domains/models/medical/datum/message.model'
+import type Note from '../src/domains/models/medical/datum/note.model'
 import type PhysicalActivity from '../src/domains/models/medical/datum/physical-activity.model'
 import type { PumpSettings } from '../src/domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from '../src/domains/models/medical/datum/reservoir-change.model'
@@ -210,10 +210,10 @@ function createRescueCarbsNonModifiedData(date?: Date): Meal {
   }
 }
 
-function createRandomMessage(date?: Date): Message {
+function createRandomMessage(date?: Date): Note {
   return {
     ...createBaseData(date),
-    type: DatumType.Message,
+    type: DatumType.Note,
     userid: faker.string.uuid(),
     groupid: faker.string.uuid(),
     messageText: faker.lorem.lines(3),
@@ -346,7 +346,7 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
       }
     case DatumType.Food:
       return createRescueCarbsData(date)
-    case DatumType.Message:
+    case DatumType.Note:
       return createRandomMessage(date)
     case DatumType.PhysicalActivity:
       return createRandomPhysicalActivity(date)

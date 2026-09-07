@@ -25,7 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, within } from '@testing-library/react'
+import { act } from 'react'
+import { NotesApi } from '../../../../../lib/notes/notes.api'
+import { mockNotesApi, NOTES_THREAD } from '../../../mock/notes.api.mock'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { when } from 'jest-when'
@@ -62,7 +65,8 @@ import {
   testDailyViewChartsDblg2,
   testDailyViewTooltipsAndValuesMgdl,
   testDailyViewTooltipsForDblg2,
-  testDailyViewTooltipsForRecentSoftware
+  testDailyViewTooltipsForRecentSoftware,
+  testNotesFailure
 } from '../../../use-cases/patient-data-visualisation'
 import { renderPage } from '../../../utils/render'
 
@@ -86,22 +90,45 @@ describe('Daily view for anyone', () => {
     mockPatientLogin(patient2Info)
     mockErrorApi()
     mockAnalyticsApi()
+    mockNotesApi()
   })
 
   afterEach(() => {
     window.ResizeObserver = ResizeObserver
     jest.restoreAllMocks()
+    jest.useRealTimers()
   })
 
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
+      mockNotesApi(NOTES_THREAD)
+
+      const now = new Date()
+      jest.useFakeTimers({
+        now,
+        doNotFake: ['nextTick', 'queueMicrotask', 'setImmediate', 'clearImmediate', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout']
+      })
+
       await act(async () => {
         renderPage(dailyRoute)
       })
 
-      await testDailyViewTooltipsAndValuesMgdl()
+      await testDailyViewTooltipsAndValuesMgdl(now)
       testDailyViewChartsDblg1()
+    })
+
+    it('should handle update errors', async () => {
+      mockDataAPI()
+      mockNotesApi(NOTES_THREAD)
+      jest.spyOn(NotesApi, 'createNote').mockRejectedValue(new Error('error'))
+      jest.spyOn(NotesApi, 'editNote').mockRejectedValue(new Error('error'))
+
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
+
+      await testNotesFailure()
     })
   })
 

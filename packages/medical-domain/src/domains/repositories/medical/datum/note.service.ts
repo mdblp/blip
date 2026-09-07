@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Message from '../../../models/medical/datum/message.model'
+import type Note from '../../../models/medical/datum/note.model'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
@@ -33,14 +33,14 @@ import type MedicalDataOptions from '../../../models/medical/medical-data-option
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
-const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Message => {
+const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Note => {
   rawData.time = rawData.timestamp
   rawData.timezone = rawData.timezone ?? 'UTC'
   const base = BaseDatumService.normalize(rawData, opts)
   const rawUser = (rawData?.user ?? {}) as Record<string, unknown>
-  const message: Message = {
+  const note: Note = {
     ...base,
-    type: DatumType.Message,
+    type: DatumType.Note,
     userid: rawData.userid as string,
     groupid: rawData.groupid as string,
     messageText: rawData.messagetext as string,
@@ -49,21 +49,21 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       fullName: (rawUser?.fullName ?? '') as string
     }
   }
-  return message
+  return note
 }
 
-const deduplicate = (data: Message[], opts: MedicalDataOptions): Message[] => {
-  return DatumService.deduplicate(data, opts) as Message[]
+const deduplicate = (data: Note[], opts: MedicalDataOptions): Note[] => {
+  return DatumService.deduplicate(data, opts) as Note[]
 }
 
-const filterOnDate = (data: Message[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Message[] => {
-  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Message[]
+const filterOnDate = (data: Note[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Note[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Note[]
 }
 
-const MessageService: DatumProcessor<Message> = {
+const NoteService: DatumProcessor<Note> = {
   normalize,
   deduplicate,
   filterOnDate
 }
 
-export default MessageService
+export default NoteService
