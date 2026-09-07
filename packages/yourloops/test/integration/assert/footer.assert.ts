@@ -27,6 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { ConfigService } from '../../../lib/config/config.service'
 import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
 
 const checkFooter = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
@@ -36,7 +37,7 @@ const checkFooter = (isMobile: boolean, hasLanguageSelector: boolean = false) =>
   const privacyPolicyLink = footer.getByText('Privacy Policy')
   const cookiesManagementLink = footer.getByText('Cookies management')
   const cookiesPolicyLink = footer.getByText('Cookies policy')
-  const contactLink = footer.getByText('Contact')
+  const helpLink = footer.getByText('Help')
 
   const releaseNotesLink =  isMobile ? null : footer.getByTestId('footer-link-url-release-notes')
 
@@ -59,7 +60,8 @@ const checkFooter = (isMobile: boolean, hasLanguageSelector: boolean = false) =>
     expect(releaseNotesLink).toBeVisible()
     expect(releaseNotesLink).toHaveAttribute('href', 'fake-urlyourloops-release-notes.pdf')
   }
-  expect(contactLink).toBeVisible()
+  expect(helpLink).toBeVisible()
+  expect(helpLink).toHaveAttribute('href', ConfigService.getHelpWebUrl())
 }
 
 export const checkFooterForUserNotLoggedIn = (isMobile: boolean, hasLanguageSelector: boolean = false) => {
