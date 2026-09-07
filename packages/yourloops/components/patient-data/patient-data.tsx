@@ -177,6 +177,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
 
   const isEatingShortlyEnabled = ConfigService.getIsEatingShortlyEnabled()
 
+  const pumpSettings = medicalData?.medicalData?.pumpSettings?.at(-1)
+
   return (
     <>
       <PatientNavBar
@@ -302,18 +304,18 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   />
                   {isMobile && (
                     <Route>
-                      <Route path={AppUserRoute.DevicesSectionsOverview} element={<DeviceViewSectionsOverview pumpSettings={medicalData.medicalData.pumpSettings.at(-1)} />} />
+                      <Route path={AppUserRoute.DevicesSectionsOverview} element={<DeviceViewSectionsOverview pumpSettings={pumpSettings} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewCurrentSettings}
-                             element={<CurrentParametersSection pumpSettings={medicalData.medicalData.pumpSettings.at(-1)} />} />
+                             element={<CurrentParametersSection pumpSettings={pumpSettings} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewBasalSafety}
-                             element={<SafetyBasalProfileSection safetyBasalConfig={medicalData.medicalData.pumpSettings.at(-1).payload.securityBasals}
-                                                                 deviceSystem={medicalData.medicalData.pumpSettings.at(-1).payload.device.name} />} />
+                             element={<SafetyBasalProfileSection safetyBasalConfig={pumpSettings.payload.securityBasals}
+                                                                 deviceSystem={pumpSettings.payload.device.name} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewSettingsHistory}
                              element={<ParametersChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
-                                                                      pumpSettings={medicalData.medicalData.pumpSettings.at(-1)} />} />
+                                                                      pumpSettings={pumpSettings} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewDevicesHistory}
                              element={<DeviceChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
-                                                                  pumpSettings={medicalData.medicalData.pumpSettings.at(-1)} />} />
+                                                                  pumpSettings={pumpSettings} />} />
                     </Route>
                   )}
                   {
