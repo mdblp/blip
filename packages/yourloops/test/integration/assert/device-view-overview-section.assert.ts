@@ -55,3 +55,20 @@ export const checkCareTeamSectionCardForParametersHistory = (): void => {
 export const checkCareTeamSectionCardForDeviceHistory = (): void => {
   expect(screen.getByText('Last update')).toBeVisible()
 }
+
+export const checkClickViewMoreCurrentParameters = async (): Promise<void> => {
+  const viewMoreInfos = within(screen.getByTestId('link-device-current-parameters'))
+  await userEvent.click(viewMoreInfos.getByText('View more'))
+  const currentParametersTitle = await screen.findByText('Team information')
+  expect(currentParametersTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  await userEvent.click(header.getByTestId('back-button'))
+
+}
+
+export const checkClickViewMoreSafetyBasal = async (): Promise<void> => {
+  const viewMoreUserAccount = within(screen.getByTestId('care-team-settings-menu-mobile-members'))
+  await userEvent.click(viewMoreUserAccount.getByText('View more'))
+  const userDataSharingPageTitle = await screen.findByText('Members')
+  expect(userDataSharingPageTitle).toBeInTheDocument()
+}
