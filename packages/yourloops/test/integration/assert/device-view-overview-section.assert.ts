@@ -32,7 +32,7 @@ export const checkDeviceSectionsOverviewVisible = (): void => {
   expect(screen.queryByTestId('device-view-overview-card-current-parameters')).toBeVisible()
   expect(screen.queryByTestId('device-view-overview-card-safety-basal')).toBeVisible()
   expect(screen.queryByTestId('device-view-overview-card-parameters-history')).toBeVisible()
-  expect(screen.queryByTestId('device-view-overview-card-device-history')).toBeVisible()
+  expect(screen.queryByTestId('device-view-overview-card-devices-history')).toBeVisible()
 }
 
 export const checkCareTeamSectionCardForCurrentParameters = (): void => {
@@ -48,27 +48,39 @@ export const checkCareTeamSectionCardForSafetyBasal = (): void => {
   expect(screen.getByText('In this section you can find the values of the patient safety basal profile.')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForParametersHistory = (): void => {
-  expect(screen.getByText('Last update')).toBeVisible()
-}
-
-export const checkCareTeamSectionCardForDeviceHistory = (): void => {
-  expect(screen.getByText('Last update')).toBeVisible()
-}
-
 export const checkClickViewMoreCurrentParameters = async (): Promise<void> => {
-  const viewMoreInfos = within(screen.getByTestId('link-device-current-parameters'))
+  const viewMoreInfos = within(screen.getByTestId('device-view-overview-card-current-parameters'))
   await userEvent.click(viewMoreInfos.getByText('View more'))
-  const currentParametersTitle = await screen.findByText('Team information')
-  expect(currentParametersTitle).toBeInTheDocument()
+  const currentParametersSectionTitle = await screen.findByText('Devices and current settings')
+  expect(currentParametersSectionTitle).toBeInTheDocument()
   const header = within(await screen.findByTestId('app-main-header-mobile'))
   await userEvent.click(header.getByTestId('back-button'))
 
 }
 
 export const checkClickViewMoreSafetyBasal = async (): Promise<void> => {
-  const viewMoreUserAccount = within(screen.getByTestId('care-team-settings-menu-mobile-members'))
-  await userEvent.click(viewMoreUserAccount.getByText('View more'))
-  const userDataSharingPageTitle = await screen.findByText('Members')
-  expect(userDataSharingPageTitle).toBeInTheDocument()
+  const viewMoreInfos = within(screen.getByTestId('device-view-overview-card-safety-basal'))
+  await userEvent.click(viewMoreInfos.getByText('View more'))
+  const safetyBasalSectionTitle = await screen.findByText('Basal safety profile')
+  expect(safetyBasalSectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  await userEvent.click(header.getByTestId('back-button'))
+}
+
+export const checkClickViewMoreSettingsHistory = async (): Promise<void> => {
+  const viewMoreInfos = within(screen.getByTestId('device-view-overview-card-parameters-history'))
+  await userEvent.click(viewMoreInfos.getByText('View more'))
+  const settingsHistorySectionTitle = await screen.findByText('Settings change history')
+  expect(settingsHistorySectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  await userEvent.click(header.getByTestId('back-button'))
+}
+
+export const checkClickViewMoreDevicesHistory = async (): Promise<void> => {
+  const viewMoreInfos = within(screen.getByTestId('device-view-overview-card-devices-history'))
+  await userEvent.click(viewMoreInfos.getByText('View more'))
+  const devicesHistorySectionTitle = await screen.findByText('Devices change history')
+  expect(devicesHistorySectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  await userEvent.click(header.getByTestId('back-button'))
 }

@@ -175,12 +175,12 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
       <GenericListCard
         title={t('device-history')}
-        data-testid="device-view-overview-card-device-history"
+        data-testid="device-view-overview-card-devices-history"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
           <ViewMoreLink
-            dataTestId="link-device-device-history"
+            dataTestId="link-device-devices-history"
             targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewDevicesHistory}`}
           />
         }
