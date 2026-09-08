@@ -39,6 +39,7 @@ import { Unit } from 'medical-domain'
 import { useAuth } from '../../lib/auth'
 import { cardStyle } from './card-style'
 import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
+import Typography from '@mui/material/Typography'
 
 export const CareTeamSettingsSectionsOverviewCards = () => {
   const { getTeam } = useTeam()
@@ -84,7 +85,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         cardHeaderClassName={classes.cardsHeader}
         title={t('team-information')}
         tableLines={getTableTeamInformation()}
-        data-testid="care-team-settings-menu-mobile-team-information"
+        data-testid="care-team-settings-overview-section-team-information"
         headerAction={
           <ViewMoreLink dataTestId="link-team-info"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsInformationSection, { teamId })} />
@@ -96,7 +97,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         cardHeaderClassName={classes.cardsHeader}
         title={t('members')}
         tableLines={getTableMembers()}
-        data-testid="care-team-settings-menu-mobile-members"
+        data-testid="care-team-settings-overview-section-members"
         headerAction={
           <ViewMoreLink dataTestId="link-team-members"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsMembersSection, { teamId })} />
@@ -107,13 +108,14 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         title={`${t('alerts')} (${userBgUnit})`}
-        data-testid="care-team-settings-menu-mobile-alerts"
-        hasNoContent = {true}
+        data-testid="care-team-settings-overview-section-alerts"
+        hasNoContent={true}
         headerAction={
           <ViewMoreLink dataTestId="link-team-alerts"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
         }
       >
+        <Typography variant="body2">{t('monitoring-alerts')}</Typography>
       </GenericListCard>
     </>
   )

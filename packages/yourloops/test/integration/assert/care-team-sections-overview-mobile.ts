@@ -29,15 +29,15 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
 export const checkCareTeamSectionsOverviewVisible = (): void => {
-  expect(screen.queryByTestId('care-team-settings-menu-mobile-team-information')).toBeVisible()
-  expect(screen.queryByTestId('care-team-settings-menu-mobile-members')).toBeVisible()
-  expect(screen.queryByTestId('care-team-settings-menu-mobile-alerts')).toBeVisible()
+  expect(screen.queryByTestId('care-team-settings-overview-section-team-information')).toBeVisible()
+  expect(screen.queryByTestId('care-team-settings-overview-section-members')).toBeVisible()
+  expect(screen.queryByTestId('care-team-settings-overview-section-alerts')).toBeVisible()
 }
 
 export const checkCareTeamSectionsOverviewNotVisible = (): void => {
-  expect(screen.queryByTestId('care-team-settings-menu-mobile-team-information')).not.toBeInTheDocument()
-  expect(screen.queryByTestId('care-team-settings-menu-mobile-members')).not.toBeInTheDocument()
-  expect(screen.queryByTestId('care-team-settings-menu-mobile-alerts')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('care-team-settings-overview-section-team-information')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('care-team-settings-overview-section-members')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('care-team-settings-overview-section-alerts')).not.toBeInTheDocument()
 }
 
 export const checkCareTeamSectionCardForInfos = (): void => {
@@ -60,8 +60,8 @@ export const checkCareTeamSectionCardForMembers = (): void => {
 export const checkClickViewMoreInfos = async (): Promise<void> => {
   const viewMoreInfos = within(screen.getByTestId('care-team-settings-menu-mobile-team-information'))
   await userEvent.click(viewMoreInfos.getByText('View more'))
-  const userAccountTitle = await screen.findByText('Team information')
-  expect(userAccountTitle).toBeInTheDocument()
+  const teamInformationSectionTitle = await screen.findByText('Team information')
+  expect(teamInformationSectionTitle).toBeInTheDocument()
   const header = within(await screen.findByTestId('app-main-header-mobile'))
   await userEvent.click(header.getByTestId('back-button'))
 
@@ -70,13 +70,15 @@ export const checkClickViewMoreInfos = async (): Promise<void> => {
 export const checkClickViewMoreMembers = async (): Promise<void> => {
   const viewMoreUserAccount = within(screen.getByTestId('care-team-settings-menu-mobile-members'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
-  const userDataSharingPageTitle = await screen.findByText('Members')
-  expect(userDataSharingPageTitle).toBeInTheDocument()
+  const membersSectionTitle = await screen.findByText('Members')
+  expect(membersSectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('app-main-header-mobile'))
+  await userEvent.click(header.getByTestId('back-button'))
 }
 
 export const checkClickViewMoreAlerts = async (): Promise<void> => {
   const viewMoreUserAccount = within(screen.getByTestId('care-team-settings-menu-mobile-alerts'))
   await userEvent.click(viewMoreUserAccount.getByText('View more'))
-  const userDataSharingPageTitle = await screen.findByText('Monitoring alerts configuration')
-  expect(userDataSharingPageTitle).toBeInTheDocument()
+  const alertsSectionTitle = await screen.findByText('Monitoring alerts configuration')
+  expect(alertsSectionTitle).toBeInTheDocument()
 }
