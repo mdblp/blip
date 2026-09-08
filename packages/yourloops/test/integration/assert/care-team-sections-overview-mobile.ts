@@ -62,8 +62,8 @@ export const checkCareTeamSectionCardForAlerts  = () => {
 }
 
 export const checkClickViewMoreInfos = async () => {
-  const viewMoreInfos = within(screen.getByTestId('care-team-settings-overview-section-team-information'))
-  await userEvent.click(viewMoreInfos.getByText('View more'))
+  const InformationSectionCard = within(screen.getByTestId('care-team-settings-overview-section-team-information'))
+  await userEvent.click(InformationSectionCard.getByText('View more'))
   const teamInformationSectionTitle = await screen.findByText('Team information')
   expect(teamInformationSectionTitle).toBeInTheDocument()
   const header = within(await screen.findByTestId('app-main-header-mobile'))
@@ -72,8 +72,8 @@ export const checkClickViewMoreInfos = async () => {
 }
 
 export const checkClickViewMoreMembers = async () => {
-  const viewMoreUserAccount = within(screen.getByTestId('care-team-settings-overview-section-members'))
-  await userEvent.click(viewMoreUserAccount.getByText('View more'))
+  const MembersSectionCard = within(screen.getByTestId('care-team-settings-overview-section-members'))
+  await userEvent.click(MembersSectionCard.getByText('View more'))
   const membersSectionTitle = await screen.findByText('Members')
   expect(membersSectionTitle).toBeInTheDocument()
   const header = within(await screen.findByTestId('app-main-header-mobile'))
@@ -81,8 +81,8 @@ export const checkClickViewMoreMembers = async () => {
 }
 
 export const checkClickViewMoreAlerts  = async () => {
-  const viewMoreUserAccount = within(screen.getByTestId('care-team-settings-overview-section-alerts'))
-  await userEvent.click(viewMoreUserAccount.getByText('View more'))
+  const AlertsSectionCard = within(screen.getByTestId('care-team-settings-overview-section-alerts'))
+  await userEvent.click(AlertsSectionCard.getByText('View more'))
   const alertsSectionTitle = await screen.findByText('Monitoring alerts configuration')
   expect(alertsSectionTitle).toBeInTheDocument()
 }
