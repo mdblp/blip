@@ -28,19 +28,19 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
-export const checkCareTeamSectionsOverviewVisible = async () => {
+export const checkCareTeamSectionsOverviewVisible = () => {
   expect(screen.queryByTestId('care-team-settings-overview-section-team-information')).toBeVisible()
   expect(screen.queryByTestId('care-team-settings-overview-section-members')).toBeVisible()
   expect(screen.queryByTestId('care-team-settings-overview-section-alerts')).toBeVisible()
 }
 
-export const checkCareTeamSectionsOverviewNotVisible  = async () => {
+export const checkCareTeamSectionsOverviewNotVisible  = () => {
   expect(screen.queryByTestId('care-team-settings-overview-section-team-information')).not.toBeInTheDocument()
   expect(screen.queryByTestId('care-team-settings-overview-section-members')).not.toBeInTheDocument()
   expect(screen.queryByTestId('care-team-settings-overview-section-alerts')).not.toBeInTheDocument()
 }
 
-export const checkCareTeamSectionCardForInfos  = async () => {
+export const checkCareTeamSectionCardForInfos  = () => {
   expect(screen.getByText('Name')).toBeVisible()
   expect(screen.getByText('Identification code')).toBeVisible()
   expect(screen.getByText('Address')).toBeVisible()
@@ -48,7 +48,7 @@ export const checkCareTeamSectionCardForInfos  = async () => {
   expect(screen.getByText('Phone number')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForMembers = async () => {
+export const checkCareTeamSectionCardForMembers = () => {
   // Checking that the number of admins is displayed correctly
   expect(screen.getByText('Number of admins')).toBeVisible()
   expect(screen.getByText('1')).toBeVisible()
@@ -57,7 +57,7 @@ export const checkCareTeamSectionCardForMembers = async () => {
   expect(screen.getByText('2')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForAlerts  = async () => {
+export const checkCareTeamSectionCardForAlerts  = () => {
   expect(screen.getByText('Monitoring alerts configuration')).toBeVisible()
 }
 

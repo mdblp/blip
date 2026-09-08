@@ -95,7 +95,8 @@ describe('HCP care team settings page', () => {
 
   it('should display the section overview page in mobile version', async () => {
     await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
-    await testCareTeamSectionsOverviewVisibleMobile()
+    await screen.findByTestId('care-team-settings-overview-section-team-information')
+    testCareTeamSectionsOverviewVisibleMobile()
   })
 
   it('should be able to access the pages linked by the cards', async () => {
