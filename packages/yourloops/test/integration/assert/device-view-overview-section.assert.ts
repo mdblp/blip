@@ -45,19 +45,13 @@ export const checkCareTeamSectionCardForCurrentParameters = (): void => {
 }
 
 export const checkCareTeamSectionCardForSafetyBasal = (): void => {
-  expect(screen.getByText('In this section you can find the values of the patient safety basal profile')).toBeVisible()
+  expect(screen.getByText('In this section you can find the values of the patient safety basal profile.')).toBeVisible()
 }
 
 export const checkCareTeamSectionCardForParametersHistory = (): void => {
-  expect(screen.getByText('Identification code')).toBeVisible()
-  expect(screen.getByText('Address')).toBeVisible()
-  expect(screen.getByText('City')).toBeVisible()
-  expect(screen.getByText('Phone number')).toBeVisible()
+  expect(screen.getByText('Last update')).toBeVisible()
 }
 
 export const checkCareTeamSectionCardForDeviceHistory = (): void => {
-  expect(screen.getByText('Identification code')).toBeVisible()
-  expect(screen.getByText('Address')).toBeVisible()
-  expect(screen.getByText('City')).toBeVisible()
-  expect(screen.getByText('Phone number')).toBeVisible()
+  expect(screen.getByText('Last update')).toBeVisible()
 }
