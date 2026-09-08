@@ -168,7 +168,7 @@ const LoginPageDesktop: FunctionComponent = () => {
                   alignItems: "center",
                   marginLeft: 1
                 }}>
-                <Link href={helpWebUrl} target="_blank" rel="nofollow">
+                <Link href={helpWebUrl} target="_blank" rel="noopener noreferrer nofollow">
                   <Typography
                     variant="subtitle2"
                     className={classes.hoverable}

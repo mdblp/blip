@@ -46,7 +46,7 @@ import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { FooterLink } from './footer-link'
 import { commonStyleFooter } from './shared/footer-style'
-import { useFooterHook } from "./shared/footer.hook"
+import { useFooterHook } from './shared/footer.hook'
 
 export const footerMobileStyle = makeStyles<{
   isLongLanguage?: boolean
