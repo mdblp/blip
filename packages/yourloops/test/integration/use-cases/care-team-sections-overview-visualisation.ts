@@ -26,6 +26,7 @@
  */
 
 import {
+  checkCareTeamSectionCardForAlerts,
   checkCareTeamSectionCardForInfos,
   checkCareTeamSectionCardForMembers,
   checkCareTeamSectionsOverviewNotVisible,
@@ -35,24 +36,25 @@ import {
   checkClickViewMoreMembers
 } from '../assert/care-team-sections-overview-mobile'
 
-export const testCareTeamSectionsOverviewVisibleMobile = (): void => {
-  checkCareTeamSectionsOverviewVisible()
-  checkCareTeamSectionCardForInfos()
-  checkCareTeamSectionCardForMembers()
+export const testCareTeamSectionsOverviewVisibleMobile = async () => {
+  await checkCareTeamSectionsOverviewVisible()
+  await checkCareTeamSectionCardForInfos()
+  await checkCareTeamSectionCardForMembers()
+  await checkCareTeamSectionCardForAlerts()
 }
 
-export const testCareTeamSectionsOverviewNotVisibleMobile = (): void => {
-  checkCareTeamSectionsOverviewNotVisible()
+export const testCareTeamSectionsOverviewNotVisibleMobile  = async () => {
+  await checkCareTeamSectionsOverviewNotVisible()
 }
 
-export const testClickViewMoreInfos = (): void => {
-  checkClickViewMoreInfos()
+export const testClickViewMoreInfos  = async () => {
+  await checkClickViewMoreInfos()
 }
 
-export const testClickViewMoreMembers = (): void => {
-  checkClickViewMoreMembers()
+export const testClickViewMoreMembers  = async () => {
+  await checkClickViewMoreMembers()
 }
 
-export const testClickViewMoreAlerts = (): void => {
-  checkClickViewMoreAlerts()
+export const testClickViewMoreAlerts = async () => {
+  await checkClickViewMoreAlerts()
 }

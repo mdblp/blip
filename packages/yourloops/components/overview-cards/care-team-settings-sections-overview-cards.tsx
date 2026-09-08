@@ -115,7 +115,7 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
         }
       >
-        <Typography variant="body2">{t('monitoring-alerts')}</Typography>
+        <Typography variant="body2">{t('monitoring-alerts-configuration')}</Typography>
       </GenericListCard>
     </>
   )
