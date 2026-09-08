@@ -36,7 +36,6 @@ import {
 } from '../../use-cases/care-team-sections-overview-visualisation'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import { act, screen } from '@testing-library/react'
@@ -62,7 +61,6 @@ describe('HCP care team settings page', () => {
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
-    mockDirectShareApi()
     mockDataAPI()
     mockDblCommunicationApi()
     mockErrorApi()
