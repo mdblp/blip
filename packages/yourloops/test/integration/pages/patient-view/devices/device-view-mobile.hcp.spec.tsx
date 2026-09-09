@@ -55,6 +55,7 @@ describe('Device view for HCP', () => {
   const deviceSectionsOverviewRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.DevicesSectionsOverview}`
 
   beforeEach(() => {
+    jest.clearAllMocks();
     mockWindowResizer()
     mockAuth0Hook()
     mockDblCommunicationApi()

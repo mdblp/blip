@@ -110,7 +110,9 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       }
     ]
   }
-
+  if (hasParameters) {
+    console.log('Noms seulement :', firstChange.parameters.map((p) => p.name));
+  }
   return (
     <>
       <GenericListCard
@@ -165,7 +167,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
             {firstChange.parameters.map((parameter) => (
               <Box key={parameter.name} className={classes.parameters}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {(t(`params|${parameter.name}`))}
+                  {truncate(t(`params|${parameter.name}`), 10)}
                 </Typography>
                 <ChangeValueDeviceOverview
                   previousValue={
