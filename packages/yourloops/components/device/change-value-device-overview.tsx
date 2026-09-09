@@ -25,37 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkCareTeamSectionCardForCurrentParameters,
-  checkCareTeamSectionCardForDevicesHistory, checkCareTeamSectionCardForParametersHistory,
-  checkCareTeamSectionCardForSafetyBasal,
-  checkClickViewMoreBasalSafety,
-  checkClickViewMoreCurrentSettings,
-  checkClickViewMoreDevicesHistory,
-  checkClickViewMoreSettingsHistory,
-  checkDeviceSectionsOverviewVisible
-} from '../assert/device-view-sections-overview.assert'
+import React, { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
+import { Typography } from "@mui/material"
 
-export const testDeviceSectionsOverviewVisibleMobile = async () => {
-  checkDeviceSectionsOverviewVisible()
-  checkCareTeamSectionCardForCurrentParameters()
-  checkCareTeamSectionCardForSafetyBasal()
-  await checkCareTeamSectionCardForParametersHistory()
-  await checkCareTeamSectionCardForDevicesHistory()
+interface ChangeValueDeviceOverviewProps {
+  previousValue?: string
+  currentValue: string
+  withFormatting: boolean
 }
 
-export const testClickViewMoreCurrentSettings = async () => {
-  await checkClickViewMoreCurrentSettings()
-}
+export const ChangeValueDeviceOverview: FC<ChangeValueDeviceOverviewProps> = (props) => {
+  const { previousValue, currentValue, withFormatting } = props
+  const theme = useTheme()
 
-export const testClickViewMoreBasalSafety = async () => {
-  await checkClickViewMoreBasalSafety()
-}
-
-export const testClickViewMoreSettingsHistory = async () => {
-  await checkClickViewMoreSettingsHistory()
-}
-
-export const testClickViewMoreDevicesHistory = async () => {
-  await checkClickViewMoreDevicesHistory()
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
+      {previousValue &&
+        <>
+          <Typography
+            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
+          </Typography>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <Typography variant="body2">{withFormatting ? formatNumberForLang(currentValue) : currentValue} </Typography>
+    </Box>
+  )
 }
