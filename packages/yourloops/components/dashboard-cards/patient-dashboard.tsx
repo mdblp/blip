@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,31 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { type Patient } from '../../lib/patient/models/patient.model'
+import Alert from '@mui/material/Alert'
+import Grid from '@mui/material/Grid'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { type BgPrefs } from 'dumb'
 import type MedicalDataService from 'medical-domain'
 import { type DateFilter, type MedicalData } from 'medical-domain'
-import { type BgPrefs } from 'dumb'
-import Grid from '@mui/material/Grid'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../../lib/auth'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import {
-  RESPONSIVE_GRID_FOUR_COLUMNS,
-  RESPONSIVE_GRID_FULL_WIDTH,
-  RESPONSIVE_GRID_HALF_WIDTH
-} from '../../css/css-utils'
-import MedicalFilesCard from './medical-files/medical-files-card'
-import MonitoringAlertsCard from '../monitoring-alert/monitoring-alerts-card'
-import { makeStyles } from 'tss-react/mui'
-import ChatWidget from '../chat/chat-widget'
-import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
-import { DevicesColumn } from './devices/devices-column'
 import { useParams } from 'react-router-dom'
-import TeamUtils from '../../lib/team/team.util'
+import { makeStyles } from 'tss-react/mui'
+import { RESPONSIVE_GRID_FOUR_COLUMNS, RESPONSIVE_GRID_FULL_WIDTH } from '../../css/css-utils'
+import { useAuth } from '../../lib/auth'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTeam } from '../../lib/team'
-import { PatientStatistics } from '../statistics/patient-statistics'
-import Alert from '@mui/material/Alert'
+import TeamUtils from '../../lib/team/team.util'
+import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
+import { CommunicationColumn } from './communication-column/communication-column'
+import { DevicesColumn } from './devices-column/devices-column'
+import { GlucoseColumn } from './glucose-column/glucose-column'
+import { InsulinTherapyColumn } from './insulin-therapy-column/insulin-therapy-column'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -159,12 +154,12 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const isCaregiver = user.isUserCaregiver()
   const isPatientWithNoTeams = user.isUserPatient() && getMedicalTeams().length === 0
 
+  const isMedicalTeamContext = !isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate
+  const showMonitoringAlerts = isMedicalTeamContext && user.isUserHcp()
+
   const getGridWidgetSize = (): number => {
     if (isMobileBreakpoint) {
       return RESPONSIVE_GRID_FULL_WIDTH
-    }
-    if (isCaregiver || isSelectedTeamPrivate || isPatientWithNoTeams) {
-      return RESPONSIVE_GRID_HALF_WIDTH
     }
     return RESPONSIVE_GRID_FOUR_COLUMNS
   }
@@ -187,16 +182,9 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           display: "flex",
           alignItems: "center"
         }}>
-          <Alert severity="info">
-            {t('data-period-text')}
-          </Alert>
-      </Grid>
-      <Grid size={gridWidgetSize}>
-        <PatientStatistics
-          medicalData={medicalData}
-          bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
-        />
+        <Alert severity="info">
+          {t('data-period-text')}
+        </Alert>
       </Grid>
       <Grid size={gridWidgetSize}>
         <DevicesColumn
@@ -205,22 +193,28 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           medicalDataService={medicalDataService}
         />
       </Grid>
-      {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
-        <>
-          <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
-            {user.isUserHcp() &&
-              <MonitoringAlertsCard patient={patient} />
-            }
-            <MedicalFilesCard patient={patient} />
-          </Grid>
-
-          <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
-            <ChatWidget
-              patient={patient}
-            />
-          </Grid>
-        </>
-      }
+      <Grid size={gridWidgetSize}>
+        <GlucoseColumn
+          bgPrefs={bgPrefs}
+          dateFilter={dateFilter}
+          medicalData={medicalData}
+        />
+      </Grid>
+      <Grid size={gridWidgetSize} className={classes.gridItemContainer}>
+        <InsulinTherapyColumn
+          medicalData={medicalData}
+          dateFilter={dateFilter}
+          patient={patient}
+          showMonitoringAlerts={showMonitoringAlerts}
+        />
+      </Grid>
+      <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
+        <CommunicationColumn
+          patient={patient}
+          pumpSettings={medicalData.pumpSettings}
+          showMedicalCards={isMedicalTeamContext}
+        />
+      </Grid>
     </Grid>
   )
 }

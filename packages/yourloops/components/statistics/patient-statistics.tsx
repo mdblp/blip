@@ -26,34 +26,14 @@
  */
 
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
-import { useTheme } from '@mui/material/styles'
-import { type BgPrefs, LoopModeStat, TimeInRangeChart, TimeInRangeDT1Chart, TimeInTightRangeChart } from 'dumb'
-import {
-  BasalBolusStatisticsService,
-  type BgType,
-  CarbsStatisticsService,
-  type DateFilter,
-  DatumType,
-  defaultBgClasses,
-  DiabeticType,
-  GlycemiaStatisticsService,
-  type MedicalData,
-  MS_IN_DAY,
-  TimeService
-} from 'medical-domain'
+import { type BgPrefs } from 'dumb'
+import { type DateFilter, DiabeticType, type MedicalData } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
 import { useLocation } from 'react-router-dom'
-import { makeStyles } from 'tss-react/mui'
-import AnalyticsApi from '../../lib/analytics/analytics.api'
-import { DataCard } from '../data-card/data-card'
-import { AverageGlucoseStat } from './average-glucose-stat'
-import { CarbsStat } from './carbs-stat'
-import { CoefficientOfVariation } from './coefficient-of-variation-stat'
-import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
-import { SensorUsageStat } from './sensor-usage-stat'
-import { StandardDeviationStat } from './standard-deviation-stat'
-import { TotalInsulinStat } from './total-insulin-stat'
+import { GlucoseMetricsCard } from './stat-cards/glucose-metrics-card'
+import { TimeInLoopModeCard } from './stat-cards/time-in-loop-mode-card'
+import { TimeInRangeCard } from './stat-cards/time-in-range-card'
+import { TotalCarbsInsulinCard } from './stat-cards/total-carbs-insulin-card'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -62,176 +42,37 @@ export interface PatientStatisticsProps {
   diabeticProfile?: string
 }
 
-const useStyles = makeStyles()((theme) => ({
-  divider: {
-    marginBlock: theme.spacing(1),
-    backgroundColor: 'var(--light-grey-border-color)'
-  }
-}))
-
 export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
   const { medicalData, bgPrefs, dateFilter, diabeticProfile } = props
-  const { classes } = useStyles()
   const location = useLocation()
-  const theme = useTheme()
 
-  const cbgSelected = medicalData.cbg.length > 0
-  const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
-  const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
-  const bgUnits = bgPrefs.bgUnits
-  const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsView = location.pathname.includes('trends')
   const isDailyView = location.pathname.includes('daily')
 
-  const {
-    standardDeviation,
-    total: standardDeviationTotal
-  } = GlycemiaStatisticsService.getStandardDevData(selectedBgData, dateFilter)
-
-  const {
-    sensorUsage,
-    total: sensorUsageTotal
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
-
-  const {
-    rescueCarbsPerDay,
-    totalMealCarbsWithRescueCarbsEntries,
-    totalRescueCarbsEntries,
-    totalCarbsPerDay,
-    mealCarbsPerDay
-  } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
-
-  const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
-  const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
-  const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
-
-  const timeInRangeChartData = GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-  const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
-
-  const {
-    automatedBasalDuration,
-    manualBasalDuration,
-    manualPercentage,
-    automatedPercentage
-  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
-
-  const {
-    weight,
-    totalMealBoluses,
-    totalManualBoluses,
-    totalPenBoluses,
-    totalCorrectiveBolusesAndBasals,
-    totalInsulin,
-    estimatedTotalInsulin
-  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings, automatedBasalDuration)
-
-  let defaultBgPrefs: BgPrefs
-  let timeInRangeDt1Data: {
-    value: number,
-    total: number
-  }
-
-  if (diabeticProfile === DiabeticType.DT1Pregnancy && isDailyView) {
-    const bgClasses = defaultBgClasses[bgUnits]
-    defaultBgPrefs = {
-      bgUnits: bgUnits,
-      bgClasses: bgClasses,
-      bgBounds: {
-        veryHighThreshold: bgClasses.high,
-        targetUpperBound: bgClasses.target,
-        targetLowerBound: bgClasses.low,
-        veryLowThreshold: bgClasses.veryLow
-      }
-    }
-    timeInRangeDt1Data = GlycemiaStatisticsService.getTimeInRangeDt1Data(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
-  }
-
   return (
     <Box data-testid="patient-statistics">
-      <DataCard>
-        <TimeInRangeChart
-          data={timeInRangeChartData}
-          bgPrefs={bgPrefs}
-          trackHoverFunc={AnalyticsApi.trackHover}
-        />
-        {diabeticProfile === DiabeticType.DT1Pregnancy && isDailyView &&
-          <Box sx={{ marginTop: theme.spacing(3) }}>
-            <TimeInRangeDT1Chart
-              data={timeInRangeDt1Data}
-              bgPrefs={defaultBgPrefs}
-              trackHoverFunc={AnalyticsApi.trackHover}
-            />
-          </Box>
-        }
-
-        <Box sx={{ marginTop: theme.spacing(3) }}>
-          <TimeInTightRangeChart
-            data={timeInTightRangeData}
-            bgPrefs={bgPrefs}
-            trackHoverFunc={AnalyticsApi.trackHover}
-          />
-        </Box>
-        {isTrendsView &&
-          <Box sx={{ marginTop: theme.spacing(2) }}>
-            <Divider className={classes.divider} />
-            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} trackHoverFunc={AnalyticsApi.trackHover}
-            />
-          </Box>
-        }
-      </DataCard>
-
-      <DataCard>
-        <CarbsStat
-          totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
-          totalRescueCarbsEntries={totalRescueCarbsEntries}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay * 10) / 10}
-          rescueCarbsPerDay={Math.round(rescueCarbsPerDay * 10) / 10}
-          mealCarbsPerDay={Math.round(mealCarbsPerDay * 10) / 10}
-        />
-        <Divider className={classes.divider} />
-        <TotalInsulinStat
-          totalMealBoluses={totalMealBoluses}
-          totalManualBoluses={totalManualBoluses}
-          totalPenBoluses={totalPenBoluses}
-          totalCorrectiveBolusesAndBasals={totalCorrectiveBolusesAndBasals}
-          totalInsulin={totalInsulin}
-          estimatedTotalInsulin={estimatedTotalInsulin}
-          weight={weight}
-        />
-      </DataCard>
-
-      <DataCard>
-        <LoopModeStat
-          automatedBasalDuration={automatedBasalDuration}
-          manualBasalDuration={manualBasalDuration}
-          manualPercentage={manualPercentage}
-          automatedPercentage={automatedPercentage}
-        />
-      </DataCard>
-
-      <DataCard>
-        <AverageGlucoseStat
-          averageGlucose={averageGlucose}
-          bgPrefs={bgPrefs}
-          bgType={bgType}
-        />
-        <Divider className={classes.divider} />
-        <StandardDeviationStat
-          total={standardDeviationTotal}
-          bgType={bgType}
-          bgPrefs={bgPrefs}
-          averageGlucose={averageGlucose}
-          standardDeviation={standardDeviation}
-        />
-        <Divider className={classes.divider} />
-        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
-        {!isDailyView &&
-          <>
-            <Divider className={classes.divider} />
-            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-          </>
-        }
-      </DataCard>
+      <TimeInRangeCard
+        bgPrefs={bgPrefs}
+        dateFilter={dateFilter}
+        cbgData={medicalData.cbg}
+        showDt1Chart={diabeticProfile === DiabeticType.DT1Pregnancy && isDailyView}
+        showSensorUsage={isTrendsView}
+      />
+      <TotalCarbsInsulinCard
+        basalData={medicalData.basal}
+        bolusData={medicalData.bolus}
+        mealData={medicalData.meals}
+        pumpSettingsData={medicalData.pumpSettings}
+        wizardData={medicalData.wizards}
+        dateFilter={dateFilter}
+      />
+      <TimeInLoopModeCard basalData={medicalData.basal} dateFilter={dateFilter} />
+      <GlucoseMetricsCard
+        cbgData={medicalData.cbg}
+        dateFilter={dateFilter}
+        bgPrefs={bgPrefs}
+        showGmi={!isDailyView}
+      />
     </Box>
   )
 }

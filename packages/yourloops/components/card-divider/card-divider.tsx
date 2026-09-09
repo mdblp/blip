@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,5 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const RESPONSIVE_GRID_FULL_WIDTH = 12
-export const RESPONSIVE_GRID_FOUR_COLUMNS = 3
+import Divider from '@mui/material/Divider'
+import React from 'react'
+
+export const CardDivider = () => {
+  return (
+    <Divider sx={{ backgroundColor: 'var(--light-grey-border-color)', marginBlock: 1 }} />
+  )
+}

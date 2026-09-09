@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme) => ({
     padding: theme.spacing(0.2, 0.5)
   },
   parameterChangesTable: {
-    maxHeight: 200
+    maxHeight: 138
   }
 }))
 

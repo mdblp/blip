@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,23 +35,23 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 
-import { useAuth } from '../../../lib/auth'
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import MedicalReportEditDialog from '../../dialogs/medical-report-edit-dialog'
-import MedicalReportDeleteDialog from '../../dialogs/medical-report-delete-dialog'
+import { useAuth } from '../../../../lib/auth'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
+import MedicalReportEditDialog from '../../../dialogs/medical-report-edit-dialog'
+import MedicalReportDeleteDialog from '../../../dialogs/medical-report-delete-dialog'
 import { type CategoryProps } from './medical-files-card'
-import { useAlert } from '../../utils/snackbar'
-import SpinningLoader from '../../loaders/spinning-loader'
+import { useAlert } from '../../../utils/snackbar'
+import SpinningLoader from '../../../loaders/spinning-loader'
 import {
   type MedicalReport,
   type MedicalReportDeleteDialogPayload
-} from '../../../lib/medical-files/models/medical-report.model'
+} from '../../../../lib/medical-files/models/medical-report.model'
 import { getSortedMedicalReports } from './medical-report-list.util'
 import { MedicalReportItem } from './medical-report-item'
 import Typography from '@mui/material/Typography'
-import { logError } from '../../../utils/error.util'
-import { errorTextFromException } from '../../../lib/utils'
-import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
+import { logError } from '../../../../utils/error.util'
+import { errorTextFromException } from '../../../../lib/utils'
+import AnalyticsApi, { ElementType } from '../../../../lib/analytics/analytics.api'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {

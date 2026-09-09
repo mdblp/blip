@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,47 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import type MedicalDataService from 'medical-domain'
-import { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
-import { sortHistory } from '../../device/utils/device.utils'
-import { DeviceListCard } from './device-list-card'
-import { LastUpdatesCard } from './last-updates-card'
-import { DevicesUsageCard } from './devices-usage-card'
+import { type DateFilter, MedicalData } from 'medical-domain'
+import React, { FC } from 'react'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import MonitoringAlertsCard from '../../monitoring-alert/monitoring-alerts-card'
+import { TotalCarbsInsulinCard } from '../../statistics/stat-cards/total-carbs-insulin-card'
 
-interface DeviceUsageWidgetProps {
+interface InsulinTherapyColumnProps {
+  medicalData: MedicalData
   dateFilter: DateFilter
-  goToDailySpecificDate: (date: Date) => void
-  medicalDataService: MedicalDataService
+  patient: Patient
+  showMonitoringAlerts: boolean
 }
 
-export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
-  const { dateFilter, goToDailySpecificDate, medicalDataService } = props
-  const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
-  const {
-    total,
-    sensorUsage
-  } = GlycemiaStatisticsService.getSensorUsage(medicalDataService.medicalData.cbg, dateFilter)
-
-  if (pumpSettings) {
-    sortHistory(pumpSettings.payload.history.parameters)
-  }
+export const InsulinTherapyColumn: FC<InsulinTherapyColumnProps> = (props) => {
+  const { dateFilter, medicalData, patient, showMonitoringAlerts } = props
 
   return (
     <>
-      <DeviceListCard
-        pumpSettings={pumpSettings}
-      />
-      <LastUpdatesCard
-        pumpSettings={pumpSettings}
-      />
-      <DevicesUsageCard
+      <TotalCarbsInsulinCard
+        basalData={medicalData.basal}
+        bolusData={medicalData.bolus}
+        mealData={medicalData.meals}
+        pumpSettingsData={medicalData.pumpSettings}
+        wizardData={medicalData.wizards}
         dateFilter={dateFilter}
-        goToDailySpecificDate={goToDailySpecificDate}
-        medicalDataService={medicalDataService}
-        sensorUsage={sensorUsage}
-        totalUsage={total}
       />
+
+      {showMonitoringAlerts &&
+        <MonitoringAlertsCard patient={patient} />
+      }
     </>
   )
 }

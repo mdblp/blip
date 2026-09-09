@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,13 +40,13 @@ import ListItemText from '@mui/material/ListItemText'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
-import { useAuth } from '../../../lib/auth'
-import TrashCanOutlined from '../../icons/trash-can-outlined'
-import { type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
+import { useAuth } from '../../../../lib/auth'
+import TrashCanOutlined from '../../../icons/trash-can-outlined'
+import { type MedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
 import ListItemButton from '@mui/material/ListItemButton'
 import { getMedicalReportDate } from './medical-report-list.util'
-import { useTeam } from '../../../lib/team'
-import { getUserName } from '../../../lib/auth/user.util'
+import { useTeam } from '../../../../lib/team'
+import { getUserName } from '../../../../lib/auth/user.util'
 
 interface MedicalReportItemProps {
   displayDivider: boolean
