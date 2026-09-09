@@ -33,9 +33,9 @@ import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { ViewMoreLink } from '../../../components/buttons/view-more-link'
 import Typography from '@mui/material/Typography'
 import { DblParameter, PumpSettings } from 'medical-domain'
-import { formatDateWithMomentLongFormat } from '../../../lib/utils'
+import { formatDateWithMomentShortFormat } from '../../../lib/utils'
 import { useLocation } from 'react-router-dom'
-import { ChangeValue } from '../../../components/device/change-value'
+import { ChangeValueDeviceOverview } from '../../../components/device/change-value-device-overview'
 import { formatParameterValue, getTranslationKeyForDeviceChange } from '../../../components/device/utils/device.utils'
 import Box from '@mui/material/Box'
 
@@ -84,10 +84,14 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const { pathname } = useLocation()
   const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
   const timezone = pumpSettings.timezone
+  const firstChange = lastParameterChange?.[0]
+  const hasParameters = Boolean(firstChange?.parameters?.length)
+  const firstDeviceChange = lastDeviceChange?.[0]
+  const hasDevices = Boolean(firstDeviceChange?.devices?.length)
   const truncate = (str: string, max: number) =>
     str.length > max ? str.slice(0, max).toString() + "..." : str
 
-  const getTableLinesCurrentParameters = (): { label: string, value: string }[] => {
+  const getTableLinesCurrentSettings = (): { label: string, value: string }[] => {
     return [
       { label: t('system'), value: device?.name },
       { label: t('Pump'), value: pump?.name },
@@ -111,13 +115,13 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     <>
       <GenericListCard
         title={t('current-parameters')}
-        data-testid="device-view-overview-card-current-parameters"
-        tableLines={getTableLinesCurrentParameters()}
+        data-testid="device-view-overview-card-current-settings"
+        tableLines={getTableLinesCurrentSettings()}
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
           <ViewMoreLink
-            dataTestId="link-device-current-parameters"
+            dataTestId="link-device-current-settings"
             targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewCurrentSettings}`}
           />
         }
@@ -125,7 +129,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
       <GenericListCard
         title={t('safety-basal')}
-        data-testid="device-view-overview-card-safety-basal"
+        data-testid="device-view-overview-card-basal-safety"
         cardClassName={classes.cards}
         cardHeaderClassName={classes.cardsHeader}
         headerAction={
@@ -152,25 +156,34 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
           />
         }
       >
-        <Box className={classes.listOfParameters}>
+        {hasParameters ? (
+          <Box className={classes.listOfParameters}>
+            <Typography variant="body2">
+              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
+            </Typography>
+
+            {firstChange.parameters.map((parameter) => (
+              <Box key={parameter.name} className={classes.parameters}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  {(t(`params|${parameter.name}`))}
+                </Typography>
+                <ChangeValueDeviceOverview
+                  previousValue={
+                    parameter.previousValue
+                      ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`
+                      : parameter.previousValue
+                  }
+                  currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
+                  withFormatting={true}
+                />
+              </Box>
+            ))}
+          </Box>
+        ) : (
           <Typography variant="body2">
-            {`${t('last-upload:')} ${formatDateWithMomentLongFormat(new Date(lastParameterChange[0].changeDate), 'llll', timezone)}`}
+            {t('no-data')}
           </Typography>
-          {lastParameterChange[0]?.parameters.map((parameter) => (
-            <Box key={parameter.name}
-                 className={classes.parameters}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                {truncate(t(`params|${parameter.name}`), 10)}
-              </Typography>
-              <ChangeValue
-                previousValue={parameter.previousValue ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}` : parameter.previousValue}
-                currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
-                withFormatting={true} isOverviewCard={true}
-              />
-            </Box>
-          ))}
-        </Box>
+        )}
       </GenericListCard>
 
       <GenericListCard
@@ -186,21 +199,31 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         }
       >
 
-        <Box className={classes.listOfParameters}>
+
+        {hasDevices ? (
+          <Box className={classes.listOfParameters}>
+            <Typography variant="body2">
+              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
+            </Typography>
+
+            {firstDeviceChange.devices.map((device) => (
+              <Box key={device.name} className={classes.parameters}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  {t(getTranslationKeyForDeviceChange(device.name))}
+                </Typography>
+                <ChangeValueDeviceOverview
+                  previousValue={device.previousValue}
+                  currentValue={device.value}
+                  withFormatting={false}
+                />
+              </Box>
+            ))}
+          </Box>
+        ) : (
           <Typography variant="body2">
-            {`${t('last-upload:')} ${formatDateWithMomentLongFormat(new Date(lastDeviceChange[0].changeDate), 'llll', timezone)}`}
+            {t('no-data')}
           </Typography>
-          {lastDeviceChange[0]?.devices.map((device) => (
-            <Box key={device.name}
-                 className={classes.parameters}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                {t(`${getTranslationKeyForDeviceChange(device.name)}`)}
-              </Typography>
-              <ChangeValue previousValue={device.previousValue} currentValue={device.value} withFormatting={false} isOverviewCard={true}/>
-            </Box>
-          ))}
-        </Box>
+        )}
       </GenericListCard>
     </>
   )
