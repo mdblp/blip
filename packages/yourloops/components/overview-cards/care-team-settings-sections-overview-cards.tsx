@@ -109,7 +109,6 @@ export const CareTeamSettingsSectionsOverviewCards = () => {
         cardHeaderClassName={classes.cardsHeader}
         title={`${t('alerts')} (${userBgUnit})`}
         data-testid="care-team-settings-overview-section-alerts"
-        hasNoContent={true}
         headerAction={
           <ViewMoreLink dataTestId="link-team-alerts"
                         targetRoute={generatePath(AppUserRoute.CareTeamSettingsAlertsSection, { teamId })} />
