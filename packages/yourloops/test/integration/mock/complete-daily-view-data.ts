@@ -32,6 +32,7 @@ import {
   BasalDeliveryType,
   Bolus,
   BolusSubtype,
+  CGMName,
   DatumType,
   DblParameter,
   DeviceSystem,
@@ -114,6 +115,7 @@ import {
   PEN_BOLUS_ID,
   SMBG_ID,
   WARMUP_01_ID,
+  WARMUP_G7_ID,
   WIZARD_BOLUS_LOW_OVERRIDE_ID,
   WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
   WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
@@ -1838,6 +1840,27 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "subType": DeviceEventSubtype.Warmup,
           "guid": WARMUP_01_ID,
           "inputTime": "2022-08-08T09:00:00Z",
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659981600000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T18:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": WARMUP_G7_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "duration": {
+            "units": DurationUnit.Hours,
+            "value": 0
+          },
+          "normalEnd": "2022-08-08T18:30:00.000Z",
+          "epochEnd": 1659983400000,
+          "subType": DeviceEventSubtype.Warmup,
+          "guid": WARMUP_G7_ID,
+          "inputTime": "2022-08-08T09:00:00Z",
+          "warmupSensorModel": CGMName.G7,
           "isoWeekday": WeekDays.Sunday
         },
         {
