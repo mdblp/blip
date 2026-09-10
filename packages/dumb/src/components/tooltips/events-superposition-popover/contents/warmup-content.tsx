@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React, { FC } from 'react'
 import Box from '@mui/material/Box'
 import styles from '../events-superposition-popover.css'
 import { WarmUp } from 'medical-domain'
-import { getWarmUpDescription, getWarmUpEndTime } from '../../../../utils/warm-up/warm-up.util'
+import { getWarmUpTooltipContent } from '../../../../utils/warm-up/warm-up.util'
 
 interface WarmupContentProps {
   warmUpEvent: WarmUp
@@ -37,6 +37,7 @@ interface WarmupContentProps {
 
 export const WarmUpContent: FC<WarmupContentProps> = (props) => {
   const { warmUpEvent } = props
+  const { description, endTime } = getWarmUpTooltipContent(warmUpEvent)
 
   return (
     <Box
@@ -45,11 +46,13 @@ export const WarmUpContent: FC<WarmupContentProps> = (props) => {
         justifyContent: "space-between"
       }}>
       <span className={styles.contentLine}>
-        {getWarmUpDescription()}
+        {description}
       </span>
-      <span className={styles.contentLine}>
-        {getWarmUpEndTime(warmUpEvent.epochEnd, warmUpEvent.timezone)}
-      </span>
+      {endTime &&
+        <span className={styles.contentLine}>
+          {endTime}
+        </span>
+      }
     </Box>
   )
 }

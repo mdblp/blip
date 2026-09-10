@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ type WarmUp = BaseDatum & Duration & {
   subType: DeviceEventSubtype.Warmup
   guid: string
   inputTime: string
+  warmupSensorModel?: string
 }
 
 export default WarmUp
