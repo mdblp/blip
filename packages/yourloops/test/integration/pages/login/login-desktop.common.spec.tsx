@@ -27,6 +27,7 @@
 
 import * as auth0Mock from '@auth0/auth0-react'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { ConfigService } from '../../../../lib/config/config.service'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
@@ -57,7 +58,7 @@ describe('Login page desktop view', () => {
     const header = screen.getByTestId('login-page-header')
     const registerButton = within(header).getByRole('button', { name: 'Register' })
     const loginButton = within(header).getByRole('button', { name: 'Connect' })
-    const contactLink = within(header).getByRole('link', { name: 'Contact' })
+    const helpLink = within(header).getByRole('link', { name: 'Help' })
     const languageSelector = within(header).queryByTestId('language-selector')
     const infoContainer = screen.getByTestId('info-container')
     const moreInfoLink = within(infoContainer).getByRole('link')
@@ -71,8 +72,8 @@ describe('Login page desktop view', () => {
     expect(within(header).getByTestId('header-main-logo')).toBeVisible()
     expect(registerButton).toBeVisible()
     expect(loginButton).toBeVisible()
-    expect(contactLink).toBeVisible()
-    expect(contactLink).toHaveAttribute('href', 'mailto:yourloops@diabeloop.com')
+    expect(helpLink).toBeVisible()
+    expect(helpLink).toHaveAttribute('href', ConfigService.getHelpWebUrl())
     expect(within(header).getByTestId('language-icon')).toBeVisible()
     expect(languageSelector).toBeVisible()
 

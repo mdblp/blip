@@ -34,28 +34,23 @@ import { LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
 import i18next from 'i18next'
 
 describe('Language', () => {
-  const zeSpy = jest.fn()
 
   beforeAll(() => {
-    window.zE = zeSpy
     config.METRICS_SERVICE = 'matomo'
   })
 
   afterAll(async () => {
-    delete window.zE
     await i18n.changeLanguage(LanguageCode.En)
     delete window._paq
     config.METRICS_SERVICE = 'disabled'
   })
 
   beforeEach(() => {
-    zeSpy.mockReset()
     window._paq = []
   })
 
-  it('should update zendesk & moment locale on change', async () => {
+  it('should update moment locale on change', async () => {
     await i18n.changeLanguage(LanguageCode.Fr)
-    expect(zeSpy).toHaveBeenCalledTimes(1)
     expect(moment.locale()).toBe(LanguageCode.Fr)
     expect(localStorage.getItem('lang')).toBe(LanguageCode.Fr)
     expect(getCurrentLang()).toBe(LanguageCode.Fr)

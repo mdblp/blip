@@ -40,7 +40,6 @@ import _ from 'lodash'
 
 import { AppState, useAuth0 } from '@auth0/auth0-react'
 import { type HcpProfession } from './models/enums/hcp-profession.enum'
-import { zendeskLogout } from '../zendesk'
 import User from './models/user.model'
 import HttpService from '../http/http.service'
 import UserApi from './user.api'
@@ -217,7 +216,6 @@ export function AuthContextImpl(): AuthContext {
 
   const logout = (isIdle = false): void => {
     try {
-      zendeskLogout()
       const redirectUrl = getLogoutRedirectUrl(isIdle)
       auth0logout({ logoutParams: { returnTo: redirectUrl } })
       metrics.resetUser()

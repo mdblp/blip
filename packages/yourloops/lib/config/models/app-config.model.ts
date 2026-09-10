@@ -35,12 +35,11 @@ export interface AppConfig {
   LATEST_TERMS?: string
   LATEST_TRAINING?: string
   LATEST_RELEASE?: string
-  SUPPORT_WEB_ADDRESS?: string
   CONTACT_SUPPORT_WEB_URL: string
+  HELP_WEB_URL: string
   ASSETS_URL?: string | null
   METRICS_SERVICE?: string | null
   TERMS_PRIVACY_DATE?: string
-  STONLY_WID: string
   COOKIE_BANNER_CLIENT_ID: string
   SESSION_TIMEOUT: number
   YLP820_BASAL_TIME: number

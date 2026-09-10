@@ -64,11 +64,9 @@ const getAllSettingsMemoUrls = () => {
   ]
 }
 
-const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
 const reTrackerSiteId = /const id = ([0-9])/
 const reMatomoJs = /(^\s+<!-- Start of Tracker Code -->\n)(.*\n)*(^\s+<!-- End of Tracker Code -->)/m
-const reStonly = /(^\s+<!-- Start of stonly-widget -->\n)(.*\n)*(^\s+<!-- End of stonly-widget -->)/m
 const reCookieBanner = /(^\s+<!-- Start of cookie-banner -->\n)(.*\n)*(^\s+<!-- End of cookie-banner -->)/m
 
 const reUrl = /(^https?:\/\/[^/]+).*/
@@ -117,7 +115,6 @@ let distribFiles = null
 
 let distDir = null
 let templateDir = null
-let zendeskEnabled = false
 const templateFilename = path.resolve(`${__dirname}/../templates/lambda-request-viewer.js`)
 
 function getHash(str) {
@@ -159,32 +156,12 @@ function afterGenOutputFile(err) {
  * @returns {string} The CSP for the template.
  */
 function genContentSecurityPolicy() {
-  if (zendeskEnabled) {
-    // Assume Zendesk
-    const helpUrl = blipConfig.HELP_SCRIPT_URL.replace(reUrl, '$1')
-    contentSecurityPolicy.connectSrc.push(helpUrl)
-    contentSecurityPolicy.imgSrc.push(helpUrl)
-    contentSecurityPolicy.connectSrc.push('https://ekr.zdassets.com')
-    contentSecurityPolicy.connectSrc.push(blipConfig.HELP_PAGE_URL)
-  }
-
   const metricsUrl = process.env.MATOMO_TRACKER_URL
   if (blipConfig.METRICS_SERVICE === 'matomo' && reUrl.test(metricsUrl)) {
     const matomoUrl = metricsUrl.replace(reUrl, '$1')
     contentSecurityPolicy.scriptSrc.push(matomoUrl)
     contentSecurityPolicy.imgSrc.push(matomoUrl)
     contentSecurityPolicy.connectSrc.push(matomoUrl)
-  }
-
-  if (blipConfig.STONLY_WID !== 'disabled') {
-    const stonlyURL = 'https://stonly.com'
-    const stonlyAPI = 'https://api.stonly.com'
-    contentSecurityPolicy.scriptSrc.push(stonlyURL)
-    contentSecurityPolicy.imgSrc.push(stonlyURL)
-    contentSecurityPolicy.connectSrc.push(stonlyURL)
-    contentSecurityPolicy.connectSrc.push(stonlyAPI)
-    contentSecurityPolicy.fontSrc.push(stonlyURL)
-    contentSecurityPolicy.frameSrc.push(stonlyURL)
   }
 
   if (blipConfig.COOKIE_BANNER_CLIENT_ID !== 'disabled') {
@@ -341,34 +318,6 @@ console.info('Using configuration:', blipConfig)
 const indexHtmlPath = path.resolve(`${distDir}/static/index.html`)
 indexHtml = fs.readFileSync(indexHtmlPath, 'utf8')
 
-// *** ZenDesk ***
-zendeskEnabled = typeof blipConfig.HELP_SCRIPT_URL === 'string' && reUrl.test(blipConfig.HELP_SCRIPT_URL)
-zendeskEnabled = zendeskEnabled && typeof blipConfig.HELP_PAGE_URL === 'string' && reUrl.test(blipConfig.HELP_PAGE_URL)
-
-let helpLink = '<!-- Zendesk disabled -->'
-if (!reZendesk.test(indexHtml)) {
-  console.error(`/!\\ Can't find help pattern in index.html: ${reZendesk.source} /!\\`)
-  process.exit(1)
-}
-if (zendeskEnabled) {
-  console.info('- Using HELP_SCRIPT_URL:', process.env.HELP_SCRIPT_URL)
-  console.info('- Using HELP_PAGE_URL:', process.env.HELP_PAGE_URL)
-  let zdkJs = fs.readFileSync(`${templateDir}/zendesk.js`, 'utf8')
-
-  let fileHash = getHash(zdkJs)
-  let integrity = getIntegrity(zdkJs)
-  let fileName = `zdk.${fileHash}.js`
-  fs.writeFileSync(`${distDir}/static/${fileName}`, zdkJs)
-
-  helpLink = `\
-  <script type="text/javascript" defer src="${fileName}" integrity="sha512-${integrity}" crossorigin="anonymous"></script>\n\
-  <script id="ze-snippet" type="text/javascript" defer src="${process.env.HELP_SCRIPT_URL}"></script>`
-
-} else {
-  console.info('- Help link is disabled')
-}
-indexHtml = indexHtml.replace(reZendesk, `$1${helpLink}\n$3`)
-
 // *** Matomo ***
 if (!reMatomoJs.test(indexHtml)) {
   console.error(`/!\\ Can't find tracker pattern in index.html: ${reMatomoJs.source} /!\\`)
@@ -437,27 +386,6 @@ switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
     console.error(`/!\\ Unknown tracker ${process.env.METRICS_SERVICE} /!\\`)
     indexHtml = indexHtml.replace(reMatomoJs, '$1  <!-- Tracker disabled -->\n$3')
     break
-}
-
-// ** Stonly **
-if (blipConfig.STONLY_WID !== 'disabled') {
-  console.info('- Enable stonly...')
-  let jsScript = fs.readFileSync(`${templateDir}/stonly.js`, 'utf8')
-  jsScript = jsScript.replace(/__STONLY_WID__/g, process.env.STONLY_WID)
-  const fileHash = getHash(jsScript)
-  const integrity = getIntegrity(jsScript)
-  const fileName = `stonly.${fileHash}.js`
-  fs.writeFileSync(`${distDir}/static/${fileName}`, jsScript)
-
-  const stonlyScript = `  <script type="text/javascript" defer src="${fileName}" integrity="sha512-${integrity}" crossorigin="anonymous"></script>`
-  if (!reStonly.test(indexHtml)) {
-    console.error(`/!\\ Can't find stonly pattern in index.html: ${reStonly.source} /!\\`)
-    process.exit(1)
-  }
-  indexHtml = indexHtml.replace(reStonly, `$1${stonlyScript}\n$3`)
-} else {
-  console.info('- Stonly is disabled')
-  indexHtml = indexHtml.replace(reStonly, '$1  <!-- disabled -->\n$3')
 }
 
 // ** Cookie Banner **

@@ -91,7 +91,6 @@ module.exports = {
   // A set of global variables that need to be available in all test environments
   globals: {
     BUILD_CONFIG: {
-      STONLY_WID: '',
       ASSETS_URL: 'fake-url',
       TEST: true,
       CBG_BUCKETS_ENABLED: false,

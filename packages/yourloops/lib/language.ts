@@ -35,7 +35,6 @@ import locales from '../../../locales/languages.json'
 import { type Country } from './auth/models/country.model'
 import { getBrowserLocale } from './browser'
 import metrics from './metrics'
-import { zendeskLocale } from './zendesk'
 import { type LanguageCode } from './auth/models/enums/language-code.enum'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCode[]
@@ -51,7 +50,6 @@ export const getLanguage = (): LanguageCode => {
 let language: LanguageCode = getLanguage()
 
 function refreshLanguage(language: LanguageCode): void {
-  zendeskLocale(language)
   dayjs.locale(language)
   moment.locale(language)
   metrics.setLanguage(language)

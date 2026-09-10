@@ -31,7 +31,6 @@ import { AppRoute } from '../models/enums/routes.enum'
  */
 class DiabeloopExternalUrls {
   readonly dblDiabetes: string = 'https://www.dbl-diabetes.com';
-  readonly contactEmail: string = 'yourloops@diabeloop.com';
   readonly support: string = 'https://www.diabeloop.com';
 }
 

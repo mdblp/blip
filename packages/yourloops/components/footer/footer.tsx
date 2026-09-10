@@ -37,6 +37,7 @@ import Tooltip from '@mui/material/Tooltip'
 import config from '../../lib/config/config'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
+import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
@@ -161,6 +162,7 @@ export const Footer: FunctionComponent = () => {
     privacyPolicyUrl,
     termsOfUseUrl,
     releaseNotesUrl,
+    helpUrl,
     handleShowCookieBanner,
     metricsPdfDocument
   } = useFooterHook()
@@ -233,12 +235,13 @@ export const Footer: FunctionComponent = () => {
         </FooterLink>
         <Box className={classes.separator}>|</Box>
         <FooterLink
-          id="footer-link-contact-mailto"
-          href={`mailto:${diabeloopExternalUrls.contactEmail}`}
-          onClick={metricsPdfDocument('mailto-contact')}
+          id="footer-link-help"
+          href={helpUrl}
+          onClick={() => metrics.send('footer', 'click_help')}
           style={classes.commonLink}
+          isExternal
         >
-          {t('contact')}
+          {t('help')}
         </FooterLink>
       </Box>
       <Box className={`${classes.sideBox} ${classes.rightBox}`}>
