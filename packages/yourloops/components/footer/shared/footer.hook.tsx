@@ -26,10 +26,11 @@
  */
 
 
-import metrics from '../../../lib/metrics'
 import { LanguageCode } from '../../../lib/auth/models/enums/language-code.enum'
+import { ConfigService } from '../../../lib/config/config.service'
 import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
 import { getCurrentLang } from '../../../lib/language'
+import metrics from '../../../lib/metrics'
 
 export const useFooterHook = () => {
 
@@ -41,6 +42,8 @@ export const useFooterHook = () => {
   const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
   const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
   const releaseNotesUrl = ExternalFilesService.getReleaseNotesUrl()
+
+  const helpUrl = ConfigService.getHelpWebUrl()
 
   const handleShowCookieBanner = (): void => {
     if (typeof window.openAxeptioCookies === 'function') {
@@ -60,6 +63,7 @@ export const useFooterHook = () => {
     privacyPolicyUrl,
     termsOfUseUrl,
     releaseNotesUrl,
+    helpUrl,
     handleShowCookieBanner,
     metricsPdfDocument
   }

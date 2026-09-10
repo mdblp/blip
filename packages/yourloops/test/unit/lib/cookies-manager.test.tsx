@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,29 +28,22 @@
 /* eslint-disable no-underscore-dangle */
 
 import config from '../../../lib/config/config'
-import metrics from '../../../lib/metrics'
-import { isZendeskAllowCookies } from '../../../lib/zendesk'
 import initCookiesConsentListener from '../../../lib/cookies-manager'
+import metrics from '../../../lib/metrics'
 
 type AxceptIOCallback = (a: AxeptIO) => void
 
 describe('Cookie manager', () => {
   let sendMetrics: jest.SpyInstance
-  let loadStonlyWidgetMock: jest.Mock
 
   beforeAll(() => {
     sendMetrics = jest.spyOn(metrics, 'send')
-    loadStonlyWidgetMock = jest.fn()
-    window.loadStonlyWidget = loadStonlyWidgetMock
   })
   afterAll(() => {
     sendMetrics.mockRestore()
-    loadStonlyWidgetMock.mockRestore()
-    delete window.loadStonlyWidget
   })
   afterEach(() => {
     sendMetrics.mockReset()
-    loadStonlyWidgetMock.mockReset()
   })
 
   it('should do nothing if axeptio is not available', () => {
@@ -63,10 +56,8 @@ describe('Cookie manager', () => {
   it('should accept all if axeptio is disabled', () => {
     config.COOKIE_BANNER_CLIENT_ID = 'disabled'
     initCookiesConsentListener()
-    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(1)
     expect(sendMetrics).toHaveBeenCalledTimes(1)
     expect(sendMetrics).toHaveBeenCalledWith('metrics', 'enabled')
-    expect(isZendeskAllowCookies()).toBe(true)
   })
 
   it('should add the axeptio callback when configuration is set', () => {
@@ -82,7 +73,7 @@ describe('Cookie manager', () => {
     const axeptIO: AxeptIO = {
       on: (event: string, callback: (c: CookiesComplete) => void) => {
         expect(event).toBe('cookies:complete')
-        callback({ matomo: false, stonly: false, zendesk: false })
+        callback({ matomo: false })
       }
     }
     window._axcb = {
@@ -98,7 +89,5 @@ describe('Cookie manager', () => {
 
     expect(sendMetrics).toHaveBeenCalledTimes(1)
     expect(sendMetrics).toHaveBeenCalledWith('metrics', 'disabled')
-    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(0)
-    expect(isZendeskAllowCookies()).toBe(false)
   })
 })

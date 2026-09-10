@@ -41,6 +41,7 @@ import LanguageSelect from '../../components/language-select'
 import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import { ConfigService } from '../../lib/config/config.service'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { LanguageCode } from '../../lib/auth/models/enums/language-code.enum'
 import { useLogin } from './login.hook'
@@ -117,6 +118,8 @@ const LoginPageDesktop: FunctionComponent = () => {
   const { classes, theme } = styles()
   const { redirectToSignupInformation } = useLogin()
 
+  const helpWebUrl = ConfigService.getHelpWebUrl()
+
   return (
     <React.Fragment>
       <AppBar
@@ -165,12 +168,12 @@ const LoginPageDesktop: FunctionComponent = () => {
                   alignItems: "center",
                   marginLeft: 1
                 }}>
-                <Link href={`mailto:${diabeloopExternalUrls.contactEmail}`}>
+                <Link href={helpWebUrl} target="_blank" rel="noopener noreferrer nofollow">
                   <Typography
                     variant="subtitle2"
                     className={classes.hoverable}
                   >
-                    {t('contact')}
+                    {t('help')}
                   </Typography>
                 </Link>
                 <Box

@@ -58,7 +58,7 @@ export const FooterLink : React.FC<FooterLinkProps> = (props) => {
       onClick={onClick}
       data-testid={dataTestId}
       target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'nofollow' : undefined}
+      rel={isExternal ? 'noopener noreferrer nofollow' : undefined}
     >
       {children}
     </Link>

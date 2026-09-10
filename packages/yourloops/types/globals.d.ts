@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,9 +31,7 @@ import { type AppConfig } from '../lib/config/models/app-config.model'
 
 declare global {
   interface CookiesComplete {
-    zendesk?: boolean
     matomo?: boolean
-    stonly?: boolean
   }
   interface AxeptIO {
     on: (event: string, callback: (c: CookiesComplete) => void) => void
@@ -41,7 +39,6 @@ declare global {
 
   // var window: Window & typeof globalThis & ExtendedWindow;
   interface Window {
-    _jipt: any // Zendesk
     _paq?: Array<Array<string | number>> // Matomo
     process: any
     config?: AppConfig
@@ -50,8 +47,6 @@ declare global {
     }
     /** Display the Axeptio cookie banner */
     openAxeptioCookies?: () => void
-    loadStonlyWidget?: () => void
-    zE: (...args: any) => void // Zendesk API
   }
   interface Navigator {
     userLanguage?: string

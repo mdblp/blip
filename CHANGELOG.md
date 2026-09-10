@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3490 Update notes UI
 - YLP-3842 New design for monitoring alerts configuration
 - YLP-3857 Update the cards organization in the Dashboard view
+- YLP-3867 Remove Zendesk and Stonly
 - YLP-3939 Adapting the main header to mobile format for HCP
 - YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver
