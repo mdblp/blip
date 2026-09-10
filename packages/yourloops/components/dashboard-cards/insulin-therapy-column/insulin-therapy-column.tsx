@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Box from '@mui/material/Box'
 import { type DateFilter, MedicalData } from 'medical-domain'
 import React, { FC } from 'react'
 import { Patient } from '../../../lib/patient/models/patient.model'
@@ -42,7 +43,7 @@ export const InsulinTherapyColumn: FC<InsulinTherapyColumnProps> = (props) => {
   const { dateFilter, medicalData, patient, showMonitoringAlerts } = props
 
   return (
-    <>
+    <Box data-testid="insulin-therapy-column">
       <TotalCarbsInsulinCard
         basalData={medicalData.basal}
         bolusData={medicalData.bolus}
@@ -55,6 +56,6 @@ export const InsulinTherapyColumn: FC<InsulinTherapyColumnProps> = (props) => {
       {showMonitoringAlerts &&
         <MonitoringAlertsCard patient={patient} />
       }
-    </>
+    </Box>
   )
 }

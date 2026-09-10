@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,6 +61,10 @@ export const checkMedicalReportContentForPatient = async (medicalFilesWidgetPara
 }
 
 export const checkMedicalReportCancel = async (): Promise<void> => {
+  const medicalFilesWidget = await getMedicalFilesWidget()
+  const medicalFilesDetailsButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical files' })
+  await userEvent.click(medicalFilesDetailsButton)
+
   const createMedicalReportButton = within(await getMedicalFilesWidget()).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
   const medicalReportDialog = screen.getByRole('dialog')
@@ -189,5 +193,7 @@ export const checkEmptyMedicalFilesWidgetForPatient = async (): Promise<void> =>
 
 export const checkEmptyMedicalFilesWidgetForHcp = async (): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
+  const medicalFilesDetailsButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical files' })
+  await userEvent.click(medicalFilesDetailsButton)
   expect(within(medicalFilesWidget).getByText('No medical files have yet been created.')).toBeVisible()
 }

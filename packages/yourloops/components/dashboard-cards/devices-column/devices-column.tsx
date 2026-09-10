@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Box from '@mui/material/Box'
 import MedicalDataService, { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
 import React, { type FC } from 'react'
 import { sortHistory } from '../../device/utils/device.utils'
@@ -52,7 +53,7 @@ export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
   }
 
   return (
-    <>
+    <Box data-testid="devices-column">
       <DeviceListCard pumpSettings={pumpSettings} />
       <TimeInLoopModeCard basalData={medicalData.basal} dateFilter={dateFilter} />
       <DevicesUsageCard
@@ -62,6 +63,6 @@ export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
         sensorUsage={sensorUsage}
         totalUsage={total}
       />
-    </>
+    </Box>
   )
 }
