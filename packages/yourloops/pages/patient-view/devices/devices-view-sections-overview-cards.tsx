@@ -88,26 +88,39 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const hasParameters = Boolean(firstChange?.parameters?.length)
   const firstDeviceChange = lastDeviceChange?.[0]
   const hasDevices = Boolean(firstDeviceChange?.devices?.length)
+
   const truncate = (str: string, max: number) =>
     str.length > max ? str.slice(0, max).toString() + "..." : str
+
+  const hasSafetyBasalData = Boolean(
+    totalDailyInsulin || targetGlucoseLevel || totalHypoglycemiaThreshold
+  )
 
   const getTableLinesCurrentSettings = (): { label: string, value: string }[] => {
     return [
       { label: t('system'), value: device?.name },
       { label: t('Pump'), value: pump?.name },
       { label: t('CGM'), value: cgm?.manufacturer + " " + cgm?.name },
-      {
-        label: t(`params|${DblParameter.TotalDailyInsulin}`),
-        value: totalDailyInsulin.value + " " + totalDailyInsulin.unit
-      },
-      {
-        label: t(`params|${DblParameter.TargetGlucoseLevel}`),
-        value: targetGlucoseLevel.value + " " + targetGlucoseLevel.unit
-      },
-      {
-        label: t(`params|${DblParameter.HypoglycemiaThreshold}`),
-        value: totalHypoglycemiaThreshold.value + " " + totalHypoglycemiaThreshold.unit
-      }
+      ...(totalDailyInsulin
+        ? [{
+          label: t(`params|${DblParameter.TotalDailyInsulin}`),
+          value: totalDailyInsulin.value + " " + totalDailyInsulin.unit
+        }]
+        : []),
+
+      ...(targetGlucoseLevel
+        ? [{
+          label: t(`params|${DblParameter.TargetGlucoseLevel}`),
+          value: targetGlucoseLevel?.value + " " + targetGlucoseLevel?.unit
+        }]
+        : []),
+
+      ...(totalHypoglycemiaThreshold
+        ? [{
+          label: t(`params|${DblParameter.HypoglycemiaThreshold}`),
+          value: totalHypoglycemiaThreshold?.value + " " + totalHypoglycemiaThreshold?.unit
+        }]
+        : [])
     ]
   }
   if (hasParameters) {
@@ -129,22 +142,24 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         }
       />
 
-      <GenericListCard
-        title={t('safety-basal')}
-        data-testid="device-view-overview-card-basal-safety"
-        cardClassName={classes.cards}
-        cardHeaderClassName={classes.cardsHeader}
-        headerAction={
-          <ViewMoreLink
-            dataTestId="link-device-basal-safety"
-            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewBasalSafety}`}
-          />
-        }
-      >
-        <Typography variant="body2">
-          {t('basal-safety-card-text')}
-        </Typography>
-      </GenericListCard>
+      {hasSafetyBasalData && (
+        <GenericListCard
+          title={t('safety-basal')}
+          data-testid="device-view-overview-card-basal-safety"
+          cardClassName={classes.cards}
+          cardHeaderClassName={classes.cardsHeader}
+          headerAction={
+            <ViewMoreLink
+              dataTestId="link-device-basal-safety"
+              targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewBasalSafety}`}
+            />
+          }
+        >
+          <Typography variant="body2">
+            {t('basal-safety-card-text')}
+          </Typography>
+        </GenericListCard>
+      )}
 
       <GenericListCard
         title={t('parameters-history')}
