@@ -37,33 +37,22 @@ import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
 import { ChangeValueDeviceOverview } from '../device/change-value-device-overview'
 import { formatParameterValue, getTranslationKeyForDeviceChange } from '../device/utils/device.utils'
+import { cardStyle } from './card-style'
 import Box from '@mui/material/Box'
 
 interface DeviceViewSectionsOverviewCardsProps {
   pumpSettings: PumpSettings
 }
 
-export const cardStyle = makeStyles()((theme) => {
+export const deviceCardStyle = makeStyles()((theme) => {
   return {
-    cards: {
-      margin: theme.spacing(2),
-      p: 1, '&:last-child': { pb: 1 }
-    },
-    cardsHeader: {
-      lineHeight: 1
-    },
-    links: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 0.5
-    },
     listOfParameters: {
       display: 'flex',
       flexDirection: 'column',
       gap: 1,
       flex: 1
     },
-    parameters: {
+    parameterChange: {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -74,7 +63,8 @@ export const cardStyle = makeStyles()((theme) => {
 
 export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCardsProps> = ({ pumpSettings }) => {
   const { t } = useTranslation()
-  const { classes } = cardStyle()
+  const { classes: { parameterChange, listOfParameters } } = deviceCardStyle()
+  const { classes: { cards, cardsHeader } } = cardStyle()
   const { device, pump, parameters, cgm, history } = pumpSettings.payload
   const totalDailyInsulin = parameters.find(parameter => parameter.name === DblParameter.TotalDailyInsulin)
   const targetGlucoseLevel = parameters.find(parameter => parameter.name === DblParameter.TargetGlucoseLevel)
@@ -132,8 +122,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         title={t('current-parameters')}
         data-testid="device-view-overview-card-current-settings"
         tableLines={getTableLinesCurrentSettings()}
-        cardClassName={classes.cards}
-        cardHeaderClassName={classes.cardsHeader}
+        cardClassName={cards}
+        cardHeaderClassName={cardsHeader}
         headerAction={
           <ViewMoreLink
             dataTestId="link-device-current-settings"
@@ -146,8 +136,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         <GenericListCard
           title={t('safety-basal')}
           data-testid="device-view-overview-card-basal-safety"
-          cardClassName={classes.cards}
-          cardHeaderClassName={classes.cardsHeader}
+          cardClassName={cards}
+          cardHeaderClassName={cardsHeader}
           headerAction={
             <ViewMoreLink
               dataTestId="link-device-basal-safety"
@@ -164,8 +154,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       <GenericListCard
         title={t('parameters-history')}
         data-testid="device-view-overview-card-parameters-history"
-        cardClassName={classes.cards}
-        cardHeaderClassName={classes.cardsHeader}
+        cardClassName={cards}
+        cardHeaderClassName={cardsHeader}
         headerAction={
           <ViewMoreLink
             dataTestId="link-device-parameters-history"
@@ -174,13 +164,13 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         }
       >
         {hasParameters ? (
-          <Box className={classes.listOfParameters}>
+          <Box className={listOfParameters}>
             <Typography variant="body2">
               {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
             </Typography>
 
             {firstChange.parameters.map((parameter) => (
-              <Box key={parameter.name} className={classes.parameters}>
+              <Box key={parameter.name} className={parameterChange}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {truncate(t(`params|${parameter.name}`), 10)}
                 </Typography>
@@ -206,8 +196,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       <GenericListCard
         title={t('device-history')}
         data-testid="device-view-overview-card-devices-history"
-        cardClassName={classes.cards}
-        cardHeaderClassName={classes.cardsHeader}
+        cardClassName={cards}
+        cardHeaderClassName={cardsHeader}
         headerAction={
           <ViewMoreLink
             dataTestId="link-device-devices-history"
@@ -218,13 +208,13 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
 
         {hasDevices ? (
-          <Box className={classes.listOfParameters}>
+          <Box className={listOfParameters}>
             <Typography variant="body2">
               {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
             </Typography>
 
             {firstDeviceChange.devices.map((device) => (
-              <Box key={device.name} className={classes.parameters}>
+              <Box key={device.name} className={parameterChange}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {t(getTranslationKeyForDeviceChange(device.name))}
                 </Typography>
