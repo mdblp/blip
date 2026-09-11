@@ -25,43 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
-import Box from '@mui/material/Box'
-import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
-import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
-import { type PatientView } from '../../enum/patient-view.enum'
+import {
+  checkCareTeamSectionCardForCurrentParameters,
+  checkCareTeamSectionCardForDevicesHistory, checkCareTeamSectionCardForParametersHistory,
+  checkCareTeamSectionCardForSafetyBasal,
+  checkClickViewMoreBasalSafety,
+  checkClickViewMoreCurrentSettings,
+  checkClickViewMoreDevicesHistory,
+  checkClickViewMoreSettingsHistory,
+  checkDeviceSectionsOverviewVisible
+} from '../assert/device-view-sections-overview.assert'
 
-interface PatientNavBarProps {
-  currentPatientView: PatientView
-  onChangePatientView: (patientView: PatientView) => void
-  onClickPrint?: () => void
+export const testDeviceSectionsOverviewVisibleMobile = async () => {
+  checkDeviceSectionsOverviewVisible()
+  checkCareTeamSectionCardForCurrentParameters()
+  checkCareTeamSectionCardForSafetyBasal()
+  await checkCareTeamSectionCardForParametersHistory()
+  await checkCareTeamSectionCardForDevicesHistory()
 }
 
-export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
-  const {
-    currentPatientView,
-    onChangePatientView,
-    onClickPrint
-  } = props
-
-  const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
-
-  return (
-    <>
-      <Box sx={{ minHeight: mainHeaderHeight }}>
-        <MainHeaderPatientNavMobile
-          onClickPrint={onClickPrint}
-          setMainHeaderHeight={setMainHeaderHeight}
-        />
-      </Box>
-
-      <Box>
-        <PatientNavBarTabsMobile
-          currentPatientView={currentPatientView}
-          onChangePatientView={onChangePatientView}
-        />
-      </Box>
-    </>
-  )
+export const testClickViewMoreCurrentSettings = async () => {
+  await checkClickViewMoreCurrentSettings()
 }
 
+export const testClickViewMoreBasalSafety = async () => {
+  await checkClickViewMoreBasalSafety()
+}
+
+export const testClickViewMoreSettingsHistory = async () => {
+  await checkClickViewMoreSettingsHistory()
+}
+
+export const testClickViewMoreDevicesHistory = async () => {
+  await checkClickViewMoreDevicesHistory()
+}

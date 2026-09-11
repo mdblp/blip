@@ -37,8 +37,6 @@ import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { useAuth } from '../../lib/auth'
-import { ConfigService } from '../../lib/config/config.service'
-import { validatePartner } from '../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 import { Patient } from '../../lib/patient/models/patient.model'
 import TeamUtils from '../../lib/team/team.util'
@@ -46,7 +44,6 @@ import { errorTextFromException, setPageTitle } from '../../lib/utils'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { DevicesView } from '../../pages/patient-view/devices/devices-view'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
-import { logError } from '../../utils/error.util'
 import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
 import { CreateNoteDialog } from '../dialogs/notes/create-note/create-note-dialog'
@@ -61,6 +58,17 @@ import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
 import { getPageTitleByPatientView } from './patient-data.utils'
+import { logError } from '../../utils/error.util'
+import { ConfigService } from '../../lib/config/config.service'
+import { validatePartner } from '../../lib/external-consents/external-consents.util'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { CurrentParametersSection } from '../../pages/patient-view/devices/sections/current-parameters-section'
+import { SafetyBasalProfileSection } from '../../pages/patient-view/devices/sections/safety-basal-profile-section'
+import {
+  ParametersChangeHistorySection
+} from '../../pages/patient-view/devices/sections/parameters-change-history-section'
+import { DeviceChangeHistorySection } from '../../pages/patient-view/devices/sections/device-change-history-section'
+import { DeviceViewSectionsOverview } from '../../pages/patient-view/devices/devices-view-sections-overview'
 
 interface PatientDataProps {
   patient: Patient
@@ -71,6 +79,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const theme = useTheme()
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { teamId } = useParams()
   const { getAndClearAppState, user } = useAuth()
   const [appState, setAppState] = useState<AppState | null>(null)
@@ -102,7 +111,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     }
 
     fetchPartner()
-  }, [appState, partnerId, callbackUrl])
+  }, [appState, partnerId, callbackUrl, alert, t])
 
   const showDataAccessRequestDialog = user.isUserPatient() && !!partnerName
 
@@ -158,6 +167,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   }, [patient])
 
   const isEatingShortlyEnabled = ConfigService.getIsEatingShortlyEnabled()
+
+  const pumpSettings = medicalData?.medicalData?.pumpSettings?.at(-1)
 
   return (
     <>
@@ -271,15 +282,33 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                       />
                     }
                   />
-                  <Route
-                    path={AppUserRoute.Devices}
-                    element={
-                      <DevicesView
-                        goToDailySpecificDate={goToDailySpecificDate}
-                        medicalData={medicalData}
-                      />
-                    }
+                  <Route path={AppUserRoute.Devices}
+                         element={isMobile
+                           ? (<Navigate to={AppUserRoute.DevicesSectionsOverview} replace />)
+                           :
+                           (
+                             <DevicesView
+                               goToDailySpecificDate={goToDailySpecificDate}
+                               medicalData={medicalData}
+                             />
+                           )}
                   />
+                  {isMobile && (
+                    <Route>
+                      <Route path={AppUserRoute.DevicesSectionsOverview} element={<DeviceViewSectionsOverview pumpSettings={pumpSettings} />} />
+                      <Route path={AppUserRoute.DevicesSectionsOverviewCurrentSettings}
+                             element={<CurrentParametersSection pumpSettings={pumpSettings} />} />
+                      <Route path={AppUserRoute.DevicesSectionsOverviewBasalSafety}
+                             element={<SafetyBasalProfileSection safetyBasalConfig={pumpSettings?.payload?.securityBasals}
+                                                                 deviceSystem={pumpSettings?.payload?.device?.name} />} />
+                      <Route path={AppUserRoute.DevicesSectionsOverviewSettingsHistory}
+                             element={<ParametersChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
+                                                                      pumpSettings={pumpSettings} />} />
+                      <Route path={AppUserRoute.DevicesSectionsOverviewDevicesHistory}
+                             element={<DeviceChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
+                                                                  pumpSettings={pumpSettings} />} />
+                    </Route>
+                  )}
                   {
                     user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
                     <Route

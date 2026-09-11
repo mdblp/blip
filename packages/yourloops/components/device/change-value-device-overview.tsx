@@ -25,43 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
-import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
-import { type PatientView } from '../../enum/patient-view.enum'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
+import { Typography } from "@mui/material"
 
-interface PatientNavBarProps {
-  currentPatientView: PatientView
-  onChangePatientView: (patientView: PatientView) => void
-  onClickPrint?: () => void
+interface ChangeValueDeviceOverviewProps {
+  previousValue?: string
+  currentValue: string
+  withFormatting: boolean
 }
 
-export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
-  const {
-    currentPatientView,
-    onChangePatientView,
-    onClickPrint
-  } = props
-
-  const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
+export const ChangeValueDeviceOverview: FC<ChangeValueDeviceOverviewProps> = (props) => {
+  const { previousValue, currentValue, withFormatting } = props
+  const theme = useTheme()
 
   return (
-    <>
-      <Box sx={{ minHeight: mainHeaderHeight }}>
-        <MainHeaderPatientNavMobile
-          onClickPrint={onClickPrint}
-          setMainHeaderHeight={setMainHeaderHeight}
-        />
-      </Box>
-
-      <Box>
-        <PatientNavBarTabsMobile
-          currentPatientView={currentPatientView}
-          onChangePatientView={onChangePatientView}
-        />
-      </Box>
-    </>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
+      {previousValue &&
+        <>
+          <Typography
+            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
+          </Typography>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <Typography variant="body2">{withFormatting ? formatNumberForLang(currentValue) : currentValue} </Typography>
+    </Box>
   )
 }
-

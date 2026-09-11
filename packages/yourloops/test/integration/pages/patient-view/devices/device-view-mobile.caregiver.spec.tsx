@@ -41,12 +41,18 @@ import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import {
+  testClickViewMoreBasalSafety,
+  testClickViewMoreCurrentSettings, testClickViewMoreDevicesHistory, testClickViewMoreSettingsHistory,
+  testDeviceSectionsOverviewVisibleMobile
+} from '../../../use-cases/device-settings-sections-overview-visualisation'
+import { act, screen } from '@testing-library/react'
 
 describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
-  const devicesRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
+  const deviceSectionsOverviewRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.DevicesSectionsOverview}`
 
   beforeEach(() => {
     mockWindowResizer()
@@ -61,9 +67,33 @@ describe('Devices view for Caregiver', () => {
     mockMobileScreen()
   })
 
+  const renderDeviceSectionsOverviewPage = async (route: string) => {
+    await act(async () => {
+      renderPage(route)
+    })
+  }
+
   it('should render correct layout', async () => {
-    renderPage(devicesRoute)
-    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+    await checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+  })
+
+  it('should display the section overview page in mobile version', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+    await screen.findByTestId('device-view-overview-card-current-settings')
+    await testDeviceSectionsOverviewVisibleMobile()
+  })
+
+  it('should be able to access the pages linked by the cards', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+
+    await screen.findByTestId('device-view-overview-card-current-settings')
+
+    await testClickViewMoreCurrentSettings()
+    await testClickViewMoreBasalSafety()
+    await testClickViewMoreSettingsHistory()
+    await testClickViewMoreDevicesHistory()
+
   })
 
 })
