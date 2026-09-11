@@ -36,7 +36,7 @@ import { DblParameter, PumpSettings } from 'medical-domain'
 import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
 import { ChangeValueDeviceOverview } from '../device/change-value-device-overview'
-import { formatParameterValue, getTranslationKeyForDeviceChange } from '../device/utils/device.utils'
+import { formatParameterValue, getTranslationKeyForDeviceChange, sortHistory } from '../device/utils/device.utils'
 import { cardStyle } from './card-style'
 import Box from '@mui/material/Box'
 
@@ -70,6 +70,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const targetGlucoseLevel = parameters.find(parameter => parameter.name === DblParameter.TargetGlucoseLevel)
   const totalHypoglycemiaThreshold = parameters.find(parameter => parameter.name === DblParameter.HypoglycemiaThreshold)
   const lastParameterChange = history.parameters
+  sortHistory(lastParameterChange)
   const lastDeviceChange = history.devices
   const { pathname } = useLocation()
   const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
