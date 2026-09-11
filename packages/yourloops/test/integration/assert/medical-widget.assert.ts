@@ -152,8 +152,13 @@ export const checkMedicalReportUpdate = async (medicalFileWidgetParams: MedicalF
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const checkMedicalReportConsult = async (medicalFileWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+export const checkMedicalReportConsult = async (medicalFileWidgetParams: MedicalFilesWidgetParams, isClosed: boolean): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
+  if (isClosed) {
+    const medicalFilesDetailsButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical files' })
+    await userEvent.click(medicalFilesDetailsButton)
+  }
+
   const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-2 2022-01-02 Created by Lapaix Vishnou ${medicalFileWidgetParams.selectedTeamName}` })
   await userEvent.click(medicalReportButton)
   const medicalReportDialog = screen.getByRole('dialog')

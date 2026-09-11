@@ -25,11 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DataAPI from '../../../lib/data/data.api'
-import moment, { type Moment } from 'moment-timezone'
-import { devicesHistory, history } from '../data/data-api.data'
-import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 import {
+  CGMName,
   DatumType,
   DblParameter,
   DeviceSystem,
@@ -41,16 +38,19 @@ import {
   Unit,
   Wizard,
   WizardInputMealFat,
-  WizardInputMealSource,
-  CGMName
+  WizardInputMealSource
 } from 'medical-domain'
-import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
 import Bg from 'medical-domain/dist/src/domains/models/medical/datum/bg.model'
+import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
 import {
   DeviceEventSubtype
 } from 'medical-domain/dist/src/domains/models/medical/datum/enums/device-event-subtype.enum'
-import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
 import Intensity from 'medical-domain/dist/src/domains/models/medical/datum/enums/intensity.enum'
+import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
+import moment, { type Moment } from 'moment-timezone'
+import DataAPI from '../../../lib/data/data.api'
+import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
+import { devicesHistory, history } from '../data/data-api.data'
 import { getCompleteDailyViewData } from './complete-daily-view-data'
 
 export const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
@@ -1738,257 +1738,6 @@ export const smallDataSetDblg1v118: Data = {
 export const noData: Data = {
   dataRange: ['', ''],
   data: [] as unknown as MedicalData
-}
-
-export const smbgData: Data = {
-  dataRange: ['2022-08-08T11:30:00Z', '2022-08-08T18:30:00Z'],
-  data: {
-    "alarmEvents": [],
-    "basal": [],
-    "bolus": [],
-    "cbg": [],
-    "confidentialModes": [],
-    "deviceParametersChanges": [],
-    "eatingShortlyEvents": [],
-    "iob": [],
-    "messages": [],
-    "meals": [],
-    "nightModes": [],
-    "physicalActivities": [],
-    "pumpSettings": [],
-    "reservoirChanges": [],
-    "smbg": [
-      {
-        "epoch": 1659971700000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:15:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_0",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 189,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 62100000
-      },
-      {
-        "epoch": 1659972000000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:20:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_1",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 265,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 62400000
-      },
-      {
-        "epoch": 1659972300000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:25:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_2",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 265,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 62700000
-      },
-      {
-        "epoch": 1659972600000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:30:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_3",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 117,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 63000000
-      },
-      {
-        "epoch": 1659972900000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:35:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_4",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 117,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 63300000
-      },
-      {
-        "epoch": 1659973200000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:40:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_5",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 117,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 63600000
-      },
-      {
-        "epoch": 1659973500000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:45:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_6",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 61,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 63900000
-      },
-      {
-        "epoch": 1659973800000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:50:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_7",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 61,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 64200000
-      },
-      {
-        "epoch": 1659974100000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T15:55:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_8",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 61,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 64500000
-      },
-      {
-        "epoch": 1659974400000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T16:00:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_9",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 61,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 64800000
-      },
-      {
-        "epoch": 1659974700000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T16:05:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_10",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 40,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 65100000
-      },
-      {
-        "epoch": 1659975000000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T16:10:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_11",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 40,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 65400000
-      },
-      {
-        "epoch": 1659975300000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T16:15:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_12",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 40,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 65700000
-      },
-      {
-        "epoch": 1659975600000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T16:20:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_13",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 40,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 66000000
-      },
-      {
-        "epoch": 1659975900000,
-        "displayOffset": -120,
-        "normalTime": "2022-08-08T16:25:00.000Z",
-        "timezone": "Europe/Paris",
-        "guessedTimezone": false,
-        "id": "smb_2022-08-08_14",
-        "type": DatumType.Smbg,
-        "source": Source.Diabeloop,
-        "units": Unit.MilligramPerDeciliter,
-        "value": 40,
-        "localDate": "2022-08-08",
-        "isoWeekday": WeekDays.Monday,
-        "msPer24": 66300000
-      }
-    ],
-    "warmUps": [],
-    "wizards": [],
-    "zenModes": [],
-    "timezoneChanges": []
-  }
 }
 
 export const timeInRangeStatsTrendViewData: Data = {
