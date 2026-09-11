@@ -45,7 +45,7 @@ export const ChangeValue: FC<ChangeValueProps> = (props) => {
     <Box
       sx={{
         display: "flex",
-        alignItems: "center",
+        alignItems: "center"
       }}>
       {previousValue &&
         <>
