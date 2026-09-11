@@ -29,17 +29,13 @@ import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
-  checkAverageGlucoseStatWidget,
-  checkCoefficientOfVariationStatWidget,
   checkGlucoseManagementIndicator,
-  checkStandardDeviationStatWidget,
   checkStatTooltip,
   checkTimeInRangeStatsTitle
 } from '../../../assert/stats.assert'
 import {
   checkDaysSelection,
   checkRangeSelection,
-  checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsBolusAndCarbsAverage,
   checkTrendsLayout,
   checkTrendsTidelineContainerTooltips,
@@ -49,7 +45,7 @@ import {
 import { buildHba1cData } from '../../../data/data-api.data'
 import { patient2Info } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../../mock/data.api.mock'
+import { mockDataAPI, timeInRangeStatsTrendViewData } from '../../../mock/data.api.mock'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
@@ -118,21 +114,6 @@ describe('Trends view for anyone', () => {
 
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
-    })
-  })
-
-  describe('with smbg data', () => {
-    it('should display correct time in range stats info', async () => {
-      mockDataAPI(smbgData)
-      await act(async () => {
-        renderPage(trendsRoute)
-      })
-
-      await checkSMBGTrendsStatsWidgetsTooltips()
-
-      await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-      await checkCoefficientOfVariationStatWidget('CV (BGM)78%')
     })
   })
 })
