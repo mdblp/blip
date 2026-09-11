@@ -25,25 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountSectionsOverviewCards } from '../../components/overview-cards/user-account-sections-overview-cards'
-import React from 'react'
-import SpinningLoader from '../../components/loaders/spinning-loader'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { makeStyles } from 'tss-react/mui'
 
-export const UserAccountSectionsOverview = () => {
-
-  const { consents, refreshInProgress } = useDataSharingHook()
-
-  return (
-    <UserAccountPageContextProvider>
-      {refreshInProgress
-        ? <SpinningLoader className="centered-spinning-loader" />
-        :
-        <UserAccountSectionsOverviewCards
-          consents={consents}
-        />
-      }
-    </UserAccountPageContextProvider>
-  )
-}
+export const cardStyle = makeStyles()((theme) => {
+  return {
+    cards: {
+      margin: theme.spacing(2)
+    },
+    cardsHeader: {
+      lineHeight: 1
+    },
+    links: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.5
+    }
+  }
+})
