@@ -30,10 +30,6 @@ import Box from '@mui/material/Box'
 import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
 import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
 import { type PatientView } from '../../enum/patient-view.enum'
-import { MainHeaderBottomBackButton } from './main-header-bottom-back-button'
-import { DeviceViewSections } from '../../enum/patient-view-sections.enum'
-import { useLocation } from 'react-router-dom'
-import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface PatientNavBarProps {
   currentPatientView: PatientView
@@ -49,29 +45,14 @@ export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props
   } = props
 
   const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
-  const { pathname } = useLocation()
-
-  const DEVICE_VIEW_SECTIONS_URL_MAPPING: Record<DeviceViewSections, string> = {
-    [DeviceViewSections.CurrentSettings]: 'current-settings',
-    [DeviceViewSections.BasalSafety]: 'basal-safety',
-    [DeviceViewSections.SettingsHistory]: 'settings-history',
-    [DeviceViewSections.DevicesHistory]: 'devices-history'
-  }
-
-  const isMatchingDeviceViewSections = Object.values(DEVICE_VIEW_SECTIONS_URL_MAPPING).some(viewValue =>
-    pathname.includes(viewValue)
-  )
 
   return (
     <>
       <Box sx={{ minHeight: mainHeaderHeight }}>
-        {(pathname.includes(AppUserRoute.Patients) && isMatchingDeviceViewSections) ?
           <MainHeaderPatientNavMobile
             onClickPrint={onClickPrint}
             setMainHeaderHeight={setMainHeaderHeight}
           />
-          : <MainHeaderBottomBackButton />
-        }
       </Box>
 
       <Box>
