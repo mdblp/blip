@@ -193,6 +193,8 @@ export const checkMedicalReportDelete = async (medicalFileWidgetParams: MedicalF
 
 export const checkEmptyMedicalFilesWidgetForPatient = async (): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
+  const medicalFilesDetailsButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical files' })
+  await userEvent.click(medicalFilesDetailsButton)
   expect(within(medicalFilesWidget).getByText('No medical files have yet been created by your healthcare professional.')).toBeVisible()
 }
 
