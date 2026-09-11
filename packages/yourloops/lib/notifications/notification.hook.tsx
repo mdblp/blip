@@ -27,10 +27,11 @@
 
 import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
+import { useAuth0 } from '@auth0/auth0-react'
 import { useAuth } from '../auth'
 import NotificationApi from './notification.api'
 import { type NotificationContext } from './models/notification-context.model'
-import { type Notification } from './models/notification.model'
+import { InAppNotification } from './models/notification.model'
 import { type NotificationProvider } from './models/notification-provider.model'
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
@@ -41,8 +42,9 @@ let lock = false
 
 function NotificationContextImpl(): NotificationContext {
   const { user } = useAuth()
-  const [receivedInvitations, setReceivedInvitations] = React.useState<Notification[]>([])
-  const [sentInvitations, setSentInvitations] = React.useState<Notification[]>([])
+  const { getAccessTokenSilently } = useAuth0()
+  const [receivedInvitations, setReceivedInvitations] = React.useState<InAppNotification[]>([])
+  const [sentInvitations, setSentInvitations] = React.useState<InAppNotification[]>([])
   const [initialized, setInitialized] = React.useState(false)
 
   if (!user) {
@@ -53,16 +55,20 @@ function NotificationContextImpl(): NotificationContext {
     setInitialized(false)
   }
 
-  const accept = async (notification: Notification): Promise<void> => {
-    log.info('Accept invite', notification)
-    await NotificationApi.acceptInvitation(user.id, notification)
+  const removeNotification = (id: string): void => {
+    setReceivedInvitations(prev => prev.filter(n => n.id !== id))
   }
 
-  const decline = async (notification: Notification): Promise<void> => {
+  const accept = async (notification: InAppNotification): Promise<void> => {
+    log.info('Accept invite', notification)
+    await NotificationApi.acceptInvitation(user.id, notification)
+    removeNotification(notification.id)
+  }
+
+  const decline = async (notification: InAppNotification): Promise<void> => {
     log.info('Decline invite', notification)
     await NotificationApi.declineInvitation(user.id, notification)
-    const r = await NotificationApi.getReceivedInvitations(user.id)
-    setReceivedInvitations(r)
+    removeNotification(notification.id)
   }
 
   const cancel = async (notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> => {
@@ -82,6 +88,7 @@ function NotificationContextImpl(): NotificationContext {
 
   const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
+      // TODO: could be user.username as the back try to find the username based on the userid
       const invitations = await NotificationApi.getReceivedInvitations(user.id)
       setReceivedInvitations(invitations)
     } catch (err) {
@@ -97,6 +104,7 @@ function NotificationContextImpl(): NotificationContext {
     log.info('init')
     lock = true
 
+    // Init: Historic fetch of the notif
     Promise.all([
       refreshReceivedInvitations(),
       refreshSentInvitations()
@@ -107,7 +115,21 @@ function NotificationContextImpl(): NotificationContext {
       })
   }
 
-  useEffect(initHook, [user, initialized, refreshReceivedInvitations, refreshSentInvitations])
+  useEffect(initHook, [user, initialized, refreshSentInvitations, refreshReceivedInvitations])
+
+  // real time push notifications
+  useEffect(() => {
+    if (!initialized) return
+
+    const disconnect = NotificationApi.connectToRealTimeServer(
+      user.id,
+      getAccessTokenSilently,
+      (notif) => setReceivedInvitations(prev => [...prev, notif])
+    )
+
+    // used a React cleanup function to disconnect from the real time-server when the component unmounts
+    return disconnect
+  }, [initialized, user.id, getAccessTokenSilently])
 
   return {
     initialized,
@@ -117,7 +139,6 @@ function NotificationContextImpl(): NotificationContext {
     accept,
     decline,
     cancel,
-    refreshReceivedInvitations
   }
 }
 

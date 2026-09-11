@@ -26,82 +26,120 @@
  */
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { notificationConversion } from './notification.util'
-import { type Notification } from './models/notification.model'
-import { NotificationType } from './models/enums/notification-type.enum'
+import { InAppNotification } from './models/notification.model'
 import { type CancelInvitationPayload } from './models/cancel-invitation-payload.model'
-import { type INotification } from './models/i-notification.model'
+import { INotificationType } from './models/enums/i-notification-type.enum'
+import { Centrifuge } from 'centrifuge'
+import appConfig from '../config/config'
+
 
 const log = bows('Notification API')
 
 export default class NotificationApi {
-  static async acceptInvitation(userId: string, notification: Notification): Promise<void> {
+
+  static connectToRealTimeServer(userId: string, getToken: () => Promise<string>, onNotification: (notification: InAppNotification) => void): () => void {
+    const wsUrl = appConfig.API_HOST.replace(/^http/, 'ws') + '/connection/websocket'
+    const centrifuge = new Centrifuge(wsUrl, {
+      getToken: async () => await getToken()
+    })
+
+    const sub = centrifuge.newSubscription(`notification#${userId}`)
+    sub.on('publication', (ctx) => {
+      const notif = ctx.data as InAppNotification
+      onNotification(notif)
+    })
+
+    sub.subscribe()
+    centrifuge.connect()
+
+    // Return a cleanup/disconnect function
+    return () => {
+      sub.unsubscribe()
+      centrifuge.disconnect()
+    }
+  }
+
+  static async acceptInvitation(userId: string, notification: InAppNotification): Promise<void> {
     let url: string
+    const teamId = notification.payload["careTeamId"] as string
     switch (notification.type) {
-      case NotificationType.directInvitation:
-        url = `/confirm/accept/invite/${userId}/${notification.creatorId}`
+      case INotificationType.directInvitation:
+        url = `/crew/v1/direct-shares/${userId}`
         break
-      case NotificationType.careTeamProInvitation:
-      case NotificationType.careTeamPatientInvitation:
-        url = '/confirm/accept/team/invite'
+      case INotificationType.careTeamProInvitation:
+        url = `/crew/v1/teams/${teamId}/members`
+        break
+      case INotificationType.careTeamPatientInvitation:
+        url = `/crew/v1/teams/${teamId}/patients`
         break
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
     }
-    await NotificationApi.updateInvitation(url, notification.id)
+    notification.status = "accepted"
+    await NotificationApi.updateInvitation(url, userId, notification)
   }
 
   static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
-    const payload: CancelInvitationPayload = {
+    const payload = {
       email: inviteeEmail,
-      key: notificationId,
-      target: { id: teamId }
+      TeamId: teamId,
     }
 
-    await HttpService.post<string, CancelInvitationPayload>({
-      url: '/confirm/cancel/invite',
+    await HttpService.post<string, {email: string, TeamId: string}>({
+      url: `/crew/v1/teams/${teamId}/members`, // TODO: create the route in crew with payload
       payload
     })
   }
 
-  static async declineInvitation(userId: string, notification: Notification): Promise<void> {
+  static async declineInvitation(userId: string, notification: InAppNotification): Promise<void> {
     let url: string
+    const teamId = notification.payload["careTeamId"] as string
     switch (notification.type) {
-      case NotificationType.directInvitation:
-        url = `/confirm/dismiss/invite/${userId}/${notification.creatorId}`
+      case INotificationType.directInvitation:
+        // TODO: put crew
+        url = `/crew/direct-shares/${userId}`
         break
-      case NotificationType.careTeamProInvitation:
-      case NotificationType.careTeamPatientInvitation: {
-        if (!notification.target) {
-          throw Error('Invalid target team id')
-        }
-        url = `/confirm/dismiss/team/invite/${notification.target?.id}`
+      case INotificationType.careTeamProInvitation:
+        url = `/crew/v1/teams/${teamId}/members`
         break
-      }
+      case INotificationType.careTeamPatientInvitation:
+        url = `/crew/v1/teams/${teamId}/patients`
+        break
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
     }
-    await NotificationApi.updateInvitation(url, notification.id)
+    notification.status = "rejected"
+    await NotificationApi.updateInvitation(url, userId, notification)
   }
 
-  static async getReceivedInvitations(userId: string): Promise<Notification[]> {
-    return await NotificationApi.getInvitations(`/confirm/invitations/${userId}`)
+  static async getReceivedInvitations(userId: string): Promise<InAppNotification[]> {
+    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&userId=${userId}`)
   }
 
-  static async getSentInvitations(userId: string): Promise<Notification[]> {
-    return await NotificationApi.getInvitations(`/confirm/invite/${userId}`)
+  static async getSentInvitations(userId: string): Promise<InAppNotification[]> {
+    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&senderId=${userId}`)
   }
 
-  private static async updateInvitation(url: string, key: string): Promise<void> {
-    await HttpService.put<string, { key: string }>({ url, payload: { key } })
+  private static async updateInvitation(url: string, userId: string, notification: InAppNotification): Promise<void> {
+    const now = new Date().toISOString()
+    await HttpService.put<string, { userId: string, email: string, teamId: string, invitationStatus: string, lastStatusChangedAt: string }>({
+      url,
+      payload: {
+        userId: userId,
+        email: notification.userEmail,
+        teamId: notification.payload["careTeamId"] as string,
+        invitationStatus: notification.status,
+        lastStatusChangedAt: now
+      }
+    })
   }
 
-  private static async getInvitations(url: string): Promise<Notification[]> {
+  private static async getPendingNotifications(url: string): Promise<InAppNotification[]> {
     try {
-      const { data } = await HttpService.get<INotification[]>({ url })
-      return NotificationApi.convertNotifications(data)
+      const { data } = await HttpService.get<InAppNotification[]>({ url })
+      return data
     } catch (err) {
       const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
@@ -112,14 +150,4 @@ export default class NotificationApi {
     }
   }
 
-  private static convertNotifications(notificationsFromApi: INotification[]): Notification[] {
-    const convertedNotifications: Notification[] = []
-    notificationsFromApi.forEach((notificationFromApi) => {
-      const notification = notificationConversion(notificationFromApi)
-      if (notification) {
-        convertedNotifications.push(notification)
-      }
-    })
-    return convertedNotifications
-  }
 }
