@@ -28,40 +28,24 @@
 
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GenericListCard } from '../../components/generic-list-card/generic-list-card'
-import { useUserAccountPageState } from './user-account-page-context'
-import { makeStyles } from 'tss-react/mui'
+import { GenericListCard } from '../generic-list-card/generic-list-card'
+import { useUserAccountPageState } from '../../pages/user-account/user-account-page-context'
 import { ExternalConsent } from '../../lib/external-consents/models/external-consent.model'
 import { useAuth } from '../../lib/auth'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { ViewMoreLink } from '../../components/buttons/view-more-link'
+import { ViewMoreLink } from '../buttons/view-more-link'
 import PatientUtils from '../../lib/patient/patient.util'
 import { availableCountries, getLangName } from '../../lib/language'
 import { CountryCode } from '../../lib/auth/models/country.model'
 import Box from '@mui/material/Box'
-import { RemoteMonitoringAvatar } from './remote-monitoring-avatar'
+import { RemoteMonitoringAvatar } from '../../pages/user-account/remote-monitoring-avatar'
 import Typography from '@mui/material/Typography'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { useDataSharingHook } from '../../pages/user-account/sections/data-sharing-section/data-sharing.hook'
+import { cardStyle } from './card-style'
 
 interface UserAccountMenuMobileCardsProps {
   consents: ExternalConsent[]
 }
-
-export const cardStyle = makeStyles()((theme) => {
-  return {
-    cards: {
-      margin: theme.spacing(2)
-    },
-    cardsHeader: {
-      lineHeight: 1
-    },
-    links: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 0.5
-    }
-  }
-})
 
 export const UserAccountSectionsOverviewCards: FC<UserAccountMenuMobileCardsProps> = (props) => {
   const { consents } = props

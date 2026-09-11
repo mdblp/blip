@@ -25,25 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountSectionsOverviewCards } from '../../components/overview-cards/user-account-sections-overview-cards'
-import React from 'react'
-import SpinningLoader from '../../components/loaders/spinning-loader'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import {
+  checkCareTeamSectionCardForAlerts,
+  checkCareTeamSectionCardForInfos,
+  checkCareTeamSectionCardForMembers,
+  checkCareTeamSectionsOverviewNotVisible,
+  checkCareTeamSectionsOverviewVisible,
+  checkClickViewMoreAlerts,
+  checkClickViewMoreInfos,
+  checkClickViewMoreMembers
+} from '../assert/care-team-sections-overview-mobile'
 
-export const UserAccountSectionsOverview = () => {
+export const testCareTeamSectionsOverviewVisibleMobile = () => {
+  checkCareTeamSectionsOverviewVisible()
+  checkCareTeamSectionCardForInfos()
+  checkCareTeamSectionCardForMembers()
+  checkCareTeamSectionCardForAlerts()
+}
 
-  const { consents, refreshInProgress } = useDataSharingHook()
+export const testCareTeamSectionsOverviewNotVisibleMobile  = () => {
+  checkCareTeamSectionsOverviewNotVisible()
+}
 
-  return (
-    <UserAccountPageContextProvider>
-      {refreshInProgress
-        ? <SpinningLoader className="centered-spinning-loader" />
-        :
-        <UserAccountSectionsOverviewCards
-          consents={consents}
-        />
-      }
-    </UserAccountPageContextProvider>
-  )
+export const testClickViewMoreInfos  = async () => {
+  await checkClickViewMoreInfos()
+}
+
+export const testClickViewMoreMembers  = async () => {
+  await checkClickViewMoreMembers()
+}
+
+export const testClickViewMoreAlerts = async () => {
+  await checkClickViewMoreAlerts()
 }

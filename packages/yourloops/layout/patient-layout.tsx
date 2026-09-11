@@ -49,7 +49,7 @@ import { CountryCode } from '../lib/auth/models/country.model'
 export const PatientLayout: FC = () => {
   const { patient } = usePatient()
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { user } = useAuth()
   const shouldDisplayUserAccountSectionsOverview = isMobile && user.isUserPatient() && user.settings.country === CountryCode.France
 

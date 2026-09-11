@@ -25,25 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountSectionsOverviewCards } from '../../components/overview-cards/user-account-sections-overview-cards'
-import React from 'react'
+import React, { type FC } from 'react'
+import { useTeam } from '../../lib/team'
+import { useParams } from 'react-router-dom'
 import SpinningLoader from '../../components/loaders/spinning-loader'
-import { useDataSharingHook } from './sections/data-sharing-section/data-sharing.hook'
+import { CareTeamSettingsSectionsOverviewCards } from '../../components/overview-cards/care-team-settings-sections-overview-cards'
 
-export const UserAccountSectionsOverview = () => {
+export const CareTeamSettingsSectionsOverview: FC = () => {
+  const { getTeam } = useTeam()
 
-  const { consents, refreshInProgress } = useDataSharingHook()
+  const { teamId } = useParams()
+  const team = getTeam(teamId)
 
-  return (
-    <UserAccountPageContextProvider>
-      {refreshInProgress
-        ? <SpinningLoader className="centered-spinning-loader" />
-        :
-        <UserAccountSectionsOverviewCards
-          consents={consents}
-        />
-      }
-    </UserAccountPageContextProvider>
-  )
+  return team ? <CareTeamSettingsSectionsOverviewCards /> : <SpinningLoader />
 }
