@@ -75,7 +75,7 @@ const HCP_ROUTE = 'hcps'
 const PATIENTS_ROUTE = 'patients'
 
 export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE = 'patient-already-invited-in-team'
-const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
+export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
 
 export default class TeamApi {
   static async getTeams(user: User): Promise<Team[]> {
