@@ -299,8 +299,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                       <Route path={AppUserRoute.DevicesSectionsOverviewCurrentSettings}
                              element={<CurrentParametersSection pumpSettings={pumpSettings} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewBasalSafety}
-                             element={<SafetyBasalProfileSection safetyBasalConfig={pumpSettings.payload.securityBasals}
-                                                                 deviceSystem={pumpSettings.payload.device.name} />} />
+                             element={<SafetyBasalProfileSection safetyBasalConfig={pumpSettings?.payload?.securityBasals}
+                                                                 deviceSystem={pumpSettings?.payload?.device?.name} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewSettingsHistory}
                              element={<ParametersChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
                                                                       pumpSettings={pumpSettings} />} />
