@@ -35,11 +35,10 @@ interface ChangeValueProps {
   previousValue?: string
   currentValue: string
   withFormatting: boolean
-  isOverviewCard?: boolean
 }
 
 export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting, isOverviewCard = false } = props
+  const { previousValue, currentValue, withFormatting } = props
   const theme = useTheme()
 
   return (
@@ -47,7 +46,6 @@ export const ChangeValue: FC<ChangeValueProps> = (props) => {
       sx={{
         display: "flex",
         alignItems: "center",
-        fontSize: isOverviewCard ? "12px" : undefined
       }}>
       {previousValue &&
         <>

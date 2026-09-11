@@ -49,10 +49,10 @@ export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props
   return (
     <>
       <Box sx={{ minHeight: mainHeaderHeight }}>
-          <MainHeaderPatientNavMobile
-            onClickPrint={onClickPrint}
-            setMainHeaderHeight={setMainHeaderHeight}
-          />
+        <MainHeaderPatientNavMobile
+          onClickPrint={onClickPrint}
+          setMainHeaderHeight={setMainHeaderHeight}
+        />
       </Box>
 
       <Box>

@@ -43,9 +43,10 @@ import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/hea
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import {
   testClickViewMoreBasalSafety,
-  testClickViewMoreCurrentSettings, testClickViewMoreDevicesHistory, testClickViewMoreSettingsHistory
+  testClickViewMoreCurrentSettings, testClickViewMoreDevicesHistory, testClickViewMoreSettingsHistory,
+  testDeviceSectionsOverviewVisibleMobile
 } from '../../../use-cases/device-settings-sections-overview-visualisation'
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 
 describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -77,8 +78,16 @@ describe('Devices view for Caregiver', () => {
     await checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
 
+  it('should display the section overview page in mobile version', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+    await screen.findByTestId('device-view-overview-card-current-settings')
+    await testDeviceSectionsOverviewVisibleMobile()
+  })
+
   it('should be able to access the pages linked by the cards', async () => {
     await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+
+    await screen.findByTestId('device-view-overview-card-current-settings')
 
     await testClickViewMoreCurrentSettings()
     await testClickViewMoreBasalSafety()

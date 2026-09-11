@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { patient1Info } from '../../../data/patient.api.data'
 import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
@@ -35,12 +35,17 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import {
+  testClickViewMoreBasalSafety,
+  testClickViewMoreCurrentSettings, testClickViewMoreDevicesHistory, testClickViewMoreSettingsHistory,
+  testDeviceSectionsOverviewVisibleMobile
+} from '../../../use-cases/device-settings-sections-overview-visualisation'
 
 describe('Device view for G1 Patient', () => {
   const firstName = patient1Info.profile.firstName
   const lastName = patient1Info.profile.lastName
 
-  const deviceRoute = AppUserRoute.Devices
+  const deviceSectionsOverviewRoute = AppUserRoute.DevicesSectionsOverview
 
   beforeEach(() => {
     mockWindowResizer()
@@ -50,10 +55,32 @@ describe('Device view for G1 Patient', () => {
     mockMobileScreen()
   })
 
-  it('should render correct layout', async () => {
+  const renderDeviceSectionsOverviewPage = async (route: string) => {
     await act(async () => {
-      renderPage(deviceRoute)
+      renderPage(route)
     })
+  }
+
+  it('should render correct layout', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
     await testAppMainLayoutForPatientMobile({ loggedInUserFullName: `${lastName} ${firstName}` })
+  })
+
+  it('should display the section overview page in mobile version', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+    await screen.findByTestId('device-view-overview-card-current-settings')
+    await testDeviceSectionsOverviewVisibleMobile()
+  })
+
+  it('should be able to access the pages linked by the cards', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+
+    await screen.findByTestId('device-view-overview-card-current-settings')
+
+    await testClickViewMoreCurrentSettings()
+    await testClickViewMoreBasalSafety()
+    await testClickViewMoreSettingsHistory()
+    await testClickViewMoreDevicesHistory()
+
   })
 })
