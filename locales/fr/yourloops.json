@@ -643,6 +643,7 @@
   "security": "Sécurité",
   "select-account-type": "Sélection du type de compte",
   "send": "Envoyer",
+  "sensor": "Capteur",
   "sensor-usage": "Usage du capteur",
   "sensor-usage-tooltip": "**Usage du capteur :** % de temps durant lequel le capteur a enregistré des données.",
   "sensor-warmup": "Temps de chauffe du capteur",

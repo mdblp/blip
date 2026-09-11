@@ -30,25 +30,25 @@ import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
+import { getWarmUpTooltipContent } from '../../../utils/warm-up/warm-up.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
 export const WarmUpTooltip: FC<DailyTooltipProps<WarmUp>> = (props) => {
   const { datum: warmup, position, side, timePrefs } = props
-  const endTime = getWarmUpEndTime(warmup.epochEnd, warmup.timezone)
+  const { title, description, endTime } = getWarmUpTooltipContent(warmup)
 
   return (
     <Tooltip
       position={position}
       backgroundColor={colors.greyBackground}
-      title={getWarmUpTitle()}
+      title={title}
       dateTitle={getDateTitleForBaseDatum(warmup, timePrefs)}
       side={side}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlexLarge}>
-          <TooltipLine label={getWarmUpDescription()} value={endTime} />
+          <TooltipLine label={description} value={endTime} />
         </div>
       }
     />

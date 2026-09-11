@@ -80,7 +80,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
       case DeviceEventSubtype.ReservoirChange:
         return getReservoirChangeTitle(event as ReservoirChange)
       case DeviceEventSubtype.Warmup:
-        return getWarmUpTitle()
+        return getWarmUpTitle(event as WarmUp)
       default:
         return t('N/A')
     }
