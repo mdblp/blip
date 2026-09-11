@@ -109,7 +109,9 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
 
   const removeMedicalReportFromList = (medicalReportId: string): void => {
     const index = medicalReports.findIndex((mr) => mr.id === medicalReportId)
-    medicalReports.splice(index, 1)
+    const medicalReportsUpdated = Array.from(medicalReports)
+    medicalReportsUpdated.splice(index, 1)
+    setMedicalReports(medicalReportsUpdated)
     closeMedicalReportDeleteDialog()
   }
 
