@@ -44,7 +44,7 @@ interface DeviceViewSectionsOverviewCardsProps {
   pumpSettings: PumpSettings
 }
 
-export const deviceCardStyle = makeStyles()((theme) => {
+export const deviceCardStyle = makeStyles()(() => {
   return {
     listOfParameters: {
       display: 'flex',

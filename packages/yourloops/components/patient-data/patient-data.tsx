@@ -111,7 +111,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     }
 
     fetchPartner()
-  }, [appState, partnerId, callbackUrl])
+  }, [appState, partnerId, callbackUrl, alert, t])
 
   const showDataAccessRequestDialog = user.isUserPatient() && !!partnerName
 
