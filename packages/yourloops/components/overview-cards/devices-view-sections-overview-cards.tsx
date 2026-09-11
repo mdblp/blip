@@ -27,16 +27,16 @@
 
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GenericListCard } from '../../../components/generic-list-card/generic-list-card'
+import { GenericListCard } from '../generic-list-card/generic-list-card'
 import { makeStyles } from 'tss-react/mui'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
-import { ViewMoreLink } from '../../../components/buttons/view-more-link'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import { ViewMoreLink } from '../buttons/view-more-link'
 import Typography from '@mui/material/Typography'
 import { DblParameter, PumpSettings } from 'medical-domain'
-import { formatDateWithMomentShortFormat } from '../../../lib/utils'
+import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
-import { ChangeValueDeviceOverview } from '../../../components/device/change-value-device-overview'
-import { formatParameterValue, getTranslationKeyForDeviceChange } from '../../../components/device/utils/device.utils'
+import { ChangeValueDeviceOverview } from '../device/change-value-device-overview'
+import { formatParameterValue, getTranslationKeyForDeviceChange } from '../device/utils/device.utils'
 import Box from '@mui/material/Box'
 
 interface DeviceViewSectionsOverviewCardsProps {

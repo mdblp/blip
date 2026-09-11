@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DeviceViewSectionsOverviewCards } from './devices-view-sections-overview-cards'
+import { DeviceViewSectionsOverviewCards } from '../../../components/overview-cards/devices-view-sections-overview-cards'
 import React, { type FC } from 'react'
 import { PumpSettings } from 'medical-domain'
 
