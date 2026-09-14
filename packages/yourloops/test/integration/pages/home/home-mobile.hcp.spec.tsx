@@ -52,7 +52,6 @@ import {
   testAckMonitoringAlertsWithErrorMobile,
   testPatientListForHcpMobile,
 } from '../../use-cases/patient-list-management'
-import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
