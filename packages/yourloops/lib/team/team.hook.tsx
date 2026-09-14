@@ -152,7 +152,6 @@ function TeamContextImpl(): TeamContext {
     }
     refresh()
   }
-  
 
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
     if (member.status === UserInviteStatus.Pending) {

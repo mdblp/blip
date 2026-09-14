@@ -32,7 +32,7 @@ import { makeStyles } from 'tss-react/mui'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { ViewMoreLink } from '../buttons/view-more-link'
 import Typography from '@mui/material/Typography'
-import { DblParameter, PumpSettings } from 'medical-domain'
+import { DblParameter, DeviceConfig, PumpSettings } from 'medical-domain'
 import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
 import { ChangeValueDeviceOverview } from '../device/change-value-device-overview'
@@ -83,9 +83,13 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const truncate = (str: string, max: number) =>
     str.length > max ? str.slice(0, max).toString() + "..." : str
 
-  const hasSafetyBasalData = Boolean(
-    totalDailyInsulin || targetGlucoseLevel || totalHypoglycemiaThreshold
-  )
+  const isBasalSafetyProfileAvailable = (pumpSettings: PumpSettings): boolean => {
+    return !isMobiGoDevice(pumpSettings.payload.device);
+  }
+
+  const isMobiGoDevice = (device: DeviceConfig): boolean => {
+    return device.deviceId.toLowerCase().startsWith('mobigo');
+  }
 
   const getTableLinesCurrentSettings = (): { label: string, value: string }[] => {
     return [
@@ -114,9 +118,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         : [])
     ]
   }
-  if (hasParameters) {
-    console.log('Noms seulement :', firstChange.parameters.map((p) => p.name));
-  }
+
   return (
     <>
       <GenericListCard
@@ -133,7 +135,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         }
       />
 
-      {hasSafetyBasalData && (
+      {isBasalSafetyProfileAvailable && (
         <GenericListCard
           title={t('safety-basal')}
           data-testid="device-view-overview-card-basal-safety"
@@ -170,8 +172,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
               {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
             </Typography>
 
-            {firstChange.parameters.map((parameter) => (
-              <Box key={parameter.name} className={parameterChange}>
+            {firstChange.parameters.map((parameter, historyChangeIndex) => (
+              <Box key={historyChangeIndex} className={parameterChange}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {truncate(t(`params|${parameter.name}`), 10)}
                 </Typography>
