@@ -27,7 +27,6 @@
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { InAppNotification } from './models/notification.model'
-import { type CancelInvitationPayload } from './models/cancel-invitation-payload.model'
 import { INotificationType } from './models/enums/i-notification-type.enum'
 import { Centrifuge } from 'centrifuge'
 import appConfig from '../config/config'
@@ -43,7 +42,7 @@ export default class NotificationApi {
       getToken: async () => await getToken()
     })
 
-    const sub = centrifuge.newSubscription(`notification#${userId}`)
+    const sub = centrifuge.newSubscription(`notification:#auth0|${userId}`)
     sub.on('publication', (ctx) => {
       const notif = ctx.data as InAppNotification
       onNotification(notif)
@@ -79,18 +78,6 @@ export default class NotificationApi {
     notification.status = "accepted"
     await NotificationApi.updateInvitation(url, userId, notification)
   }
-
-  // static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
-  //   const payload = {
-  //     email: inviteeEmail,
-  //     TeamId: teamId,
-  //   }
-  //
-  //   await HttpService.post<string, {email: string, TeamId: string}>({
-  //     url: `/crew/v1/teams/${teamId}/members`, // TODO: create the route in crew with payload
-  //     payload
-  //   })
-  // }
 
   static async declineInvitation(userId: string, notification: InAppNotification): Promise<void> {
     let url: string

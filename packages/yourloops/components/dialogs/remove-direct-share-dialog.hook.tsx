@@ -43,7 +43,7 @@ interface RemoveDirectShareDialogHookReturn {
 const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): RemoveDirectShareDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { cancel, sentInvitations } = useNotification()
+  const { sentInvitations } = useNotification()
   const patientsHook = usePatientsContext()
 
   const removeDirectShare = async (userToRemove: UserToRemove, currentUser: User): Promise<void> => {
@@ -54,7 +54,7 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
 
       if (invitation) {
         //TODO: add why ?
-        await cancel(invitation.id, invitation.payload["careTeamId"] as string, userToRemove.email)
+        // await cancel(invitation.id, invitation.payload["careTeamId"] as string, userToRemove.email)
       } else {
         const patientId = isCurrentUserCaregiver ? userToRemove.id : currentUser.id
         const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id
