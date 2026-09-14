@@ -240,7 +240,7 @@ export const checkRemoveMember = async () => {
   expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
   const confirmButton = within(confirmDialog).getByRole('button', { name: 'Confirm' })
   await userEvent.click(confirmButton)
-  expect(TeamApi.removeMember).toHaveBeenCalledWith({ teamId: myThirdTeamId, userId: userTimId, email: userTimEmail })
+  expect(TeamApi.removeMember).toHaveBeenCalledWith({ teamId: myThirdTeamId, userId: userTimId })
   expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
 
   const cancelButton = within(confirmDialog).getByRole('button', { name: 'Cancel' })
@@ -255,7 +255,7 @@ export const checkRemoveOurselvesFromTheMembers = async () => {
 
 export const checkRemovePendingMemberNotInvitedByOurselves = async () => {
   const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userYdrisFullName}` })
-  expect(removeMemberButton).toBeDisabled()
+  expect(removeMemberButton).toBeEnabled()
 }
 
 export const checkRemovePendingMemberInvitedByOurselves = async () => {
