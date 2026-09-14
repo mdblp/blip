@@ -138,11 +138,9 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       AppUserRoute.PatientProfile,
     ]
 
-    // Trouve la section racine présente dans l'URL
     const activeSection = sections.find((section) => currentPathname.includes(section))
 
     if (activeSection) {
-      // Ne garde que ce qui se trouve AVANT la section
       return currentPathname.substring(0, currentPathname.indexOf(activeSection))
     }
 
@@ -150,21 +148,28 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   }
 
   const currentPatientView = useMemo<PatientView>(() => {
-    const cleanPath = pathname.split('?')[0]
 
-    if (
-      cleanPath.includes(AppUserRoute.Devices) ||
-      cleanPath.includes(AppUserRoute.DevicesSectionsOverview)
-    ) {
-      return PatientView.Devices
+    const routeWithoutUrlPrefix = (
+      pathname.includes(AppUserRoute.Devices) ||
+      pathname.includes(AppUserRoute.DevicesSectionsOverview)
+    )
+      ? AppUserRoute.Devices
+      : pathname.substring(pathname.lastIndexOf('/'))
+
+    switch (routeWithoutUrlPrefix) {
+      case AppUserRoute.Daily:
+        return PatientView.Daily
+      case AppUserRoute.Trends:
+        return PatientView.Trends
+      case AppUserRoute.Dashboard:
+        return PatientView.Dashboard
+      case AppUserRoute.Devices:
+        return PatientView.Devices
+      case AppUserRoute.PatientProfile:
+        return PatientView.PatientProfile
+      default:
+        return PatientView.Dashboard
     }
-
-    if (cleanPath.endsWith(AppUserRoute.Daily)) return PatientView.Daily
-    if (cleanPath.endsWith(AppUserRoute.Trends)) return PatientView.Trends
-    if (cleanPath.endsWith(AppUserRoute.Dashboard)) return PatientView.Dashboard
-    if (cleanPath.endsWith(AppUserRoute.PatientProfile)) return PatientView.PatientProfile
-
-    return PatientView.Dashboard
   }, [pathname])
 
   const getRouteByPatientView = (view: PatientView): AppUserRoute => {
@@ -200,12 +205,10 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     const newMsRange = getMsRangeByPatientView(patientView, medicalData)
     setMsRange(newMsRange)
 
-    const targetRoute = getRouteByPatientView(patientView)
-    const basePrefix = getBasePrefix(pathname)
+    const route = getRouteByPatientView(patientView)
+    const urlPrefix = getBasePrefix(pathname)
 
-    // Reconstruit l'URL propre (ex: "debut-route" + "/dashboard")
-    const fullPath = `${basePrefix}${targetRoute}`.replace(/\/+/g, '/')
-    navigate(fullPath)
+    navigate(`${urlPrefix}${route}`)
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
