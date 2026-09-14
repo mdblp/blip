@@ -172,8 +172,8 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
               {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
             </Typography>
 
-            {firstChange.parameters.map((parameter, historyChangeIndex) => (
-              <Box key={historyChangeIndex} className={parameterChange}>
+            {firstChange.parameters.map((parameter) => (
+              <Box key={`${parameter.name}-${parameter.value}`} className={parameterChange}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {truncate(t(`params|${parameter.name}`), 10)}
                 </Typography>
