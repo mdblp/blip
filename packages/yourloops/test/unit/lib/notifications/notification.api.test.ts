@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,597 +25,233 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpStatus from '../../../../lib/http/models/enums/http-status.enum'
-import { ErrorMessageStatus } from '../../../../lib/http/http.service'
-import { loggedInUsers } from '../../common'
-import axios, { type AxiosResponse } from 'axios'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
+import { type AxiosResponse } from 'axios'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { type Notification } from '../../../../lib/notifications/models/notification.model'
-import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
+import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
+import { Centrifuge } from 'centrifuge'
+import appConfig from '../../../../lib/config/config'
 
-jest.mock('axios')
-const mockedAxios = axios as jest.Mocked<typeof axios>
+jest.mock('centrifuge')
 
 describe('Notification API', () => {
   const userId = 'fakeUserId'
-  const userId2 = 'fakeUserId2'
+  const teamId = 'fakeTeamId'
   const email = 'fake@email.com'
-  const hcp = loggedInUsers.getHcp()
-  const patient = loggedInUsers.getPatient()
-  const caregiver = loggedInUsers.getCaregiver()
-  let err: Error | null = null
 
-  afterEach(() => {
-    mockedAxios.get.mockReset()
-    mockedAxios.post.mockReset()
-    mockedAxios.put.mockReset()
-    err = null
+  const buildNotification = (type: INotificationType, payload: Record<string, unknown> = { careTeamId: teamId }): InAppNotification => ({
+    id: 'fakeNotificationId',
+    type,
+    userEmail: email,
+    payload,
+    status: 'pending',
+    deliveredAt: new Date().toISOString()
   })
 
-  const directInvitationNotification: Notification = {
-    id: 'directInvitationNotificationFakeId',
-    metricsType: 'share_data',
-    type: NotificationType.directInvitation,
-    creator: { userid: patient.id, profile: patient.profile },
-    creatorId: patient.id,
-    date: new Date().toISOString(),
-    email
-  }
-
-  const careTeamProInvitationNotification: Notification = {
-    id: 'careTeamProInvitationNotificationFakeId',
-    metricsType: 'join_team',
-    type: NotificationType.careTeamProInvitation,
-    creator: { userid: caregiver.id, profile: caregiver.profile },
-    creatorId: caregiver.id,
-    date: new Date().toISOString(),
-    email,
-    target: {
-      id: 'fakeTargetId',
-      name: 'A team'
-    }
-  }
-
-  const careTeamProInvitationNotificationNoTarget: Notification = {
-    id: 'careTeamProInvitationNotificationNoTargetFakeId',
-    metricsType: 'join_team',
-    type: NotificationType.careTeamProInvitation,
-    creator: { userid: caregiver.id, profile: caregiver.profile },
-    creatorId: caregiver.id,
-    date: new Date().toISOString(),
-    email
-  }
-
-  const resolveOK: Response = {
-    status: HttpStatus.StatusOK,
-    ok: true,
-    statusText: 'OK',
-    type: 'basic',
-    redirected: false,
-    text: jest.fn().mockResolvedValue('OK')
-  } as unknown as Response
-
-  function buildAxiosError(error: string): Response {
-    return {
-      status: HttpStatus.StatusInternalServerError,
-      ok: false,
-      statusText: 'InternalServerError',
-      type: 'error',
-      redirected: false,
-      json: jest.fn().mockRejectedValue(new Error(error))
-    } as unknown as Response
-  }
-
   describe('getReceivedInvitations', () => {
-    const urlArgs = `/confirm/invitations/${userId}`
+    const url = `/v2/notifications?status=pending&userId=${userId}`
 
-    it('should throw an error if the response is not ok', async () => {
-      mockedAxios.get.mockResolvedValue(buildAxiosError('Not as JSON'))
-
-      let error: Error | null = null
-      try {
-        await NotificationApi.getReceivedInvitations(userId)
-      } catch (reason) {
-        error = reason as Error
-      }
-      expect(error).toBeInstanceOf(Error)
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything())
-    })
-
-    it('should return an empty array, if there is no invitation', async () => {
-      mockedAxios.get.mockImplementation(() => {
-        throw new Error(ErrorMessageStatus.NotFound)
-      })
+    it('should return the notifications returned by the API', async () => {
+      const data: InAppNotification[] = [buildNotification(INotificationType.careTeamProInvitation)]
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
 
       const result = await NotificationApi.getReceivedInvitations(userId)
+
+      expect(result).toEqual(data)
+      expect(HttpService.get).toHaveBeenCalledWith({ url })
+    })
+
+    it('should return an empty array when there is no pending notification', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error(ErrorMessageStatus.NotFound))
+
+      const result = await NotificationApi.getReceivedInvitations(userId)
+
       expect(result).toEqual([])
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything())
+      expect(HttpService.get).toHaveBeenCalledWith({ url })
     })
 
-    it('should return the converted notifications', async () => {
-      const email = patient.username
-      const apiNotifications: INotification[] = [
-        {
-          key: 'fakeId',
-          type: INotificationType.careTeamInvitation,
-          creatorId: 'abcd',
-          created: new Date().toISOString(),
-          creator: {
-            userid: 'abcd',
-            profile: {
-              email,
-              fullName: 'Test',
-              firstName: 'Test',
-              lastName: 'Test'
-            }
-          },
-          shortKey: 'abcdef',
-          email
-        }
-      ]
-      const resolveOK: AxiosResponse<INotification[]> = {
-        headers: {},
-        config: {},
-        status: HttpStatus.StatusOK,
-        statusText: 'OK',
-        data: apiNotifications
-      }
-      mockedAxios.get.mockResolvedValue(resolveOK)
+    it('should throw an error if the http call fails for another reason', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
 
-      const result = await NotificationApi.getReceivedInvitations(userId)
-      const expectedResult: Notification[] = [
-        {
-          id: apiNotifications[0].key,
-          metricsType: 'share_data',
-          creatorId: apiNotifications[0].creatorId,
-          date: apiNotifications[0].created,
-          email: apiNotifications[0].email,
-          type: NotificationType.directInvitation,
-          creator: apiNotifications[0].creator,
-          role: undefined,
-          target: undefined
-        }
-      ]
-
-      expect(result).toBeInstanceOf(Array)
-      expect(result).toHaveLength(1)
-      expect(result).toEqual(expectedResult)
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything())
+      await expect(async () => {
+        await NotificationApi.getReceivedInvitations(userId)
+      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 
   describe('getSentInvitations', () => {
-    const urlArgs = `/confirm/invite/${userId}`
+    const url = `/v2/notifications?status=pending&senderId=${userId}`
 
-    it('should throw an error if the response is not ok', async () => {
-      mockedAxios.get.mockResolvedValue(buildAxiosError('Not a JSON'))
+    it('should return the notifications returned by the API', async () => {
+      const data: InAppNotification[] = [buildNotification(INotificationType.careTeamProInvitation)]
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
 
-      let error: Error | null = null
-      try {
-        await NotificationApi.getSentInvitations(userId)
-      } catch (reason) {
-        error = reason as Error
-      }
+      const result = await NotificationApi.getSentInvitations(userId)
 
-      expect(error).toBeInstanceOf(Error)
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything())
+      expect(result).toEqual(data)
+      expect(HttpService.get).toHaveBeenCalledWith({ url })
     })
 
-    it('should return an empty array, if there is no invitation', async () => {
-      mockedAxios.get.mockImplementation(() => {
-        throw new Error(ErrorMessageStatus.NotFound)
-      })
+    it('should return an empty array when there is no pending notification', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error(ErrorMessageStatus.NotFound))
 
       const result = await NotificationApi.getSentInvitations(userId)
 
       expect(result).toEqual([])
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything())
+      expect(HttpService.get).toHaveBeenCalledWith({ url })
     })
 
-    it('should return the converted notifications', async () => {
-      const email = 'patient@yourloops.com'
-      const apiNotifications: INotification[] = [
-        {
-          key: 'fakeId',
-          type: INotificationType.careTeamInvitation,
-          creatorId: userId2,
-          created: new Date().toISOString(),
-          creator: {
-            userid: 'abcd',
-            profile: {
-              email,
-              fullName: 'Test',
-              firstName: 'Test',
-              lastName: 'Test'
-            }
-          },
-          shortKey: 'abcdef',
-          email
-        }
-      ]
-      mockedAxios.get.mockResolvedValue({
-        status: HttpStatus.StatusOK,
-        ok: true,
-        statusText: 'OK',
-        type: 'basic',
-        redirected: false,
-        data: apiNotifications
-      })
+    it('should throw an error if the http call fails for another reason', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
 
-      const result = await NotificationApi.getSentInvitations(userId)
-      const expectedResult: Notification[] = [
-        {
-          id: apiNotifications[0].key,
-          metricsType: 'share_data',
-          creatorId: apiNotifications[0].creatorId,
-          date: apiNotifications[0].created,
-          email: apiNotifications[0].email,
-          type: NotificationType.directInvitation,
-          creator: apiNotifications[0].creator,
-          role: undefined,
-          target: undefined
-        }
-      ]
-
-      expect(result).toBeInstanceOf(Array)
-      expect(result.length).toBe(1)
-      expect(result).toEqual(expectedResult)
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything())
+      await expect(async () => {
+        await NotificationApi.getSentInvitations(userId)
+      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 
   describe('acceptInvitation', () => {
-    it('should throw an error if the invitation type is invalid', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error()
-      })
-
-      const notification: Notification = {
-        metricsType: 'join_team',
-        type: NotificationType.careTeamProInvitation,
-        creator: { userid: userId, profile: hcp.profile },
-        creatorId: userId2,
-        date: new Date().toISOString(),
-        email,
-        id: 'fakeId'
-      }
-      try {
-        await NotificationApi.acceptInvitation(userId, {
-          ...notification,
-          type: 'unknownType' as unknown as NotificationType
-        })
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(0)
-    })
-
-    it('should throw an error if the reply is not ok (directInvitation)', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error()
-      })
-
-      try {
-        await NotificationApi.acceptInvitation(userId, directInvitationNotification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.id}`
-      const expectedBody = { key: directInvitationNotification.id }
-
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, expect.anything())
-    })
-
-    it('should resolve when the reply is ok (directInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(resolveOK)
-
-      try {
-        await NotificationApi.acceptInvitation(userId, directInvitationNotification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.id}`
-      const expectedBody = { key: directInvitationNotification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, expect.anything())
-    })
-
-    it('should throw an error if the reply is not ok (careTeamProInvitation)', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error()
-      })
-      try {
-        await NotificationApi.acceptInvitation(userId, careTeamProInvitationNotification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = '/confirm/accept/team/invite'
-      const expectedBody = { key: careTeamProInvitationNotification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should resolve when the reply is ok (careTeamProInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(resolveOK)
-
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'share_data',
-        type: NotificationType.careTeamProInvitation,
-        creator: { userid: caregiver.id, profile: caregiver.profile },
-        creatorId: caregiver.id,
-        date: new Date().toISOString(),
-        email,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
+    it('should throw an error and not call the API if the notification type is unknown', async () => {
+      const httpPut = jest.spyOn(HttpService, 'put')
+      const notification = {
+        ...buildNotification(INotificationType.directInvitation),
+        type: 'unknownType' as unknown as INotificationType
       }
 
-      await NotificationApi.acceptInvitation(userId, notification)
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = '/confirm/accept/team/invite'
-      const expectedBody = { key: notification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should throw an error if the reply is not ok (careTeamPatientInvitation)', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error('careTeamPatientInvitations')
-      })
-
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamPatientInvitation,
-        creator: { userid: patient.id, profile: patient.profile },
-        creatorId: patient.id,
-        date: new Date().toISOString(),
-        email,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
-
-      try {
+      await expect(async () => {
         await NotificationApi.acceptInvitation(userId, notification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = '/confirm/accept/team/invite'
-      const expectedBody = { key: notification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
+      }).rejects.toThrow('Unknown notification')
+      expect(httpPut).not.toHaveBeenCalled()
     })
 
-    it('should resolve when the reply is ok (careTeamPatientInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(resolveOK)
+    describe.each([
+      { type: INotificationType.directInvitation, expectedUrl: `/crew/v1/direct-shares/${userId}` },
+      { type: INotificationType.careTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
+      { type: INotificationType.careTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
+    ])('when the notification type is $type', ({ type, expectedUrl }) => {
+      it('should call the API with the correct url and payload', async () => {
+        const httpPut = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
+        const notification = buildNotification(type)
 
-      const patient = loggedInUsers.getPatient()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamPatientInvitation,
-        creator: { userid: patient.id, profile: patient.profile },
-        creatorId: patient.id,
-        date: new Date().toISOString(),
-        email,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
+        await NotificationApi.acceptInvitation(userId, notification)
 
-      await NotificationApi.acceptInvitation(userId, notification)
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = '/confirm/accept/team/invite'
-      const expectedBody = { key: notification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    }
-    )
+        expect(httpPut).toHaveBeenCalledWith({
+          url: expectedUrl,
+          payload: {
+            userId,
+            email: notification.userEmail,
+            teamId,
+            invitationStatus: 'accepted',
+            lastStatusChangedAt: expect.any(String)
+          }
+        })
+      })
+
+      it('should throw an error if the API call fails', async () => {
+        jest.spyOn(HttpService, 'put').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
+        const notification = buildNotification(type)
+
+        await expect(async () => {
+          await NotificationApi.acceptInvitation(userId, notification)
+        }).rejects.toThrow('This error was thrown by a mock on purpose')
+      })
+    })
   })
 
   describe('declineInvitation', () => {
-    it('should throw an error if the invitation type is invalid', async () => {
-      mockedAxios.put.mockResolvedValue(buildAxiosError('test'))
-
-      const notificationTypes = [NotificationType.careTeamProInvitation, NotificationType.careTeamPatientInvitation]
-      const user = hcp
-      const notification: Notification = {
-        metricsType: 'join_team',
-        type: NotificationType.careTeamProInvitation,
-        creator: { userid: user.id, profile: user.profile },
-        creatorId: user.id,
-        date: new Date().toISOString(),
-        email: user.username,
-        id: 'fakeId'
-      }
-      for (const notificationType of notificationTypes) {
-        try {
-          await NotificationApi.declineInvitation(userId, { ...notification, type: notificationType })
-        } catch (reason) {
-          err = reason as Error
-        }
-        expect(err).not.toBeNull()
-      }
-      expect(mockedAxios.put).toHaveBeenCalledTimes(0)
-    })
-
-    it('should throw an error if the reply is not ok (directInvitation)', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error('directInvitation')
-      })
-
-      try {
-        await NotificationApi.declineInvitation(userId, directInvitationNotification)
-      } catch (reason) {
-        err = reason as Error
+    it('should throw an error and not call the API if the notification type is unknown', async () => {
+      const httpPut = jest.spyOn(HttpService, 'put')
+      const notification = {
+        ...buildNotification(INotificationType.directInvitation),
+        type: 'unknownType' as unknown as INotificationType
       }
 
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.id}`
-      const expectedBody = { key: directInvitationNotification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should resolve when the reply is ok (directInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(resolveOK)
-
-      await NotificationApi.declineInvitation(userId, directInvitationNotification)
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.id}`
-      const expectedBody = { key: directInvitationNotification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should throw an error if the teamId is not set (careTeamProInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(buildAxiosError('careTeamProInvitation'))
-
-      try {
-        await NotificationApi.declineInvitation(userId, careTeamProInvitationNotificationNoTarget)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(0)
-    })
-
-    it('should throw an error if the reply is not ok (careTeamProInvitation)', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error('CareteamProInvitation')
-      })
-
-      try {
-        await NotificationApi.declineInvitation(userId, careTeamProInvitationNotification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/dismiss/team/invite/${careTeamProInvitationNotification.target.id}`
-      const expectedBody = { key: careTeamProInvitationNotification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should resolve when the reply is ok (careTeamProInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(resolveOK)
-
-      await NotificationApi.declineInvitation(userId, careTeamProInvitationNotification)
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/dismiss/team/invite/${careTeamProInvitationNotification.target.id}`
-      const expectedBody = { key: careTeamProInvitationNotification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should throw an error if the teamId is not set (careTeamPatientInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(buildAxiosError('careTeamPatientInvitation'))
-
-      const patient = loggedInUsers.getPatient()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamPatientInvitation,
-        creator: { userid: patient.id, profile: patient.profile },
-        creatorId: patient.id,
-        date: new Date().toISOString(),
-        email
-      }
-
-      try {
+      await expect(async () => {
         await NotificationApi.declineInvitation(userId, notification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(0)
+      }).rejects.toThrow('Unknown notification')
+      expect(httpPut).not.toHaveBeenCalled()
     })
 
-    it('should throw an error if the reply is not ok (careTeamPatientInvitation)', async () => {
-      mockedAxios.put.mockImplementation(() => {
-        throw new Error('careteamPatienInvitation')
+    describe.each([
+      { type: INotificationType.directInvitation, expectedUrl: `/crew/direct-shares/${userId}` },
+      { type: INotificationType.careTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
+      { type: INotificationType.careTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
+    ])('when the notification type is $type', ({ type, expectedUrl }) => {
+      it('should call the API with the correct url and payload', async () => {
+        const httpPut = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
+        const notification = buildNotification(type)
+
+        await NotificationApi.declineInvitation(userId, notification)
+
+        expect(httpPut).toHaveBeenCalledWith({
+          url: expectedUrl,
+          payload: {
+            userId,
+            email: notification.userEmail,
+            teamId,
+            invitationStatus: 'rejected',
+            lastStatusChangedAt: expect.any(String)
+          }
+        })
       })
 
-      const patient = loggedInUsers.getPatient()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamPatientInvitation,
-        creator: { userid: patient.id, profile: patient.profile },
-        creatorId: patient.id,
-        date: new Date().toISOString(),
-        email,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
+      it('should throw an error if the API call fails', async () => {
+        jest.spyOn(HttpService, 'put').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
+        const notification = buildNotification(type)
 
-      try {
-        await NotificationApi.declineInvitation(userId, notification)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/dismiss/team/invite/${notification.target.id}`
-      const expectedBody = { key: notification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should resolve when the reply is ok (careTeamPatientInvitation)', async () => {
-      mockedAxios.put.mockResolvedValue(resolveOK)
-
-      const patient = loggedInUsers.getPatient()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamPatientInvitation,
-        creator: { userid: patient.id, profile: patient.profile },
-        creatorId: patient.id,
-        date: new Date().toISOString(),
-        email,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
-
-      await NotificationApi.declineInvitation(userId, notification)
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1)
-      const expectedArgs = `/confirm/dismiss/team/invite/${notification.target.id}`
-      const expectedBody = { key: notification.id }
-      expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
+        await expect(async () => {
+          await NotificationApi.declineInvitation(userId, notification)
+        }).rejects.toThrow('This error was thrown by a mock on purpose')
+      })
     })
   })
 
-  describe('cancelInvitation', () => {
-    it('should call API with correct parameters', async () => {
-      mockedAxios.post.mockResolvedValue(resolveOK)
-      const notificationId = 'fakeNotificationId'
-      const teamId = 'fakeTeamId'
-      const inviteeEmail = 'fakeEmail'
+  describe('connectToRealTimeServer', () => {
+    const MockedCentrifuge = Centrifuge as jest.MockedClass<typeof Centrifuge>
 
-      await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
-      expect(mockedAxios.post).toHaveBeenCalledTimes(1)
-      const expectedArgs = '/confirm/cancel/invite'
-      const expectedBody = { email: inviteeEmail, key: notificationId, target: { id: teamId } }
-      expect(mockedAxios.post).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
+    afterEach(() => {
+      MockedCentrifuge.mockReset()
+    })
+
+    it('should open a subscription, connect, forward notifications and clean up on disconnect', () => {
+      const onMock = jest.fn()
+      const subscribeMock = jest.fn()
+      const unsubscribeMock = jest.fn()
+      const newSubscriptionMock = jest.fn().mockReturnValue({
+        on: onMock,
+        subscribe: subscribeMock,
+        unsubscribe: unsubscribeMock
+      })
+      const connectMock = jest.fn()
+      const disconnectMock = jest.fn()
+
+      MockedCentrifuge.mockImplementation(() => ({
+        newSubscription: newSubscriptionMock,
+        connect: connectMock,
+        disconnect: disconnectMock
+      }) as unknown as Centrifuge)
+
+      const getToken = jest.fn().mockResolvedValue('fake-token')
+      const onNotification = jest.fn()
+
+      const disconnect = NotificationApi.connectToRealTimeServer(userId, getToken, onNotification)
+
+      const expectedWsUrl = `${appConfig.API_HOST.replace(/^http/, 'ws')}/connection/websocket`
+      expect(MockedCentrifuge).toHaveBeenCalledWith(expectedWsUrl, expect.objectContaining({ getToken: expect.any(Function) }))
+      expect(newSubscriptionMock).toHaveBeenCalledWith(`notification:#auth0|${userId}`)
+      expect(onMock).toHaveBeenCalledWith('publication', expect.any(Function))
+      expect(subscribeMock).toHaveBeenCalledTimes(1)
+      expect(connectMock).toHaveBeenCalledTimes(1)
+
+      const notification = buildNotification(INotificationType.careTeamProInvitation)
+      const publicationHandler = onMock.mock.calls[0][1] as (ctx: { data: InAppNotification }) => void
+      publicationHandler({ data: notification })
+      expect(onNotification).toHaveBeenCalledWith(notification)
+
+      disconnect()
+      expect(unsubscribeMock).toHaveBeenCalledTimes(1)
+      expect(disconnectMock).toHaveBeenCalledTimes(1)
     })
   })
 })
