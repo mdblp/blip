@@ -25,33 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Notification } from '../../../../lib/notifications/models/notification.model'
+import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
 import { type NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
 
 export interface NotificationAPIStub {
-  getReceivedInvitations: jest.Mock<Promise<Notification[]>, []>
-  getSentInvitations: jest.Mock<Promise<Notification[]>, []>
-  acceptInvitation: jest.Mock<Promise<void>, [Notification]>
-  declineInvitation: jest.Mock<Promise<void>, [Notification]>
-  cancelInvitation: jest.Mock<Promise<void>, [Notification]>
+  getReceivedInvitations: jest.Mock<Promise<InAppNotification[]>, []>
+  getSentInvitations: jest.Mock<Promise<InAppNotification[]>, []>
+  acceptInvitation: jest.Mock<Promise<void>, [InAppNotification]>
+  declineInvitation: jest.Mock<Promise<void>, [InAppNotification]>
 }
 
 export const notificationAPIStub: NotificationAPIStub = {
-  getReceivedInvitations: jest.fn<Promise<Notification[]>, []>().mockResolvedValue([]),
-  getSentInvitations: jest.fn<Promise<Notification[]>, []>().mockResolvedValue([]),
-  acceptInvitation: jest.fn<Promise<void>, [Notification]>().mockResolvedValue(),
-  declineInvitation: jest.fn<Promise<void>, [Notification]>().mockResolvedValue(),
-  cancelInvitation: jest.fn<Promise<void>, [Notification]>().mockResolvedValue()
+  getReceivedInvitations: jest.fn<Promise<InAppNotification[]>, []>().mockResolvedValue([]),
+  getSentInvitations: jest.fn<Promise<InAppNotification[]>, []>().mockResolvedValue([]),
+  acceptInvitation: jest.fn<Promise<void>, [InAppNotification]>().mockResolvedValue(),
+  declineInvitation: jest.fn<Promise<void>, [InAppNotification]>().mockResolvedValue()
 }
 
 const stubNotificationContextValueInternal = {
   accept: jest.fn().mockReturnValue(() => Promise.resolve()),
-  cancel: jest.fn().mockReturnValue(() => Promise.resolve()),
   decline: jest.fn().mockReturnValue(() => Promise.resolve()),
   update: jest.fn(),
   initialized: true,
-  receivedInvitations: [] as Notification[],
-  sentInvitations: [] as Notification[]
+  receivedInvitations: [] as InAppNotification[],
+  sentInvitations: [] as InAppNotification[]
 }
 
 export const stubNotificationContextValue = stubNotificationContextValueInternal as unknown as NotificationContext
