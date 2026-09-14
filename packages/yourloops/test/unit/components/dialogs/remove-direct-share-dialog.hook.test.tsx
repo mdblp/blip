@@ -32,7 +32,7 @@ import { renderHook } from '@testing-library/react'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type User } from '../../../../lib/auth'
-import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+// import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import ErrorApi from '../../../../lib/error/error.api'
 
 jest.mock('../../../../components/utils/snackbar')
@@ -42,7 +42,7 @@ jest.mock('../../../../lib/patient/patients.provider')
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'
   const userToRemove = { id: 'fake-id', email: userToRemoveEmail, fullName: 'Fake User' }
-  const invitation = { id: 'fake-invitation-id', email: userToRemoveEmail, type: NotificationType.directInvitation, target: { id: 'fakeTeamId' } }
+  // const invitation = { id: 'fake-invitation-id', email: userToRemoveEmail, type: NotificationType.directInvitation, target: { id: 'fakeTeamId' } }
   const authUserId = 'auth-user-id'
 
   const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare')
@@ -72,10 +72,11 @@ describe('Remove direct share dialog hook', () => {
   })
 
   describe('when a patient removes a pending invitation', () => {
-    beforeEach(() => {
-      isUserCaregiverMock.mockReturnValueOnce(false)
-      sentInvitationsMock = [invitation]
-    })
+    // TODO: re enable when direct share is migrated
+    // beforeEach(() => {
+    //   isUserCaregiverMock.mockReturnValueOnce(false)
+    //   sentInvitationsMock = [invitation]
+    // })
 
     // it('should show success and close the dialog if the removal is successful', async () => {
     //   cancelInvitationMock.mockResolvedValueOnce(undefined)
