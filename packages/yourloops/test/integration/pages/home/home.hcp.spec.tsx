@@ -32,7 +32,6 @@ import { Unit } from 'medical-domain'
 import { act } from 'react'
 import { LanguageCode } from '../../../../lib/auth/models/enums/language-code.enum'
 import { ConfigService } from '../../../../lib/config/config.service'
-import NotificationApi from '../../../../lib/notifications/notification.api'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
@@ -94,7 +93,6 @@ describe('HCP home page', () => {
     mockAnalyticsApi()
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
-    jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
   })
 
   const renderHomePage = async (route: string): Promise<Router> => {

@@ -405,7 +405,6 @@ export const PATIENTS_INFO_BY_TEAMID: Record<string, Patient[]> = {
       ...pendingPatient,
       invitationStatus: UserInviteStatus.Pending,
       invite: {
-        id: 'fakeInviteId',
         creatorId: loggedInUserId,
         creationDate: '2023-05-17T11:37:42.638Z'
       }

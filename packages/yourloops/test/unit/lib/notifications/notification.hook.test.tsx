@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,23 +29,36 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { BrowserRouter } from 'react-router-dom'
 import * as authHookMock from '../../../../lib/auth/auth.hook'
+import * as auth0Mock from '@auth0/auth0-react'
 import { NotificationContextProvider, useNotification } from '../../../../lib/notifications/notification.hook'
 import { loggedInUsers } from '../../common'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { render, waitFor } from '@testing-library/react'
 import { type NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
-import { type Notification } from '../../../../lib/notifications/models/notification.model'
-import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
+import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 
 jest.mock('../../../../lib/auth/auth.hook')
+jest.mock('@auth0/auth0-react')
+
 describe('Notification hook', () => {
   let notifications: NotificationContext | null = null
+  const hcp = loggedInUsers.getHcp()
 
   jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])
   jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValue([])
-  jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue()
   jest.spyOn(NotificationApi, 'declineInvitation').mockResolvedValue()
   jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
+  jest.spyOn(NotificationApi, 'connectToRealTimeServer').mockReturnValue(jest.fn())
+
+  const buildNotification = (): InAppNotification => ({
+    id: 'fakeId',
+    type: INotificationType.careTeamProInvitation,
+    userEmail: hcp.username,
+    payload: { careTeamId: 'fakeTeamId' },
+    status: 'pending',
+    deliveredAt: new Date().toISOString()
+  })
 
   const initNotificationContext = async () => {
     const DummyComponent = (): JSX.Element => {
@@ -68,7 +81,10 @@ describe('Notification hook', () => {
 
   beforeAll(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: {} }
+      return { user: { id: hcp.id } }
+    });
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      getAccessTokenSilently: jest.fn().mockResolvedValue('fake-token')
     })
   })
 
@@ -86,83 +102,40 @@ describe('Notification hook', () => {
   })
 
   describe('Accept', () => {
-    it('should call the api to accept the invite and refresh', async () => {
+    it('should call the api to accept the invite and remove it from the received invitations', async () => {
+      const notification = buildNotification()
+      jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValueOnce([notification])
+
       await initNotificationContext()
-      const currentUser = loggedInUsers.getHcp()
-      const caregiver = loggedInUsers.getCaregiver()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamProInvitation,
-        creator: { userid: caregiver.id, profile: caregiver.profile },
-        creatorId: caregiver.id,
-        date: new Date().toISOString(),
-        email: currentUser.username,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
+      expect(notifications.receivedInvitations).toEqual([notification])
+
       await act(async () => {
         await notifications.accept(notification)
       })
-      expect(NotificationApi.acceptInvitation).toHaveBeenCalledTimes(1)
+
+      expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith(hcp.id, notification)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
+      expect(notifications.receivedInvitations).toEqual([])
     })
   })
 
   describe('Decline', () => {
-    it('should call the api to decline the invite and refresh', async () => {
+    it('should call the api to decline the invite and remove it from the received invitations', async () => {
+      const notification = buildNotification()
+      jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValueOnce([notification])
+
       await initNotificationContext()
-      const currentUser = loggedInUsers.getHcp()
-      const caregiver = loggedInUsers.getCaregiver()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamProInvitation,
-        creator: { userid: caregiver.id, profile: caregiver.profile },
-        creatorId: caregiver.id,
-        date: new Date().toISOString(),
-        email: currentUser.username,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
+      expect(notifications.receivedInvitations).toEqual([notification])
+
       await act(async () => {
         await notifications.decline(notification)
       })
-      expect(NotificationApi.declineInvitation).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
-    })
-  })
 
-  describe('Cancel', () => {
-    it('should call the api to decline the invite and refresh', async () => {
-      await initNotificationContext()
-      const currentUser = loggedInUsers.getHcp()
-      const caregiver = loggedInUsers.getCaregiver()
-      const notification: Notification = {
-        id: 'fakeId',
-        metricsType: 'join_team',
-        type: NotificationType.careTeamProInvitation,
-        creator: { userid: caregiver.id, profile: caregiver.profile },
-        creatorId: caregiver.id,
-        date: new Date().toISOString(),
-        email: currentUser.username,
-        target: {
-          id: 'fakeTargetId',
-          name: 'A team'
-        }
-      }
-      await act(async () => {
-        await notifications.cancel(notification.id)
-      })
-      expect(NotificationApi.cancelInvitation).toHaveBeenCalledTimes(1)
+      expect(NotificationApi.declineInvitation).toHaveBeenCalledWith(hcp.id, notification)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2)
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
+      expect(notifications.receivedInvitations).toEqual([])
     })
   })
 })
