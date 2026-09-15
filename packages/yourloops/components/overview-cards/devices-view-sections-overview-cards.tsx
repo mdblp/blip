@@ -35,7 +35,7 @@ import Typography from '@mui/material/Typography'
 import { DblParameter, DeviceConfig, PumpSettings } from 'medical-domain'
 import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
-import { ChangeValueDeviceOverview } from '../device/change-value-device-overview'
+import { ChangeValue} from '../device/change-value'
 import { formatParameterValue, getTranslationKeyForDeviceChange, sortHistory } from '../device/utils/device.utils'
 import { cardStyle } from './card-style'
 import Box from '@mui/material/Box'
@@ -60,6 +60,8 @@ export const deviceCardStyle = makeStyles()(() => {
     }
   }
 })
+
+const MAX_STRING_LENGTH = 10
 
 export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCardsProps> = ({ pumpSettings }) => {
   const { t } = useTranslation()
@@ -175,9 +177,9 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
             {firstChange.parameters.map((parameter) => (
               <Box key={`${parameter.name}-${parameter.value}`} className={parameterChange}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {truncate(t(`params|${parameter.name}`), 10)}
+                  {truncate(t(`params|${parameter.name}`), MAX_STRING_LENGTH)}
                 </Typography>
-                <ChangeValueDeviceOverview
+                <ChangeValue
                   previousValue={
                     parameter.previousValue
                       ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`
@@ -185,6 +187,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
                   }
                   currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
                   withFormatting={true}
+                  isSectionsOverviewPage={true}
                 />
               </Box>
             ))}
@@ -209,7 +212,6 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         }
       >
 
-
         {hasDevices ? (
           <Box className={listOfParameters}>
             <Typography variant="body2">
@@ -221,10 +223,11 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {t(getTranslationKeyForDeviceChange(device.name))}
                 </Typography>
-                <ChangeValueDeviceOverview
+                <ChangeValue
                   previousValue={device.previousValue}
                   currentValue={device.value}
                   withFormatting={false}
+                  isSectionsOverviewPage={true}
                 />
               </Box>
             ))}
