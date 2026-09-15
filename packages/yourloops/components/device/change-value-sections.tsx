@@ -25,43 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
-import Box from '@mui/material/Box'
-import { PatientNavBarTabsMobile } from './patient-nav-bar-tabs-mobile'
-import { MainHeaderPatientNavMobile } from './main-header-patient-nav-mobile'
-import { type PatientView } from '../../enum/patient-view.enum'
+import React, { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
 
-interface PatientNavBarProps {
-  currentPatientView: PatientView
-  onChangePatientView: (patientView: PatientView) => void
-  onClickPrint?: () => void
+interface ChangeValueSectionsProps {
+  previousValue?: string
+  currentValue: string
+  withFormatting: boolean
 }
 
-export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props) => {
-  const {
-    currentPatientView,
-    onChangePatientView,
-    onClickPrint
-  } = props
-
-  const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
+export const ChangeValueSections: FC<ChangeValueSectionsProps> = (props) => {
+  const { previousValue, currentValue, withFormatting } = props
+  const theme = useTheme()
 
   return (
     <>
-      <Box sx={{ minHeight: mainHeaderHeight }}>
-        <MainHeaderPatientNavMobile
-          onClickPrint={onClickPrint}
-          setMainHeaderHeight={setMainHeaderHeight}
-        />
-      </Box>
-
-      <Box>
-        <PatientNavBarTabsMobile
-          currentPatientView={currentPatientView}
-          onChangePatientView={onChangePatientView}
-        />
-      </Box>
+      {previousValue &&
+        <>
+          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
     </>
   )
 }
-

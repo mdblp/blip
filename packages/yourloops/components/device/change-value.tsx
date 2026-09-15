@@ -26,20 +26,19 @@
  */
 
 import React, { FC } from 'react'
-import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
-import { formatNumberForLang } from '../../lib/language'
+import { ChangeValueSectionsOverview } from './change-value-sections-overview'
+import { ChangeValueSections } from './change-value-sections'
 
 interface ChangeValueProps {
   previousValue?: string
   currentValue: string
   withFormatting: boolean
+  isSectionsOverviewPage?: boolean
 }
 
 export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting } = props
-  const theme = useTheme()
+  const { previousValue, currentValue, withFormatting, isSectionsOverviewPage = false } = props
 
   return (
     <Box
@@ -47,13 +46,11 @@ export const ChangeValue: FC<ChangeValueProps> = (props) => {
         display: "flex",
         alignItems: "center"
       }}>
-      {previousValue &&
-        <>
-          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
-        </>
+      {isSectionsOverviewPage ?
+        <ChangeValueSectionsOverview previousValue={previousValue} currentValue={currentValue} withFormatting={withFormatting} />
+        :
+        <ChangeValueSections previousValue={previousValue} currentValue={currentValue} withFormatting={withFormatting} />
       }
-      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
     </Box>
   )
 }

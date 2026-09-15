@@ -30,12 +30,13 @@ import Button from '@mui/material/Button'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { useStyles } from './main-header-style'
 import { useAuth } from '../../lib/auth'
 import { DownloadReportButton } from './download-report_button'
+import { DeviceViewSections } from '../../enum/patient-view-sections.enum'
 
 interface MainHeaderPatientNavMobileProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
@@ -55,6 +56,7 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
   const { classes: { appBar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const theme = useTheme()
   const { user } = useAuth()
 
@@ -68,9 +70,20 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
     }
   }
 
+  const DEVICE_VIEW_SECTIONS_URL_MAPPING: Record<DeviceViewSections, string> = {
+    [DeviceViewSections.CurrentSettings]: 'current-settings',
+    [DeviceViewSections.BasalSafety]: 'basal-safety',
+    [DeviceViewSections.SettingsHistory]: 'settings-history',
+    [DeviceViewSections.DevicesHistory]: 'devices-history'
+  }
+
+  const isMatchingDeviceViewSections = Object.values(DEVICE_VIEW_SECTIONS_URL_MAPPING).some(viewValue =>
+    pathname.includes(viewValue)
+  )
+
   return (
 
-    user?.isUserPatient() ? (
+    (user?.isUserPatient() && !isMatchingDeviceViewSections) ? (
       <Box
         ref={appBarRefCallback}
         className={appBar}
