@@ -81,10 +81,6 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
       dataTestId: 'daily-tab'
     },
     {
-      value: PatientView.Trends,
-      dataTestId: 'trends-tab'
-    },
-    {
       value: PatientView.PatientProfile,
       dataTestId: 'patient-profile-tab'
     },

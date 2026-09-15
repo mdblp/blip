@@ -61,6 +61,7 @@ import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
 import { getPageTitleByPatientView } from './patient-data.utils'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface PatientDataProps {
   patient: Patient
@@ -74,6 +75,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { teamId } = useParams()
   const { getAndClearAppState, user } = useAuth()
   const [appState, setAppState] = useState<AppState | null>(null)
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     const appStateFromAuth = getAndClearAppState()
@@ -102,6 +104,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     }
 
     fetchPartner()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appState, partnerId, callbackUrl])
 
   const showDataAccessRequestDialog = user.isUserPatient() && !!partnerName
@@ -253,24 +256,27 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                       </>
                     }
                   />
-                  <Route
-                    path={AppUserRoute.Trends}
-                    element={
-                      <Trends
-                        bgPrefs={bgPrefs}
-                        chartPrefs={chartPrefs}
-                        epochLocation={trendsDate}
-                        msRange={msRange}
-                        patient={patient}
-                        tidelineData={medicalData}
-                        loading={refreshingData}
-                        onClickRefresh={refreshData}
-                        onSwitchToDaily={goToDailySpecificDate}
-                        onDatetimeLocationChange={handleDatetimeLocationChange}
-                        updateChartPrefs={updateChartPrefs}
-                      />
-                    }
-                  />
+                  {
+                    !isMobile &&
+                    <Route
+                      path={AppUserRoute.Trends}
+                      element={
+                        <Trends
+                          bgPrefs={bgPrefs}
+                          chartPrefs={chartPrefs}
+                          epochLocation={trendsDate}
+                          msRange={msRange}
+                          patient={patient}
+                          tidelineData={medicalData}
+                          loading={refreshingData}
+                          onClickRefresh={refreshData}
+                          onSwitchToDaily={goToDailySpecificDate}
+                          onDatetimeLocationChange={handleDatetimeLocationChange}
+                          updateChartPrefs={updateChartPrefs}
+                        />
+                      }
+                    />
+                  }
                   <Route
                     path={AppUserRoute.Devices}
                     element={
