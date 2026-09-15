@@ -173,7 +173,6 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, 'Alarm 910022:00 pmReservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, 'Alarm 910042:30 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`, 'Sensor warmup6:30 pmSession end9:00 pm')
-  await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_G7_ID}`, 'Sensor8:00 pmSensor warmup')
   await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`, 'Zen mode11:00 pmDuration2hours')
   await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level130mg/dLSet target110mg/dLDifference+20mg/dLDuration2hours')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_ON_ID}`, 'Basal rate6:30 pmEnd time6:30 pmLoop modeONDelivered0.80U/h')
@@ -227,6 +226,7 @@ export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
   await checkTidelineContainerElementTooltip(`eatingShortly_group_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
+  await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_G7_ID}`, 'Sensor8:00 pmSensor warmup')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {

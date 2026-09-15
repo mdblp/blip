@@ -21,8 +21,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-4020 Adapting the patient list content and the footer to mobile format
 - YLP-4042 Display G7 Pairing code instead of Firmware version on Device view
 - YLP-4043 Display different warmup tooltip for Dexcom G7 sensors
-- YLP-4044 Display the parameter changes tooltip on Daily view
-- YLP-4045 Display the parameter changes tooltip on Daily view
 - YLP-4046 Improve the display of the parameter changes tooltip on Daily view
 - YLP-4047 Use smart rounding for TIR percentage values
 
