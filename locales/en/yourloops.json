@@ -664,6 +664,7 @@
   "security": "Security",
   "select-account-type": "Select account type",
   "send": "Send",
+  "sensor": "Sensor",
   "sensor-usage": "Sensor Usage",
   "sensor-usage-tooltip": "**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.",
   "sensor-warmup": "Sensor warmup",

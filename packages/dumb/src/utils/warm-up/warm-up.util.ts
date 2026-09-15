@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,19 +27,44 @@
 
 import i18next from 'i18next'
 import moment from 'moment-timezone'
+import { CGMName, type WarmUp } from 'medical-domain'
 import { getHourMinuteFormat } from '../datetime/datetime.util'
 
 const t = i18next.t.bind(i18next)
 
-export const getWarmUpTitle = () => {
-  return t('sensor-warmup')
+export interface WarmUpTooltipContent {
+  title: string
+  description: string
+  endTime?: string
 }
 
-export const getWarmUpDescription = (): string => {
-  return t('sensor-warmup-session-end')
+/**
+ * `warmupSensorModel` is absent from records created before the backend returned it.
+ * Those predate G7 support, so they are treated as G6.
+ */
+const isG6Sensor = (warmUp: WarmUp): boolean => {
+  return warmUp.warmupSensorModel === undefined || warmUp.warmupSensorModel === CGMName.G6
 }
 
-export const getWarmUpEndTime = (epochEnd: number, timezone: string) => {
-  return moment.tz(epochEnd, timezone).format(getHourMinuteFormat())
+/**
+ * Only G6 sensors display the warm-up session end time. Later sensor generations
+ * get their own title and a description with no value.
+ */
+export const getWarmUpTooltipContent = (warmUp: WarmUp): WarmUpTooltipContent => {
+  if (isG6Sensor(warmUp)) {
+    return {
+      title: t('sensor-warmup'),
+      description: t('sensor-warmup-session-end'),
+      endTime: moment.tz(warmUp.epochEnd, warmUp.timezone).format(getHourMinuteFormat())
+    }
+  }
+  return {
+    title: t('sensor'),
+    description: t('sensor-warmup')
+  }
+}
+
+export const getWarmUpTitle = (warmUp: WarmUp): string => {
+  return getWarmUpTooltipContent(warmUp).title
 }
 
