@@ -104,6 +104,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     }
 
     fetchPartner()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appState, partnerId, callbackUrl])
 
   const showDataAccessRequestDialog = user.isUserPatient() && !!partnerName
