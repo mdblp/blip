@@ -27,27 +27,22 @@
 
 import React, { FC } from 'react'
 import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 import { formatNumberForLang } from '../../lib/language'
 import { Typography } from "@mui/material"
 
-interface ChangeValueDeviceOverviewProps {
+interface ChangeValueSectionsOverviewProps {
   previousValue?: string
   currentValue: string
   withFormatting: boolean
 }
 
-export const ChangeValueDeviceOverview: FC<ChangeValueDeviceOverviewProps> = (props) => {
+export const ChangeValueSectionsOverview: FC<ChangeValueSectionsOverviewProps> = (props) => {
   const { previousValue, currentValue, withFormatting } = props
   const theme = useTheme()
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center"
-      }}>
+    <>
       {previousValue &&
         <>
           <Typography
@@ -55,8 +50,8 @@ export const ChangeValueDeviceOverview: FC<ChangeValueDeviceOverviewProps> = (pr
           </Typography>
           <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
-      }
+    }
       <Typography variant="body2">{withFormatting ? formatNumberForLang(currentValue) : currentValue} </Typography>
-    </Box>
+    </>
   )
 }
