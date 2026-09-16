@@ -59,6 +59,9 @@ jobs:
       - name: Test lambda
         run: npm run test-lambda
 
+      - name: Lint release script
+        run: shellcheck cloudfront-dist/deploy.sh
+
   test-tideline:
     runs-on: ubuntu-latest
     needs: lint
