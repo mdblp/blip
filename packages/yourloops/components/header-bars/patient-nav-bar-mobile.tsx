@@ -54,7 +54,6 @@ export const PatientNavBarMobile: FunctionComponent<PatientNavBarProps> = (props
           setMainHeaderHeight={setMainHeaderHeight}
         />
       </Box>
-
       <Box>
         <PatientNavBarTabsMobile
           currentPatientView={currentPatientView}
