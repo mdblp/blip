@@ -45,6 +45,7 @@ import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { testPatientProfileSectionsOverviewVisibleMobile } from '../../../use-cases/patient-profile-sections-overview'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -67,14 +68,26 @@ describe('Patient profile view for HCP', () => {
 
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfileSectionsOverview}`
 
-  describe('Alerts section', () => {
-    it('should render correct layout', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+  const renderPatientProfileSectionsOverviewPage = async (route: string) => {
+    await act(async () => {
+      renderPage(route)
+    })
+  }
 
-      checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+  describe('Patient profile sections overview for HCP in mobile version', () => {
+    it('should render correct layout', async () => {
+      await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
+
+      await checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+    })
+
+    it('should render the sections overview in mobile version', async () => {
+      await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
+
+      testPatientProfileSectionsOverviewVisibleMobile()
     })
 
   })
+
+
 })
