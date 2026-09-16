@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,6 +45,9 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     subType: DeviceEventSubtype.Warmup,
     guid: rawData.guid as string,
     inputTime: rawData.inputTime as string
+  }
+  if (rawData.warmupSensorModel) {
+    warmUp.warmupSensorModel = rawData.warmupSensorModel as string
   }
   return warmUp
 }
