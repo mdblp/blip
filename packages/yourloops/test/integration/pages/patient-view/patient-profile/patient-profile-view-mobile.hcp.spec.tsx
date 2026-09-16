@@ -38,7 +38,7 @@ import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import { patient1Id } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
@@ -83,7 +83,7 @@ describe('Patient profile view for HCP', () => {
 
     it('should render the sections overview in mobile version', async () => {
       await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
-
+      await screen.findByTestId('patient-profile-overview-section-information')
       testPatientProfileSectionsOverviewVisibleMobile()
     })
 
