@@ -208,12 +208,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     const route = getRouteByPatientView(patientView)
     const urlPrefix = getBasePrefix(pathname)
 
-    if (patientView === PatientView.Daily && dailyDate && isMobile) {
-      const params = new URLSearchParams({ date: new Date(dailyDate).toISOString() });
-      navigate(`${urlPrefix}${route}?${params.toString()}`, { replace: true })
-    } else {
-      navigate(`${urlPrefix}${route}`)
-    }
+    navigate(`${urlPrefix}${route}`)
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
