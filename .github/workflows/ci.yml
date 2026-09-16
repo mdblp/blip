@@ -59,6 +59,53 @@ jobs:
       - name: Test lambda
         run: npm run test-lambda
 
+  test-cdk:
+    runs-on: ubuntu-latest
+    needs: lint
+    defaults:
+      run:
+        working-directory: cloudfront-dist/deployment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          cache: 'npm'
+          # This package is not part of the root workspaces, so it has its own lockfile.
+          cache-dependency-path: cloudfront-dist/deployment/package-lock.json
+          node-version: ${{ env.node-version }}
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Typecheck deployment stacks
+        run: npm run build
+
+      - name: Test deployment stacks
+        run: npm test -- --ci
+
+      # Synthesizes both stacks for real, with no AWS credentials: CDK_OUTDIR makes
+      # the App self-synthesize on exit, and CDK_CONTEXT_JSON supplies the hosted
+      # zone as an object, which `cdk synth -c` cannot express.
+      - name: Synth smoke test
+        env:
+          CDK_OUTDIR: cdk.out
+          CDK_CONTEXT_JSON: >-
+            {"hosted-zone:account=111111111111:domainName=ci.your-loops.test:region=eu-west-1":
+             {"Id":"/hostedzone/ZCITESTZONE0001","Name":"ci.your-loops.test."}}
+          AWS_ACCOUNT: '111111111111'
+          AWS_DEFAULT_REGION: eu-west-1
+          STACK_PREFIX_NAME: ci
+          STACK_VERSION: 0.0.0-ci
+          DOMAIN_NAME: app.ci.your-loops.test
+          ALT_DOMAIN_NAME: www.ci.your-loops.test
+          DNS_ZONE: ci.your-loops.test
+          FRONT_APP_NAME: blip
+          DIST_DIR: test/fixtures/app-dist
+        run: npx ts-node bin/staticwebsite-cdk.ts
+
   test-tideline:
     runs-on: ubuntu-latest
     needs: lint
@@ -235,7 +282,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: [ test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
+    needs: [ test-cdk, test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

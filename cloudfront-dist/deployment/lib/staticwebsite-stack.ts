@@ -47,7 +47,15 @@ export class StaticWebSiteStack extends core.Stack {
           Name: `/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
         },
         region: 'us-east-1',
-        physicalResourceId: rsc.PhysicalResourceId.of(Date.now().toString()) // Update physical id to always fetch the latest version
+        // Refetch the edge lambda ARN whenever the edge function could have changed,
+        // and only then. Using Date.now() here made the physical id differ on every
+        // synth, so the custom resource was replaced and the distribution updated on
+        // every deploy — which meant `cdk diff` was never clean and could not be used
+        // as a release gate. The code fingerprint covers changes to the handler, and
+        // the version covers a redeploy of the same code under a new release.
+        physicalResourceId: rsc.PhysicalResourceId.of(
+          `${core.FileSystem.fingerprint(`${distDir}/lambda`)}-${props?.version}`
+        )
       }
     });
 

@@ -1,6 +1,12 @@
+# Compiled output. The app runs from TypeScript via ts-node (see cdk.json), so
+# any .js next to the sources is build litter rather than something we ship.
 *.js
-!jest.config.js
 *.d.ts
+!jest.config.js
+# Test support files are real, committed .js — the serializer is loaded by Jest,
+# and the lambda fixture must exist on disk for Code.fromAsset() to synthesize.
+!test/**/*.js
+
 node_modules
 
 # CDK asset staging directory
