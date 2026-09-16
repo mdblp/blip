@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { Dispatch, type FunctionComponent, type MouseEventHandler, SetStateAction } from 'react'
+import React, { Dispatch, type FunctionComponent, type MouseEventHandler, SetStateAction, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { useStyles } from './main-header-style'
@@ -57,6 +57,13 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
   const navigate = useNavigate()
   const theme = useTheme()
   const { user } = useAuth()
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log('URL :', location.pathname);
+    console.log('Query params :', location.search);
+    console.log('State interne :', location.state);
+  }, [location]);
 
   const goBack = (): void => {
     navigate(-1)
@@ -102,6 +109,9 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
           onClick={goBack}
           className={arrowBack}
           data-testid="back-button"
+          sx={{
+            touchAction: 'manipulation', // Empêche le comportement de scroll/zoom au touch
+          }}
         >
           {t('back')}
         </Button>

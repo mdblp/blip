@@ -210,6 +210,9 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
                 onClick={goHome}
                 className={arrowBack}
                 data-testid="back-button"
+                sx={{
+                  touchAction: 'manipulation', // Empêche le comportement de scroll/zoom au touch
+                }}
               >
                 {t('back')}
               </Button>
