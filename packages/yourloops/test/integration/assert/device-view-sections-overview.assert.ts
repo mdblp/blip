@@ -35,7 +35,7 @@ export const checkDeviceSectionsOverviewVisible = (): void => {
   expect(screen.queryByTestId('device-view-overview-card-devices-history')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForCurrentParameters = (): void => {
+export const checkDeviceSectionCardForCurrentParameters = (): void => {
   expect(screen.getByText('System')).toBeVisible()
   expect(screen.getByText('Pump')).toBeVisible()
   expect(screen.getByText('CGM')).toBeVisible()
@@ -44,17 +44,17 @@ export const checkCareTeamSectionCardForCurrentParameters = (): void => {
   expect(screen.getByText('Hypoglycemia threshold')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForSafetyBasal = (): void => {
+export const checkDeviceSectionCardForSafetyBasal = (): void => {
   expect(screen.getByText('In this section you can find the values of the patient safety basal profile.')).toBeVisible()
 }
 
-export const checkCareTeamSectionCardForParametersHistory = async () => {
+export const checkDeviceSectionCardForParametersHistory = async () => {
   const changeHistorySection = screen.getByTestId('device-view-overview-card-parameters-history')
   expect(changeHistorySection).toBeVisible()
   expect(changeHistorySection).toHaveTextContent('Settings HistoryView moreLast update: 01/11/22 - 1:00 amAggressive...130 %90 % Aggressive...100 %110 % Aggressive...100 %90 % Hyperglyce...180.1 mg/dL140.0 mg/dL Hypoglycem...70.0 mg/dL60.0 mg/dL Aggressive...143 % Breakfast ...150.0 g Dinner - l...150.0 g Lunch - la...70.0 g Aggressive...100 % Aggressive...110 %100 % Aggressive...100 % Aggressive...90 %100 % Aggressive...130 % Breakfast ...70.0 g Dinner - a...60.0 g Lunch - av...50.0 g Aggressive...100 % Target glu...100.0 mg/dL Hyperglyce...180.1 mg/dL Hyperglyce...140.0 mg/dL180.1 mg/dL Hypoglycem...70.0 mg/dL Hypoglycem...60.0 mg/dL70.0 mg/dL Breakfast ...15.0 g Dinner - s...20.0 g Lunch - sm...30.0 g Total Dail...53.0 U Weight69.0 kg')
 }
 
-export const checkCareTeamSectionCardForDevicesHistory = async () => {
+export const checkDeviceSectionCardForDevicesHistory = async () => {
   const changeHistorySection = screen.getByTestId('device-view-overview-card-devices-history')
   expect(changeHistorySection).toBeVisible()
   expect(changeHistorySection).toHaveTextContent('Devices HistoryView moreLast update: 01/11/22 - 1:00 amCGM manufacturerDexcom CGM productG5 HandsetMobiGo+ IMEI0123456789 Software version1.12.12-DBLG1-INS-DEXG6-COMMERCIAL Activation code123-456-789 Software version1.0.0 Pump manufacturerROCHE Pump productInsight Smartphone modelA212F')

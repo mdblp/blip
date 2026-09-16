@@ -26,9 +26,9 @@
  */
 
 import {
-  checkCareTeamSectionCardForCurrentParameters,
-  checkCareTeamSectionCardForDevicesHistory, checkCareTeamSectionCardForParametersHistory,
-  checkCareTeamSectionCardForSafetyBasal,
+  checkDeviceSectionCardForCurrentParameters,
+  checkDeviceSectionCardForDevicesHistory, checkDeviceSectionCardForParametersHistory,
+  checkDeviceSectionCardForSafetyBasal,
   checkClickViewMoreBasalSafety,
   checkClickViewMoreCurrentSettings,
   checkClickViewMoreDevicesHistory,
@@ -38,10 +38,10 @@ import {
 
 export const testDeviceSectionsOverviewVisibleMobile = async () => {
   checkDeviceSectionsOverviewVisible()
-  checkCareTeamSectionCardForCurrentParameters()
-  checkCareTeamSectionCardForSafetyBasal()
-  await checkCareTeamSectionCardForParametersHistory()
-  await checkCareTeamSectionCardForDevicesHistory()
+  checkDeviceSectionCardForCurrentParameters()
+  checkDeviceSectionCardForSafetyBasal()
+  await checkDeviceSectionCardForParametersHistory()
+  await checkDeviceSectionCardForDevicesHistory()
 }
 
 export const testClickViewMoreCurrentSettings = async () => {
