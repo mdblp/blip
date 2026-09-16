@@ -135,7 +135,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       AppUserRoute.Dashboard,
       AppUserRoute.Daily,
       AppUserRoute.Trends,
-      AppUserRoute.PatientProfile,
+      AppUserRoute.PatientProfile
     ]
 
     const activeSection = sections.find((section) => currentPathname.includes(section))
@@ -208,7 +208,12 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     const route = getRouteByPatientView(patientView)
     const urlPrefix = getBasePrefix(pathname)
 
-    navigate(`${urlPrefix}${route}`)
+    if (patientView === PatientView.Daily && dailyDate && isMobile) {
+      const params = new URLSearchParams({ date: new Date(dailyDate).toISOString() });
+      navigate(`${urlPrefix}${route}?${params.toString()}`, { replace: true })
+    } else {
+      navigate(`${urlPrefix}${route}`)
+    }
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {

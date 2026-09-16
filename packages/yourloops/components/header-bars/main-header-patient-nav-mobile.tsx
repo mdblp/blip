@@ -61,7 +61,9 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
   const { user } = useAuth()
 
   const goBack = (): void => {
-    navigate(-1)
+    pathname.includes("daily") ?
+      navigate(-2) :
+      navigate(-1)
   }
 
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
