@@ -62,6 +62,17 @@ import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
 import { getPageTitleByPatientView } from './patient-data.utils'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import {
+  PatientProfileSectionsOverview
+} from '../../pages/patient-view/patient-profile/patient-profile-sections-overview'
+import {
+  PatientInformation
+} from '../../pages/patient-view/patient-profile/sections/personal-information/patient-information'
+import { AlertsSection } from '../../pages/patient-view/patient-profile/sections/alerts-section'
+import {
+  PatientLeadClinicians
+} from '../../pages/patient-view/patient-profile/sections/personal-information/clinicians/patient-lead-clinicians'
+import { PatientProfileViewSection } from '../../pages/patient-view/patient-profile/patient-profile-view-section.enum'
 
 interface PatientDataProps {
   patient: Patient
@@ -72,10 +83,15 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const theme = useTheme()
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { teamId } = useParams()
   const { getAndClearAppState, user } = useAuth()
   const [appState, setAppState] = useState<AppState | null>(null)
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const dateOfBirthHidden = ConfigService.getDateOfBirthHidden()
+  const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
+  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => {
     const appStateFromAuth = getAndClearAppState()
@@ -88,6 +104,19 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const callbackUrl = appState?.callbackUrl
   const partnerState = appState?.partnerState
   const [partnerName, setPartnerName] = useState<PartnerName | null>(null)
+
+  const confirmNavigation = (): void => {
+    setShowDialog(false)
+    if (pendingNavigationSection !== null) {
+      setSelectedSection(pendingNavigationSection)
+    }
+    setPendingNavigationSection(null)
+    setHasUnsavedChanges(false)
+  }
+
+  const handleUnsavedChangesChange = (hasChanges: boolean): void => {
+    setHasUnsavedChanges(hasChanges)
+  }
 
   useEffect(() => {
     if (!appState || !partnerId) return
@@ -291,11 +320,35 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     <Route
                       path={AppUserRoute.PatientProfile}
                       element={
-                        <PatientProfileView
-                          patient={patient}
-                        />
-                      }
+                        isMobile
+                          ? (<Navigate to={AppUserRoute.PatientProfileSectionsOverview} replace />)
+                          : (<PatientProfileView patient={patient} />
+                          )}
                     />
+                  }
+                  {
+                    isMobile && user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
+
+                    <Route>
+                      <Route
+                        path={AppUserRoute.PatientProfileSectionsOverview}
+                        element={
+                          <PatientProfileSectionsOverview patient={patient} />
+                        }
+                      />
+                      <Route path={AppUserRoute.PatientProfileInformationSection}
+                             element={<PatientInformation patient={patient} dateOfBirthHidden={dateOfBirthHidden} />} />
+                      <Route path={AppUserRoute.PatientProfileLeadCliniciansSection}
+                             element={
+                               <PatientLeadClinicians
+                                 patientId={patient.userid}
+                                 patientProfile={patient.profile}
+                                 leadClinicians={patient.leadClinicians}
+                               />} />
+                      <Route path={AppUserRoute.PatientProfileAlertsSection}
+                             element={<AlertsSection patient={patient}
+                                                     onUnsavedChangesChange={handleUnsavedChangesChange} />} />
+                    </Route>
                   }
                   <Route path="/" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
                   <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />

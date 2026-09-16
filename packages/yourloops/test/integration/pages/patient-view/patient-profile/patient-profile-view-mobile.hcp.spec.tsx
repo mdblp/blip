@@ -65,7 +65,7 @@ describe('Patient profile view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
+  const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfileSectionsOverview}`
 
   describe('Alerts section', () => {
     it('should render correct layout', async () => {
