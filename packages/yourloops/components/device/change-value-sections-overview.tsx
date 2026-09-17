@@ -30,28 +30,35 @@ import { useTheme } from '@mui/material/styles'
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 import { formatNumberForLang } from '../../lib/language'
 import { Typography } from "@mui/material"
+import Box from '@mui/material/Box'
 
-interface ChangeValueSectionsOverviewProps {
+interface ChangeValueProps {
   previousValue?: string
   currentValue: string
   withFormatting: boolean
 }
 
-export const ChangeValueSectionsOverview: FC<ChangeValueSectionsOverviewProps> = (props) => {
+export const ChangeValueSectionsOverview: FC<ChangeValueProps> = (props) => {
   const { previousValue, currentValue, withFormatting } = props
   const theme = useTheme()
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        flexShrink: 0
+      }}>
       {previousValue &&
         <>
           <Typography
             variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
           </Typography>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1), flexShrink: 0 }} />
         </>
-    }
-      <Typography variant="body2">{withFormatting ? formatNumberForLang(currentValue) : currentValue} </Typography>
-    </>
+      }
+      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{withFormatting ? formatNumberForLang(currentValue) : currentValue} </Typography>
+    </Box>
   )
 }
+

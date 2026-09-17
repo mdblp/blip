@@ -35,37 +35,40 @@ import Typography from '@mui/material/Typography'
 import { DblParameter, DeviceConfig, PumpSettings } from 'medical-domain'
 import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
-import { ChangeValue } from '../device/change-value'
+import { ChangeValueSectionsOverview } from '../device/change-value-sections-overview'
 import { formatParameterValue, getTranslationKeyForDeviceChange, sortHistory } from '../device/utils/device.utils'
 import { cardStyle } from './card-style'
 import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
 
 interface DeviceViewSectionsOverviewCardsProps {
   pumpSettings: PumpSettings
 }
 
-export const deviceCardStyle = makeStyles()(() => {
+export const deviceCardStyle = makeStyles()((theme) => {
   return {
     listOfParameters: {
       display: 'flex',
       flexDirection: 'column',
       gap: 1,
-      flex: 1
+      flex: 1,
+      maxWidth: '100%'
     },
     parameterChange: {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       flex: 1
+    },
+    dateLastUpdate: {
+      paddingBottom : theme.spacing(2)
     }
   }
 })
 
-const MAX_STRING_LENGTH = 10
-
 export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCardsProps> = ({ pumpSettings }) => {
   const { t } = useTranslation()
-  const { classes: { parameterChange, listOfParameters } } = deviceCardStyle()
+  const { classes: { parameterChange, listOfParameters, dateLastUpdate } } = deviceCardStyle()
   const { classes: { cards, cardsHeader } } = cardStyle()
   const { device, pump, parameters, cgm, history } = pumpSettings.payload
   const totalDailyInsulin = parameters.find(parameter => parameter.name === DblParameter.TotalDailyInsulin)
@@ -81,9 +84,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const hasParameters = Boolean(firstChange?.parameters?.length)
   const firstDeviceChange = lastDeviceChange?.[0]
   const hasDevices = Boolean(firstDeviceChange?.devices?.length)
-
-  const truncate = (str: string, max: number) =>
-    str.length > max ? str.slice(0, max).toString() + "..." : str
+  const theme = useTheme()
 
   const isBasalSafetyProfileAvailable = (pumpSettings: PumpSettings): boolean => {
     return !isMobiGoDevice(pumpSettings.payload.device);
@@ -139,7 +140,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
 
       {isBasalSafetyProfileAvailable && (
         <GenericListCard
-          title={t('safety-basal')}
+          title={t('basal-safety-profile-short')}
           data-testid="device-view-overview-card-basal-safety"
           cardClassName={cards}
           cardHeaderClassName={cardsHeader}
@@ -157,7 +158,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       )}
 
       <GenericListCard
-        title={t('parameters-history')}
+        title={t('settings-change-history-short')}
         data-testid="device-view-overview-card-parameters-history"
         cardClassName={cards}
         cardHeaderClassName={cardsHeader}
@@ -170,16 +171,26 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       >
         {hasParameters ? (
           <Box className={listOfParameters}>
-            <Typography variant="body2">
-              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
+            <Typography variant="body2" className = { dateLastUpdate } >
+              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), `${t('short-date-with-time')}`, timezone)}`}
             </Typography>
 
             {firstChange.parameters.map((parameter) => (
               <Box key={`${parameter.name}-${parameter.value}`} className={parameterChange}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {truncate(t(`params|${parameter.name}`), MAX_STRING_LENGTH)}
+                <Typography
+                  variant="body2"
+                  sx={{
+                  fontWeight: 'bold',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  flexGrow: 1,
+                  width: 0,
+                  paddingRight: theme.spacing(2)
+                }}>
+                  {t(`params|${parameter.name}`)}
                 </Typography>
-                <ChangeValue
+                <ChangeValueSectionsOverview
                   previousValue={
                     parameter.previousValue
                       ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`
@@ -187,7 +198,6 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
                   }
                   currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
                   withFormatting={true}
-                  isSectionsOverviewPage={true}
                 />
               </Box>
             ))}
@@ -200,7 +210,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       </GenericListCard>
 
       <GenericListCard
-        title={t('device-history')}
+        title={t('device-change-history-short')}
         data-testid="device-view-overview-card-devices-history"
         cardClassName={cards}
         cardHeaderClassName={cardsHeader}
@@ -211,11 +221,10 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
           />
         }
       >
-
         {hasDevices ? (
           <Box className={listOfParameters}>
-            <Typography variant="body2">
-              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), 'DD/MM/YY - h:mm a', timezone)}`}
+            <Typography variant="body2" className = { dateLastUpdate }>
+              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), `${t('short-date-with-time')}`, timezone)}`}
             </Typography>
 
             {firstDeviceChange.devices.map((device) => (
@@ -223,11 +232,10 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {t(getTranslationKeyForDeviceChange(device.name))}
                 </Typography>
-                <ChangeValue
+                <ChangeValueSectionsOverview
                   previousValue={device.previousValue}
                   currentValue={device.value}
                   withFormatting={false}
-                  isSectionsOverviewPage={true}
                 />
               </Box>
             ))}
