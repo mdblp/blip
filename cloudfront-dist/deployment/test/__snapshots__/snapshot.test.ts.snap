@@ -35,6 +35,9 @@ exports[`edge stack matches the committed baseline 1`] = `
       "Type": "AWS::IAM::Role",
     },
     "cibliprequestviewerCurrentVersionBBC422FDf339e3e0c3fa91c70609ffdc99554538": {
+      "Metadata": {
+        "aws:cdk:do-not-refactor": true,
+      },
       "Properties": {
         "FunctionName": {
           "Ref": "cibliprequestviewerD090C18F",
@@ -133,7 +136,7 @@ exports[`web stack matches the committed baseline 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 120,
       },
       "Type": "AWS::Lambda::Function",
@@ -175,6 +178,9 @@ exports[`web stack matches the committed baseline 1`] = `
         "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
       ],
       "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-111111111111-eu-west-1",
           "S3Key": "[ASSET_HASH]",
@@ -190,13 +196,14 @@ exports[`web stack matches the committed baseline 1`] = `
             "Ref": "ciblipdeploymentwithinvalidationAwsCliLayerB5FD6924",
           },
         ],
+        "MemorySize": 1024,
         "Role": {
           "Fn::GetAtt": [
             "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
             "Arn",
           ],
         },
-        "Runtime": "python3.11",
+        "Runtime": "python3.13",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -356,7 +363,7 @@ exports[`web stack matches the committed baseline 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -451,7 +458,7 @@ exports[`web stack matches the committed baseline 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -737,6 +744,7 @@ exports[`web stack matches the committed baseline 1`] = `
         "SourceObjectKeys": [
           "[ASSET_HASH]",
         ],
+        "WaitForDistributionInvalidation": true,
       },
       "Type": "Custom::CDKBucketDeployment",
       "UpdateReplacePolicy": "Delete",
@@ -778,6 +786,7 @@ exports[`web stack matches the committed baseline 1`] = `
         "SourceObjectKeys": [
           "[ASSET_HASH]",
         ],
+        "WaitForDistributionInvalidation": true,
       },
       "Type": "Custom::CDKBucketDeployment",
       "UpdateReplacePolicy": "Delete",
@@ -1038,7 +1047,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 120,
       },
       "Type": "AWS::Lambda::Function",
@@ -1080,6 +1089,9 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
       ],
       "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-111111111111-eu-west-1",
           "S3Key": "[ASSET_HASH]",
@@ -1095,13 +1107,14 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             "Ref": "ciblipdeploymentwithinvalidationAwsCliLayerB5FD6924",
           },
         ],
+        "MemorySize": 1024,
         "Role": {
           "Fn::GetAtt": [
             "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
             "Arn",
           ],
         },
-        "Runtime": "python3.11",
+        "Runtime": "python3.13",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1261,7 +1274,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1356,7 +1369,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1642,6 +1655,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         "SourceObjectKeys": [
           "[ASSET_HASH]",
         ],
+        "WaitForDistributionInvalidation": true,
       },
       "Type": "Custom::CDKBucketDeployment",
       "UpdateReplacePolicy": "Delete",
@@ -1683,6 +1697,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         "SourceObjectKeys": [
           "[ASSET_HASH]",
         ],
+        "WaitForDistributionInvalidation": true,
       },
       "Type": "Custom::CDKBucketDeployment",
       "UpdateReplacePolicy": "Delete",
