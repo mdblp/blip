@@ -81,10 +81,6 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
       dataTestId: 'daily-tab'
     },
     {
-      value: PatientView.Trends,
-      dataTestId: 'trends-tab'
-    },
-    {
       value: PatientView.PatientProfile,
       dataTestId: 'patient-profile-tab'
     },
@@ -117,7 +113,6 @@ export const PatientNavBarTabsMobile: FunctionComponent<PatientNavBarTabsProps> 
           value={tabItem.value}
           dataTestId={tabItem.dataTestId}
           isSelected={isSelected(tabItem.value)}
-          onChangePatientView={onChangePatientView}
         />
       ))}
     </BottomNavigation>

@@ -54,7 +54,7 @@ export const checkPatientNavBarAsHcp = () => {
 }
 
 export const checkPatientNavBarAsHcpMobile = () => {
-  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Profile', 'Devices'])
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Profile', 'Devices'])
 }
 
 export const checkPatientNavBarAsHcpInPrivateTeam = () => {
@@ -74,11 +74,11 @@ export const checkPatientNavBarAsPatient = () => {
 }
 
 export const checkPatientNavBarAsCaregiverMobile = () => {
-  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Devices'])
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Devices'])
 }
 
 export const checkPatientNavBarAsPatientMobile = () => {
-  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Trends', 'Profile', 'Devices'])
+  checkPatientNavBarCommonMobile(['Dashboard', 'Daily', 'Profile', 'Devices'])
 }
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {

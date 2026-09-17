@@ -53,6 +53,7 @@ import { useAuth } from '../../lib/auth'
 import { PatientView } from '../../enum/patient-view.enum'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
+
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
 }
@@ -129,7 +130,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
 
   const targetUrl = getTargetUrl(userRole)
 
-  const goHome = () => {
+  const goBack = () => {
     navigate(-1)
   }
 
@@ -207,7 +208,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               <Button
                 variant="text"
                 startIcon={<ArrowBackIcon />}
-                onClick={goHome}
+                onClick={goBack}
                 className={arrowBack}
                 data-testid="back-button"
               >
