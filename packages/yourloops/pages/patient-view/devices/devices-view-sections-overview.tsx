@@ -25,35 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import Box from '@mui/material/Box'
-import { formatNumberForLang } from '../../lib/language'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
-import { useTheme } from '@mui/material/styles'
+import { DeviceViewSectionsOverviewCards } from '../../../components/overview-cards/devices-view-sections-overview-cards'
+import React, { type FC } from 'react'
+import { PumpSettings } from 'medical-domain'
 
-interface ChangeValueProps {
-  previousValue?: string
-  currentValue: string
-  withFormatting: boolean
+interface DeviceViewSectionsOverviewProps {
+  pumpSettings: PumpSettings
 }
 
-export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting } = props
-  const theme = useTheme()
+export const DeviceViewSectionsOverview: FC<DeviceViewSectionsOverviewProps> = ({ pumpSettings }) => {
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center"
-      }}>
-      {previousValue &&
-        <>
-          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
-        </>
-      }
-      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
-    </Box>
+    <DeviceViewSectionsOverviewCards pumpSettings={pumpSettings} />
   )
 }

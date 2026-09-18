@@ -26,34 +26,46 @@
  */
 
 import React, { FC } from 'react'
-import Box from '@mui/material/Box'
-import { formatNumberForLang } from '../../lib/language'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 import { useTheme } from '@mui/material/styles'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
+import { Typography } from "@mui/material"
+import Box from '@mui/material/Box'
 
 interface ChangeValueProps {
   previousValue?: string
   currentValue: string
+  previousUnit?: string
+  currentUnit?: string
   withFormatting: boolean
 }
 
-export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting } = props
+export const ChangeValueSectionsOverview: FC<ChangeValueProps> = (props) => {
+  const { previousValue, currentValue, previousUnit, currentUnit, withFormatting } = props
   const theme = useTheme()
 
   return (
     <Box
       sx={{
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        flexShrink: 0
       }}>
       {previousValue &&
         <>
-          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+          <Typography
+            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue} {previousUnit}</span>
+          </Typography>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1), flexShrink: 0 }} />
         </>
       }
-      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
+      <Typography variant="body2">
+        <Box component="span" sx={{ fontWeight: "bold" }}>
+          {withFormatting ? formatNumberForLang(currentValue) : currentValue}
+        </Box>
+        {currentUnit ? ` ${currentUnit}` : ""}
+      </Typography>
     </Box>
   )
 }
+

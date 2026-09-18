@@ -25,35 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import Box from '@mui/material/Box'
-import { formatNumberForLang } from '../../lib/language'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
-import { useTheme } from '@mui/material/styles'
+import {
+  checkDeviceSectionCardForCurrentParameters,
+  checkDeviceSectionCardForDevicesHistory, checkDeviceSectionCardForParametersHistory,
+  checkDeviceSectionCardForSafetyBasal,
+  checkClickViewMoreBasalSafety,
+  checkClickViewMoreCurrentSettings,
+  checkClickViewMoreDevicesHistory,
+  checkClickViewMoreSettingsHistory,
+  checkDeviceSectionsOverviewVisible
+} from '../assert/device-view-sections-overview.assert'
 
-interface ChangeValueProps {
-  previousValue?: string
-  currentValue: string
-  withFormatting: boolean
+export const testDeviceSectionsOverviewVisibleMobile = async () => {
+  checkDeviceSectionsOverviewVisible()
+  checkDeviceSectionCardForCurrentParameters()
+  checkDeviceSectionCardForSafetyBasal()
+  await checkDeviceSectionCardForParametersHistory()
+  await checkDeviceSectionCardForDevicesHistory()
 }
 
-export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting } = props
-  const theme = useTheme()
+export const testClickViewMoreCurrentSettings = async () => {
+  await checkClickViewMoreCurrentSettings()
+}
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center"
-      }}>
-      {previousValue &&
-        <>
-          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
-        </>
-      }
-      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
-    </Box>
-  )
+export const testClickViewMoreBasalSafety = async () => {
+  await checkClickViewMoreBasalSafety()
+}
+
+export const testClickViewMoreSettingsHistory = async () => {
+  await checkClickViewMoreSettingsHistory()
+}
+
+export const testClickViewMoreDevicesHistory = async () => {
+  await checkClickViewMoreDevicesHistory()
 }

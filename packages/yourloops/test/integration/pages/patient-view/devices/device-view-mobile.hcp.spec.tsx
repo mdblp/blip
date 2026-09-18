@@ -25,13 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
-import {
-  mockDataAPI,
-  pumpSettingsData,
-} from '../../../mock/data.api.mock'
+import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
@@ -44,14 +41,21 @@ import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import {
+  testClickViewMoreBasalSafety,
+  testClickViewMoreCurrentSettings,
+  testClickViewMoreDevicesHistory,
+  testClickViewMoreSettingsHistory, testDeviceSectionsOverviewVisibleMobile
+} from '../../../use-cases/device-settings-sections-overview-visualisation'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Devices}`
+  const deviceSectionsOverviewRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.DevicesSectionsOverview}`
 
   beforeEach(() => {
+    jest.clearAllMocks();
     mockWindowResizer()
     mockAuth0Hook()
     mockDblCommunicationApi()
@@ -65,11 +69,35 @@ describe('Device view for HCP', () => {
     mockMobileScreen()
   })
 
-  it('should render correct layout', async () => {
+  const renderDeviceSectionsOverviewPage = async (route: string) => {
     await act(async () => {
-      renderPage(deviceRoute)
+      renderPage(route)
     })
+  }
 
-    checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
+  it('should render correct layout', async () => {
+
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+
+    await checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
   })
+
+  it('should display the section overview page in mobile version', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+    await screen.findByTestId('device-view-overview-card-current-settings')
+    await testDeviceSectionsOverviewVisibleMobile()
+  })
+
+  it('should be able to access the pages linked by the cards', async () => {
+    await renderDeviceSectionsOverviewPage(deviceSectionsOverviewRoute)
+
+    await screen.findByTestId('device-view-overview-card-current-settings')
+
+    await testClickViewMoreCurrentSettings()
+    await testClickViewMoreBasalSafety()
+    await testClickViewMoreSettingsHistory()
+    await testClickViewMoreDevicesHistory()
+
+  })
+
 })
