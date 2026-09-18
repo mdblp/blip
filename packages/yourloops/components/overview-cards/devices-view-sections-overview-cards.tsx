@@ -87,11 +87,11 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const theme = useTheme()
 
   const isBasalSafetyProfileAvailable = (pumpSettings: PumpSettings): boolean => {
-    return !isMobiGoDevice(pumpSettings.payload.device);
+    return !isMobiGoDevice(pumpSettings.payload.device)
   }
 
   const isMobiGoDevice = (device: DeviceConfig): boolean => {
-    return device.deviceId.toLowerCase().startsWith('mobigo');
+    return device.deviceId.toLowerCase().startsWith('mobigo')
   }
 
   const formattedDate = formatDateWithMomentShortFormat(
