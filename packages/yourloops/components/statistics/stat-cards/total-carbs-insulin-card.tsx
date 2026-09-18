@@ -41,6 +41,7 @@ import React, { FC } from 'react'
 import { CardDivider } from '../../card-divider/card-divider'
 import { DataCard } from '../../data-card/data-card'
 import { CarbsStat } from '../carbs-stat'
+import { roundToOneDecimal } from '../statistics.util'
 import { TotalInsulinStat } from '../total-insulin-stat'
 
 interface TotalCarbsInsulinCardProps {
@@ -85,9 +86,9 @@ const { basalData, bolusData, mealData, pumpSettingsData, wizardData, dateFilter
       <CarbsStat
         totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
         totalRescueCarbsEntries={totalRescueCarbsEntries}
-        totalCarbsPerDay={Math.round(totalCarbsPerDay * 10) / 10}
-        rescueCarbsPerDay={Math.round(rescueCarbsPerDay * 10) / 10}
-        mealCarbsPerDay={Math.round(mealCarbsPerDay * 10) / 10}
+        totalCarbsPerDay={roundToOneDecimal(totalCarbsPerDay)}
+        rescueCarbsPerDay={roundToOneDecimal(rescueCarbsPerDay)}
+        mealCarbsPerDay={roundToOneDecimal(mealCarbsPerDay)}
       />
       <CardDivider />
       <TotalInsulinStat
