@@ -35,11 +35,13 @@ import Box from '@mui/material/Box'
 interface ChangeValueProps {
   previousValue?: string
   currentValue: string
+  previousUnit?: string
+  currentUnit?: string
   withFormatting: boolean
 }
 
 export const ChangeValueSectionsOverview: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting } = props
+  const { previousValue, currentValue, previousUnit, currentUnit, withFormatting } = props
   const theme = useTheme()
 
   return (
@@ -52,12 +54,17 @@ export const ChangeValueSectionsOverview: FC<ChangeValueProps> = (props) => {
       {previousValue &&
         <>
           <Typography
-            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
+            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue} {previousUnit}</span>
           </Typography>
           <TrendingFlatIcon sx={{ marginInline: theme.spacing(1), flexShrink: 0 }} />
         </>
       }
-      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{withFormatting ? formatNumberForLang(currentValue) : currentValue} </Typography>
+      <Typography variant="body2">
+        <Box component="span" sx={{ fontWeight: "bold" }}>
+          {withFormatting ? formatNumberForLang(currentValue) : currentValue}
+        </Box>
+        {currentUnit ? ` ${currentUnit}` : ""}
+      </Typography>
     </Box>
   )
 }

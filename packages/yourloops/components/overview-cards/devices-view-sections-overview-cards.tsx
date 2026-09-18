@@ -61,7 +61,7 @@ export const deviceCardStyle = makeStyles()((theme) => {
       flex: 1
     },
     dateLastUpdate: {
-      paddingBottom : theme.spacing(2)
+      paddingBottom: theme.spacing(2)
     }
   }
 })
@@ -171,7 +171,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       >
         {hasParameters ? (
           <Box className={listOfParameters}>
-            <Typography variant="body2" className = { dateLastUpdate } >
+            <Typography variant="body2" className={dateLastUpdate}>
               {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), `${t('short-date-with-time')}`, timezone)}`}
             </Typography>
 
@@ -179,25 +179,25 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
               <Box key={`${parameter.name}-${parameter.value}`} className={parameterChange}>
                 <Typography
                   variant="body2"
+                  noWrap
                   sx={{
-                  fontWeight: 'bold',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  flexGrow: 1,
-                  width: 0,
-                  paddingRight: theme.spacing(2)
-                }}>
+                    fontWeight: 'bold',
+                    flexGrow: 1,
+                    width: 0,
+                    paddingRight: theme.spacing(2)
+                  }}>
                   {t(`params|${parameter.name}`)}
                 </Typography>
                 <ChangeValueSectionsOverview
                   previousValue={
                     parameter.previousValue
-                      ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`
+                      ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} `
                       : parameter.previousValue
                   }
-                  currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
+                  previousUnit={parameter.previousUnit}
+                  currentValue={`${formatParameterValue(parameter.value, parameter.unit)}`}
                   withFormatting={true}
+                  currentUnit={parameter.unit}
                 />
               </Box>
             ))}
@@ -223,7 +223,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
       >
         {hasDevices ? (
           <Box className={listOfParameters}>
-            <Typography variant="body2" className = { dateLastUpdate }>
+            <Typography variant="body2" className={dateLastUpdate}>
               {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), `${t('short-date-with-time')}`, timezone)}`}
             </Typography>
 
