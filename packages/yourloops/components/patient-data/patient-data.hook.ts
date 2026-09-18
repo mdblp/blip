@@ -168,7 +168,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       default:
         return PatientView.Dashboard
     }
-  }, [pathname])
+  }, [pathname, isOverviewSectionsRoute])
 
   const getRouteByPatientView = (view: PatientView): AppUserRoute => {
     switch (view) {
