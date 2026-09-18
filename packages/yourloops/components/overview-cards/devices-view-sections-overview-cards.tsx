@@ -94,6 +94,12 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     return device.deviceId.toLowerCase().startsWith('mobigo');
   }
 
+  const formattedDate = formatDateWithMomentShortFormat(
+    new Date(firstChange.changeDate),
+    t('short-date-with-time'),
+    timezone
+  );
+
   const getTableLinesCurrentSettings = (): { label: string, value: string }[] => {
     return [
       { label: t('system'), value: device?.name },
@@ -172,7 +178,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         {hasParameters ? (
           <Box className={listOfParameters}>
             <Typography variant="body2" className={dateLastUpdate}>
-              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), `${t('short-date-with-time')}`, timezone)}`}
+              {`${t('last-upload:')} ${formattedDate}`}
             </Typography>
 
             {firstChange.parameters.map((parameter) => (
@@ -224,7 +230,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         {hasDevices ? (
           <Box className={listOfParameters}>
             <Typography variant="body2" className={dateLastUpdate}>
-              {`${t('last-upload:')} ${formatDateWithMomentShortFormat(new Date(firstChange.changeDate), `${t('short-date-with-time')}`, timezone)}`}
+              {`${t('last-upload:')} ${formattedDate}`}
             </Typography>
 
             {firstDeviceChange.devices.map((device) => (
