@@ -72,9 +72,9 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
 
   const DEVICE_VIEW_SECTIONS_URL_MAPPING: Record<DeviceViewSectionsOverview, string> = {
     [DeviceViewSectionsOverview.CurrentSettings]: 'current-settings',
-    [DeviceViewSectionsOverview.BasalSafety]: 'basal-safety',
-    [DeviceViewSectionsOverview.SettingsHistory]: 'settings-history',
-    [DeviceViewSectionsOverview.DevicesHistory]: 'devices-history'
+    [DeviceViewSectionsOverview.BasalSafety]: 'basal-safety-profile',
+    [DeviceViewSectionsOverview.SettingsHistory]: 'settings-change-history',
+    [DeviceViewSectionsOverview.DevicesHistory]: 'devices-change-history'
   }
 
   const isMatchingDeviceViewSections = Object.values(DEVICE_VIEW_SECTIONS_URL_MAPPING).some(viewValue =>
