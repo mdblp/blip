@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,5 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const RESPONSIVE_GRID_FULL_WIDTH = 12
-export const RESPONSIVE_GRID_FOUR_COLUMNS = 3
+import { LoopModeStat } from 'dumb'
+import { Basal, BasalBolusStatisticsService, DateFilter } from 'medical-domain'
+import React, { FC } from 'react'
+import { DataCard } from '../../data-card/data-card'
+
+interface TimeInLoopModeProps {
+  basalData: Basal[]
+  dateFilter: DateFilter
+}
+
+export const TimeInLoopModeCard: FC<TimeInLoopModeProps> = (props) => {
+  const { basalData, dateFilter } = props
+
+  const {
+    automatedBasalDuration,
+    manualBasalDuration,
+    manualPercentage,
+    automatedPercentage
+  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilter)
+
+  return (
+    <DataCard>
+      <LoopModeStat
+        automatedBasalDuration={automatedBasalDuration}
+        manualBasalDuration={manualBasalDuration}
+        manualPercentage={manualPercentage}
+        automatedPercentage={automatedPercentage}
+      />
+    </DataCard>
+  )
+}

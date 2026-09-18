@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
+import { type MedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
 
 export const getSortedMedicalReports = (medicalReports: MedicalReport[]): MedicalReport[] => {
   return medicalReports.sort((firstMedicalReport, secondMedicalReport) => {

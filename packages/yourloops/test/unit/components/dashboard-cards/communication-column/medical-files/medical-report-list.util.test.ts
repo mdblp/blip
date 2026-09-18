@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,10 @@
 
 import {
   type MedicalReport
-} from '../../../../../lib/medical-files/models/medical-report.model'
+} from '../../../../../../lib/medical-files/models/medical-report.model'
 import {
   getMedicalReportDate
-} from '../../../../../components/dashboard-cards/medical-files/medical-report-list.util'
+} from '../../../../../../components/dashboard-cards/communication-column/medical-files/medical-report-list.util'
 
 describe('Medical Report list util', () => {
   describe('getMedicalReportDate', () => {
@@ -41,6 +41,7 @@ describe('Medical Report list util', () => {
         creationDate: '2023-02-15T10:00:000Z',
         patientId: 'PatientId',
         teamId: 'teamId',
+        teamName: 'teamName',
         diagnosis: 'diag1',
         progressionProposal: 'proposal1',
         trainingSubject: 'training1',

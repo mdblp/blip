@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,11 +41,11 @@ export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalF
   await checkMedicalReportCancel()
   await checkMedicalReportCreate(medicalFilesWidgetParams)
   await checkMedicalReportUpdate(medicalFilesWidgetParams)
-  await checkMedicalReportConsult(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams, false)
   await checkMedicalReportDelete(medicalFilesWidgetParams)
 }
 
 export const testMedicalWidgetForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   await checkMedicalReportContentForPatient(medicalFilesWidgetParams)
-  await checkMedicalReportConsult(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams, true)
 }
