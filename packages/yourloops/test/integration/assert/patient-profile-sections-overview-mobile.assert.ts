@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 export const checkPatientProfileSectionsOverviewVisible = (): void => {
   expect(screen.queryByTestId('patient-profile-overview-section-information')).toBeVisible()
@@ -52,4 +53,40 @@ export const checkPatientProfileSectionCardForRange = (): void => {
 
 export const checkPatientProfileSectionCardForAlerts = (): void => {
   expect(screen.getByText('Monitoring alerts configuration')).toBeVisible()
+}
+
+export const checkClickViewMoreInformation = async () => {
+  const viewMoreInformation = within(screen.getByTestId('patient-profile-overview-section-information'))
+  await userEvent.click(viewMoreInformation.getByText('View more'))
+  const InformationSectionTitle = await screen.findByText('Devices and current settings') //à changer
+  expect(InformationSectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('bottom-part-main-header'))
+  await userEvent.click(header.getByTestId('back-button'))
+}
+
+export const checkClickViewMoreLeadClinicians = async () => {
+  const viewMoreLeadClinicians = within(screen.getByTestId('patient-profile-overview-section-lead-clinicians'))
+  await userEvent.click(viewMoreLeadClinicians.getByText('View more'))
+  const LeadCliniciansSectionTitle = await screen.findByText('Lead clinicians')
+  expect(LeadCliniciansSectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('bottom-part-main-header'))
+  await userEvent.click(header.getByTestId('back-button'))
+}
+
+export const checkClickViewMoreRange = async () => {
+  const viewMoreRange = within(screen.getByTestId('patient-profile-overview-section-range'))
+  await userEvent.click(viewMoreRange.getByText('View more'))
+  const RangeSectionTitle = await screen.findByText('Range')
+  expect(RangeSectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('bottom-part-main-header'))
+  await userEvent.click(header.getByTestId('back-button'))
+}
+
+export const checkClickViewMoreAlerts = async () => {
+  const viewMoreAlerts = within(screen.getByTestId('patient-profile-overview-section-alerts'))
+  await userEvent.click(viewMoreAlerts.getByText('View more'))
+  const AlertsSectionTitle = await screen.findByText('Monitoring alerts')
+  expect(AlertsSectionTitle).toBeInTheDocument()
+  const header = within(await screen.findByTestId('bottom-part-main-header'))
+  await userEvent.click(header.getByTestId('back-button'))
 }

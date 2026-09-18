@@ -17,6 +17,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver
 - YLP-3945 Adapting the second level of navigation to mobile format
+- YLP-3946 Adapting the patient profile tab menu to mobile format
 - YLP-3947 Adapting the device tab menu to mobile format
 - YLP-3950 Adapting the user account menu for french patient to mobile format
 - YLP-3955 Adapting the care team settings menu to mobile format

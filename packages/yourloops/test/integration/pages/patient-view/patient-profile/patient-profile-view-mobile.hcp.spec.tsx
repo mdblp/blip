@@ -45,7 +45,11 @@ import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
-import { testPatientProfileSectionsOverviewVisibleMobile } from '../../../use-cases/patient-profile-sections-overview'
+import {
+  testClickViewMoreAlerts,
+  testClickViewMoreInformation, testClickViewMoreLeadClinicians, testClickViewMoreRange,
+  testPatientProfileSectionsOverviewVisibleMobile
+} from '../../../use-cases/patient-profile-sections-overview'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -85,6 +89,17 @@ describe('Patient profile view for HCP', () => {
       await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
       await screen.findByTestId('patient-profile-overview-section-information')
       testPatientProfileSectionsOverviewVisibleMobile()
+    })
+
+    it('should be able to access the pages linked by the cards', async () => {
+      await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
+
+      await screen.findByTestId('patient-profile-overview-section-information')
+
+      await testClickViewMoreInformation()
+      await testClickViewMoreLeadClinicians()
+      await testClickViewMoreRange()
+      await testClickViewMoreAlerts()
     })
 
   })
