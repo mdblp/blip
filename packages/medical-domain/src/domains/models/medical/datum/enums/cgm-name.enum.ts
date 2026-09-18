@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,5 +28,5 @@
 export enum CGMName {
   G6 = 'G6',
   G7 = 'G7',
-  G7_15 = 'G7-15'
+  G7_15 = 'G7-15' //special version of Dexcom G7, not supported right now but should be soon.
 }

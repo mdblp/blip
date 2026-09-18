@@ -91,6 +91,7 @@ import {
   RESERVOIR_CHANGE_ID,
   SMBG_ID,
   WARMUP_01_ID,
+  WARMUP_G7_ID,
   WIZARD_INPUT_TIME,
   WIZARD_LOW_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_ID,
@@ -225,6 +226,7 @@ export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
   await checkTidelineContainerElementTooltip(`eatingShortly_group_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
+  await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_G7_ID}`, 'Sensor8:00 pmSensor warmup')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {

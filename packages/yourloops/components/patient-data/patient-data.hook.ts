@@ -222,7 +222,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     } finally {
       if (currentPatientView === PatientView.Daily) {
         setDailyDate(epochLocation)
-        setSearchParams({ [DATE_QUERY_PARAM_KEY]: new Date(epochLocation).toISOString() })
+        setSearchParams({ [DATE_QUERY_PARAM_KEY]: new Date(epochLocation).toISOString() }, { replace: true })
       }
       if (currentPatientView === PatientView.Trends) {
         setTrendsDate(epochLocation)

@@ -45,7 +45,6 @@ interface BottomNavigationTabProps {
   value: PatientView
   dataTestId: string
   isSelected: boolean
-  onChangePatientView: (patientView: PatientView) => void
 }
 
 const styles = makeStyles()(() => {
@@ -67,7 +66,6 @@ export const BottomNavigationTab: React.FC<BottomNavigationTabProps> = (props) =
     value,
     dataTestId,
     isSelected,
-    onChangePatientView,
     ...otherProps
   } = props
   const { classes } = styles()
@@ -94,9 +92,6 @@ export const BottomNavigationTab: React.FC<BottomNavigationTabProps> = (props) =
       value={value}
       icon={getIcon(value)}
       className={classes.bottomNavAction}
-      onClick={() => {
-        onChangePatientView(value)
-      }}
       data-testid={dataTestId}
       aria-label={ value === PatientView.PatientProfile ? t("patient-profile") : t(value.toLowerCase())}
     />
