@@ -75,11 +75,45 @@ To revert from a maintenance state to a "normal" state make sure to reset the en
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
+## Tests
+
+```sh
+npm ci
+npm run build   # typecheck
+npm test        # synthesize the stacks and assert on the templates
+```
+
+The tests run offline: no AWS credentials, no network, and no built `dist/`. Two details make that
+work, and both are easy to break by accident:
+
+* **Asset paths.** `lambda.Code.fromAsset()` and `s3deploy.Source.asset()` throw inside the stack
+  constructor when their directory is missing, so the stacks cannot even be instantiated without one.
+  `distDir` is a constructor parameter, so the tests pass `test/fixtures/app-dist`. The fixture handler
+  filename must match the `prefix` the tests use, because the stack builds its handler name from it.
+  The directory is `app-dist` rather than `dist` because the repository root `.gitignore` ignores
+  `dist/`, which would leave the fixtures uncommitted and break CI on a fresh checkout.
+* **The hosted zone.** `HostedZone.fromLookup()` does not need credentials — CDK records the miss and
+  returns a dummy — but it does need a concrete account and region, and without a seeded context every
+  assertion about the zone would be made against the string `"DUMMY"`. `test/helpers/synth.ts` seeds
+  it; the context key is `hosted-zone:account=…:domainName=…:region=…`, with the properties sorted
+  alphabetically.
+
+Tests live in `test/`, never in `lib/` — the root `Dockerfile` copies `lib/` wholesale into the
+published image.
+
+Some cases are written as `it.failing`. Those are known defects that a later change will fix; they
+pass while the defect exists and start failing the moment it is fixed, which is the signal to delete
+the marker. Do not "fix" one by removing the assertion.
+
+Snapshots under `test/__snapshots__/` are a migration harness: a diff there means a CloudFormation
+change, and a changed logical ID means a resource replacement. Read the diff rather than running
+`jest -u`.
+
 ## Useful commands
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
+* `npm run build`   typecheck the stacks (the app runs from TypeScript via ts-node, see `cdk.json`, so nothing consumes compiled output)
+* `npm run watch`   typecheck in watch mode
+* `npm run test`    run the jest unit tests against the synthesized CloudFormation templates
 * `cdk deploy --require-approval never`      deploy this stack to your default AWS account/region
 * `cdk diff`        compare deployed stack with current state
 * `cdk synth`       emits the synthesized CloudFormation template
