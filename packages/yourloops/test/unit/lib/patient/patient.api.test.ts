@@ -27,11 +27,11 @@
 
 import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
-import { getCurrentLang } from '../../../../lib/language'
-import PatientApi from '../../../../lib/patient/patient.api'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
+import PatientApi, {
+  PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE,
+  PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_MESSAGE
+} from '../../../../lib/patient/patient.api'
+import HttpStatus from '../../../../lib/http/models/enums/http-status.enum'
 import { type MonitoringAlertsParameters, Unit } from 'medical-domain'
 import { type AlertReactivationDates, type PatientAlertsConfiguration } from '../../../../lib/patient/models/monitoring-alerts-parameters.model'
 
@@ -41,17 +41,36 @@ describe('PatientApi', () => {
   const email = 'email@test.com'
 
   describe('invitePatient', () => {
-    it('should invite a new patient in a team and get a notification if success', async () => {
-      const data = { creatorId: 'creatorId' } as INotification
-      jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data } as AxiosResponse)
+    it('should invite a new patient in a team', async () => {
+      jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: undefined } as AxiosResponse)
 
-      const notification = await PatientApi.invitePatient({ teamId, email })
-      expect(notification).toEqual(data)
+      await PatientApi.invitePatient({ teamId, email })
+
       expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRole.Patient },
-        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-      }, [409])
+        url: `/crew/v1/teams/${teamId}/patients`,
+        payload: { email }
+      }, [HttpStatus.StatusConflict, HttpStatus.StatusNotFound])
+    })
+
+    it('should throw a dedicated error when the patient is already in the team', async () => {
+      const error = { response: { status: HttpStatus.StatusConflict } }
+      jest.spyOn(HttpService, 'post').mockRejectedValueOnce(error)
+
+      await expect(PatientApi.invitePatient({ teamId, email })).rejects.toThrow(PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE)
+    })
+
+    it('should throw a dedicated error when the patient does not have an account', async () => {
+      const error = { response: { status: HttpStatus.StatusNotFound } }
+      jest.spyOn(HttpService, 'post').mockRejectedValueOnce(error)
+
+      await expect(PatientApi.invitePatient({ teamId, email })).rejects.toThrow(PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_MESSAGE)
+    })
+
+    it('should propagate any other error from HttpService', async () => {
+      const error = { response: { status: HttpStatus.StatusInternalServerError } }
+      jest.spyOn(HttpService, 'post').mockRejectedValueOnce(error)
+
+      await expect(PatientApi.invitePatient({ teamId, email })).rejects.toEqual(error)
     })
   })
 
