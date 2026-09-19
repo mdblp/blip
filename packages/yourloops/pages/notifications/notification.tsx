@@ -40,28 +40,28 @@ import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { useTeam } from '../../lib/team'
-import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
+import { InAppNotification } from '../../lib/notifications/models/notification.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../lib/data/models/i-user.model'
-import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
+import { NotificationMetricType } from '../../lib/notifications/models/enums/notification-type.enum'
 import { JoinTeamDialog } from '../../components/dialogs/join-team/join-team-dialog'
 import { logError } from '../../utils/error.util'
+import { INotificationType } from '../../lib/notifications/models/enums/i-notification-type.enum'
 
 export interface NotificationSpanProps {
   id: string
-  notification: NotificationModel
+  notification: InAppNotification
 }
 
 interface NotificationProps {
-  notification: NotificationModel
+  notification: InAppNotification
   userRole: UserRole
   onHelp: () => void
-  refreshReceivedInvitations: () => void
 }
 
 interface NotificationIconPayload {
   id: string
-  type: NotificationType
+  type: INotificationType
   className: string
 }
 
@@ -99,16 +99,16 @@ const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme) => ({
 
 export const NotificationSpan = ({ notification, id }: NotificationSpanProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
-  const { creator, type } = notification
-  const firstName = getUserFirstName(creator as IUser)
-  const lastName = getUserLastName(creator as IUser)
-  const careTeam = notification.target?.name ?? ''
+  const { payload, type } = notification
+  const firstName = getUserFirstName(payload["creator"] as IUser)
+  const lastName = getUserLastName(payload["creator"] as IUser)
+  const careTeam = notification.payload["careTeamName"] as string ?? ''
   const values = { firstName, lastName, careteam: careTeam }
   const { classes } = useStyles()
 
   let notificationText: JSX.Element
   switch (type) {
-    case NotificationType.directInvitation:
+    case INotificationType.directInvitation:
       notificationText = (
         <Trans
           t={t}
@@ -120,7 +120,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
         </Trans>
       )
       break
-    case NotificationType.careTeamProInvitation:
+    case INotificationType.careTeamProInvitation:
       notificationText = (
         <Trans
           t={t}
@@ -133,7 +133,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
         </Trans>
       )
       break
-    case NotificationType.careTeamPatientInvitation:
+    case INotificationType.careTeamPatientInvitation:
       notificationText = (
         <Trans
           t={t}
@@ -153,7 +153,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
 
 const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX.Element => {
   switch (type) {
-    case NotificationType.directInvitation:
+    case INotificationType.directInvitation:
       return (
         <PersonIcon
           id={`person-icon-${id}`}
@@ -161,7 +161,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
           className={className}
         />
       )
-    case NotificationType.careTeamPatientInvitation:
+    case INotificationType.careTeamPatientInvitation:
       return (
         <MedicalServiceIcon
           id={`medical-service-icon-${id}`}
@@ -169,7 +169,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
           className={className}
         />
       )
-    case NotificationType.careTeamProInvitation:
+    case INotificationType.careTeamProInvitation:
     default:
       return (
         <GroupIcon
@@ -213,14 +213,16 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const patientsHook = usePatientsContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
-  const { notification, userRole, onHelp, refreshReceivedInvitations } = props
+  const { notification, userRole, onHelp } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
-  const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
-  const isADirectInvitation = notification.type === NotificationType.directInvitation
-  const inviterName = isADirectInvitation ? notification.creator.profile.fullName : notification.target.name
+  const isACareTeamPatientInvitation = notification.type === INotificationType.careTeamPatientInvitation
+  const isADirectInvitation = notification.type === INotificationType.directInvitation
+  const metricsType = isADirectInvitation ? NotificationMetricType.shareData : NotificationMetricType.joinTeam
+  const inviterName = isADirectInvitation ? notification.payload["senderFullName"] : notification.payload["careTeamName"]
+  const careTeamName = notification.payload["careTeamName"] as string
 
-  if (isACareTeamPatientInvitation && !notification.target) {
+  if (isACareTeamPatientInvitation && !notification.payload["careTeamId"]) {
     throw Error('Cannot accept team invite because notification is missing the team id info')
   }
 
@@ -228,14 +230,13 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     setInProgress(true)
     try {
       await notifications.accept(notification)
-      metrics.send('invitation', 'accept_invitation', notification.metricsType)
+      metrics.send('invitation', 'accept_invitation', metricsType)
       if (isADirectInvitation) {
         patientsHook.refresh()
       } else {
         teamHook.refresh()
       }
       alert.success(t('accept-notification-success', { name: inviterName }))
-      refreshReceivedInvitations()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       logError(errorMessage, 'notification-accept-invitation')
@@ -258,7 +259,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     setInProgress(true)
     try {
       await notifications.decline(notification)
-      metrics.send('invitation', 'decline_invitation', notification.metricsType)
+      metrics.send('invitation', 'decline_invitation', metricsType)
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       logError(errorMessage, 'notification-decline-invitation')
@@ -284,7 +285,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     }
   }
   const handleAcceptButtonClick = (): void => {
-    userRole === UserRole.Caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
+    userRole === UserRole.Caregiver && notification.type === INotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
   }
 
   return (
@@ -292,15 +293,15 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
          className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={id} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} notification={notification} />
-      {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
+      {isACareTeamPatientInvitation && addTeamDialogVisible && careTeamName &&
         <JoinTeamDialog
           onClose={onCloseDialog}
           onAccept={joinTeam}
-          teamName={notification.target.name}
+          teamName={careTeamName}
         />
       }
       <div className={classes.rightSide}>
-        <NotificationDate createdDate={notification.date} id={id} />
+        <NotificationDate createdDate={notification.deliveredAt} id={id} />
         <Button
           data-testid="notification-button-accept"
           color="primary"
