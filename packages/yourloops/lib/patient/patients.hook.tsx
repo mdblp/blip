@@ -29,7 +29,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { type Team } from '../team'
-import { useNotification } from '../notifications/notification.hook'
 import PatientUtils from './patient.util'
 import PatientApi from './patient.api'
 import DirectShareApi from '../share/direct-share.api'
@@ -50,7 +49,6 @@ import { type AlertReactivationDates } from './models/monitoring-alerts-paramete
 // Custom hook to manage patients' data and actions for healthcare professionals and caregivers
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { t } = useTranslation()
-  const { cancel: cancelInvite } = useNotification()
   const { user } = useAuth()
   const { filters } = usePatientListContext()
   const { teamId: teamIdFromParam } = useParams()
@@ -192,9 +190,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }
 
   const removePatient = async (patient: Patient): Promise<void> => {
-    if (PatientUtils.isInvitationPending(patient)) {
-      await cancelInvite(patient.invite.id, undefined, patient.profile.email)
-    }
     if (teamId === PRIVATE_TEAM_ID) {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
     } else {
