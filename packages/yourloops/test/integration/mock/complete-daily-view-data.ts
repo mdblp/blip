@@ -1730,8 +1730,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "manufacturer": Source.Diabeloop,
               "name": deviceName,
               "swVersion": softwareVersion,
-              "operatingSystem": "Android",
-              "osVersion": "12",
+              "operatingSystem": "android",
+              "osVersion": "Android 12",
               "smartphoneModel": "X"
             },
             "pump": {
@@ -2331,8 +2331,8 @@ export const getTargetValueChangesData = (): Data => {
               "manufacturer": Source.Diabeloop,
               "name": DeviceSystem.Dblg1,
               "swVersion": "1.2.3",
-              "operatingSystem": "Android",
-              "osVersion": "12",
+              "operatingSystem": "android",
+              "osVersion": "Android 12",
               "smartphoneModel": "X"
             },
             "pump": {

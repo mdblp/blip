@@ -72,6 +72,11 @@ export const testG2G7CGMVisualisation = async () => {
   checkG2WithG7CurrentParametersContent()
 }
 
+export const testG2CurrentParametersVisualisationForHcpWithIosDevice = async () => {
+  checkG2CurrentParametersContent(true, 'iOS 17.1')
+  await checkG2CopyTextButton('iOS 17.1')
+}
+
 export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
   await checkSafetyBasalProfileErrorMessage('The basal safety profile values are not available.')
 }

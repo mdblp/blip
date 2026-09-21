@@ -45,6 +45,11 @@ import { formatCurrentDate } from 'dumb/dist/src/utils/datetime/datetime.util'
 const t = i18next.t.bind(i18next)
 export const PARAMETER_STRING_MAX_WIDTH = 250
 
+// The backend already prefixes osVersion with "Android" for Android devices, but not for iOS.
+export const formatOsVersion = (device: DeviceConfig): string => {
+  return device.operatingSystem?.toLowerCase() === 'ios' ? `iOS ${device.osVersion}` : device.osVersion
+}
+
 export const copySettingsToClipboard = async (lastUploadDate: string, device: DeviceConfig, parameters: ParameterConfig[], mobileApp: MobileAppConfig): Promise<void> => {
   const lastUploadDateText = `${lastUploadDate}\n\n`
   const deviceText = `-- ${t('Device')} --\n`
@@ -83,7 +88,7 @@ export const copySettingsToClipboard = async (lastUploadDate: string, device: De
       [t('activation-code'), mobileApp.activationCode],
       [t('Identifier'), mobileApp.identifier],
       [t('smartphone-model'), device.smartphoneModel],
-      [t('smartphone-os-version'), device.osVersion],
+      [t('smartphone-os-version'), formatOsVersion(device)],
     ]) as string
     rawText = `${lastUploadDateText}${mobileAppText}${mobileAppTableText}${parametersText}${textTable(parametersTable, { align: ['l', 'r', 'l'] })}`
 

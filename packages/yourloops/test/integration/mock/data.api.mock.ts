@@ -736,8 +736,8 @@ export const pumpSettingsDblg2: Data = {
             deviceId: '1234',
             manufacturer: 'Samsung',
             name: DeviceSystem.Dblg2,
-            operatingSystem: 'Android',
-            osVersion: '14',
+            operatingSystem: 'android',
+            osVersion: 'Android 14',
             smartphoneModel: 'A25',
             swVersion: '',
             imei: ''
@@ -930,6 +930,24 @@ export const pumpSettingsDblg2: Data = {
   }
 }
 
+export const pumpSettingsDblg2Ios: Data = {
+  ...pumpSettingsDblg2,
+  data: {
+    ...pumpSettingsDblg2.data,
+    pumpSettings: [{
+      ...pumpSettingsDblg2.data.pumpSettings[0],
+      payload: {
+        ...pumpSettingsDblg2.data.pumpSettings[0].payload,
+        device: {
+          ...pumpSettingsDblg2.data.pumpSettings[0].payload.device,
+          operatingSystem: 'ios',
+          osVersion: '17.1'
+        }
+      }
+    }]
+  }
+}
+
 export const pumpSettingsDblg2G7: Data = {
   dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
   data: {
@@ -960,8 +978,8 @@ export const pumpSettingsDblg2G7: Data = {
             deviceId: '1234',
             manufacturer: 'Samsung',
             name: DeviceSystem.Dblg2,
-            operatingSystem: 'Android',
-            osVersion: '14',
+            operatingSystem: 'android',
+            osVersion: 'Android 14',
             smartphoneModel: 'A25',
             swVersion: '',
             imei: ''
@@ -1378,8 +1396,8 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
             deviceId: '1234',
             manufacturer: 'Samsung',
             name: DeviceSystem.Dblg2,
-            operatingSystem: 'Android',
-            osVersion: '14',
+            operatingSystem: 'android',
+            osVersion: 'Android 14',
             smartphoneModel: 'A25',
             imei: '',
             swVersion: ''

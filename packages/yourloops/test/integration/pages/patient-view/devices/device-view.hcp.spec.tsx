@@ -33,6 +33,7 @@ import {
   pumpSettingsData,
   pumpSettingsDblg1Mobigo,
   pumpSettingsDblg2,
+  pumpSettingsDblg2Ios,
   pumpSettingsDblg2WithoutSecurityBasalData
 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -47,6 +48,7 @@ import {
   testDevicesMenuLayoutForMobigoDevice,
   testDevicesVisualisationForHcp,
   testEmptySafetyBasalProfileGenericErrorMessage,
+  testG2CurrentParametersVisualisationForHcpWithIosDevice,
   testG2DevicesVisualisationForHcp
 } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
@@ -105,6 +107,15 @@ describe('Device view for HCP', () => {
       renderPage(deviceRoute)
     })
     await testG2DevicesVisualisationForHcp(true)
+  })
+
+  it('should display correct OS version parameters when having a g2 patient using an iOS device', async () => {
+    mockDataAPI(pumpSettingsDblg2Ios)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testG2CurrentParametersVisualisationForHcpWithIosDevice()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {

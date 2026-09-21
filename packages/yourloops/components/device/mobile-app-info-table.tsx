@@ -30,6 +30,7 @@ import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatCode } from '../../utils/format.utils'
 import { GenericListCard } from '../generic-list-card/generic-list-card'
+import { formatOsVersion } from './utils/device.utils'
 
 interface MobileApplicationInfoProps {
   app: MobileAppConfig,
@@ -47,7 +48,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       { label: t('activation-code'), value: formatCode(app.activationCode) },
       { label: t('Identifier'), value: app.identifier },
       { label: t('smartphone-model'), value: device.smartphoneModel },
-      { label: t('smartphone-os-version'), value: device.osVersion }
+      { label: t('smartphone-os-version'), value: formatOsVersion(device) }
     ]
   }
 
