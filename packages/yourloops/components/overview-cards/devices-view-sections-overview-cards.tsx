@@ -94,11 +94,13 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     return device.deviceId.toLowerCase().startsWith('mobigo')
   }
 
-  const formattedDate = formatDateWithMomentShortFormat(
-    new Date(firstChange.changeDate),
-    t('short-date-with-time'),
-    timezone
-  );
+  const formattedDate = hasParameters
+    ? formatDateWithMomentShortFormat(
+      new Date(firstChange.changeDate),
+      t('short-date-with-time'),
+      timezone
+    )
+    : ''
 
   const getTableLinesCurrentSettings = (): { label: string, value: string }[] => {
     return [
