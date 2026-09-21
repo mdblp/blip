@@ -26,15 +26,38 @@
  */
 
 import {
+  formatOsVersion,
   formatParameterValue,
   getPumpSettingsParameterList,
   sortHistory,
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
-import { DblParameter, type ParameterConfig, Unit } from 'medical-domain'
+import { DblParameter, type DeviceConfig, type ParameterConfig, Unit } from 'medical-domain'
 import { expectedPumpSettingsParameterList, expectedSortedHistory, history } from './device-settings.mock'
 
 describe('Device settings utils', () => {
+  describe('formatOsVersion', () => {
+    it('should return the osVersion unchanged for an Android device', () => {
+      const device = { operatingSystem: 'android', osVersion: 'Android 14' } as DeviceConfig
+      expect(formatOsVersion(device)).toEqual('Android 14')
+    })
+
+    it('should prefix the osVersion with "iOS" for an iOS device', () => {
+      const device = { operatingSystem: 'ios', osVersion: '17.1' } as DeviceConfig
+      expect(formatOsVersion(device)).toEqual('iOS 17.1')
+    })
+
+    it('should match the operating system case-insensitively', () => {
+      const device = { operatingSystem: 'iOS', osVersion: '17.1' } as DeviceConfig
+      expect(formatOsVersion(device)).toEqual('iOS 17.1')
+    })
+
+    it('should return the osVersion unchanged when the operating system is unknown', () => {
+      const device = { operatingSystem: '', osVersion: '14' } as DeviceConfig
+      expect(formatOsVersion(device)).toEqual('14')
+    })
+  })
+
   describe('formatParameterValue', () => {
     it('should return the correct format for the given value', () => {
       expect(formatParameterValue('75', Unit.Percent)).toEqual('75')
