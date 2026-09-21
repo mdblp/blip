@@ -135,7 +135,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       AppUserRoute.Dashboard,
       AppUserRoute.Daily,
       AppUserRoute.Trends,
-      AppUserRoute.PatientProfile
+      AppUserRoute.PatientProfile,
+      AppUserRoute.PatientProfileSectionsOverview
     ]
 
     const activeSection = sections.find((section) => currentPathname.includes(section))

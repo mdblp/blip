@@ -680,6 +680,7 @@
   "settings-change": "Settings change",
   "settings-change-history-short": "Settings History",
   "short-date-with-time": "DD/MM/YY - h:mm a",
+  "short-date": "DD/MM/YY",
   "show-column": "Show column",
   "show-parameters-at-title-button": "Device Settings",
   "show-parameters-at-popover-header": "Settings of the displayed day",

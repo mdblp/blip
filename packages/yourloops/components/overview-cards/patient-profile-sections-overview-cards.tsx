@@ -14,6 +14,7 @@ import {
 import { formatNumberForLang } from '../../lib/language'
 import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
+import { formatDateWithMomentShortFormatWithoutHours } from '../../lib/utils'
 
 interface PatientProfileSectionsOverviewCardsProps {
   patient: Patient
@@ -26,12 +27,18 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const patientInfo = useMemo(() => getPatientDisplayInfo(patient), [patient])
 
+  const formattedDate =
+    formatDateWithMomentShortFormatWithoutHours(
+      new Date(patientInfo.equipmentDate),
+      t('short-date')
+    )
+
   const getTableProfileInformation = (): { value: string, label: string }[] => {
     return [
       { label: t('age'), value: `${patientInfo.age}` },
       { label: t(`params|${DblParameter.Weight}`), value: formatNumberForLang(patientInfo.weight) },
       { label: t(`params|${DblParameter.Height}`), value: formatNumberForLang(patientInfo.height) },
-      { label: t('equipment-date'), value: patientInfo.equipmentDate },
+      { label: t('equipment-date'), value: formattedDate },
       { label: t(`params|${DblParameter.InsulinType}`), value: patientInfo.insulinType }
     ]
   }
