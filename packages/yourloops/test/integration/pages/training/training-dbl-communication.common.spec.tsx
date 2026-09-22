@@ -29,7 +29,7 @@
 // pending training acknowledgment and a pending Diabeloop communication, the app bounced forever
 // between '/training' and '/dbl-communication' (see main-lobby.tsx `USER_GATES`).
 
-import { act, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { mockDblCommunicationApiPage } from '../../mock/dbl-communication.api'
@@ -86,9 +86,7 @@ describe('Training page when a dbl communication is also pending ack', () => {
     await new Promise((resolve) => setTimeout(resolve, 50))
     expect(router.state.location.pathname).toEqual('/dbl-communication')
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: 'Continue' }))
-    })
+    await userEvent.click(screen.getByRole('button', { name: 'Continue' }))
 
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/training')
@@ -104,9 +102,7 @@ describe('Training page when a dbl communication is also pending ack', () => {
     await userEvent.click(screen.getByText('I went through the entire training and I understood it'))
     expect(confirmButton).toBeEnabled()
 
-    await act(async () => {
-      await userEvent.click(confirmButton)
-    })
+    await userEvent.click(confirmButton)
 
     // `UserApi.updateUserAccount` is mocked to resolve `undefined` (see mockUserApi), so the client
     // account is cleared after the ack and the consent gate is (artificially) pending again -- this

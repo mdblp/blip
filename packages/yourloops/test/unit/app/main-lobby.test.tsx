@@ -138,14 +138,14 @@ describe('Main lobby', () => {
     })
 
     describe('no redirection loop between the gates', () => {
-      it('should not redirect away from the training page when a dbl communication is also pending', () => {
+      it('should resolve to the dbl communication page instead of bouncing between it and the training page', () => {
         const user = buildUser({ hasToDisplayTrainingInfoPage: true, hasToDisplayDblCommunicationPage: true })
 
         testGetRedirectUrl('/dbl-communication', user, true, undefined)
         testGetRedirectUrl('/training', user, true, '/dbl-communication')
       })
 
-      it('should not redirect away from the consent pages when a dbl communication is also pending', () => {
+      it('should resolve to the dbl communication page instead of bouncing between it and a consent page', () => {
         const userToAcceptConsent = buildUser({ hasToAcceptNewConsent: true, hasToDisplayDblCommunicationPage: true })
         testGetRedirectUrl('/dbl-communication', userToAcceptConsent, true, undefined)
         testGetRedirectUrl('/new-consent', userToAcceptConsent, true, '/dbl-communication')
@@ -155,7 +155,7 @@ describe('Main lobby', () => {
         testGetRedirectUrl('/renew-consent', userToRenewConsent, true, '/dbl-communication')
       })
 
-      it('should not redirect away from the complete signup page when a dbl communication is also pending', () => {
+      it('should resolve to the complete signup page instead of bouncing between it and the dbl communication page', () => {
         const user = buildUser({ isFirstLogin: true, hasToDisplayDblCommunicationPage: true })
 
         testGetRedirectUrl('/complete-signup', user, true, undefined)
