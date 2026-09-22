@@ -26,95 +26,58 @@
  */
 
 import type User from '../../../lib/auth/models/user.model'
-import { getRedirectUrl } from '../../../app/main-lobby'
+import { getRedirectUrl, USER_GATES } from '../../../app/main-lobby'
+import { AppRoute } from '../../../models/enums/routes.enum'
+
+interface UserGateFlags {
+  isFirstLogin?: boolean
+  hasToAcceptNewConsent?: boolean
+  hasToRenewConsent?: boolean
+  hasToDisplayTrainingInfoPage?: boolean
+  hasToDisplayDblCommunicationPage?: boolean
+}
+
+const buildUser = (flags: UserGateFlags = {}): User => ({
+  isFirstLogin: () => flags.isFirstLogin ?? false,
+  hasToAcceptNewConsent: () => flags.hasToAcceptNewConsent ?? false,
+  hasToRenewConsent: () => flags.hasToRenewConsent ?? false,
+  hasToDisplayTrainingInfoPage: () => flags.hasToDisplayTrainingInfoPage ?? false,
+  hasToDisplayDblCommunicationPage: () => flags.hasToDisplayDblCommunicationPage ?? false
+} as unknown as User)
 
 describe('Main lobby', () => {
   describe('getRedirectUrl', () => {
-    function testGetRedirectUrl(route: string, user: User, isAuthenticated: boolean, expectedUrlToRedirectTo: string | undefined) {
+    function testGetRedirectUrl(route: string, user: User | null, isAuthenticated: boolean, expectedUrlToRedirectTo: string | undefined) {
       const urlToRedirectTo = getRedirectUrl(route, user, isAuthenticated)
       expect(urlToRedirectTo).toBe(expectedUrlToRedirectTo)
     }
 
     it("should return renew consent url when user is logged in and did not consent and route is '/'", () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => true,
-        isFirstLogin: () => false,
-        isUserHcp: () => true,
-        hasToDisplayTrainingInfoPage: () => false
-      } as User
-
-      testGetRedirectUrl('/', user, true, '/renew-consent')
+      testGetRedirectUrl('/', buildUser({ hasToRenewConsent: true }), true, '/renew-consent')
     })
 
     it("should return new consent url when user is logged in and did not consent and route is '/' and role is patient", () => {
-      const user = {
-        hasToAcceptNewConsent: () => true,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => false,
-        isUserHcp: () => false,
-        isUserPatient: () => true,
-        hasToDisplayTrainingInfoPage: () => false
-      } as User
-
-      testGetRedirectUrl('/', user, true, '/new-consent')
+      testGetRedirectUrl('/', buildUser({ hasToAcceptNewConsent: true }), true, '/new-consent')
     })
 
     it("should return undefined when user is not logged in and route is '/login'", () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => false,
-        hasToDisplayDblCommunicationPage: () => false
-      } as User
-
-      testGetRedirectUrl('/login', user, false, undefined)
+      testGetRedirectUrl('/login', buildUser(), false, undefined)
     })
 
     it("should return undefined when user is logged in and route is '/login'", () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => false,
-        hasToDisplayDblCommunicationPage: () => false
-      } as User
-
-      testGetRedirectUrl('/login', user, true, undefined)
+      testGetRedirectUrl('/login', buildUser(), true, undefined)
     })
 
     it("should return login route when user is not logged in and route is '/'", () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => false
-      } as User
-
-      testGetRedirectUrl('/', user, false, '/login')
+      testGetRedirectUrl('/', buildUser(), false, '/login')
     })
 
     it('should return complete signup url when a new user is logged in and have no profile yet', () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => true,
-        hasToDisplayTrainingInfoPage: () => false
-      } as User
-
-      testGetRedirectUrl('/', user, true, '/complete-signup')
+      testGetRedirectUrl('/', buildUser({ isFirstLogin: true }), true, '/complete-signup')
     })
 
     it('should return training url when a new user is logged in, consents are done and profile is created', () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => true
-      } as User
-
-      testGetRedirectUrl('/', user, true, '/training')
+      testGetRedirectUrl('/', buildUser({ hasToDisplayTrainingInfoPage: true }), true, '/training')
     })
 
     it('should return dbl communication url when a user is logged in and there is a communication available', () => {
