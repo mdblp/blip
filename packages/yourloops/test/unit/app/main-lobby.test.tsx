@@ -81,15 +81,139 @@ describe('Main lobby', () => {
     })
 
     it('should return dbl communication url when a user is logged in and there is a communication available', () => {
-      const user = {
-        hasToAcceptNewConsent: () => false,
-        hasToRenewConsent: () => false,
-        isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => false,
-        hasToDisplayDblCommunicationPage: () => true
-      } as User
+      testGetRedirectUrl('/', buildUser({ hasToDisplayDblCommunicationPage: true }), true, '/dbl-communication')
+    })
 
-      testGetRedirectUrl('/', user, true, '/dbl-communication')
+    it('should return undefined when there is no user', () => {
+      testGetRedirectUrl('/', null, true, undefined)
+    })
+
+    it('should return undefined when the user is not authenticated anymore but is still in the auth context', () => {
+      const user = buildUser({
+        isFirstLogin: true,
+        hasToAcceptNewConsent: true,
+        hasToRenewConsent: true,
+        hasToDisplayTrainingInfoPage: true,
+        hasToDisplayDblCommunicationPage: true
+      })
+
+      testGetRedirectUrl('/login', user, false, undefined)
+    })
+
+    describe('gates ordering', () => {
+      it('should present the gates one after the other, from the most blocking one', () => {
+        testGetRedirectUrl('/', buildUser({
+          isFirstLogin: true,
+          hasToAcceptNewConsent: true,
+          hasToRenewConsent: true,
+          hasToDisplayTrainingInfoPage: true,
+          hasToDisplayDblCommunicationPage: true
+        }), true, '/complete-signup')
+
+        testGetRedirectUrl('/', buildUser({
+          hasToAcceptNewConsent: true,
+          hasToRenewConsent: true,
+          hasToDisplayTrainingInfoPage: true,
+          hasToDisplayDblCommunicationPage: true
+        }), true, '/dbl-communication')
+
+        testGetRedirectUrl('/', buildUser({
+          hasToAcceptNewConsent: true,
+          hasToRenewConsent: true,
+          hasToDisplayTrainingInfoPage: true
+        }), true, '/new-consent')
+
+        testGetRedirectUrl('/', buildUser({
+          hasToRenewConsent: true,
+          hasToDisplayTrainingInfoPage: true
+        }), true, '/renew-consent')
+
+        testGetRedirectUrl('/', buildUser({ hasToDisplayTrainingInfoPage: true }), true, '/training')
+        testGetRedirectUrl('/', buildUser(), true, undefined)
+      })
+
+      it('should keep the user on a route which already satisfies the pending gate', () => {
+        testGetRedirectUrl('/product-labelling', buildUser({ hasToDisplayTrainingInfoPage: true }), true, '/training')
+      })
+    })
+
+    describe('no redirection loop between the gates', () => {
+      it('should not redirect away from the training page when a dbl communication is also pending', () => {
+        const user = buildUser({ hasToDisplayTrainingInfoPage: true, hasToDisplayDblCommunicationPage: true })
+
+        testGetRedirectUrl('/dbl-communication', user, true, undefined)
+        testGetRedirectUrl('/training', user, true, '/dbl-communication')
+      })
+
+      it('should not redirect away from the consent pages when a dbl communication is also pending', () => {
+        const userToAcceptConsent = buildUser({ hasToAcceptNewConsent: true, hasToDisplayDblCommunicationPage: true })
+        testGetRedirectUrl('/dbl-communication', userToAcceptConsent, true, undefined)
+        testGetRedirectUrl('/new-consent', userToAcceptConsent, true, '/dbl-communication')
+
+        const userToRenewConsent = buildUser({ hasToRenewConsent: true, hasToDisplayDblCommunicationPage: true })
+        testGetRedirectUrl('/dbl-communication', userToRenewConsent, true, undefined)
+        testGetRedirectUrl('/renew-consent', userToRenewConsent, true, '/dbl-communication')
+      })
+
+      it('should not redirect away from the complete signup page when a dbl communication is also pending', () => {
+        const user = buildUser({ isFirstLogin: true, hasToDisplayDblCommunicationPage: true })
+
+        testGetRedirectUrl('/complete-signup', user, true, undefined)
+        testGetRedirectUrl('/dbl-communication', user, true, '/complete-signup')
+      })
+
+      it('should not redirect away from a consent page when both consents are pending', () => {
+        const user = buildUser({ hasToAcceptNewConsent: true, hasToRenewConsent: true })
+
+        testGetRedirectUrl('/new-consent', user, true, undefined)
+        testGetRedirectUrl('/renew-consent', user, true, undefined)
+        testGetRedirectUrl('/', user, true, '/new-consent')
+      })
+
+      it('should not redirect away from the complete signup page when the training is pending', () => {
+        testGetRedirectUrl('/complete-signup', buildUser({ hasToDisplayTrainingInfoPage: true }), true, undefined)
+      })
+
+      it('should be satisfied by its own route for every gate', () => {
+        USER_GATES.forEach((gate) => {
+          expect(gate.satisfiedByRoutes).toContain(gate.route)
+        })
+      })
+
+      it('should always reach a stable route, for every combination of pending gates and every route', () => {
+        const flagNames: Array<keyof UserGateFlags> = [
+          'isFirstLogin',
+          'hasToAcceptNewConsent',
+          'hasToRenewConsent',
+          'hasToDisplayTrainingInfoPage',
+          'hasToDisplayDblCommunicationPage'
+        ]
+        const routes = [...Object.values(AppRoute), '/', '/unknown-route']
+        const maxHops = flagNames.length + 2
+
+        for (let combination = 0; combination < 2 ** flagNames.length; combination++) {
+          const flags = flagNames.reduce<UserGateFlags>((acc, flagName, index) => {
+            acc[flagName] = (combination & (1 << index)) !== 0
+            return acc
+          }, {})
+          const user = buildUser(flags)
+
+          routes.forEach((initialRoute) => {
+            const visitedRoutes = [initialRoute]
+            let currentRoute = initialRoute
+            let redirection = getRedirectUrl(currentRoute, user, true)
+
+            while (redirection !== undefined && visitedRoutes.length <= maxHops) {
+              expect(visitedRoutes).not.toContain(redirection)
+              visitedRoutes.push(redirection)
+              currentRoute = redirection
+              redirection = getRedirectUrl(currentRoute, user, true)
+            }
+
+            expect(redirection).toBeUndefined()
+          })
+        }
+      })
     })
   })
 })
