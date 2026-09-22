@@ -82,7 +82,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices)
+  const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices) || pathname.includes(AppUserRoute.PatientProfileSectionsOverview)
 
   const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
@@ -153,6 +153,9 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     const routeWithoutUrlPrefix = (isOverviewSectionsRoute)
       ? AppUserRoute.Devices
       : pathname.substring(pathname.lastIndexOf('/'))
+    const routeWithoutUrlPrefix = (isOverviewSectionsRoute)
+      ? AppUserRoute.PatientProfile
+      : pathname.substring(pathname.lastIndexOf('/'))
 
     switch (routeWithoutUrlPrefix) {
       case AppUserRoute.Daily:
@@ -204,8 +207,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    const urlPrefix = getBasePrefix(pathname)
 
+    const urlPrefix = getBasePrefix(pathname)
     navigate(`${urlPrefix}${route}`)
   }
 

@@ -36,6 +36,7 @@ import Box from '@mui/material/Box'
 import { useStyles } from './main-header-style'
 import { useAuth } from '../../lib/auth'
 import { DownloadReportButton } from './download-report_button'
+import { PatientProfileViewSectionsOverview } from '../../enum/patient-view-sections.enum'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface MainHeaderPatientNavMobileProps {

@@ -79,6 +79,7 @@ import {
   PatientLeadClinicians
 } from '../../pages/patient-view/patient-profile/sections/personal-information/clinicians/patient-lead-clinicians'
 import { PatientProfileViewSection } from '../../pages/patient-view/patient-profile/patient-profile-view-section.enum'
+import { RangeSection } from '../../pages/patient-view/patient-profile/sections/range-section'
 
 interface PatientDataProps {
   patient: Patient
@@ -356,6 +357,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                                  patientProfile={patient.profile}
                                  leadClinicians={patient.leadClinicians}
                                />} />
+                      <Route path={AppUserRoute.PatientProfileRangeSection}
+                             element={<RangeSection patient={patient} />} />
                       <Route path={AppUserRoute.PatientProfileAlertsSection}
                              element={<AlertsSection patient={patient}
                                                      onUnsavedChangesChange={handleUnsavedChangesChange} />} />

@@ -15,6 +15,7 @@ import { formatNumberForLang } from '../../lib/language'
 import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
 import { formatDateWithMomentShortFormatWithoutHours } from '../../lib/utils'
+import { useLocation } from 'react-router-dom'
 
 interface PatientProfileSectionsOverviewCardsProps {
   patient: Patient
@@ -26,6 +27,8 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
   const { user } = useAuth()
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const patientInfo = useMemo(() => getPatientDisplayInfo(patient), [patient])
+  const { pathname } = useLocation()
+  const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
 
   const formattedDate =
     formatDateWithMomentShortFormatWithoutHours(
@@ -72,7 +75,7 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
         data-testid="patient-profile-overview-section-information"
         headerAction={
           <ViewMoreLink dataTestId="link-patient-profile-info"
-                        targetRoute={AppUserRoute.PatientProfileInformationSection} />
+                        targetRoute= {`${urlPrefix}${AppUserRoute.PatientProfileInformationSection}`}/>
         }
       />
 
@@ -84,7 +87,7 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
         data-testid="patient-profile-overview-section-lead-clinicians"
         headerAction={
           <ViewMoreLink dataTestId="link-patient-profile-lead-clinicians"
-                        targetRoute={AppUserRoute.PatientProfileLeadCliniciansSection} />
+                        targetRoute={`${urlPrefix}${AppUserRoute.PatientProfileLeadCliniciansSection}`}/>
         }
       />
 
@@ -95,7 +98,7 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
         data-testid="patient-profile-overview-section-range"
         headerAction={
           <ViewMoreLink dataTestId="link-patient-profile-range"
-                        targetRoute={AppUserRoute.PatientProfileAlertsSection} />
+                        targetRoute= {`${urlPrefix}${AppUserRoute.PatientProfileRangeSection}`} />
         }
       >
         <Box
@@ -124,7 +127,7 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
         data-testid="patient-profile-overview-section-alerts"
         headerAction={
           <ViewMoreLink dataTestId="link-patient-profile-alerts"
-                        targetRoute={AppUserRoute.PatientProfileAlertsSection} />
+                        targetRoute= {`${urlPrefix}${AppUserRoute.PatientProfileAlertsSection}`} />
         }
       >
         <Typography variant="body2">{t('monitoring-alerts-configuration')}</Typography>
