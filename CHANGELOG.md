@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-3338 Use weight unit from parameters instead of "kg"
 - YLP-3490 Update notes UI
+- YLP-3781 Fix the conflict between "communication page" and "training ack" pages
 - YLP-3842 New design for monitoring alerts configuration
 - YLP-3857 Update the cards organization in the Dashboard view
 - YLP-3867 Remove Zendesk and Stonly
