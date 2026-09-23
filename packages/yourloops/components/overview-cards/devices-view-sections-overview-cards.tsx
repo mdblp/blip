@@ -143,7 +143,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         : [])
     ]
   }
-
+  
   return (
     <>
       <GenericListCard
@@ -198,7 +198,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
             </Typography>
 
             {firstChange.parameters.map((parameter) => (
-              <Box key={`${parameter.name}-${parameter.value}`} className={parameterChange}>
+              <Box key={`${parameter.name}-${parameter.value}-${parameter.previousValue}`} className={parameterChange}>
                 <Typography
                   variant="body2"
                   noWrap
