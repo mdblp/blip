@@ -120,7 +120,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     return [
       { label: t('system'), value: device?.name },
       { label: t('Pump'), value: pump?.name },
-      { label: t('CGM'), value: cgm ? `${cgm.manufacturer ?? ''} ${cgm.name ?? ''}`.trim() : "" },
+      { label: t('CGM'), value: cgm?.manufacturer && cgm?.name ? `${cgm.manufacturer} ${cgm.name}` : "" },
       ...(totalDailyInsulin
         ? [{
           label: t(`params|${DblParameter.TotalDailyInsulin}`),
