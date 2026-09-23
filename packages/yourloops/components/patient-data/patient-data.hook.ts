@@ -38,8 +38,6 @@ import { convertIfNeeded, type DateRange, isValidDateQueryParam, PatientDataUtil
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { useTheme } from '@mui/material/styles'
 
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
@@ -80,8 +78,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices)
 
   const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
