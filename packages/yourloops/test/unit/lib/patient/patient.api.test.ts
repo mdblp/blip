@@ -48,7 +48,7 @@ describe('PatientApi', () => {
       expect(HttpService.post).toHaveBeenCalledWith({
         url: `/crew/v1/teams/${teamId}/patients`,
         payload: { email }
-      }, [HttpStatus.StatusConflict, HttpStatus.StatusNotFound])
+      }, [HttpStatus.StatusConflict])
     })
 
     it('should throw a dedicated error when the patient is already in the team', async () => {
