@@ -26,23 +26,19 @@
  */
 
 import DirectShareApi from '../../../../lib/share/direct-share.api'
-import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as patientsHookMock from '../../../../lib/patient/patients.provider'
 import { renderHook } from '@testing-library/react'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type User } from '../../../../lib/auth'
-// import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import ErrorApi from '../../../../lib/error/error.api'
 
 jest.mock('../../../../components/utils/snackbar')
-jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/patient/patients.provider')
 
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'
   const userToRemove = { id: 'fake-id', email: userToRemoveEmail, fullName: 'Fake User' }
-  // const invitation = { id: 'fake-invitation-id', email: userToRemoveEmail, type: NotificationType.directInvitation, target: { id: 'fakeTeamId' } }
   const authUserId = 'auth-user-id'
 
   const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare')
@@ -54,13 +50,7 @@ describe('Remove direct share dialog hook', () => {
 
   const currentUser = { id: authUserId, isUserCaregiver: isUserCaregiverMock } as unknown as User
 
-  let sentInvitationsMock = []
-
   beforeEach(() => {
-    (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => ({
-      sentInvitations: sentInvitationsMock
-    }));
-
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
       success: onSuccessAlertMock,
       error: onErrorAlertMock
@@ -71,41 +61,9 @@ describe('Remove direct share dialog hook', () => {
     }))
   })
 
-  describe('when a patient removes a pending invitation', () => {
-    // TODO: re enable when direct share is migrated
-    // beforeEach(() => {
-    //   isUserCaregiverMock.mockReturnValueOnce(false)
-    //   sentInvitationsMock = [invitation]
-    // })
-
-    // it('should show success and close the dialog if the removal is successful', async () => {
-    //   cancelInvitationMock.mockResolvedValueOnce(undefined)
-    //
-    //   const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))
-    //   await result.current.removeDirectShare(userToRemove, currentUser)
-    //
-    //   expect(cancelInvitationMock).toHaveBeenCalledWith(invitation.id, invitation.target.id, userToRemove.email)
-    //   expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
-    //   expect(onClose).toHaveBeenCalledWith(false)
-    // })
-
-    // it('should show error and not close the dialog if the removal fails', async () => {
-    //   jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
-    //   cancelInvitationMock.mockRejectedValueOnce('Error')
-    //
-    //   const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))
-    //   await result.current.removeDirectShare(userToRemove, currentUser)
-    //
-    //   expect(cancelInvitationMock).toHaveBeenCalledWith(invitation.id, invitation.target.id, userToRemove.email)
-    //   expect(onErrorAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-failure')
-    //   expect(onClose).not.toHaveBeenCalled()
-    // })
-  })
-
   describe('when a patient removes a direct share', () => {
     beforeEach(() => {
       isUserCaregiverMock.mockReturnValueOnce(false)
-      sentInvitationsMock = []
     })
 
     it('should show success and close the dialog if the removal is successful', async () => {
@@ -135,7 +93,6 @@ describe('Remove direct share dialog hook', () => {
   describe('when a caregiver removes a direct share', () => {
     beforeEach(() => {
       isUserCaregiverMock.mockReturnValueOnce(true)
-      sentInvitationsMock = []
     })
 
     it('should show success and close the dialog when the removal is successful', async () => {
