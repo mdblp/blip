@@ -94,7 +94,6 @@ export default class TeamApi {
   }
 
   static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<InviteMemberResult> {
-    // TODO: check inviteMemberResult
     const { data } = await HttpService.post<InviteMemberResult, InviteMemberPayload>({
       config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
       payload: { role },
