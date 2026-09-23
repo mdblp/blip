@@ -219,7 +219,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const isACareTeamPatientInvitation = notification.type === INotificationType.careTeamPatientInvitation
   const isADirectInvitation = notification.type === INotificationType.directInvitation
   const metricsType = isADirectInvitation ? NotificationMetricType.shareData : NotificationMetricType.joinTeam
-  const inviterName = isADirectInvitation ? notification.payload["senderFullName"] : notification.payload["careTeamName"]
+  const inviterName = isADirectInvitation ? (notification.payload["creator"] as IUser).profile?.fullName : notification.payload["careTeamName"]
   const careTeamName = notification.payload["careTeamName"] as string
 
   if (isACareTeamPatientInvitation && !notification.payload["careTeamId"]) {

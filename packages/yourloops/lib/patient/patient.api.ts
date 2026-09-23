@@ -41,8 +41,6 @@ import { UserProfilePayload } from './models/user-profile-payload.model'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
-export const PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_MESSAGE = 'patient-not-having-an-account'
-const PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_CODE = HttpStatus.StatusNotFound
 
 interface InvitePatientArgs {
   teamId: string
@@ -88,13 +86,10 @@ export default class PatientApi {
       await HttpService.post<void, InvitePatientPayload>({
         url: `/crew/v1/teams/${teamId}/patients`,
         payload: { email }
-      }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE, PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_CODE]) // TODO: add error managemnt
+      }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE]) // TODO: add error managemnt
     } catch (error) {
       if (error.response.status === PATIENT_ALREADY_IN_TEAM_ERROR_CODE) {
         throw new Error(PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE)
-      }
-      if (error.response.status === PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_CODE) {
-        throw new Error(PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_MESSAGE)
       }
       throw error
     }
