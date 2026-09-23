@@ -46,7 +46,6 @@ describe('Notification hook', () => {
   const hcp = loggedInUsers.getHcp()
 
   jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])
-  jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValue([])
   jest.spyOn(NotificationApi, 'declineInvitation').mockResolvedValue()
   jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
   jest.spyOn(NotificationApi, 'connectToRealTimeServer').mockReturnValue(jest.fn())
@@ -76,7 +75,6 @@ describe('Notification hook', () => {
     })
     await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
     expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-    expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
   }
 
   beforeAll(() => {
@@ -92,12 +90,10 @@ describe('Notification hook', () => {
     it('should re-fetch invites from the api', async () => {
       await initNotificationContext()
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
       act(() => {
         notifications.update()
       })
       await waitFor(() => { expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2) })
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2)
     })
   })
 
@@ -115,7 +111,6 @@ describe('Notification hook', () => {
 
       expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith(hcp.id, notification)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
       expect(notifications.receivedInvitations).toEqual([])
     })
   })
@@ -134,7 +129,6 @@ describe('Notification hook', () => {
 
       expect(NotificationApi.declineInvitation).toHaveBeenCalledWith(hcp.id, notification)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
       expect(notifications.receivedInvitations).toEqual([])
     })
   })

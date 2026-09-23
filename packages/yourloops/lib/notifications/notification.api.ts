@@ -26,7 +26,7 @@
  */
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { InAppNotification } from './models/notification.model'
+import { type InAppNotification } from './models/notification.model'
 import { INotificationType } from './models/enums/i-notification-type.enum'
 import { Centrifuge } from 'centrifuge'
 import appConfig from '../config/config'
@@ -60,21 +60,15 @@ export default class NotificationApi {
   }
 
   static async acceptInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    notification.status = "accepted"
-    await NotificationApi.processInvitationUpdate(userId, notification)
+    await NotificationApi.processInvitationUpdate(userId, { ...notification, status: 'accepted' })
   }
 
   static async declineInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    notification.status = "rejected"
-    await NotificationApi.processInvitationUpdate(userId, notification)
+    await NotificationApi.processInvitationUpdate(userId, { ...notification, status: 'rejected' })
   }
 
   static async getReceivedInvitations(userId: string): Promise<InAppNotification[]> {
     return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&userId=${userId}`)
-  }
-
-  static async getSentInvitations(userId: string): Promise<InAppNotification[]> {
-    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&senderId=${userId}`)
   }
 
   private static async processInvitationUpdate(userId: string, notification: InAppNotification): Promise<void> {
@@ -86,7 +80,11 @@ export default class NotificationApi {
   }
 
   private static async updateDirectShareInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    const patientId = (notification.payload["creator"] as IUser).userid
+    const creator = notification.payload["creator"] as IUser | undefined
+    if (!creator?.userid) {
+      throw new Error('Invalid direct-share invitation: missing creator')
+    }
+    const patientId = creator.userid
     await HttpService.put<string, { patientId: string, viewerId: string, viewerEmail: string, invitationStatus: string, lastStatusChangedAt: string }>({
       url: `/crew/v1/direct-shares`,
       payload: {
@@ -100,7 +98,10 @@ export default class NotificationApi {
   }
 
   private static async updateTeamInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    const teamId = notification.payload["careTeamId"] as string
+    const teamId = notification.payload["careTeamId"] as string | undefined
+    if (!teamId) {
+      throw Error('Invalid target team id')
+    }
     let url: string
     switch (notification.type) {
       case INotificationType.careTeamProInvitation:

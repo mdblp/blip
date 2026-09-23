@@ -28,7 +28,6 @@
 import TeamApi from '../../../../lib/team/team.api'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'
 import { type User } from '../../../../lib/auth'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
@@ -88,9 +87,8 @@ describe('TeamApi', () => {
 
   describe('inviteMember', () => {
     it('should invite a new member in a team and get the invitation and updated teams list if success', async () => {
-      const invitation = { creatorId: 'creatorId' } as INotification
       const teams: Team[] = [{ name: 'team1' } as Team]
-      const data = { invitation, teams }
+      const data = { teams }
       jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data } as AxiosResponse)
 
       const result = await TeamApi.inviteMember(userId, teamId, email, role)

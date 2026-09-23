@@ -35,7 +35,6 @@ import TeamApi from '../../../../lib/team/team.api'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type ITeam } from '../../../../lib/team/models/i-team.model'
-import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 jest.mock('../../../../lib/auth')
@@ -159,15 +158,6 @@ describe('Team hook', () => {
   describe('inviteMember', () => {
     it('should invite and add a member in a team', async () => {
       jest.spyOn(TeamApi, 'inviteMember').mockResolvedValueOnce({
-        invitation: {
-          key: 'key',
-          type: INotificationType.careTeamProInvitation,
-          email: 'hcp@username.com',
-          creatorId: 'currentUserId',
-          created: 'now',
-          shortKey: 'short',
-          creator: { userid: 'currentUserId' }
-        },
         teams
       })
       const initialTeamMembersLength = team1.members.length
