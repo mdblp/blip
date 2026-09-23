@@ -71,15 +71,15 @@ import { DeviceChangeHistorySection } from '../../pages/patient-view/devices/sec
 import {
   PatientProfileSectionsOverview
 } from '../../pages/patient-view/patient-profile/patient-profile-sections-overview'
-import {
-  PatientInformation
-} from '../../pages/patient-view/patient-profile/sections/personal-information/patient-information'
 import { AlertsSection } from '../../pages/patient-view/patient-profile/sections/alerts-section'
 import {
   PatientLeadClinicians
 } from '../../pages/patient-view/patient-profile/sections/personal-information/clinicians/patient-lead-clinicians'
 import { PatientProfileViewSection } from '../../pages/patient-view/patient-profile/patient-profile-view-section.enum'
 import { RangeSection } from '../../pages/patient-view/patient-profile/sections/range-section'
+import {
+  PatientPersonalInformationSection
+} from '../../pages/patient-view/patient-profile/sections/personal-information/patient-personal-information-section'
 
 interface PatientDataProps {
   patient: Patient
@@ -349,14 +349,15 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                         }
                       />
                       <Route path={AppUserRoute.PatientProfileInformationSection}
-                             element={<PatientInformation patient={patient} dateOfBirthHidden={dateOfBirthHidden} />} />
+                             element={<PatientPersonalInformationSection patient={patient}
+                                                                         dateOfBirthHidden={dateOfBirthHidden}
+                                                                         isInformationSection={true}
+                                                                         isLeadCliniciansSection={false}/>} />
                       <Route path={AppUserRoute.PatientProfileLeadCliniciansSection}
-                             element={
-                               <PatientLeadClinicians
-                                 patientId={patient.userid}
-                                 patientProfile={patient.profile}
-                                 leadClinicians={patient.leadClinicians}
-                               />} />
+                             element={<PatientPersonalInformationSection patient={patient}
+                                                                         dateOfBirthHidden={dateOfBirthHidden}
+                                                                         isInformationSection={false}
+                                                                         isLeadCliniciansSection={true}/>} />
                       <Route path={AppUserRoute.PatientProfileRangeSection}
                              element={<RangeSection patient={patient} />} />
                       <Route path={AppUserRoute.PatientProfileAlertsSection}

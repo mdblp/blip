@@ -36,10 +36,13 @@ import { PatientAdditionalInformation } from './patient-additional-information'
 import { PatientInformation } from './patient-information'
 import { PatientTitle } from './patient-title'
 import { PatientLeadClinicians } from './clinicians/patient-lead-clinicians'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 interface InformationSectionProps {
   patient: Patient
   dateOfBirthHidden: boolean
+  isInformationSection?: boolean
+  isLeadCliniciansSection?: boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -58,8 +61,9 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const PatientPersonalInformationSection: FC<InformationSectionProps> = (props) => {
-  const { patient, dateOfBirthHidden } = props
+  const { patient, dateOfBirthHidden, isInformationSection = true, isLeadCliniciansSection = true } = props
   const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { classes } = useStyles()
 
 
@@ -73,21 +77,32 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             flexDirection: "column",
             gap: 3
           }}>
-          <PatientTitle patient={patient} />
 
-          <PatientInformation patient={patient} dateOfBirthHidden={dateOfBirthHidden} />
+          {isInformationSection &&
 
-          <div className={classes.separator} />
+            <>
+              <PatientTitle patient={patient} />
 
-          <PatientLeadClinicians
-            patientId={patient.userid}
-            patientProfile={patient.profile}
-            leadClinicians={patient.leadClinicians}
-          />
+              <PatientInformation patient={patient} dateOfBirthHidden={dateOfBirthHidden} />
 
-          <div className={classes.separator} />
+              <div className={classes.separator} />
+            </>
+          }
+          {isLeadCliniciansSection &&
+            <PatientLeadClinicians
+              patientId={patient.userid}
+              patientProfile={patient.profile}
+              leadClinicians={patient.leadClinicians}
+            />
+          }
 
-          <PatientAdditionalInformation patient={patient} />
+          {isInformationSection &&
+            <>
+              {!isMobile && <div className={classes.separator} />}
+
+              <PatientAdditionalInformation patient={patient} />
+            </>
+          }
         </Box>
       </CardContent>
     </Card>

@@ -36,13 +36,16 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
       t('short-date')
     )
 
+  const isNA = (formattedString : string): boolean => !formattedString || /n\/?a/i.test(formattedString)
+
   const getTableProfileInformation = (): { value: string, label: string }[] => {
+
     return [
-      { label: t('age'), value: `${patientInfo.age}` },
-      { label: t(`params|${DblParameter.Weight}`), value: formatNumberForLang(patientInfo.weight) },
-      { label: t(`params|${DblParameter.Height}`), value: formatNumberForLang(patientInfo.height) },
-      { label: t('equipment-date'), value: formattedDate },
-      { label: t(`params|${DblParameter.InsulinType}`), value: patientInfo.insulinType }
+      { label: t('age'), value: isNA(patientInfo.age) ? '' : patientInfo.age },
+      { label: t(`params|${DblParameter.Weight}`), value: isNA(formatNumberForLang(patientInfo.weight)) ? '' : formatNumberForLang(patientInfo.weight) },
+      { label: t(`params|${DblParameter.Height}`), value: isNA(formatNumberForLang(patientInfo.height)) ? '' :formatNumberForLang(patientInfo.height) },
+      { label: t('equipment-date'), value: isNA(formattedDate) ? '' : formattedDate },
+      { label: t(`params|${DblParameter.InsulinType}`), value: isNA(patientInfo.insulinType) ? '' :  patientInfo.insulinType }
     ]
   }
 

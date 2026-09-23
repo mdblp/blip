@@ -58,8 +58,8 @@ export const checkPatientProfileSectionCardForAlerts = (): void => {
 export const checkClickViewMoreInformation = async () => {
   const viewMoreInformation = within(screen.getByTestId('patient-profile-overview-section-information'))
   await userEvent.click(viewMoreInformation.getByText('View more'))
-  const InformationSectionTitle = await screen.findByText('Devices and current settings') //à changer
-  expect(InformationSectionTitle).toBeInTheDocument()
+  const informationSection = screen.getByTestId('information-section')
+  expect(informationSection).toBeVisible()
   const header = within(await screen.findByTestId('bottom-part-main-header'))
   await userEvent.click(header.getByTestId('back-button'))
 }

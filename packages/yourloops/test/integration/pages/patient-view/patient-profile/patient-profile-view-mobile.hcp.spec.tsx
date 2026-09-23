@@ -65,6 +65,9 @@ describe('Patient profile view for HCP', () => {
     mockErrorApi()
     mockAnalyticsApi()
     mockMobileScreen()
+    global.structuredClone = jest.fn(val => {
+      return JSON.parse(JSON.stringify(val));
+    });
   })
 
   const firstName = 'HCP firstName'
