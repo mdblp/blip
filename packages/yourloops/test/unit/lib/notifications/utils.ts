@@ -30,14 +30,12 @@ import { type NotificationContext } from '../../../../lib/notifications/models/n
 
 export interface NotificationAPIStub {
   getReceivedInvitations: jest.Mock<Promise<InAppNotification[]>, []>
-  getSentInvitations: jest.Mock<Promise<InAppNotification[]>, []>
   acceptInvitation: jest.Mock<Promise<void>, [InAppNotification]>
   declineInvitation: jest.Mock<Promise<void>, [InAppNotification]>
 }
 
 export const notificationAPIStub: NotificationAPIStub = {
   getReceivedInvitations: jest.fn<Promise<InAppNotification[]>, []>().mockResolvedValue([]),
-  getSentInvitations: jest.fn<Promise<InAppNotification[]>, []>().mockResolvedValue([]),
   acceptInvitation: jest.fn<Promise<void>, [InAppNotification]>().mockResolvedValue(),
   declineInvitation: jest.fn<Promise<void>, [InAppNotification]>().mockResolvedValue()
 }
@@ -47,8 +45,7 @@ const stubNotificationContextValueInternal = {
   decline: jest.fn().mockReturnValue(() => Promise.resolve()),
   update: jest.fn(),
   initialized: true,
-  receivedInvitations: [] as InAppNotification[],
-  sentInvitations: [] as InAppNotification[]
+  receivedInvitations: [] as InAppNotification[]
 }
 
 export const stubNotificationContextValue = stubNotificationContextValueInternal as unknown as NotificationContext

@@ -40,7 +40,7 @@ import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { useTeam } from '../../lib/team'
-import { InAppNotification } from '../../lib/notifications/models/notification.model'
+import { type InAppNotification } from '../../lib/notifications/models/notification.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationMetricType } from '../../lib/notifications/models/enums/notification-type.enum'
@@ -219,7 +219,8 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const isACareTeamPatientInvitation = notification.type === INotificationType.careTeamPatientInvitation
   const isADirectInvitation = notification.type === INotificationType.directInvitation
   const metricsType = isADirectInvitation ? NotificationMetricType.shareData : NotificationMetricType.joinTeam
-  const inviterName = isADirectInvitation ? (notification.payload["creator"] as IUser).profile?.fullName : notification.payload["careTeamName"]
+  const creator = isADirectInvitation ? notification.payload["creator"] as IUser | undefined : undefined
+  const inviterName = isADirectInvitation ? creator?.profile?.fullName : notification.payload["careTeamName"]
   const careTeamName = notification.payload["careTeamName"] as string
 
   if (isACareTeamPatientInvitation && !notification.payload["careTeamId"]) {

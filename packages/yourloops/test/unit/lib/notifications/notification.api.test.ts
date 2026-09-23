@@ -86,37 +86,6 @@ describe('Notification API', () => {
     })
   })
 
-  describe('getSentInvitations', () => {
-    const url = `/v2/notifications?status=pending&senderId=${userId}`
-
-    it('should return the notifications returned by the API', async () => {
-      const data: InAppNotification[] = [buildNotification(INotificationType.careTeamProInvitation)]
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-
-      const result = await NotificationApi.getSentInvitations(userId)
-
-      expect(result).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url })
-    })
-
-    it('should return an empty array when there is no pending notification', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error(ErrorMessageStatus.NotFound))
-
-      const result = await NotificationApi.getSentInvitations(userId)
-
-      expect(result).toEqual([])
-      expect(HttpService.get).toHaveBeenCalledWith({ url })
-    })
-
-    it('should throw an error if the http call fails for another reason', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
-
-      await expect(async () => {
-        await NotificationApi.getSentInvitations(userId)
-      }).rejects.toThrow('This error was thrown by a mock on purpose')
-    })
-  })
-
   describe('acceptInvitation', () => {
     it('should throw an error and not call the API if the notification type is unknown', async () => {
       const httpPut = jest.spyOn(HttpService, 'put')

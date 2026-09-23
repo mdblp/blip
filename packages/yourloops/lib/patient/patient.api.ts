@@ -86,7 +86,7 @@ export default class PatientApi {
       await HttpService.post<void, InvitePatientPayload>({
         url: `/crew/v1/teams/${teamId}/patients`,
         payload: { email }
-      }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE]) // TODO: add error managemnt
+      }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE])
     } catch (error) {
       if (error.response.status === PATIENT_ALREADY_IN_TEAM_ERROR_CODE) {
         throw new Error(PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE)

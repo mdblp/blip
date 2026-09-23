@@ -25,12 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { InAppNotification } from './notification.model'
+import { type InAppNotification } from './notification.model'
 
 export interface NotificationContext {
   initialized: boolean
   receivedInvitations: InAppNotification[]
-  sentInvitations: InAppNotification[]
   update: () => void
   accept: (notification: InAppNotification) => Promise<void>
   decline: (notification: InAppNotification) => Promise<void>
