@@ -82,7 +82,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices) || pathname.includes(AppUserRoute.DevicesSectionsOverview)
+  const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices)
 
   const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
@@ -131,7 +131,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
 
   const getBasePrefix = (currentPathname: string): string => {
     const sections = [
-      AppUserRoute.DevicesSectionsOverview,
       AppUserRoute.Devices,
       AppUserRoute.Dashboard,
       AppUserRoute.Daily,
@@ -145,7 +144,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       return currentPathname.substring(0, currentPathname.indexOf(activeSection))
     }
 
-    return currentPathname
+    return currentPathname.substring(0, currentPathname.lastIndexOf('/'))
   }
 
   const currentPatientView = useMemo<PatientView>(() => {
@@ -177,7 +176,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       case PatientView.Dashboard:
         return AppUserRoute.Dashboard
       case PatientView.Devices:
-        return isMobile ? AppUserRoute.DevicesSectionsOverview : AppUserRoute.Devices
+        return AppUserRoute.Devices
       case PatientView.PatientProfile:
         return AppUserRoute.PatientProfile
       case PatientView.Trends:
@@ -216,7 +215,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
 
-    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
+    const urlPrefix = getBasePrefix(pathname)
     navigate(`${urlPrefix}${AppUserRoute.Daily}?date=${new Date(date).toISOString()}`)
 
     window.scrollTo({ top: 0, behavior: 'smooth' })

@@ -52,7 +52,7 @@ describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const deviceSectionsOverviewRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.DevicesSectionsOverview}`
+  const deviceSectionsOverviewRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     jest.clearAllMocks();

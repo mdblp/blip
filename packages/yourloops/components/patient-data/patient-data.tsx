@@ -68,7 +68,6 @@ import {
   ParametersChangeHistorySection
 } from '../../pages/patient-view/devices/sections/parameters-change-history-section'
 import { DeviceChangeHistorySection } from '../../pages/patient-view/devices/sections/device-change-history-section'
-import { DeviceViewSectionsOverview } from '../../pages/patient-view/devices/devices-view-sections-overview'
 
 interface PatientDataProps {
   patient: Patient
@@ -287,24 +286,22 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     />
                   }
                   <Route path={AppUserRoute.Devices}
-                         element={isMobile
-                           ? (<Navigate to={AppUserRoute.DevicesSectionsOverview} replace />)
-                           :
-                           (
-                             <DevicesView
-                               goToDailySpecificDate={goToDailySpecificDate}
-                               medicalData={medicalData}
-                             />
-                           )}
+                         element={
+                           <DevicesView
+                             goToDailySpecificDate={goToDailySpecificDate}
+                             medicalData={medicalData}
+                             pumpSettings={pumpSettings}
+                           />
+                         }
                   />
                   {isMobile && (
                     <Route>
-                      <Route path={AppUserRoute.DevicesSectionsOverview} element={<DeviceViewSectionsOverview pumpSettings={pumpSettings} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewCurrentSettings}
                              element={<CurrentParametersSection pumpSettings={pumpSettings} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewBasalSafety}
-                             element={<SafetyBasalProfileSection safetyBasalConfig={pumpSettings?.payload?.securityBasals}
-                                                                 deviceSystem={pumpSettings?.payload?.device?.name} />} />
+                             element={<SafetyBasalProfileSection
+                               safetyBasalConfig={pumpSettings?.payload?.securityBasals}
+                               deviceSystem={pumpSettings?.payload?.device?.name} />} />
                       <Route path={AppUserRoute.DevicesSectionsOverviewSettingsHistory}
                              element={<ParametersChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
                                                                       pumpSettings={pumpSettings} />} />

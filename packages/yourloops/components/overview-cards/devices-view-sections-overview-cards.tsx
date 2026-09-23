@@ -36,7 +36,12 @@ import { DblParameter, DeviceConfig, PumpSettings } from 'medical-domain'
 import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
 import { ChangeValueSectionsOverview } from '../device/change-value-sections-overview'
-import { formatParameterValue, getTranslationKeyForDeviceChange, sortHistory } from '../device/utils/device.utils'
+import {
+  formatParameterValue,
+  getTranslationKeyForDeviceChange,
+  sortDeviceChangeHistory,
+  sortHistory
+} from '../device/utils/device.utils'
 import { cardStyle } from './card-style'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
@@ -77,6 +82,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
   const lastParameterChange = history.parameters
   sortHistory(lastParameterChange)
   const lastDeviceChange = history.devices
+  sortDeviceChangeHistory(lastDeviceChange)
   const { pathname } = useLocation()
   const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
   const timezone = pumpSettings.timezone
@@ -94,7 +100,15 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     return device.deviceId.toLowerCase().startsWith('mobigo')
   }
 
-  const formattedDate = hasParameters
+  const formattedDateForSettings = hasParameters
+    ? formatDateWithMomentShortFormat(
+      new Date(firstChange.changeDate),
+      t('short-date-with-time'),
+      timezone
+    )
+    : ''
+
+  const formattedDateForDevice = hasParameters
     ? formatDateWithMomentShortFormat(
       new Date(firstChange.changeDate),
       t('short-date-with-time'),
@@ -106,7 +120,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     return [
       { label: t('system'), value: device?.name },
       { label: t('Pump'), value: pump?.name },
-      { label: t('CGM'), value: cgm?.manufacturer + " " + cgm?.name },
+      { label: t('CGM'), value: cgm ? `${cgm.manufacturer ?? ''} ${cgm.name ?? ''}`.trim() : "" },
       ...(totalDailyInsulin
         ? [{
           label: t(`params|${DblParameter.TotalDailyInsulin}`),
@@ -146,7 +160,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         }
       />
 
-      {isBasalSafetyProfileAvailable && (
+      {isBasalSafetyProfileAvailable(pumpSettings) && (
         <GenericListCard
           title={t('basal-safety-profile-short')}
           data-testid="device-view-overview-card-basal-safety"
@@ -180,7 +194,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         {hasParameters ? (
           <Box className={listOfParameters}>
             <Typography variant="body2" className={dateLastUpdate}>
-              {`${t('last-upload:')} ${formattedDate}`}
+              {`${t('last-upload:')} ${formattedDateForSettings}`}
             </Typography>
 
             {firstChange.parameters.map((parameter) => (
@@ -232,7 +246,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         {hasDevices ? (
           <Box className={listOfParameters}>
             <Typography variant="body2" className={dateLastUpdate}>
-              {`${t('last-upload:')} ${formattedDate}`}
+              {`${t('last-upload:')} ${formattedDateForDevice}`}
             </Typography>
 
             {firstDeviceChange.devices.map((device) => (

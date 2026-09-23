@@ -52,7 +52,7 @@ describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
-  const deviceSectionsOverviewRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.DevicesSectionsOverview}`
+  const deviceSectionsOverviewRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     mockWindowResizer()
