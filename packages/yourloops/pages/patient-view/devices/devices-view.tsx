@@ -25,23 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useState } from 'react'
-import MedicalDataService, { DeviceConfig, DeviceSystem, PumpSettings, SecurityBasalConfig } from 'medical-domain'
-import Container from '@mui/material/Container'
-import { useTranslation } from 'react-i18next'
+import React, { type FC } from 'react'
+import MedicalDataService, { PumpSettings } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import { CurrentParametersSection } from './sections/current-parameters-section'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
-import { ParametersChangeHistorySection } from './sections/parameters-change-history-section'
-import { DevicesViewMenu } from './devices-view-menu'
-import { DeviceViewSection } from './device-view-section.enum'
-import { DeviceChangeHistorySection } from './sections/device-change-history-section'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { MainHeaderMobileMemoized } from '../../../components/header-bars/main-header-mobile'
-import { MainHeaderDesktopMemoized } from '../../../components/header-bars/main-header-desktop'
 import { DevicesViewDesktop } from './devices-view-desktop'
 import { DeviceViewSectionsOverview } from './devices-view-sections-overview'
 
