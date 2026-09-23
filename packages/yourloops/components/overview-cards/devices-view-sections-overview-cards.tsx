@@ -143,7 +143,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         : [])
     ]
   }
-  
+
   return (
     <>
       <GenericListCard
