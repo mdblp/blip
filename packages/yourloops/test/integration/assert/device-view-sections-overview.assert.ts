@@ -59,7 +59,7 @@ export const checkDeviceSectionCardForParametersHistory = async () => {
 export const checkDeviceSectionCardForDevicesHistory = async () => {
   const changeHistorySection = screen.getByTestId('device-view-overview-card-devices-history')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Devices HistoryView moreLast update: 01/11/22 - 1:00 amCGM manufacturerDexcomCGM productG5HandsetMobiGo+IMEI0123456789Software version1.12.12-DBLG1-INS-DEXG6-COMMERCIALActivation code123-456-789Software version1.0.0Pump manufacturerROCHEPump productInsightSmartphone modelA212F')
+  expect(changeHistorySection).toHaveTextContent('Devices HistoryView moreLast update: 01/11/22 - 1:00 amCGM manufacturerDexcom AbbottHandsetMobiGo+ DH22IMEI0123456789 111111111Software version1.12.12-DBLG1-INS-DEXG6-COMMERCIAL 1.18.0.1300-DBLG1-KAL-G6-COMMERCIALActivation code123-456-789 111-111-111CGM productG5 G6Software version1.0.0 1.1.0Pump manufacturerROCHE VICENTRAPump productInsight KaleidoSmartphone modelA212F A26')
 }
 
 export const checkClickViewMoreCurrentSettings = async () => {
