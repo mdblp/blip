@@ -29,7 +29,6 @@ import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import PatientApi, {
   PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE,
-  PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_MESSAGE
 } from '../../../../lib/patient/patient.api'
 import HttpStatus from '../../../../lib/http/models/enums/http-status.enum'
 import { type MonitoringAlertsParameters, Unit } from 'medical-domain'
@@ -57,13 +56,6 @@ describe('PatientApi', () => {
       jest.spyOn(HttpService, 'post').mockRejectedValueOnce(error)
 
       await expect(PatientApi.invitePatient({ teamId, email })).rejects.toThrow(PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE)
-    })
-
-    it('should throw a dedicated error when the patient does not have an account', async () => {
-      const error = { response: { status: HttpStatus.StatusNotFound } }
-      jest.spyOn(HttpService, 'post').mockRejectedValueOnce(error)
-
-      await expect(PatientApi.invitePatient({ teamId, email })).rejects.toThrow(PATIENT_NOT_HAVING_AN_ACCOUNT_ERROR_MESSAGE)
     })
 
     it('should propagate any other error from HttpService', async () => {

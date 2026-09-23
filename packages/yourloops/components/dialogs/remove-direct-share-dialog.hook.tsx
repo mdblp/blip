@@ -29,9 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { useAlert } from '../utils/snackbar'
 import DirectShareApi from '../../lib/share/direct-share.api'
 import { type User } from '../../lib/auth'
-import { useNotification } from '../../lib/notifications/notification.hook'
 import { type OnCloseRemoveDirectShareDialog, type UserToRemove } from './remove-direct-share-dialog'
-import { InAppNotification } from '../../lib/notifications/models/notification.model'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
@@ -43,32 +41,25 @@ interface RemoveDirectShareDialogHookReturn {
 const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): RemoveDirectShareDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { sentInvitations } = useNotification()
   const patientsHook = usePatientsContext()
 
   const removeDirectShare = async (userToRemove: UserToRemove, currentUser: User): Promise<void> => {
     const isCurrentUserCaregiver = currentUser.isUserCaregiver()
 
     try {
-      const invitation = sentInvitations.find((invitation: InAppNotification) => invitation.payload["email"] === userToRemove.email)
 
-      if (invitation) {
-        //TODO: add why ?
-        // await cancel(invitation.id, invitation.payload["careTeamId"] as string, userToRemove.email)
-      } else {
-        const patientId = isCurrentUserCaregiver ? userToRemove.id : currentUser.id
-        const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id
+      const patientId = isCurrentUserCaregiver ? userToRemove.id : currentUser.id
+      const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id
 
-        await DirectShareApi.removeDirectShare(patientId, viewerId)
-        if (isCurrentUserCaregiver) {
-          patientsHook.refresh()
-        }
+      await DirectShareApi.removeDirectShare(patientId, viewerId)
+      if (isCurrentUserCaregiver) {
+        patientsHook.refresh()
       }
 
       const successAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-success' : 'modal-patient-remove-caregiver-success'
       alert.success(t(successAlertKey))
 
-      onClose(!invitation)
+      onClose(true)
     } catch (reason) {
       const errorMessage = errorTextFromException(reason)
       logError(errorMessage, 'remove-direct-share')

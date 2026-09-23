@@ -26,7 +26,7 @@
  */
 
 export enum INotificationType {
-  directInvitation = 'careteam_invitation',
+  directInvitation = 'directshare_invitation',
   careTeamProInvitation = 'medicalteam_invitation',
   careTeamPatientInvitation = 'medicalteam_patient_invitation',
   careTeamDoAdmin = 'medicalteam_do_admin',

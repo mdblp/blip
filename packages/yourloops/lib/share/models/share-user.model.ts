@@ -25,12 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Notification } from '../../notifications/models/notification.model'
 import { type IUser } from '../../data/models/i-user.model'
 import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
 
 export interface ShareUser {
   user: IUser
-  invitation?: Notification
   status: UserInviteStatus
 }
