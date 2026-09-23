@@ -25,9 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useCallback, useEffect, useRef } from 'react'
+import React, { type FC, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { v4 as uuidv4 } from 'uuid'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import { useAuth } from '../../../lib/auth'
@@ -40,13 +39,10 @@ import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-caregiver-dialog'
 import CaregiversTable from './caregivers-table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
-import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
-import { InAppNotification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 import SpinningLoader from '../../../components/loaders/spinning-loader'
 import { logError } from '../../../utils/error.util'
-import { INotificationType } from '../../../lib/notifications/models/enums/i-notification-type.enum'
+
 
 export const PatientCaregiversPage: FC = () => {
   const { t } = useTranslation('yourloops')
@@ -55,9 +51,6 @@ export const PatientCaregiversPage: FC = () => {
   const notificationHook = useNotification()
   const [caregiverToAdd, setCaregiverToAdd] = React.useState<AddDialogContentProps | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
-  const { sentInvitations } = notificationHook
-  const sentInvitationsFetched = useRef(null)
-
   const handleShowAddCaregiverDialog = async (): Promise<void> => {
     const getCaregiverEmail = async (): Promise<string | null> => {
       return await new Promise((resolve: (email: string | null) => void) => {
@@ -76,7 +69,7 @@ export const PatientCaregiversPage: FC = () => {
         // Refresh the notifications list
         notificationHook.update()
         // And refresh the list
-        setCaregivers(null)
+        await fetchCaregivers(user.id)
       } catch (reason) {
         const error = reason as Error
         console.error(reason)
@@ -93,45 +86,19 @@ export const PatientCaregiversPage: FC = () => {
     }
   }
 
-  const getCaregiversFromPendingInvitations = useCallback((): ShareUser[] => {
-    return sentInvitations.reduce((acc: ShareUser[], invitation: InAppNotification) => {
-      if (invitation.type !== INotificationType.directInvitation) {
-        return acc
-      }
-
-      const caregiver: ShareUser = {
-        status: UserInviteStatus.Pending,
-        user: {
-          username: invitation.payload["email"] as string, //TODO: check the payload for direct Share
-          userid: uuidv4(),
-          role: UserRole.Caregiver
-        }
-      }
-      acc.push(caregiver)
-      return acc
-    }, [])
-  }, [sentInvitations])
 
   const fetchCaregivers = useCallback(async (userId: string): Promise<void> => {
-    await DirectShareApi.getDirectShares(userId)
+    const receivedCaregivers = await DirectShareApi.getDirectShares(userId)
       .catch((reason: unknown) => {
         console.error(reason)
-
         return []
       })
-      .then((receivedCaregivers: ShareUser[]) => {
-        const invitedCaregivers = getCaregiversFromPendingInvitations()
-        receivedCaregivers.push(...invitedCaregivers)
-        setCaregivers(receivedCaregivers)
-      })
-  }, [getCaregiversFromPendingInvitations])
+    setCaregivers(receivedCaregivers)
+  }, [])
 
   useEffect(() => {
-    if (sentInvitationsFetched.current !== sentInvitations) {
-      sentInvitationsFetched.current = sentInvitations
-      fetchCaregivers(user.id)
-    }
-  }, [fetchCaregivers, sentInvitations, user.id])
+    fetchCaregivers(user.id)
+  }, [fetchCaregivers, user.id])
 
   setPageTitle(t('caregivers-title'))
 
