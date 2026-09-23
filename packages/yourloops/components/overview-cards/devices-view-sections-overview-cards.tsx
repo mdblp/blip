@@ -108,9 +108,9 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
     )
     : ''
 
-  const formattedDateForDevice = hasParameters
+  const formattedDateForDevice = hasDevices
     ? formatDateWithMomentShortFormat(
-      new Date(firstChange.changeDate),
+      new Date(firstDeviceChange.changeDate),
       t('short-date-with-time'),
       timezone
     )
