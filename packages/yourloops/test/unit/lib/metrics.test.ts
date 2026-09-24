@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,7 +60,7 @@ describe('Metrics', () => {
     expect(window._paq).toBeInstanceOf(Array)
     if (window._paq) { // Make typescript happy
       // eslint-disable-next-line no-magic-numbers,jest/no-conditional-expect
-      expect(window._paq.length).toBe(7)
+      expect(window._paq.length).toBe(8)
     }
   })
 
