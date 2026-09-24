@@ -26,10 +26,10 @@
  */
 
 import React, { FC } from 'react'
-import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 import { formatNumberForLang } from '../../lib/language'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { useTheme } from '@mui/material/styles'
 
 interface ChangeValueProps {
   previousValue?: string

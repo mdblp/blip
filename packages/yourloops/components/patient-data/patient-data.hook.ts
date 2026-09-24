@@ -78,6 +78,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
+  const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices)
 
   const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
@@ -124,9 +125,29 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     bgUnits
   }))
 
+  const getBasePrefix = (currentPathname: string): string => {
+    const sections = [
+      AppUserRoute.Devices,
+      AppUserRoute.Dashboard,
+      AppUserRoute.Daily,
+      AppUserRoute.Trends,
+      AppUserRoute.PatientProfile
+    ]
+
+    const activeSection = sections.find((section) => currentPathname.includes(section))
+
+    if (activeSection) {
+      return currentPathname.substring(0, currentPathname.indexOf(activeSection))
+    }
+
+    return currentPathname.substring(0, currentPathname.lastIndexOf('/'))
+  }
+
   const currentPatientView = useMemo<PatientView>(() => {
-    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
-    const routeWithoutUrlPrefix = pathname.replace(urlPrefix, '')
+
+    const routeWithoutUrlPrefix = (isOverviewSectionsRoute)
+      ? AppUserRoute.Devices
+      : pathname.substring(pathname.lastIndexOf('/'))
 
     switch (routeWithoutUrlPrefix) {
       case AppUserRoute.Daily:
@@ -139,8 +160,10 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return PatientView.Devices
       case AppUserRoute.PatientProfile:
         return PatientView.PatientProfile
+      default:
+        return PatientView.Dashboard
     }
-  }, [pathname])
+  }, [pathname, isOverviewSectionsRoute])
 
   const getRouteByPatientView = (view: PatientView): AppUserRoute => {
     switch (view) {
@@ -156,7 +179,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return AppUserRoute.Trends
     }
   }
-
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
     if (patientMedicalData && patientView === PatientView.Dashboard) {
@@ -177,8 +199,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
+    const urlPrefix = getBasePrefix(pathname)
 
-    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
     navigate(`${urlPrefix}${route}`)
   }
 
@@ -189,7 +211,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
 
-    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
+    const urlPrefix = getBasePrefix(pathname)
     navigate(`${urlPrefix}${AppUserRoute.Daily}?date=${new Date(date).toISOString()}`)
 
     window.scrollTo({ top: 0, behavior: 'smooth' })

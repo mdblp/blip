@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import MedicalDataService, { PumpSettings } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { DevicesViewDesktop } from './devices-view-desktop'
-import { DeviceViewSectionsOverview } from './devices-view-sections-overview'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
+import { Typography } from "@mui/material"
+import Box from '@mui/material/Box'
 
-interface DeviceViewProps {
-  goToDailySpecificDate: (date: number) => void
-  medicalData: MedicalDataService
-  pumpSettings: PumpSettings
+interface ChangeValueProps {
+  previousValue?: string
+  currentValue: string
+  previousUnit?: string
+  currentUnit?: string
+  withFormatting: boolean
 }
 
-export const DevicesView: FC<DeviceViewProps> = (props) => {
-
-  const { medicalData, goToDailySpecificDate, pumpSettings } = props
+export const ChangeValueSectionsOverview: FC<ChangeValueProps> = (props) => {
+  const { previousValue, currentValue, previousUnit, currentUnit, withFormatting } = props
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <>
-      {isMobile
-        ? <DeviceViewSectionsOverview pumpSettings={pumpSettings} />
-        : <DevicesViewDesktop
-          goToDailySpecificDate={goToDailySpecificDate}
-          medicalData={medicalData}
-        />
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        flexShrink: 0
+      }}>
+      {previousValue &&
+        <>
+          <Typography
+            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue} {previousUnit}</span>
+          </Typography>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1), flexShrink: 0 }} />
+        </>
       }
-    </>
+      <Typography variant="body2">
+        <Box component="span" sx={{ fontWeight: "bold" }}>
+          {withFormatting ? formatNumberForLang(currentValue) : currentValue}
+        </Box>
+        {currentUnit ? ` ${currentUnit}` : ""}
+      </Typography>
+    </Box>
   )
 }
+

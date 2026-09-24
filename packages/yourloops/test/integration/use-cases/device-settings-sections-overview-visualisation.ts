@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import MedicalDataService, { PumpSettings } from 'medical-domain'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { DevicesViewDesktop } from './devices-view-desktop'
-import { DeviceViewSectionsOverview } from './devices-view-sections-overview'
+import {
+  checkDeviceSectionCardForCurrentParameters,
+  checkDeviceSectionCardForDevicesHistory, checkDeviceSectionCardForParametersHistory,
+  checkDeviceSectionCardForSafetyBasal,
+  checkClickViewMoreBasalSafety,
+  checkClickViewMoreCurrentSettings,
+  checkClickViewMoreDevicesHistory,
+  checkClickViewMoreSettingsHistory,
+  checkDeviceSectionsOverviewVisible
+} from '../assert/device-view-sections-overview.assert'
 
-interface DeviceViewProps {
-  goToDailySpecificDate: (date: number) => void
-  medicalData: MedicalDataService
-  pumpSettings: PumpSettings
+export const testDeviceSectionsOverviewVisibleMobile = async () => {
+  checkDeviceSectionsOverviewVisible()
+  checkDeviceSectionCardForCurrentParameters()
+  checkDeviceSectionCardForSafetyBasal()
+  await checkDeviceSectionCardForParametersHistory()
+  await checkDeviceSectionCardForDevicesHistory()
 }
 
-export const DevicesView: FC<DeviceViewProps> = (props) => {
+export const testClickViewMoreCurrentSettings = async () => {
+  await checkClickViewMoreCurrentSettings()
+}
 
-  const { medicalData, goToDailySpecificDate, pumpSettings } = props
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+export const testClickViewMoreBasalSafety = async () => {
+  await checkClickViewMoreBasalSafety()
+}
 
-  return (
-    <>
-      {isMobile
-        ? <DeviceViewSectionsOverview pumpSettings={pumpSettings} />
-        : <DevicesViewDesktop
-          goToDailySpecificDate={goToDailySpecificDate}
-          medicalData={medicalData}
-        />
-      }
-    </>
-  )
+export const testClickViewMoreSettingsHistory = async () => {
+  await checkClickViewMoreSettingsHistory()
+}
+
+export const testClickViewMoreDevicesHistory = async () => {
+  await checkClickViewMoreDevicesHistory()
 }
