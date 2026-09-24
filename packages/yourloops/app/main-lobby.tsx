@@ -72,11 +72,62 @@ tssCache.compat = true
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
 const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
-export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
+
+interface UserGate {
+  route: AppRoute
+  isPending: (user: User) => boolean
+  /**
+   * Routes on which the user is already dealing with this gate, so no redirect is issued.
+   * It MUST contain `route`, otherwise the redirect would be issued again and again.
+   */
+  satisfiedByRoutes: AppRoute[]
+}
+
+/**
+ * The gates a user has to clear once logged in, in the order they are presented.
+ *
+ * Termination invariant: `getPendingUserGate` only depends on the user, so navigating cannot change
+ * which gate wins, and every gate is satisfied by its own route. A redirect to `pendingGate.route`
+ * therefore resolves to the same gate and returns undefined: at most one redirect is issued per user
+ * state, whatever the combination of pending gates. Keep it that way when adding a new gate.
+ */
+export const USER_GATES: UserGate[] = [
+  {
+    route: AppRoute.CompleteSignup,
+    isPending: (user: User) => user.isFirstLogin(),
+    satisfiedByRoutes: [AppRoute.CompleteSignup]
+  },
+  {
+    route: AppRoute.DblCommunication,
+    isPending: (user: User) => user.hasToDisplayDblCommunicationPage(),
+    // The signup stepper sets the role on its last step and then displays its own completion message:
+    // it navigates to '/' by itself, do not interrupt it.
+    satisfiedByRoutes: [AppRoute.DblCommunication, AppRoute.CompleteSignup]
+  },
+  {
+    route: AppRoute.NewConsent,
+    isPending: (user: User) => user.hasToAcceptNewConsent(),
+    satisfiedByRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
+  },
+  {
+    route: AppRoute.RenewConsent,
+    isPending: (user: User) => user.hasToRenewConsent(),
+    satisfiedByRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
+  },
+  {
+    route: AppRoute.Training,
+    isPending: (user: User) => user.hasToDisplayTrainingInfoPage(),
+    // A user who just completed the signup has no training acknowledgment yet: let them read the
+    // completion message. Same when they are acknowledging their consents.
+    satisfiedByRoutes: [AppRoute.Training, AppRoute.CompleteSignup, AppRoute.NewConsent, AppRoute.RenewConsent]
+  }
+]
+
+const getPendingUserGate = (user: User): UserGate | undefined => USER_GATES.find((gate: UserGate) => gate.isPending(user))
+
+export const getRedirectUrl = (route: string, user: User | null, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
-  const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
-  const trainingPath = route === AppRoute.Training
-  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route as AppRoute)
+  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route)
 
   if (routeIsPublic && !isCurrentRouteAlwaysAccessible && isAuthenticated) {
     return '/'
@@ -84,22 +135,15 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
     return AppRoute.Login
   }
-  if (route !== AppRoute.CompleteSignup && isAuthenticated && user?.isFirstLogin()) {
-    return AppRoute.CompleteSignup
+  if (!isAuthenticated || !user) {
+    return undefined
   }
-  if (!renewConsentPath && user?.hasToAcceptNewConsent()) {
-    return AppRoute.NewConsent
+
+  const pendingGate = getPendingUserGate(user)
+  if (!pendingGate || pendingGate.satisfiedByRoutes.includes(route as AppRoute)) {
+    return undefined
   }
-  if (!renewConsentPath && user?.hasToRenewConsent()) {
-    return AppRoute.RenewConsent
-  }
-  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user?.hasToDisplayTrainingInfoPage()) {
-    return AppRoute.Training
-  }
-  if (route !== AppRoute.DblCommunication && user?.hasToDisplayDblCommunicationPage()) {
-    return AppRoute.DblCommunication
-  }
-  return undefined
+  return pendingGate.route
 }
 
 export const MainLobby: FC = () => {
