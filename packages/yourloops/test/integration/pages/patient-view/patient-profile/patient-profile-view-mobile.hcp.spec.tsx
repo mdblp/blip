@@ -47,7 +47,7 @@ import {
   testClickViewMoreInformation,
   testClickViewMoreLeadClinicians,
   testClickViewMoreRange,
-  testPatientProfileSectionsOverviewVisibleMobile
+  testPatientProfileSectionsOverviewVisibleHCP
 } from '../../../use-cases/patient-profile-sections-overview'
 
 describe('Patient profile view for HCP', () => {
@@ -99,7 +99,7 @@ describe('Patient profile view for HCP', () => {
     it('should render the sections overview in mobile version', async () => {
       await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
       await screen.findByTestId('patient-profile-overview-section-information')
-      testPatientProfileSectionsOverviewVisibleMobile()
+      testPatientProfileSectionsOverviewVisibleHCP()
     })
 
     it('should be able to access the pages linked by the cards', async () => {

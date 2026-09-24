@@ -29,9 +29,13 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../utils/i18n'
 
-export const checkPatientProfileSectionsOverviewVisible = (): void => {
+export const checkPatientProfileSectionsOverviewVisibleCommon = (): void => {
   expect(screen.queryByTestId('patient-profile-overview-section-information')).toBeVisible()
   expect(screen.queryByTestId('patient-profile-overview-section-lead-clinicians')).toBeVisible()
+}
+
+export const checkPatientProfileSectionsOverviewVisibleHCP = (): void => {
+  checkPatientProfileSectionsOverviewVisibleCommon()
   expect(screen.queryByTestId('patient-profile-overview-section-range')).toBeVisible()
   expect(screen.queryByTestId('patient-profile-overview-section-alerts')).toBeVisible()
 }

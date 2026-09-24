@@ -36,11 +36,9 @@ import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import {
-  testClickViewMoreAlerts,
   testClickViewMoreInformation,
   testClickViewMoreLeadClinicians,
-  testClickViewMoreRange,
-  testPatientProfileSectionsOverviewVisibleMobile
+  testPatientProfileSectionsOverviewVisiblePatient
 } from '../../../use-cases/patient-profile-sections-overview'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
@@ -81,7 +79,7 @@ describe('Patient profile view for HCP', () => {
     it('should render the sections overview in mobile version', async () => {
       await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
       await screen.findByTestId('patient-profile-overview-section-information')
-      testPatientProfileSectionsOverviewVisibleMobile()
+      testPatientProfileSectionsOverviewVisiblePatient()
     })
 
     it('should be able to access the pages linked by the cards', async () => {
@@ -91,8 +89,6 @@ describe('Patient profile view for HCP', () => {
 
       await testClickViewMoreInformation()
       await testClickViewMoreLeadClinicians()
-      await testClickViewMoreRange()
-      await testClickViewMoreAlerts()
     })
 
   })

@@ -1,21 +1,28 @@
 import {
+  checkClickViewMoreAlerts,
+  checkClickViewMoreInformation,
+  checkClickViewMoreLeadClinicians,
+  checkClickViewMoreRange,
   checkPatientProfileSectionCardForAlerts,
   checkPatientProfileSectionCardForInformation,
   checkPatientProfileSectionCardForLeadClinicians,
   checkPatientProfileSectionCardForRange,
-  checkPatientProfileSectionsOverviewVisible,
-  checkClickViewMoreInformation,
-  checkClickViewMoreLeadClinicians,
-  checkClickViewMoreRange,
-  checkClickViewMoreAlerts
+  checkPatientProfileSectionsOverviewVisibleCommon,
+  checkPatientProfileSectionsOverviewVisibleHCP
 } from '../assert/patient-profile-sections-overview-mobile.assert'
 
-export const testPatientProfileSectionsOverviewVisibleMobile = (): void => {
-  checkPatientProfileSectionsOverviewVisible()
+export const testPatientProfileSectionsOverviewVisibleHCP = (): void => {
+  checkPatientProfileSectionsOverviewVisibleHCP()
   checkPatientProfileSectionCardForInformation()
   checkPatientProfileSectionCardForLeadClinicians()
   checkPatientProfileSectionCardForRange()
   checkPatientProfileSectionCardForAlerts()
+}
+
+export const testPatientProfileSectionsOverviewVisiblePatient = (): void => {
+  checkPatientProfileSectionsOverviewVisibleCommon()
+  checkPatientProfileSectionCardForInformation()
+  checkPatientProfileSectionCardForLeadClinicians()
 }
 
 export const testClickViewMoreInformation = async () => {

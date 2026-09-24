@@ -36,16 +36,25 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
       t('short-date')
     )
 
-  const isNA = (formattedString : string): boolean => !formattedString || /n\/?a/i.test(formattedString)
+  const isNA = (formattedString: string): boolean => !formattedString || /n\/?a/i.test(formattedString)
 
   const getTableProfileInformation = (): { value: string, label: string }[] => {
 
     return [
       { label: t('age'), value: isNA(patientInfo.age) ? '' : patientInfo.age },
-      { label: t(`params|${DblParameter.Weight}`), value: isNA(formatNumberForLang(patientInfo.weight)) ? '' : formatNumberForLang(patientInfo.weight) },
-      { label: t(`params|${DblParameter.Height}`), value: isNA(formatNumberForLang(patientInfo.height)) ? '' :formatNumberForLang(patientInfo.height) },
+      {
+        label: t(`params|${DblParameter.Weight}`),
+        value: isNA(formatNumberForLang(patientInfo.weight)) ? '' : formatNumberForLang(patientInfo.weight)
+      },
+      {
+        label: t(`params|${DblParameter.Height}`),
+        value: isNA(formatNumberForLang(patientInfo.height)) ? '' : formatNumberForLang(patientInfo.height)
+      },
       { label: t('equipment-date'), value: isNA(formattedDate) ? '' : formattedDate },
-      { label: t(`params|${DblParameter.InsulinType}`), value: isNA(patientInfo.insulinType) ? '' :  patientInfo.insulinType }
+      {
+        label: t(`params|${DblParameter.InsulinType}`),
+        value: isNA(patientInfo.insulinType) ? '' : patientInfo.insulinType
+      }
     ]
   }
 
@@ -78,7 +87,7 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
         data-testid="patient-profile-overview-section-information"
         headerAction={
           <ViewMoreLink dataTestId="link-patient-profile-info"
-                        targetRoute= {`${urlPrefix}${AppUserRoute.PatientProfileInformationSection}`}/>
+                        targetRoute={`${urlPrefix}${AppUserRoute.PatientProfileInformationSection}`} />
         }
       />
 
@@ -90,51 +99,54 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
         data-testid="patient-profile-overview-section-lead-clinicians"
         headerAction={
           <ViewMoreLink dataTestId="link-patient-profile-lead-clinicians"
-                        targetRoute={`${urlPrefix}${AppUserRoute.PatientProfileLeadCliniciansSection}`}/>
+                        targetRoute={`${urlPrefix}${AppUserRoute.PatientProfileLeadCliniciansSection}`} />
         }
       />
+      {user.isUserHcp() &&
+        <>
+          <GenericListCard
+            cardClassName={cards}
+            cardHeaderClassName={cardsHeader}
+            title={`${t('range')} (${userBgUnit})`}
+            data-testid="patient-profile-overview-section-range"
+            headerAction={
+              <ViewMoreLink dataTestId="link-patient-profile-range"
+                            targetRoute={`${urlPrefix}${AppUserRoute.PatientProfileRangeSection}`} />
+            }
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                alignItems: "center"
+              }}
+            >
+              <Typography variant="body2">{t('patient-profile')}</Typography>
+              <Chip
+                label={chipConfig}
+                sx={{
+                  color: 'var(--text-color-primary)',
+                  backgroundColor: 'var(--info-color-20)'
+                }}
+              />
+            </Box>
+          </GenericListCard>
 
-      <GenericListCard
-        cardClassName={cards}
-        cardHeaderClassName={cardsHeader}
-        title={`${t('range')} (${userBgUnit})`}
-        data-testid="patient-profile-overview-section-range"
-        headerAction={
-          <ViewMoreLink dataTestId="link-patient-profile-range"
-                        targetRoute= {`${urlPrefix}${AppUserRoute.PatientProfileRangeSection}`} />
-        }
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            alignItems: "center"
-          }}
-        >
-          <Typography variant="body2">{t('patient-profile')}</Typography>
-          <Chip
-            label={chipConfig}
-            sx={{
-              color: 'var(--text-color-primary)',
-              backgroundColor: 'var(--info-color-20)'
-            }}
-          />
-        </Box>
-      </GenericListCard>
-
-      <GenericListCard
-        cardClassName={cards}
-        cardHeaderClassName={cardsHeader}
-        title={`${t('alerts')} (${userBgUnit})`}
-        data-testid="patient-profile-overview-section-alerts"
-        headerAction={
-          <ViewMoreLink dataTestId="link-patient-profile-alerts"
-                        targetRoute= {`${urlPrefix}${AppUserRoute.PatientProfileAlertsSection}`} />
-        }
-      >
-        <Typography variant="body2">{t('monitoring-alerts-configuration')}</Typography>
-      </GenericListCard>
+          <GenericListCard
+            cardClassName={cards}
+            cardHeaderClassName={cardsHeader}
+            title={`${t('alerts')} (${userBgUnit})`}
+            data-testid="patient-profile-overview-section-alerts"
+            headerAction={
+              <ViewMoreLink dataTestId="link-patient-profile-alerts"
+                            targetRoute={`${urlPrefix}${AppUserRoute.PatientProfileAlertsSection}`} />
+            }
+          >
+            <Typography variant="body2">{t('monitoring-alerts-configuration')}</Typography>
+          </GenericListCard>
+        </>
+      }
     </>
   )
 }
