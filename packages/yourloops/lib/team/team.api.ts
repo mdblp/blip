@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
 import bows from 'bows'
 import { type User } from '../auth'
@@ -40,7 +39,7 @@ import HttpStatus from '../http/models/enums/http-status.enum'
 
 const log = bows('Team API')
 
-interface ChangeMemberRoleFirstPayload {
+interface ChangeMemberRoleBaseArgs {
   teamId: string
   email: string
   role: TeamMemberRole.admin | TeamMemberRole.member
@@ -50,11 +49,11 @@ interface InviteMemberPayload {
   role: TeamMemberRole
 }
 
-interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
+interface ChangeMemberRoleArgs extends ChangeMemberRoleBaseArgs {
   userId: string
 }
 
-interface ChangeMemberRoleSecondPayload {
+interface ChangeMemberRolePayload {
   teamId: string
   userId: string
   email: string
@@ -67,7 +66,6 @@ interface RemoveMemberArgs {
 }
 
 interface InviteMemberResult {
-  invitation: INotification
   teams: Team[]
 }
 
@@ -145,7 +143,7 @@ export default class TeamApi {
   }
 
   static async changeMemberRole({ teamId, userId, email, role }: ChangeMemberRoleArgs): Promise<void> {
-    await HttpService.post<void, ChangeMemberRoleSecondPayload>({
+    await HttpService.post<void, ChangeMemberRolePayload>({
       url: `/crew/v1/teams/${teamId}/members/${userId}/change-role`,
       payload: { teamId, email, userId, role }
     })
