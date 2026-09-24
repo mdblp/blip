@@ -130,7 +130,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       AppUserRoute.Dashboard,
       AppUserRoute.Daily,
       AppUserRoute.Trends,
-      AppUserRoute.PatientProfile,
+      AppUserRoute.PatientProfile
     ]
 
     const activeSection = sections.find((section) => currentPathname.includes(section))

@@ -68,11 +68,7 @@ import {
   ParametersChangeHistorySection
 } from '../../pages/patient-view/devices/sections/parameters-change-history-section'
 import { DeviceChangeHistorySection } from '../../pages/patient-view/devices/sections/device-change-history-section'
-import {
-  PatientProfileSectionsOverview
-} from '../../pages/patient-view/patient-profile/patient-profile-sections-overview'
 import { AlertsSection } from '../../pages/patient-view/patient-profile/sections/alerts-section'
-import { PatientProfileViewSection } from '../../pages/patient-view/patient-profile/patient-profile-view-section.enum'
 import { RangeSection } from '../../pages/patient-view/patient-profile/sections/range-section'
 import {
   PatientPersonalInformationSection
