@@ -43,9 +43,7 @@ describe('AddMemberDialog', () => {
   }
 
   function renderComponent(props: AddMemberDialogProps) {
-    act(() => {
-      render(<AddMemberDialog addMember={props.addMember} />)
-    })
+    render(<AddMemberDialog addMember={props.addMember} />)
   }
 
   it('should be closed if addMember is null', () => {

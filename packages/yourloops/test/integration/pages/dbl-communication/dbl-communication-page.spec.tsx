@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { mockDblCommunicationApiPage } from '../../mock/dbl-communication.api'
@@ -88,9 +88,7 @@ describe('DBL Communication Page', () => {
 
       const continueButton = screen.getByRole('button', { name: 'Continue' })
 
-      await act(async () => {
-        await userEvent.click(continueButton)
-      })
+      await userEvent.click(continueButton)
 
       // Check that acknowledgment was registered
       expect(registerDblCommunicationAckSpy).toHaveBeenCalledWith(newDblCommunication.id)

@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from 'react'
 import * as router from 'react-router'
 import { renderHook } from '@testing-library/react'
 import { useLogin } from '../../../../pages/login/login.hook'
@@ -57,9 +56,7 @@ describe('Login hook', () => {
     it('should redirect to the Signup Information page', () => {
       const { result } = renderHook(() => useLogin())
 
-      act(() => {
-        result.current.redirectToSignupInformation()
-      })
+      result.current.redirectToSignupInformation()
 
       expect(useNavigateMock).toHaveBeenCalledWith(AppRoute.SignupInformation)
     })
@@ -70,9 +67,7 @@ describe('Login hook', () => {
       const appState = { showConsent: true, callbackUrl: '/home' }
       const { result } = renderHook(() => useLogin())
 
-      await act(async () => {
-        await result.current.loginWithState(appState)
-      })
+      await result.current.loginWithState(appState)
 
       expect(loginWithRedirectMock).toHaveBeenCalledWith({
         appState: { appStateJSON: encodeURIComponent(JSON.stringify(appState)) }
@@ -83,9 +78,7 @@ describe('Login hook', () => {
       const appState = { showConsent: true, callbackUrl: '/home?foo=bar&baz=1', meta: { step: 2 } }
       const { result } = renderHook(() => useLogin())
 
-      await act(async () => {
-        await result.current.loginWithState(appState)
-      })
+      await result.current.loginWithState(appState)
 
       const [call] = loginWithRedirectMock.mock.calls
       const decoded = JSON.parse(decodeURIComponent(call[0].appState.appStateJSON))
@@ -95,9 +88,7 @@ describe('Login hook', () => {
     it('should call loginWithRedirect exactly once per invocation', async () => {
       const { result } = renderHook(() => useLogin())
 
-      await act(async () => {
-        await result.current.loginWithState({ showConsent: false })
-      })
+      await result.current.loginWithState({ showConsent: false })
 
       expect(loginWithRedirectMock).toHaveBeenCalledTimes(1)
     })

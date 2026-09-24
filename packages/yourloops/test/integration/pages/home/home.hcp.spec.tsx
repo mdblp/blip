@@ -191,9 +191,7 @@ describe('HCP home page', () => {
     const textToFind = "Date of birth"
     jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(true)
 
-    await act(async () => {
-      await renderHomePage(thirdTeamPatientsList)
-    })
+    await renderHomePage(thirdTeamPatientsList)
 
     /* Verify date of birth is not in the table*/
     const dobInTable = screen.queryByText(textToFind)
@@ -241,9 +239,7 @@ describe('HCP home page', () => {
   })
 
   it('should translate the data grid labels if the language is not English', async () => {
-    act(() => {
-      i18n.changeLanguage(LanguageCode.Fr)
-    })
+    i18n.changeLanguage(LanguageCode.Fr)
 
     await renderHomePage(thirdTeamPatientsList)
 

@@ -101,9 +101,7 @@ describe('Patient list hook', () => {
         updatePendingFilter: updatePendingFilterMock,
         filters: { pendingEnabled: true }
       }))
-      act(() => {
-        renderHook(() => usePatientListHook())
-      })
+      renderHook(() => usePatientListHook())
       expect(updatePendingFilterMock).toHaveBeenCalledWith(false)
     })
   })
