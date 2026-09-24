@@ -28,10 +28,7 @@
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
-import {
-  mockTeamAPI,
-  myThirdTeamId,
-} from '../../../mock/team.api.mock'
+import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -47,7 +44,9 @@ import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/hea
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import {
   testClickViewMoreAlerts,
-  testClickViewMoreInformation, testClickViewMoreLeadClinicians, testClickViewMoreRange,
+  testClickViewMoreInformation,
+  testClickViewMoreLeadClinicians,
+  testClickViewMoreRange,
   testPatientProfileSectionsOverviewVisibleMobile
 } from '../../../use-cases/patient-profile-sections-overview'
 
@@ -65,15 +64,24 @@ describe('Patient profile view for HCP', () => {
     mockErrorApi()
     mockAnalyticsApi()
     mockMobileScreen()
-    global.structuredClone = jest.fn(val => {
-      return JSON.parse(JSON.stringify(val));
-    });
   })
 
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfileSectionsOverview}`
+
+  /**
+   * @see https://github.com/testing-library/react-testing-library/issues/651
+   * @description SVGElement.getBBOx is not implemented in JSDOM yet.
+   */
+  Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: jest.fn().mockReturnValue({
+      x: 0,
+      y: 0
+    })
+  });
 
   const renderPatientProfileSectionsOverviewPage = async (route: string) => {
     await act(async () => {
@@ -106,6 +114,5 @@ describe('Patient profile view for HCP', () => {
     })
 
   })
-
 
 })

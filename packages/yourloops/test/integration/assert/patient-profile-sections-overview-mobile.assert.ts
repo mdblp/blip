@@ -27,6 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getTranslation } from '../../utils/i18n'
 
 export const checkPatientProfileSectionsOverviewVisible = (): void => {
   expect(screen.queryByTestId('patient-profile-overview-section-information')).toBeVisible()
@@ -76,8 +77,8 @@ export const checkClickViewMoreLeadClinicians = async () => {
 export const checkClickViewMoreRange = async () => {
   const viewMoreRange = within(screen.getByTestId('patient-profile-overview-section-range'))
   await userEvent.click(viewMoreRange.getByText('View more'))
-  const RangeSectionTitle = await screen.findByText('Range')
-  expect(RangeSectionTitle).toBeInTheDocument()
+  const rangeContent = await screen.findByTestId('range-container')
+  expect(rangeContent).toHaveTextContent(getTranslation('range'))
   const header = within(await screen.findByTestId('bottom-part-main-header'))
   await userEvent.click(header.getByTestId('back-button'))
 }
