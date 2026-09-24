@@ -95,9 +95,7 @@ describe('Trends view for anyone', () => {
   describe('with cbgs to calculate GMI', () => {
     it('should render correct tooltip and values GMI', async () => {
       mockDataAPI(buildHba1cData())
-      await act(async () => {
-        renderPage(trendsRoute)
-      })
+      renderPage(trendsRoute)
 
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
       await checkGlucoseManagementIndicator('GMI (estimated HbA1c)7.7%')

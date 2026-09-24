@@ -279,63 +279,49 @@ describe('Patient profile view for HCP', () => {
     })
 
     it('should display drug treatment field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const drugTreatmentField = await screen.findByTestId('additional-patient-profile-drug-treatment')
       expect(drugTreatmentField).toBeVisible()
     })
 
     it('should display profession field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const professionField = await screen.findByTestId('additional-patient-profile-profession')
       expect(professionField).toBeVisible()
     })
 
     it('should display diet autocomplete', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const dietField = await screen.findByTestId('additional-patient-profile-diet')
       expect(dietField).toBeVisible()
     })
 
     it('should display hobbies field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const hobbiesField = await screen.findByTestId('additional-patient-profile-hobby')
       expect(hobbiesField).toBeVisible()
     })
 
     it('should display physical activities field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const physicalActivitiesField = await screen.findByTestId('additional-patient-profile-physical-activity')
       expect(physicalActivitiesField).toBeVisible()
     })
 
     it('should display physical activity duration field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const durationField = await screen.findByTestId('additional-patient-profile-physical-activity-duration')
       expect(durationField).toBeVisible()
     })
 
     it('should display open comments field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const commentsField = await screen.findByTestId('additional-patient-profile-open-comments')
       expect(commentsField).toBeVisible()

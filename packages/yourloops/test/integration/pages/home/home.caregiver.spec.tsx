@@ -69,9 +69,7 @@ describe('Caregiver home page', () => {
   it('should render the patient list page with correct components', async () => {
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
 
-    await act(async () => {
-      renderPage('/')
-    })
+    renderPage('/')
 
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${lastName} ${firstName}`)

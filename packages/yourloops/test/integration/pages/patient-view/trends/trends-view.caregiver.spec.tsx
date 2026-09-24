@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -69,9 +69,7 @@ describe('Trends view for caregiver', () => {
   it('should render correct layout', async () => {
     mockDataAPI(getMinimalTrendViewData())
 
-    await act(async () => {
-      renderPage(`/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Trends}`)
-    })
+    renderPage(`/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Trends}`)
 
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()

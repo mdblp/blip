@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -64,9 +64,7 @@ describe('Daily view for caregiver', () => {
   it('should render correct layout', async () => {
     mockDataAPI()
 
-    await act(async () => {
-      renderPage(`/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Daily}`)
-    })
+    renderPage(`/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Daily}`)
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsCaregiver()

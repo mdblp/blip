@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -79,9 +79,7 @@ describe('Trends view for HCP', () => {
       }
     }
 
-    await act(async () => {
-      renderPage(`/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`)
-    })
+    renderPage(`/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`)
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHcp()

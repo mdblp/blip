@@ -83,9 +83,7 @@ describe('Daily view for HCP', () => {
       }
     }
 
-    await act(async () => {
-      renderPage(dailyRoute)
-    })
+    renderPage(dailyRoute)
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHcp()

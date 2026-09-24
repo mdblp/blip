@@ -143,18 +143,14 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display additional information section with disclaimer', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const disclaimer = await screen.findByTestId('additional-information-status-disclamer-label')
       expect(disclaimer).toBeVisible()
     })
 
     it('should display drug treatment field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const drugTreatmentField = await screen.findByTestId('additional-patient-profile-drug-treatment')
       expect(drugTreatmentField).toBeVisible()
@@ -162,9 +158,7 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display profession field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const professionField = await screen.findByTestId('additional-patient-profile-profession')
       expect(professionField).toBeVisible()
@@ -172,9 +166,7 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display diet autocomplete', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const dietField = await screen.findByTestId('additional-patient-profile-diet')
       expect(dietField).toBeVisible()
@@ -182,9 +174,7 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display hobbies field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const hobbiesField = await screen.findByTestId('additional-patient-profile-hobby')
       expect(hobbiesField).toBeVisible()
@@ -192,9 +182,7 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display physical activities field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const physicalActivitiesField = await screen.findByTestId('additional-patient-profile-physical-activity')
       expect(physicalActivitiesField).toBeVisible()
@@ -211,9 +199,7 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display open comments field', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const commentsField = await screen.findByTestId('additional-patient-profile-open-comments')
       expect(commentsField).toBeVisible()
@@ -299,9 +285,7 @@ describe('Patient profile view for Patient', () => {
     })
 
     it('should display save button enabled by default', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const saveButton = await screen.findByTestId('additional-patient-profile-save')
       expect(saveButton).toBeVisible()
@@ -312,9 +296,7 @@ describe('Patient profile view for Patient', () => {
 
       const updatePatientProfileSpy = jest.spyOn(PatientApi, 'updatePatientProfile').mockResolvedValue(undefined)
 
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
+      renderPage(patientProfileRoute)
 
       const drugTreatmentField = await screen.findByTestId('additional-patient-profile-drug-treatment')
       await userEvent.type(drugTreatmentField, 'Updated treatment')

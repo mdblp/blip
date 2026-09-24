@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { checkPatientNavBarAsPatient } from '../../../assert/patient-nav-bar.assert'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -49,9 +49,7 @@ describe('Daily view for patient', () => {
   it('should render correct layout', async () => {
     mockDataAPI()
 
-    await act(async () => {
-      renderPage(AppUserRoute.Daily)
-    })
+    renderPage(AppUserRoute.Daily)
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()
