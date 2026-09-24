@@ -72,9 +72,6 @@ import {
   PatientProfileSectionsOverview
 } from '../../pages/patient-view/patient-profile/patient-profile-sections-overview'
 import { AlertsSection } from '../../pages/patient-view/patient-profile/sections/alerts-section'
-import {
-  PatientLeadClinicians
-} from '../../pages/patient-view/patient-profile/sections/personal-information/clinicians/patient-lead-clinicians'
 import { PatientProfileViewSection } from '../../pages/patient-view/patient-profile/patient-profile-view-section.enum'
 import { RangeSection } from '../../pages/patient-view/patient-profile/sections/range-section'
 import {
@@ -95,10 +92,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { getAndClearAppState, user } = useAuth()
   const [appState, setAppState] = useState<AppState | null>(null)
   const dateOfBirthHidden = ConfigService.getDateOfBirthHidden()
-  const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
-  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => {
     const appStateFromAuth = getAndClearAppState()
@@ -331,38 +324,27 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
                     <Route
                       path={AppUserRoute.PatientProfile}
-                      element={
-                        isMobile
-                          ? (<Navigate to={AppUserRoute.PatientProfileSectionsOverview} replace />)
-                          : (<PatientProfileView patient={patient} />
-                          )}
+                      element={ <PatientProfileView patient={patient} /> }
                     />
                   }
                   {
                     isMobile && user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
 
                     <Route>
-                      <Route
-                        path={AppUserRoute.PatientProfileSectionsOverview}
-                        element={
-                          <PatientProfileSectionsOverview patient={patient} />
-                        }
-                      />
                       <Route path={AppUserRoute.PatientProfileInformationSection}
                              element={<PatientPersonalInformationSection patient={patient}
                                                                          dateOfBirthHidden={dateOfBirthHidden}
                                                                          isInformationSection={true}
-                                                                         isLeadCliniciansSection={false}/>} />
+                                                                         isLeadCliniciansSection={false} />} />
                       <Route path={AppUserRoute.PatientProfileLeadCliniciansSection}
                              element={<PatientPersonalInformationSection patient={patient}
                                                                          dateOfBirthHidden={dateOfBirthHidden}
                                                                          isInformationSection={false}
-                                                                         isLeadCliniciansSection={true}/>} />
+                                                                         isLeadCliniciansSection={true} />} />
                       <Route path={AppUserRoute.PatientProfileRangeSection}
                              element={<RangeSection patient={patient} />} />
                       <Route path={AppUserRoute.PatientProfileAlertsSection}
-                             element={<AlertsSection patient={patient}
-                                                     onUnsavedChangesChange={handleUnsavedChangesChange} />} />
+                             element={<AlertsSection patient={patient} />} />
                     </Route>
                   }
                   <Route path="/" element={<Navigate to={AppUserRoute.Dashboard} replace />} />

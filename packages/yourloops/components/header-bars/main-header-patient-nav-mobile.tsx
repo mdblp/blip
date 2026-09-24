@@ -36,7 +36,6 @@ import Box from '@mui/material/Box'
 import { useStyles } from './main-header-style'
 import { useAuth } from '../../lib/auth'
 import { DownloadReportButton } from './download-report_button'
-import { PatientProfileViewSectionsOverview } from '../../enum/patient-view-sections.enum'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface MainHeaderPatientNavMobileProps {
@@ -71,11 +70,13 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
     }
   }
 
-  const isMatchingDeviceViewSections = pathname.includes(`${AppUserRoute.Devices}/`);
+  const isMatchingDeviceViewSections = pathname.includes(`${AppUserRoute.Devices}/`)
+
+  const isMatchingPatientProfileViewSections = pathname.includes(`${AppUserRoute.PatientProfile}/`)
 
   return (
 
-    (user?.isUserPatient() && !isMatchingDeviceViewSections) ? (
+    (user?.isUserPatient() && !isMatchingDeviceViewSections && !isMatchingPatientProfileViewSections) ? (
       <Box
         ref={appBarRefCallback}
         className={appBar}
