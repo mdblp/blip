@@ -200,7 +200,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             </Box>
           )
         }
-        {(!pathname.includes(AppUserRoute.Patients) && !isMatchingPatientView) &&
+        {(!pathname.includes(AppUserRoute.Patients) && !isMatchingPatientView && pathname !== "/") &&
           (
             <Box
               className={bottomPart}
