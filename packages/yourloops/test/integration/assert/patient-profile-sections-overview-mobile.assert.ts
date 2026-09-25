@@ -50,6 +50,7 @@ export const checkPatientProfileSectionCardForInformation = (): void => {
 
 export const checkPatientProfileSectionCardForLeadClinicians = (): void => {
   expect(screen.getByText('Number of lead clinicians')).toBeVisible()
+  expect(screen.getByText('1')).toBeVisible()
 }
 
 export const checkPatientProfileSectionCardForRange = (): void => {

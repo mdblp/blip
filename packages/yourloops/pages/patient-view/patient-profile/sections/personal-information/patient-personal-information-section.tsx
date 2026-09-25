@@ -82,12 +82,11 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
 
             <>
               <PatientTitle patient={patient} />
-
               <PatientInformation patient={patient} dateOfBirthHidden={dateOfBirthHidden} />
-
               <div className={classes.separator} />
             </>
           }
+
           {isLeadCliniciansSection &&
             <PatientLeadClinicians
               patientId={patient.userid}
