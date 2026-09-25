@@ -78,7 +78,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
-  const isOverviewSectionsRoute = pathname.includes(AppUserRoute.Devices)
 
   const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
@@ -145,9 +144,13 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
 
   const currentPatientView = useMemo<PatientView>(() => {
 
-    const routeWithoutUrlPrefix = (isOverviewSectionsRoute)
-      ? AppUserRoute.Devices
-      : pathname.substring(pathname.lastIndexOf('/'))
+    let routeWithoutUrlPrefix = pathname.substring(pathname.lastIndexOf('/'))
+
+    if (pathname.includes(AppUserRoute.Devices)) {
+      routeWithoutUrlPrefix = AppUserRoute.Devices
+    } else if (pathname.includes(AppUserRoute.PatientProfile)) {
+      routeWithoutUrlPrefix = AppUserRoute.PatientProfile
+    }
 
     switch (routeWithoutUrlPrefix) {
       case AppUserRoute.Daily:
@@ -160,10 +163,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return PatientView.Devices
       case AppUserRoute.PatientProfile:
         return PatientView.PatientProfile
-      default:
-        return PatientView.Dashboard
     }
-  }, [pathname, isOverviewSectionsRoute])
+  }, [pathname])
 
   const getRouteByPatientView = (view: PatientView): AppUserRoute => {
     switch (view) {
@@ -199,8 +200,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    const urlPrefix = getBasePrefix(pathname)
 
+    const urlPrefix = getBasePrefix(pathname)
     navigate(`${urlPrefix}${route}`)
   }
 

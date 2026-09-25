@@ -26,50 +26,35 @@
  */
 
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
-import { mockTeamAPI, myThirdTeamId } from '../../../mock/team.api.mock'
-import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
-import { patient1Id } from '../../../data/patient.api.data'
+import { patient1Info } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { act, screen } from '@testing-library/react'
-import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
 import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import {
-  testClickViewMoreAlerts,
   testClickViewMoreInformation,
   testClickViewMoreLeadClinicians,
-  testClickViewMoreRange,
-  testPatientProfileSectionsOverviewVisibleHCP
+  testPatientProfileSectionsOverviewVisiblePatient
 } from '../../../use-cases/patient-profile-sections-overview'
+import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
-    mockAuth0Hook()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockTeamAPI()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForHcp()
+    mockAuth0Hook(UserRole.Patient)
+    mockPatientLogin(patient1Info)
     mockDataAPI()
-    mockDblCommunicationApi()
     mockLeadCliniciansApi()
     mockErrorApi()
     mockAnalyticsApi()
     mockMobileScreen()
   })
 
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
-
-  const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
+  const patientProfileRoute = `${AppUserRoute.PatientProfile}`
 
   /**
    * @see https://github.com/testing-library/react-testing-library/issues/651
@@ -89,17 +74,12 @@ describe('Patient profile view for HCP', () => {
     })
   }
 
-  describe('Patient profile sections overview for HCP in mobile version', () => {
-    it('should render correct layout', async () => {
-      await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
-
-      await checkHCPAndCaregiverHeaderPatientViewMobile(`${lastName} ${firstName}`)
-    })
+  describe('Patient profile sections overview for patient in mobile version', () => {
 
     it('should render the sections overview in mobile version', async () => {
       await renderPatientProfileSectionsOverviewPage(patientProfileRoute)
       await screen.findByTestId('patient-profile-overview-section-information')
-      testPatientProfileSectionsOverviewVisibleHCP()
+      testPatientProfileSectionsOverviewVisiblePatient()
     })
 
     it('should be able to access the pages linked by the cards', async () => {
@@ -109,8 +89,6 @@ describe('Patient profile view for HCP', () => {
 
       await testClickViewMoreInformation()
       await testClickViewMoreLeadClinicians()
-      await testClickViewMoreRange()
-      await testClickViewMoreAlerts()
     })
 
   })
