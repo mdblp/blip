@@ -25,35 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type TeamMemberRole } from '../../team/models/enums/team-member-role.enum'
-import { type UserAccount } from '../../auth/models/user-account.model'
-import { type NotificationType } from './enums/notification-type.enum'
 import { INotificationType } from './enums/i-notification-type.enum'
-
-export interface Notification {
-  id: string
-  type: NotificationType
-  metricsType: 'share_data' | 'join_team'
-  /** Current user email for received invite, target user email for sent invites */
-  email: string
-  /** User who create the invite == creator.userid? */
-  creatorId: string
-  /** Notification creation date */
-  date: string
-  target?: {
-    /** TeamID */
-    id: string
-    /** Team name */
-    name: string
-  }
-  /** The role we will have in the team */
-  role?: TeamMemberRole
-  /** Some information on the user who created this notification */
-  creator: {
-    userid: string
-    profile?: UserAccount | null
-  }
-}
 
 export interface InAppNotification {
   id: string

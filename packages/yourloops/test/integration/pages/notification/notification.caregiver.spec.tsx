@@ -53,7 +53,6 @@ describe('Notification page for caregiver', () => {
       profile: { firstName: 'caregiverFirstName', lastName: 'caregiverLastName' }
     } as IUser,
     status: UserInviteStatus.Accepted,
-    invitation: invitationDirectShare
   }
 
   beforeAll(() => {

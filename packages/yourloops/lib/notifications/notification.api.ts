@@ -26,10 +26,11 @@
  */
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { InAppNotification } from './models/notification.model'
+import { type InAppNotification } from './models/notification.model'
 import { INotificationType } from './models/enums/i-notification-type.enum'
 import { Centrifuge } from 'centrifuge'
 import appConfig from '../config/config'
+import { type IUser } from '../data/models/i-user.model'
 
 
 const log = bows('Notification API')
@@ -59,66 +60,68 @@ export default class NotificationApi {
   }
 
   static async acceptInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    let url: string
-    const teamId = notification.payload["careTeamId"] as string
-    switch (notification.type) {
-      case INotificationType.directInvitation:
-        url = `/crew/v1/direct-shares/${userId}`
-        break
-      case INotificationType.careTeamProInvitation:
-        url = `/crew/v1/teams/${teamId}/members`
-        break
-      case INotificationType.careTeamPatientInvitation:
-        url = `/crew/v1/teams/${teamId}/patients`
-        break
-      default:
-        log.info('Unknown notification', notification)
-        throw Error('Unknown notification')
-    }
-    notification.status = "accepted"
-    await NotificationApi.updateInvitation(url, userId, notification)
+    await NotificationApi.processInvitationUpdate(userId, { ...notification, status: 'accepted' })
   }
 
   static async declineInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    let url: string
-    const teamId = notification.payload["careTeamId"] as string
-    switch (notification.type) {
-      case INotificationType.directInvitation:
-        // TODO: put crew
-        url = `/crew/direct-shares/${userId}`
-        break
-      case INotificationType.careTeamProInvitation:
-        url = `/crew/v1/teams/${teamId}/members`
-        break
-      case INotificationType.careTeamPatientInvitation:
-        url = `/crew/v1/teams/${teamId}/patients`
-        break
-      default:
-        log.info('Unknown notification', notification)
-        throw Error('Unknown notification')
-    }
-    notification.status = "rejected"
-    await NotificationApi.updateInvitation(url, userId, notification)
+    await NotificationApi.processInvitationUpdate(userId, { ...notification, status: 'rejected' })
   }
 
   static async getReceivedInvitations(userId: string): Promise<InAppNotification[]> {
     return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&userId=${userId}`)
   }
 
-  static async getSentInvitations(userId: string): Promise<InAppNotification[]> {
-    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&senderId=${userId}`)
+  private static async processInvitationUpdate(userId: string, notification: InAppNotification): Promise<void> {
+    if (notification.type === INotificationType.directInvitation) {
+      await NotificationApi.updateDirectShareInvitation(userId, notification)
+      return
+    }
+    await NotificationApi.updateTeamInvitation(userId, notification)
   }
 
-  private static async updateInvitation(url: string, userId: string, notification: InAppNotification): Promise<void> {
-    const now = new Date().toISOString()
+  private static async updateDirectShareInvitation(userId: string, notification: InAppNotification): Promise<void> {
+    const creator = notification.payload["creator"] as IUser | undefined
+    if (!creator?.userid) {
+      throw new Error('Invalid direct-share invitation: missing creator')
+    }
+    const patientId = creator.userid
+    await HttpService.put<string, { patientId: string, viewerId: string, viewerEmail: string, invitationStatus: string, lastStatusChangedAt: string }>({
+      url: `/crew/v1/direct-shares`,
+      payload: {
+        patientId,
+        viewerId: userId,
+        viewerEmail: notification.userEmail,
+        invitationStatus: notification.status,
+        lastStatusChangedAt: new Date().toISOString()
+      }
+    })
+  }
+
+  private static async updateTeamInvitation(userId: string, notification: InAppNotification): Promise<void> {
+    const teamId = notification.payload["careTeamId"] as string | undefined
+    if (!teamId) {
+      throw Error('Invalid target team id')
+    }
+    let url: string
+    switch (notification.type) {
+      case INotificationType.careTeamProInvitation:
+        url = `/crew/v1/teams/${teamId}/members`
+        break
+      case INotificationType.careTeamPatientInvitation:
+        url = `/crew/v1/teams/${teamId}/patients`
+        break
+      default:
+        log.info('Unknown notification', notification)
+        throw Error('Unknown notification')
+    }
     await HttpService.put<string, { userId: string, email: string, teamId: string, invitationStatus: string, lastStatusChangedAt: string }>({
       url,
       payload: {
-        userId: userId,
+        userId,
         email: notification.userEmail,
-        teamId: notification.payload["careTeamId"] as string,
+        teamId,
         invitationStatus: notification.status,
-        lastStatusChangedAt: now
+        lastStatusChangedAt: new Date().toISOString()
       }
     })
   }

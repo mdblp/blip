@@ -40,6 +40,8 @@ describe('Notification API', () => {
   const teamId = 'fakeTeamId'
   const email = 'fake@email.com'
 
+  const patientId = 'fakePatientId'
+
   const buildNotification = (type: INotificationType, payload: Record<string, unknown> = { careTeamId: teamId }): InAppNotification => ({
     id: 'fakeNotificationId',
     type,
@@ -47,6 +49,10 @@ describe('Notification API', () => {
     payload,
     status: 'pending',
     deliveredAt: new Date().toISOString()
+  })
+
+  const buildDirectShareNotification = (): InAppNotification => buildNotification(INotificationType.directInvitation, {
+    creator: { userid: patientId }
   })
 
   describe('getReceivedInvitations', () => {
@@ -80,37 +86,6 @@ describe('Notification API', () => {
     })
   })
 
-  describe('getSentInvitations', () => {
-    const url = `/v2/notifications?status=pending&senderId=${userId}`
-
-    it('should return the notifications returned by the API', async () => {
-      const data: InAppNotification[] = [buildNotification(INotificationType.careTeamProInvitation)]
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-
-      const result = await NotificationApi.getSentInvitations(userId)
-
-      expect(result).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url })
-    })
-
-    it('should return an empty array when there is no pending notification', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error(ErrorMessageStatus.NotFound))
-
-      const result = await NotificationApi.getSentInvitations(userId)
-
-      expect(result).toEqual([])
-      expect(HttpService.get).toHaveBeenCalledWith({ url })
-    })
-
-    it('should throw an error if the http call fails for another reason', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
-
-      await expect(async () => {
-        await NotificationApi.getSentInvitations(userId)
-      }).rejects.toThrow('This error was thrown by a mock on purpose')
-    })
-  })
-
   describe('acceptInvitation', () => {
     it('should throw an error and not call the API if the notification type is unknown', async () => {
       const httpPut = jest.spyOn(HttpService, 'put')
@@ -125,8 +100,36 @@ describe('Notification API', () => {
       expect(httpPut).not.toHaveBeenCalled()
     })
 
+    describe('when the notification type is directInvitation', () => {
+      it('should call the API with the correct url and payload', async () => {
+        const httpPut = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
+        const notification = buildDirectShareNotification()
+
+        await NotificationApi.acceptInvitation(userId, notification)
+
+        expect(httpPut).toHaveBeenCalledWith({
+          url: `/crew/v1/direct-shares`,
+          payload: {
+            patientId,
+            viewerId: userId,
+            viewerEmail: notification.userEmail,
+            invitationStatus: 'accepted',
+            lastStatusChangedAt: expect.any(String)
+          }
+        })
+      })
+
+      it('should throw an error if the API call fails', async () => {
+        jest.spyOn(HttpService, 'put').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
+        const notification = buildDirectShareNotification()
+
+        await expect(async () => {
+          await NotificationApi.acceptInvitation(userId, notification)
+        }).rejects.toThrow('This error was thrown by a mock on purpose')
+      })
+    })
+
     describe.each([
-      { type: INotificationType.directInvitation, expectedUrl: `/crew/v1/direct-shares/${userId}` },
       { type: INotificationType.careTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
       { type: INotificationType.careTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
     ])('when the notification type is $type', ({ type, expectedUrl }) => {
@@ -173,8 +176,36 @@ describe('Notification API', () => {
       expect(httpPut).not.toHaveBeenCalled()
     })
 
+    describe('when the notification type is directInvitation', () => {
+      it('should call the API with the correct url and payload', async () => {
+        const httpPut = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
+        const notification = buildDirectShareNotification()
+
+        await NotificationApi.declineInvitation(userId, notification)
+
+        expect(httpPut).toHaveBeenCalledWith({
+          url: `/crew/v1/direct-shares`,
+          payload: {
+            patientId,
+            viewerId: userId,
+            viewerEmail: notification.userEmail,
+            invitationStatus: 'rejected',
+            lastStatusChangedAt: expect.any(String)
+          }
+        })
+      })
+
+      it('should throw an error if the API call fails', async () => {
+        jest.spyOn(HttpService, 'put').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
+        const notification = buildDirectShareNotification()
+
+        await expect(async () => {
+          await NotificationApi.declineInvitation(userId, notification)
+        }).rejects.toThrow('This error was thrown by a mock on purpose')
+      })
+    })
+
     describe.each([
-      { type: INotificationType.directInvitation, expectedUrl: `/crew/direct-shares/${userId}` },
       { type: INotificationType.careTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
       { type: INotificationType.careTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
     ])('when the notification type is $type', ({ type, expectedUrl }) => {
