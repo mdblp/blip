@@ -302,16 +302,16 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   />
                   {isMobile && (
                     <Route>
-                      <Route path={AppUserRoute.DevicesSectionsOverviewCurrentSettings}
+                      <Route path={AppUserRoute.DevicesCurrentSettingsSection}
                              element={<CurrentParametersSection pumpSettings={pumpSettings} />} />
-                      <Route path={AppUserRoute.DevicesSectionsOverviewBasalSafety}
+                      <Route path={AppUserRoute.DevicesBasalSafetySection}
                              element={<SafetyBasalProfileSection
                                safetyBasalConfig={pumpSettings?.payload?.securityBasals}
                                deviceSystem={pumpSettings?.payload?.device?.name} />} />
-                      <Route path={AppUserRoute.DevicesSectionsOverviewSettingsHistory}
+                      <Route path={AppUserRoute.DevicesSettingsHistorySection}
                              element={<ParametersChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
                                                                       pumpSettings={pumpSettings} />} />
-                      <Route path={AppUserRoute.DevicesSectionsOverviewDevicesHistory}
+                      <Route path={AppUserRoute.DevicesDevicesHistorySection}
                              element={<DeviceChangeHistorySection goToDailySpecificDate={goToDailySpecificDate}
                                                                   pumpSettings={pumpSettings} />} />
                     </Route>
