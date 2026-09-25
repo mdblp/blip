@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import Typography from '@mui/material/Typography'
-import TableContainer from '@mui/material/TableContainer'
+import { useTheme } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import { formatParameterValue, getPumpSettingsParameterList } from '../../device/utils/device.utils'
-import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
+import { PumpSettings } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles } from 'tss-react/mui'
+import { formatNumberForLang } from '../../../lib/language'
 import { formatDateWithMomentLongFormat } from '../../../lib/utils'
 import { DataCard } from '../../data-card/data-card'
-import { PumpSettings } from 'medical-domain'
-import { makeStyles } from 'tss-react/mui'
-import { useTranslation } from 'react-i18next'
-import { useTheme } from '@mui/material/styles'
-import { formatNumberForLang } from '../../../lib/language'
+import { formatParameterValue, getPumpSettingsParameterList, sortHistory } from '../../device/utils/device.utils'
 
 interface LastUpdatesCardProps {
   pumpSettings: PumpSettings
@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme) => ({
     padding: theme.spacing(0.2, 0.5)
   },
   parameterChangesTable: {
-    maxHeight: 200
+    maxHeight: 138
   }
 }))
 
@@ -70,6 +70,10 @@ export const LastUpdatesCard: FC<LastUpdatesCardProps> = (props) => {
   const { pumpSettings } = props
   const { classes } = useStyles()
   const theme = useTheme()
+
+  if (pumpSettings) {
+    sortHistory(pumpSettings.payload.history.parameters)
+  }
 
   return (
     <DataCard data-testid="device-usage-updates">

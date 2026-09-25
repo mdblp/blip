@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,5 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const RESPONSIVE_GRID_FULL_WIDTH = 12
-export const RESPONSIVE_GRID_FOUR_COLUMNS = 3
+import Box from '@mui/material/Box'
+import { BgPrefs } from 'dumb'
+import { type DateFilter, type MedicalData } from 'medical-domain'
+import React, { FC } from 'react'
+import { GlucoseMetricsCard } from '../../statistics/stat-cards/glucose-metrics-card'
+import { TimeInRangeCard } from '../../statistics/stat-cards/time-in-range-card'
+
+interface GlucoseColumnProps {
+  bgPrefs: BgPrefs
+  dateFilter: DateFilter
+  medicalData: MedicalData
+}
+
+export const GlucoseColumn: FC<GlucoseColumnProps> = (props) => {
+  const { bgPrefs, dateFilter, medicalData } = props
+
+  return (
+    <Box data-testid="glucose-column">
+      <TimeInRangeCard
+        bgPrefs={bgPrefs}
+        dateFilter={dateFilter}
+        cbgData={medicalData.cbg}
+      />
+      <GlucoseMetricsCard
+        cbgData={medicalData.cbg}
+        dateFilter={dateFilter}
+        bgPrefs={bgPrefs}
+        showGmi={true}
+      />
+    </Box>
+  )
+}

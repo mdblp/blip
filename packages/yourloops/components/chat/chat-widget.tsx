@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -62,7 +62,7 @@ import { useParams } from 'react-router-dom'
 import { DataCard } from '../data-card/data-card'
 import Typography from '@mui/material/Typography'
 
-const CHAT_CONTENT_MIN_HEIGHT = '280px'
+const CHAT_CONTENT_MIN_HEIGHT = '200px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
 

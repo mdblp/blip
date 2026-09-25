@@ -11,11 +11,13 @@ It is based on Tidepool Blip 1.27.
 - YLP-3338 Use weight unit from parameters instead of "kg"
 - YLP-3490 Update notes UI
 - YLP-3842 New design for monitoring alerts configuration
+- YLP-3857 Update the cards organization in the Dashboard view
 - YLP-3867 Remove Zendesk and Stonly
 - YLP-3939 Adapting the main header to mobile format for HCP
 - YLP-3940 Adapting the main header to mobile format for Patients
 - YLP-3941 Adapting the main header to mobile format for Caregiver
 - YLP-3945 Adapting the second level of navigation to mobile format
+- YLP-3947 Adapting the device tab menu to mobile format
 - YLP-3950 Adapting the user account menu for french patient to mobile format
 - YLP-3955 Adapting the care team settings menu to mobile format
 - YLP-4020 Adapting the patient list content and the footer to mobile format
@@ -23,6 +25,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-4043 Display different warmup tooltip for Dexcom G7 sensors
 - YLP-4046 Improve the display of the parameter changes tooltip on Daily view
 - YLP-4047 Use smart rounding for TIR percentage values
+- YLP-4104 Removing trends tab from patient view in the mobile version of the website interface
 
 ### Engineering
 - YLP-3864 SBOM generation in pipeline

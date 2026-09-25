@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,5 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const RESPONSIVE_GRID_FULL_WIDTH = 12
-export const RESPONSIVE_GRID_FOUR_COLUMNS = 3
+import Box from '@mui/material/Box'
+import { type DateFilter, MedicalData } from 'medical-domain'
+import React, { FC } from 'react'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import MonitoringAlertsCard from '../../monitoring-alert/monitoring-alerts-card'
+import { TotalCarbsInsulinCard } from '../../statistics/stat-cards/total-carbs-insulin-card'
+
+interface InsulinTherapyColumnProps {
+  medicalData: MedicalData
+  dateFilter: DateFilter
+  patient: Patient
+  showMonitoringAlerts: boolean
+}
+
+export const InsulinTherapyColumn: FC<InsulinTherapyColumnProps> = (props) => {
+  const { dateFilter, medicalData, patient, showMonitoringAlerts } = props
+
+  return (
+    <Box data-testid="insulin-therapy-column">
+      <TotalCarbsInsulinCard
+        basalData={medicalData.basal}
+        bolusData={medicalData.bolus}
+        mealData={medicalData.meals}
+        pumpSettingsData={medicalData.pumpSettings}
+        wizardData={medicalData.wizards}
+        dateFilter={dateFilter}
+      />
+
+      {showMonitoringAlerts &&
+        <MonitoringAlertsCard patient={patient} />
+      }
+    </Box>
+  )
+}

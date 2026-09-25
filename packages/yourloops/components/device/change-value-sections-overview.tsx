@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,42 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import MedicalReportList from './medical-report-list'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { useAuth } from '../../../lib/auth'
-import { useParams } from 'react-router-dom'
-import { DataCard } from '../../data-card/data-card'
-import Typography from '@mui/material/Typography'
+import React, { FC } from 'react'
 import { useTheme } from '@mui/material/styles'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
+import { Typography } from "@mui/material"
+import Box from '@mui/material/Box'
 
-export interface MedicalFilesCardProps {
-  patient: Patient
+interface ChangeValueProps {
+  previousValue?: string
+  currentValue: string
+  previousUnit?: string
+  currentUnit?: string
+  withFormatting: boolean
 }
 
-export interface CategoryProps {
-  teamId?: string
-  patientId: string
-}
-
-const MedicalFilesCard: FunctionComponent<MedicalFilesCardProps> = (props) => {
-  const { t } = useTranslation()
-  const { patient } = props
-  const { teamId: selectedTeamId } = useParams()
-  const { user } = useAuth()
+export const ChangeValueSectionsOverview: FC<ChangeValueProps> = (props) => {
+  const { previousValue, currentValue, previousUnit, currentUnit, withFormatting } = props
   const theme = useTheme()
 
-  const teamId = user.isUserHcp() ? selectedTeamId : null
-
   return (
-    <DataCard data-testid="medical-files-card">
-      <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
-        {t('medical-files')}
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        flexShrink: 0
+      }}>
+      {previousValue &&
+        <>
+          <Typography
+            variant="body2"><span>{withFormatting ? formatNumberForLang(previousValue) : previousValue} {previousUnit}</span>
+          </Typography>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1), flexShrink: 0 }} />
+        </>
+      }
+      <Typography variant="body2">
+        <Box component="span" sx={{ fontWeight: "bold" }}>
+          {withFormatting ? formatNumberForLang(currentValue) : currentValue}
+        </Box>
+        {currentUnit ? ` ${currentUnit}` : ""}
       </Typography>
-      <MedicalReportList teamId={teamId} patientId={patient.userid} />
-    </DataCard>
+    </Box>
   )
 }
 
-export default MedicalFilesCard

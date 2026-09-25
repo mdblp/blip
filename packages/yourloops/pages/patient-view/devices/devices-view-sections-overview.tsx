@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,47 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { DeviceViewSectionsOverviewCards } from '../../../components/overview-cards/devices-view-sections-overview-cards'
 import React, { type FC } from 'react'
-import type MedicalDataService from 'medical-domain'
-import { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
-import { sortHistory } from '../../device/utils/device.utils'
-import { DeviceListCard } from './device-list-card'
-import { LastUpdatesCard } from './last-updates-card'
-import { DevicesUsageCard } from './devices-usage-card'
+import { PumpSettings } from 'medical-domain'
 
-interface DeviceUsageWidgetProps {
-  dateFilter: DateFilter
-  goToDailySpecificDate: (date: Date) => void
-  medicalDataService: MedicalDataService
+interface DeviceViewSectionsOverviewProps {
+  pumpSettings: PumpSettings
 }
 
-export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
-  const { dateFilter, goToDailySpecificDate, medicalDataService } = props
-  const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
-  const {
-    total,
-    sensorUsage
-  } = GlycemiaStatisticsService.getSensorUsage(medicalDataService.medicalData.cbg, dateFilter)
-
-  if (pumpSettings) {
-    sortHistory(pumpSettings.payload.history.parameters)
-  }
+export const DeviceViewSectionsOverview: FC<DeviceViewSectionsOverviewProps> = ({ pumpSettings }) => {
 
   return (
-    <>
-      <DeviceListCard
-        pumpSettings={pumpSettings}
-      />
-      <LastUpdatesCard
-        pumpSettings={pumpSettings}
-      />
-      <DevicesUsageCard
-        dateFilter={dateFilter}
-        goToDailySpecificDate={goToDailySpecificDate}
-        medicalDataService={medicalDataService}
-        sensorUsage={sensorUsage}
-        totalUsage={total}
-      />
-    </>
+    <DeviceViewSectionsOverviewCards pumpSettings={pumpSettings} />
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,5 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const RESPONSIVE_GRID_FULL_WIDTH = 12
-export const RESPONSIVE_GRID_FOUR_COLUMNS = 3
+import { PumpSettings } from 'medical-domain'
+import React, { FC } from 'react'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import ChatWidget from '../../chat/chat-widget'
+import { LastUpdatesCard } from '../devices-column/last-updates-card'
+import MedicalFilesCard from './medical-files/medical-files-card'
+
+interface CommunicationColumnProps {
+  patient: Patient
+  pumpSettings: PumpSettings[]
+  showMedicalCards: boolean
+}
+
+export const CommunicationColumn: FC<CommunicationColumnProps> = (props) => {
+  const { patient, pumpSettings, showMedicalCards } = props
+  const latestPumpSettings = pumpSettings.slice(-1)[0]
+
+  return (
+    <>
+      <LastUpdatesCard pumpSettings={latestPumpSettings} />
+      {showMedicalCards &&
+        <>
+          <ChatWidget patient={patient} />
+          <MedicalFilesCard patient={patient} />
+        </>
+      }
+    </>
+  )
+}

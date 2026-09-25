@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,5 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const RESPONSIVE_GRID_FULL_WIDTH = 12
-export const RESPONSIVE_GRID_FOUR_COLUMNS = 3
+import {
+  checkDeviceSectionCardForCurrentParameters,
+  checkDeviceSectionCardForDevicesHistory, checkDeviceSectionCardForParametersHistory,
+  checkDeviceSectionCardForSafetyBasal,
+  checkClickViewMoreBasalSafety,
+  checkClickViewMoreCurrentSettings,
+  checkClickViewMoreDevicesHistory,
+  checkClickViewMoreSettingsHistory,
+  checkDeviceSectionsOverviewVisible
+} from '../assert/device-view-sections-overview.assert'
+
+export const testDeviceSectionsOverviewVisibleMobile = async () => {
+  checkDeviceSectionsOverviewVisible()
+  checkDeviceSectionCardForCurrentParameters()
+  checkDeviceSectionCardForSafetyBasal()
+  await checkDeviceSectionCardForParametersHistory()
+  await checkDeviceSectionCardForDevicesHistory()
+}
+
+export const testClickViewMoreCurrentSettings = async () => {
+  await checkClickViewMoreCurrentSettings()
+}
+
+export const testClickViewMoreBasalSafety = async () => {
+  await checkClickViewMoreBasalSafety()
+}
+
+export const testClickViewMoreSettingsHistory = async () => {
+  await checkClickViewMoreSettingsHistory()
+}
+
+export const testClickViewMoreDevicesHistory = async () => {
+  await checkClickViewMoreDevicesHistory()
+}

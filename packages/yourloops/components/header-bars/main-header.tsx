@@ -38,7 +38,7 @@ interface MainHeaderProps {
 const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <>

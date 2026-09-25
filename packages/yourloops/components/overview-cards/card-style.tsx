@@ -34,11 +34,6 @@ export const cardStyle = makeStyles()((theme) => {
     },
     cardsHeader: {
       lineHeight: 1
-    },
-    links: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 0.5
     }
   }
 })
