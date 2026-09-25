@@ -158,10 +158,6 @@ export function formatDateWithMomentLongFormat(date?: Date, key: LongDateFormatK
   return moment.utc(date).tz(timezone).format(moment.localeData().longDateFormat(key)).toString()
 }
 
-export function formatDateWithMomentShortFormatWithoutHours(date?: Date, formatString = 'DD/MM/YY', timezone: string = TIMEZONE_UTC): string {
-  return moment.utc(date).tz(timezone).format(formatString)
-}
-
 export function formatDateWithMomentShortFormat(date?: Date, formatString = 'DD/MM/YY - h:mm a', timezone: string = TIMEZONE_UTC): string {
   return moment.utc(date).tz(timezone).format(formatString)
 }

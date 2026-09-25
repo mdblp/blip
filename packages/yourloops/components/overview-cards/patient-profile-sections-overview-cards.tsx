@@ -14,7 +14,7 @@ import {
 import { formatNumberForLang } from '../../lib/language'
 import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
-import { formatDateWithMomentShortFormatWithoutHours } from '../../lib/utils'
+import { formatDateWithMomentShortFormat } from '../../lib/utils'
 import { useLocation } from 'react-router-dom'
 
 interface PatientProfileSectionsOverviewCardsProps {
@@ -31,7 +31,7 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
   const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
 
   const formattedDate =
-    formatDateWithMomentShortFormatWithoutHours(
+    formatDateWithMomentShortFormat(
       new Date(patientInfo.equipmentDate),
       t('short-date')
     )
