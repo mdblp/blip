@@ -39,7 +39,7 @@ import { useAuth } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import SwitchRoleDialogs from '../../components/switch-role'
 
-import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
+import { type InAppNotification } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 
@@ -86,17 +86,13 @@ export const NotificationsPage: FunctionComponent = () => {
     setSwitchRoleOpen(false)
   }
 
-  const refreshReceivedInvitations = async (): Promise<void> => {
-    await notificationsHook.refreshReceivedInvitations()
-  }
-
   return (
     <>
       {notificationsHook.initialized
         ? <Container maxWidth="lg">
           <List>
             {notifications.length > 0 ? (
-              notifications.map((notification: NotificationModel, index: number) => (
+              notifications.map((notification: InAppNotification, index: number) => (
                 <ListItem
                   key={notification.id}
                   disableGutters
@@ -106,7 +102,6 @@ export const NotificationsPage: FunctionComponent = () => {
                     notification={notification}
                     userRole={user.role}
                     onHelp={handleSwitchRoleOpen}
-                    refreshReceivedInvitations={refreshReceivedInvitations}
                   />
                 </ListItem>
               ))
