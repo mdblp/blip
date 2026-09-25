@@ -29,29 +29,23 @@ import usePatientsProviderCustomHook from '../../../../lib/patient/patients.hook
 import { act, renderHook, waitFor } from '@testing-library/react'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { buildTeam, createPatient } from '../../common/utils'
-import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import * as patientFilterHookMock from '../../../../lib/providers/patient-list.provider'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type AlertReactivationDates } from '../../../../lib/patient/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/providers/patient-list.provider')
 describe('Patients hook', () => {
   const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', UserInviteStatus.Accepted)
   const patientToRemove = createPatient('patientToRemove', UserInviteStatus.Accepted)
-  const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue([patientToRemove.userid])
   const authHookFlagPatientMock = jest.fn()
-  const getInvitationMock = jest.fn()
   const refreshTeamsMock = jest.fn()
-  const refreshSentInvitationsMock = jest.fn()
   const computePatientsSpy = jest.spyOn(PatientUtils, 'computePatients')
 
   beforeAll(() => {
@@ -61,13 +55,6 @@ describe('Patients hook', () => {
         user: { id: loggedInUserAsPatient.userid, isUserHcp: () => true, preferences: { patientsStarred: [] } },
         getFlagPatients: authHookGetFlagPatientMock,
         flagPatient: authHookFlagPatientMock
-      }
-    });
-    (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
-      return {
-        cancel: notificationHookCancelMock,
-        getInvitation: getInvitationMock,
-        refreshSentInvitations: refreshSentInvitationsMock
       }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
@@ -112,15 +99,7 @@ describe('Patients hook', () => {
     })
 
     it('should invite and add a patient when the patient is not already present in the patient list', async () => {
-      jest.spyOn(PatientApi, 'invitePatient').mockResolvedValueOnce({
-        key: 'key',
-        type: INotificationType.medicalTeamPatientInvitation,
-        email: 'fake@username.com',
-        creatorId: 'currentUserId',
-        created: 'now',
-        shortKey: 'short',
-        creator: { userid: 'currentUserId' }
-      })
+      jest.spyOn(PatientApi, 'invitePatient').mockResolvedValueOnce(undefined)
 
       await act(async () => {
         await customHook.invitePatient(team1, 'new-patient@mail.com')
@@ -129,15 +108,7 @@ describe('Patients hook', () => {
     })
 
     it('should invite and update a patient when the patient is already present in the patient list', async () => {
-      jest.spyOn(PatientApi, 'invitePatient').mockResolvedValueOnce({
-        key: 'key',
-        type: INotificationType.medicalTeamPatientInvitation,
-        email: basicPatient.profile.email,
-        creatorId: 'currentUserId',
-        created: 'now',
-        shortKey: 'short',
-        creator: { userid: 'currentUserId' }
-      })
+      jest.spyOn(PatientApi, 'invitePatient').mockResolvedValueOnce(undefined)
 
       const initialPatientsLength: number = customHook.patients.length
       await act(async () => {
