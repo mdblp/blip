@@ -13,12 +13,12 @@ import { WebStackProps } from './props/WebStackProps';
 import * as path from 'path';
 
 export class StaticWebSiteStack extends core.Stack {
-  constructor(scope: Construct, id: string, distDir: string, props?: WebStackProps, isUnderMaintenance=false) {
+  constructor(scope: Construct, id: string, distDir: string, props: WebStackProps, isUnderMaintenance = false) {
     super(scope, id, props);
 
     // Create the bucket
-    const bucket = new s3.Bucket(this, `${props?.rootBucketName}.${props?.prefix}`, {
-      bucketName: `${props?.rootBucketName}.${props?.prefix}`,
+    const bucket = new s3.Bucket(this, `${props.rootBucketName}.${props.prefix}`, {
+      bucketName: `${props.rootBucketName}.${props.prefix}`,
       removalPolicy: core.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
@@ -34,7 +34,7 @@ export class StaticWebSiteStack extends core.Stack {
             this.formatArn({
               service: 'ssm',
               region: 'us-east-1',
-              resource: `parameter/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
+              resource: `parameter/${props.FrontAppName}/${props.prefix}/lambda-edge-arn`
             })
           ]
         })
@@ -44,16 +44,24 @@ export class StaticWebSiteStack extends core.Stack {
         service: 'SSM',
         action: 'getParameter',
         parameters: {
-          Name: `/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
+          Name: `/${props.FrontAppName}/${props.prefix}/lambda-edge-arn`
         },
         region: 'us-east-1',
-        physicalResourceId: rsc.PhysicalResourceId.of(Date.now().toString()) // Update physical id to always fetch the latest version
+        // Refetch the edge lambda ARN whenever the edge function could have changed,
+        // and only then. Using Date.now() here made the physical id differ on every
+        // synth, so the custom resource was replaced and the distribution updated on
+        // every deploy — which meant `cdk diff` was never clean and could not be used
+        // as a release gate. The code fingerprint covers changes to the handler, and
+        // the version covers a redeploy of the same code under a new release.
+        physicalResourceId: rsc.PhysicalResourceId.of(
+          `${core.FileSystem.fingerprint(`${distDir}/lambda`)}-${props.version}`
+        )
       }
     });
 
     // AWS variable are required here for getting dns zone
     const zone = route53.HostedZone.fromLookup(this, 'domainName', {
-      domainName: `${props?.zone}`
+      domainName: props.zone
     });
 
     // Create the Certificate
@@ -61,8 +69,8 @@ export class StaticWebSiteStack extends core.Stack {
     // and we cannot migrate to the  new one due to this https://github.com/aws/aws-cdk/discussions/23931
     const cert = new acm.DnsValidatedCertificate(this, `${id}-certificate`, {
       hostedZone: zone,
-      domainName: `${props?.domainName}`,
-      subjectAlternativeNames: [`${props?.altDomainName}`],
+      domainName: props.domainName,
+      subjectAlternativeNames: [props.altDomainName],
       region: 'us-east-1',
     });
 
@@ -72,11 +80,11 @@ export class StaticWebSiteStack extends core.Stack {
       this,
       `${id}-cloudfront`,
       {
-        comment: `cloudfront deployment for ${props?.prefix} ${props?.FrontAppName} ${props?.version}`,
+        comment: `cloudfront deployment for ${props.prefix} ${props.FrontAppName} ${props.version}`,
         originConfigs: [
           {
             s3OriginSource: {
-              originPath: `/${props?.FrontAppName}/${props?.version}`,
+              originPath: `/${props.FrontAppName}/${props.version}`,
               s3BucketSource: bucket,
               originAccessIdentity: originAccessIdentity
             },
@@ -87,7 +95,7 @@ export class StaticWebSiteStack extends core.Stack {
                 lambdaFunctionAssociations: [
                   {
                     eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props?.prefix}-${props?.FrontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
+                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props.prefix}-${props.FrontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
                   },
                 ],
               },
@@ -108,7 +116,7 @@ export class StaticWebSiteStack extends core.Stack {
         ],
         viewerCertificate:
         {
-          aliases: [`${props?.domainName}`, `${props?.altDomainName}`],
+          aliases: [props.domainName, props.altDomainName],
           props: {
             acmCertificateArn: cert.certificateArn,
             sslSupportMethod: cloudfront.SSLMethod.SNI,
@@ -135,24 +143,25 @@ export class StaticWebSiteStack extends core.Stack {
     // associate the distribution to a dns record
     new route53.CnameRecord(this, `${id}-websitealiasrecord`, {
       zone: zone,
-      recordName: `${props?.domainName}`,
+      recordName: props.domainName,
       domainName: distribution.distributionDomainName,
       ttl: Duration.minutes(5)
     });
-    if (props?.altDomainName !== undefined) {
-      new route53.CnameRecord(this, `${id}-websitealiasrecord2`, {
-        zone: zone,
-        recordName: `${props?.altDomainName}`,
-        domainName: distribution.distributionDomainName,
-        ttl: Duration.minutes(5)
-      });
-    }
+    // altDomainName is required, so the record is no longer conditional. Every
+    // environment already sets ALT_DOMAIN_NAME (see ylp/blip.env.jinja); one that
+    // does not now fails at synth rather than quietly publishing a single alias.
+    new route53.CnameRecord(this, `${id}-websitealiasrecord2`, {
+      zone: zone,
+      recordName: props.altDomainName,
+      domainName: distribution.distributionDomainName,
+      ttl: Duration.minutes(5)
+    });
 
     //  Publish the site content to the S3 bucket (with --delete and invalidation)
     new s3deploy.BucketDeployment(this, `${id}-deploymentwithinvalidation`, {
       sources: [s3deploy.Source.asset(`${distDir}/static`)],
       destinationBucket: bucket,
-      destinationKeyPrefix: `${props?.FrontAppName}/${props?.version}`,
+      destinationKeyPrefix: `${props.FrontAppName}/${props.version}`,
       distribution,
       distributionPaths: ['/*']
     });

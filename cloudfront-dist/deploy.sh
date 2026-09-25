@@ -21,9 +21,11 @@ rm -v ./static/index.html
 # Deploy, move to deployement dir in order to have access to the app in cdk.json
 cd cloudfront-dist/deployment
 
-# Uncomment the following lines if the deploy failed for some reason
-# echo "npm run cdk -- destroy --force $STACK_PREFIX_NAME-$FRONT_APP_NAME"
-# npm run cdk -- destroy --force $STACK_PREFIX_NAME-$FRONT_APP_NAME
+# NOTE: do not add a `cdk destroy` fallback here. The content bucket is declared
+# with removalPolicy DESTROY and autoDeleteObjects, and it holds every deployed
+# version under blip/<version>, so destroying the stack deletes all of them and
+# every rollback target with them. A failed deploy is recovered by fixing the
+# cause and redeploying, or by redeploying the previous STACK_VERSION.
 
 echo "run cdk deploy --require-approval never $STACK_PREFIX_NAME-$FRONT_APP_NAME"
 npm run cdk -- deploy --require-approval never $STACK_PREFIX_NAME-$FRONT_APP_NAME

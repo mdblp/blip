@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES2022",
     "module": "commonjs",
-    "lib": ["es2018"],
-    "declaration": true,
+    "moduleResolution": "node",
+    "lib": ["ES2022"],
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -13,11 +13,13 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
-    "typeRoots": ["./node_modules/@types"]
+    "types": ["node", "jest"]
   },
-  "exclude": ["cdk.out"]
+  "include": ["bin/**/*.ts", "lib/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "cdk.out"]
 }

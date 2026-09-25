@@ -8,7 +8,7 @@ export class LambdaStack extends core.Stack {
 
   private functionName: string
 
-  constructor(parent: Construct, id: string, distDir: string, props?: core.StackProps, prefix?: string) {
+  constructor(parent: Construct, id: string, distDir: string, props: core.StackProps, prefix: string) {
     super(parent, id, props)
 
     this.functionName = `${prefix}-blip-request-viewer`
