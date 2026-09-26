@@ -79,12 +79,15 @@ describe('origin access', () => {
   })
 
   it('grants no anonymous principal access to the bucket', () => {
+    // A wildcard principal on a Deny statement (R1's enforceSSL) denies everyone
+    // over plaintext — the opposite of a grant — so only Allow statements count.
     const { template } = synthWeb()
     const policies = Object.values<any>(template.findResources('AWS::S3::BucketPolicy'))
 
     expect(policies.length).toBeGreaterThan(0)
     for (const policy of policies) {
       for (const statement of policy.Properties.PolicyDocument.Statement) {
+        if (statement.Effect !== 'Allow') continue
         expect(statement.Principal).not.toBe('*')
         expect(statement.Principal?.AWS).not.toBe('*')
       }

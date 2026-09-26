@@ -21,6 +21,12 @@ export class StaticWebSiteStack extends core.Stack {
       bucketName: `${props.rootBucketName}.${props.prefix}`,
       removalPolicy: core.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      enforceSSL: true,
+      // S3_MANAGED (SSE-S3), not KMS: the OAI on this bucket cannot read SSE-KMS objects.
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      versioned: true,
+      lifecycleRules: [{ noncurrentVersionExpiration: Duration.days(30) }],
     });
     const originAccessIdentity = new cloudfront.OriginAccessIdentity(this, `${id}-originAccessIdentity`,{})
     bucket.grantRead(originAccessIdentity)

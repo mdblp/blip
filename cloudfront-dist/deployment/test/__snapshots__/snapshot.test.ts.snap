@@ -836,7 +836,32 @@ exports[`web stack matches the committed baseline 1`] = `
     "comdiabeloopyourloopscfci2606EF26": {
       "DeletionPolicy": "Delete",
       "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
         "BucketName": "com.diabeloop.yourloops-cf.ci",
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 30,
+              },
+              "Status": "Enabled",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
         "Tags": [
           {
             "Key": "aws-cdk:auto-delete-objects",
@@ -851,6 +876,9 @@ exports[`web stack matches the committed baseline 1`] = `
             "Value": "true",
           },
         ],
+        "VersioningConfiguration": {
+          "Status": "Enabled",
+        },
       },
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Delete",
@@ -881,6 +909,40 @@ exports[`web stack matches the committed baseline 1`] = `
         },
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "comdiabeloopyourloopscfci2606EF26",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "comdiabeloopyourloopscfci2606EF26",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
             {
               "Action": [
                 "s3:PutBucketPolicy",
@@ -1747,7 +1809,32 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
     "comdiabeloopyourloopscfci2606EF26": {
       "DeletionPolicy": "Delete",
       "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
         "BucketName": "com.diabeloop.yourloops-cf.ci",
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 30,
+              },
+              "Status": "Enabled",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
         "Tags": [
           {
             "Key": "aws-cdk:auto-delete-objects",
@@ -1762,6 +1849,9 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             "Value": "true",
           },
         ],
+        "VersioningConfiguration": {
+          "Status": "Enabled",
+        },
       },
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Delete",
@@ -1792,6 +1882,40 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         },
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "comdiabeloopyourloopscfci2606EF26",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "comdiabeloopyourloopscfci2606EF26",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
             {
               "Action": [
                 "s3:PutBucketPolicy",
