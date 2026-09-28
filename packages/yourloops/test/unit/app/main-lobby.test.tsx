@@ -132,7 +132,7 @@ describe('Main lobby', () => {
         testGetRedirectUrl('/', buildUser(), true, undefined)
       })
 
-      it('should keep the user on a route which already satisfies the pending gate', () => {
+      it('should redirect when the current route does not satisfy the pending gate', () => {
         testGetRedirectUrl('/product-labelling', buildUser({ hasToDisplayTrainingInfoPage: true }), true, '/training')
       })
     })
