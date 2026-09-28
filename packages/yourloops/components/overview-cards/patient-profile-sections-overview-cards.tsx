@@ -30,8 +30,6 @@ export const PatientProfileSectionsOverviewCards: FC<PatientProfileSectionsOverv
   const { pathname } = useLocation()
   const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
 
-  console.log(patientInfo.equipmentDate)
-
   const formattedDate =
     formatDateWithMomentShortFormat(
       patientInfo.equipmentDate,
