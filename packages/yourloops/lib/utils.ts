@@ -159,7 +159,7 @@ export function formatDateWithMomentLongFormat(date?: Date, key: LongDateFormatK
 }
 
 export function formatDateWithMomentShortFormat(date?: Date, formatString = 'DD/MM/YY - h:mm a', timezone: string = TIMEZONE_UTC): string {
-  return moment.utc(date).tz(timezone).format(formatString)
+  return moment(date, ['LL', 'll', 'L', 'l']).tz(timezone).format(formatString);
 }
 
 export function formatDurationToBiggestUnit(timeInMilliseconds: number): { duration: number, unit: DurationUnit } {
