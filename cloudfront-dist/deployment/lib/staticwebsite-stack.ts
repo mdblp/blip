@@ -1,6 +1,7 @@
 import * as core from 'aws-cdk-lib';
 import { Duration } from 'aws-cdk-lib';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -29,7 +30,9 @@ export class StaticWebSiteStack extends core.Stack {
       lifecycleRules: [{ noncurrentVersionExpiration: Duration.days(30) }],
     });
     const originAccessIdentity = new cloudfront.OriginAccessIdentity(this, `${id}-originAccessIdentity`,{})
-    bucket.grantRead(originAccessIdentity)
+    // No explicit bucket.grantRead() here: origins.S3BucketOrigin.withOriginAccessIdentity()
+    // below grants read access itself at bind time. Granting twice would add a
+    // duplicate statement to the bucket policy, which R2 must not touch at all.
     // Retrieve the Lambda arn
     const lambdaParameter = new rsc.AwsCustomResource(this, `${id}-GetParameter`, {
       policy: rsc.AwsCustomResourcePolicy.fromStatements([
@@ -82,69 +85,57 @@ export class StaticWebSiteStack extends core.Stack {
 
 
     // Create the distribution
-    const distribution = new cloudfront.CloudFrontWebDistribution(
-      this,
-      `${id}-cloudfront`,
-      {
-        comment: `cloudfront deployment for ${props.prefix} ${props.FrontAppName} ${props.version}`,
-        originConfigs: [
-          {
-            s3OriginSource: {
-              originPath: `/${props.FrontAppName}/${props.version}`,
-              s3BucketSource: bucket,
-              originAccessIdentity: originAccessIdentity
-            },
-            behaviors: [
-              {
-                isDefaultBehavior: !isUnderMaintenance,
-                pathPattern: isUnderMaintenance ? '/disabled/*' : '*',
-                lambdaFunctionAssociations: [
-                  {
-                    eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props.prefix}-${props.FrontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            s3OriginSource: {
-              originPath: '/maintenance',
-              s3BucketSource: bucket,
-            },
-            behaviors: [
-              {
-                isDefaultBehavior: isUnderMaintenance,
-                pathPattern: isUnderMaintenance ? '*' : '/maintenance/*',
-              },
-            ],
-          },
-        ],
-        viewerCertificate:
+    const appOrigin = origins.S3BucketOrigin.withOriginAccessIdentity(bucket, {
+      originAccessIdentity,
+      originPath: `/${props.FrontAppName}/${props.version}`
+    })
+    // withBucketDefaults, not withOriginAccessIdentity: preserves this origin's
+    // current no-OAI state exactly (a known separate defect — fixing it is out
+    // of scope for this construct swap).
+    const maintenanceOrigin = origins.S3BucketOrigin.withBucketDefaults(bucket, {
+      originPath: '/maintenance'
+    })
+
+    const appBehavior: cloudfront.BehaviorOptions = {
+      origin: appOrigin,
+      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+      edgeLambdas: [
         {
-          aliases: [props.domainName, props.altDomainName],
-          props: {
-            acmCertificateArn: cert.certificateArn,
-            sslSupportMethod: cloudfront.SSLMethod.SNI,
-            minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
-          },
+          eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
+          functionVersion: lambda.Version.fromVersionArn(this, `${props.prefix}-${props.FrontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value'))
+        }
+      ]
+    }
+    const maintenanceBehavior: cloudfront.BehaviorOptions = {
+      origin: maintenanceOrigin,
+      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED
+    }
 
-        },
-        errorConfigurations: [
-          {
-            errorCode: 403,
-            responseCode: 200,
-            responsePagePath: '/index.html'
-          },
-          {
-            errorCode: 404,
-            responseCode: 200,
-            responsePagePath: '/index.html'
-          }
-        ]
+    const distribution = new cloudfront.Distribution(this, `${id}-cloudfront`, {
+      comment: `cloudfront deployment for ${props.prefix} ${props.FrontAppName} ${props.version}`,
+      defaultRootObject: 'index.html', // modern L2 default is none — breaks maintenance mode's `/`
+      priceClass: cloudfront.PriceClass.PRICE_CLASS_100, // modern L2 default is PRICE_CLASS_ALL
+      domainNames: [props.domainName, props.altDomainName],
+      certificate: cert,
+      minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
+      defaultBehavior: isUnderMaintenance ? maintenanceBehavior : appBehavior,
+      additionalBehaviors: isUnderMaintenance
+        ? { '/disabled/*': appBehavior }
+        : { '/maintenance/*': maintenanceBehavior },
+      errorResponses: [
+        { httpStatus: 403, responseHttpStatus: 200, responsePagePath: '/index.html' },
+        { httpStatus: 404, responseHttpStatus: 200, responsePagePath: '/index.html' }
+      ]
+    });
 
-      }
-    );
+    // MIGRATION GUARD: keep the logical ID minted by the removed
+    // CloudFrontWebDistribution L2. Without this, CloudFormation creates a
+    // SECOND distribution and fails on CNAMEAlreadyExists — the alias is
+    // already claimed by the live one. See lib/legacy-distribution-ids.ts.
+    ;(distribution.node.defaultChild as cloudfront.CfnDistribution)
+      .overrideLogicalId(props.legacyDistributionLogicalId)
 
     // associate the distribution to a dns record
     new route53.CnameRecord(this, `${id}-websitealiasrecord`, {

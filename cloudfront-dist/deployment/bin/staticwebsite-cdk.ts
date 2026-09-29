@@ -3,6 +3,7 @@ import * as cdk from 'aws-cdk-lib';
 import { StaticWebSiteStack } from '../lib/staticwebsite-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 import { appStackName, edgeStackName, parseEnv } from '../lib/config';
+import { legacyDistributionLogicalId } from '../lib/legacy-distribution-ids';
 
 // Configuration is parsed and validated up front so a missing variable fails
 // here, with the variable named, rather than reaching the deployed template as
@@ -33,5 +34,6 @@ new StaticWebSiteStack(app, appStackName(config), config.distDir, {
   FrontAppName: config.frontAppName,
   prefix: config.prefix,
   version: config.version,
-  rootBucketName: config.rootBucketName
+  rootBucketName: config.rootBucketName,
+  legacyDistributionLogicalId: legacyDistributionLogicalId(appStackName(config))
 }, config.maintenance).addDependency(ls);

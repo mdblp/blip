@@ -72,9 +72,9 @@ describe('SPA routing', () => {
 
 describe('origin access', () => {
   it('serves the application origin from the versioned prefix through an OAI', () => {
-    const origin = distributionConfig().Origins.find((o: any) => o.Id === 'origin1')
+    const origin = distributionConfig().Origins.find((o: any) => o.OriginPath === `/blip/${VERSION}`)
 
-    expect(origin.OriginPath).toBe(`/blip/${VERSION}`)
+    expect(origin).toBeDefined()
     expect(origin.S3OriginConfig.OriginAccessIdentity).toBeDefined()
   })
 

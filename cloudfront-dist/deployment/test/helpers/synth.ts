@@ -23,6 +23,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import { StaticWebSiteStack } from '../../lib/staticwebsite-stack'
 import { LambdaStack } from '../../lib/lambda-stack'
 import { WebStackProps } from '../../lib/props/WebStackProps'
+import { legacyDistributionLogicalId } from '../../lib/legacy-distribution-ids'
 
 export const ACCOUNT = '111111111111'
 export const REGION = 'eu-west-1'
@@ -52,7 +53,8 @@ export const WEB_PROPS: WebStackProps = {
   FrontAppName: FRONT_APP,
   prefix: PREFIX,
   version: VERSION,
-  rootBucketName: BUCKET
+  rootBucketName: BUCKET,
+  legacyDistributionLogicalId: legacyDistributionLogicalId(WEB_STACK_ID)
 }
 
 /**
@@ -109,4 +111,19 @@ export function distributionConfig(isUnderMaintenance = false): any {
     throw new Error(`expected exactly one distribution, found ${ids.length}: ${ids.join(', ')}`)
   }
   return distributions[ids[0]].Properties.DistributionConfig
+}
+
+/**
+ * Resolves a behaviour's TargetOriginId to its origin. The modern Distribution
+ * L2 assigns origin IDs by bind order (whichever origin is `defaultBehavior`
+ * binds first), not by which physical origin it is, so the same origin can be
+ * "origin 1" in one synth and "origin 2" in another — asserting the literal ID
+ * string would be asserting an implementation detail, not the behaviour.
+ */
+export function originForBehavior(config: any, behavior: { TargetOriginId: string }): any {
+  const origin = config.Origins.find((o: any) => o.Id === behavior.TargetOriginId)
+  if (origin === undefined) {
+    throw new Error(`No origin found for TargetOriginId ${behavior.TargetOriginId}`)
+  }
+  return origin
 }

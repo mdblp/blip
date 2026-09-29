@@ -14,4 +14,6 @@ export interface WebStackProps extends core.StackProps {
     version: string;
     prefix: string;
     rootBucketName: string;
+    /** See lib/legacy-distribution-ids.ts — never computed or guessed. */
+    legacyDistributionLogicalId: string;
 }

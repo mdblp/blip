@@ -587,23 +587,10 @@ exports[`web stack matches the committed baseline 1`] = `
           ],
           "CacheBehaviors": [
             {
-              "AllowedMethods": [
-                "GET",
-                "HEAD",
-              ],
-              "CachedMethods": [
-                "GET",
-                "HEAD",
-              ],
+              "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
               "Compress": true,
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none",
-                },
-                "QueryString": false,
-              },
               "PathPattern": "/maintenance/*",
-              "TargetOriginId": "origin2",
+              "TargetOriginId": "ciblipciblipcloudfrontOrigin2D480F97F",
               "ViewerProtocolPolicy": "redirect-to-https",
             },
           ],
@@ -621,21 +608,8 @@ exports[`web stack matches the committed baseline 1`] = `
             },
           ],
           "DefaultCacheBehavior": {
-            "AllowedMethods": [
-              "GET",
-              "HEAD",
-            ],
-            "CachedMethods": [
-              "GET",
-              "HEAD",
-            ],
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
             "Compress": true,
-            "ForwardedValues": {
-              "Cookies": {
-                "Forward": "none",
-              },
-              "QueryString": false,
-            },
             "LambdaFunctionAssociations": [
               {
                 "EventType": "viewer-request",
@@ -647,7 +621,7 @@ exports[`web stack matches the committed baseline 1`] = `
                 },
               },
             ],
-            "TargetOriginId": "origin1",
+            "TargetOriginId": "ciblipciblipcloudfrontOrigin10B503A43",
             "ViewerProtocolPolicy": "redirect-to-https",
           },
           "DefaultRootObject": "index.html",
@@ -656,15 +630,13 @@ exports[`web stack matches the committed baseline 1`] = `
           "IPV6Enabled": true,
           "Origins": [
             {
-              "ConnectionAttempts": 3,
-              "ConnectionTimeout": 10,
               "DomainName": {
                 "Fn::GetAtt": [
                   "comdiabeloopyourloopscfci2606EF26",
                   "RegionalDomainName",
                 ],
               },
-              "Id": "origin1",
+              "Id": "ciblipciblipcloudfrontOrigin10B503A43",
               "OriginPath": "/blip/1.2.3",
               "S3OriginConfig": {
                 "OriginAccessIdentity": {
@@ -681,17 +653,17 @@ exports[`web stack matches the committed baseline 1`] = `
               },
             },
             {
-              "ConnectionAttempts": 3,
-              "ConnectionTimeout": 10,
               "DomainName": {
                 "Fn::GetAtt": [
                   "comdiabeloopyourloopscfci2606EF26",
                   "RegionalDomainName",
                 ],
               },
-              "Id": "origin2",
+              "Id": "ciblipciblipcloudfrontOrigin2D480F97F",
               "OriginPath": "/maintenance",
-              "S3OriginConfig": {},
+              "S3OriginConfig": {
+                "OriginAccessIdentity": "",
+              },
             },
           ],
           "PriceClass": "PriceClass_100",
@@ -958,44 +930,6 @@ exports[`web stack matches the committed baseline 1`] = `
                   "Fn::GetAtt": [
                     "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
                     "Arn",
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "comdiabeloopyourloopscfci2606EF26",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "comdiabeloopyourloopscfci2606EF26",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "CanonicalUser": {
-                  "Fn::GetAtt": [
-                    "cibliporiginAccessIdentityDC99AF16",
-                    "S3CanonicalUserId",
                   ],
                 },
               },
@@ -1560,21 +1494,8 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
           ],
           "CacheBehaviors": [
             {
-              "AllowedMethods": [
-                "GET",
-                "HEAD",
-              ],
-              "CachedMethods": [
-                "GET",
-                "HEAD",
-              ],
+              "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
               "Compress": true,
-              "ForwardedValues": {
-                "Cookies": {
-                  "Forward": "none",
-                },
-                "QueryString": false,
-              },
               "LambdaFunctionAssociations": [
                 {
                   "EventType": "viewer-request",
@@ -1587,7 +1508,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
                 },
               ],
               "PathPattern": "/disabled/*",
-              "TargetOriginId": "origin1",
+              "TargetOriginId": "ciblipciblipcloudfrontOrigin2D480F97F",
               "ViewerProtocolPolicy": "redirect-to-https",
             },
           ],
@@ -1605,22 +1526,9 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             },
           ],
           "DefaultCacheBehavior": {
-            "AllowedMethods": [
-              "GET",
-              "HEAD",
-            ],
-            "CachedMethods": [
-              "GET",
-              "HEAD",
-            ],
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
             "Compress": true,
-            "ForwardedValues": {
-              "Cookies": {
-                "Forward": "none",
-              },
-              "QueryString": false,
-            },
-            "TargetOriginId": "origin2",
+            "TargetOriginId": "ciblipciblipcloudfrontOrigin10B503A43",
             "ViewerProtocolPolicy": "redirect-to-https",
           },
           "DefaultRootObject": "index.html",
@@ -1629,15 +1537,26 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
           "IPV6Enabled": true,
           "Origins": [
             {
-              "ConnectionAttempts": 3,
-              "ConnectionTimeout": 10,
               "DomainName": {
                 "Fn::GetAtt": [
                   "comdiabeloopyourloopscfci2606EF26",
                   "RegionalDomainName",
                 ],
               },
-              "Id": "origin1",
+              "Id": "ciblipciblipcloudfrontOrigin10B503A43",
+              "OriginPath": "/maintenance",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": "",
+              },
+            },
+            {
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "comdiabeloopyourloopscfci2606EF26",
+                  "RegionalDomainName",
+                ],
+              },
+              "Id": "ciblipciblipcloudfrontOrigin2D480F97F",
               "OriginPath": "/blip/1.2.3",
               "S3OriginConfig": {
                 "OriginAccessIdentity": {
@@ -1652,19 +1571,6 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
                   ],
                 },
               },
-            },
-            {
-              "ConnectionAttempts": 3,
-              "ConnectionTimeout": 10,
-              "DomainName": {
-                "Fn::GetAtt": [
-                  "comdiabeloopyourloopscfci2606EF26",
-                  "RegionalDomainName",
-                ],
-              },
-              "Id": "origin2",
-              "OriginPath": "/maintenance",
-              "S3OriginConfig": {},
             },
           ],
           "PriceClass": "PriceClass_100",
@@ -1931,44 +1837,6 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
                   "Fn::GetAtt": [
                     "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
                     "Arn",
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "comdiabeloopyourloopscfci2606EF26",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "comdiabeloopyourloopscfci2606EF26",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "CanonicalUser": {
-                  "Fn::GetAtt": [
-                    "cibliporiginAccessIdentityDC99AF16",
-                    "S3CanonicalUserId",
                   ],
                 },
               },

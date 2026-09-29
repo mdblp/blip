@@ -8,34 +8,41 @@
  * their own once fixed, and will fail loudly if someone fixes the code without
  * removing the marker.
  */
-import { distributionConfig } from './helpers/synth'
+import { distributionConfig, originForBehavior, FRONT_APP, VERSION } from './helpers/synth'
 
 describe('normal operation', () => {
   it('serves the application origin with the viewer-request function attached', () => {
     const config = distributionConfig(false)
 
-    expect(config.DefaultCacheBehavior.TargetOriginId).toBe('origin1')
+    expect(originForBehavior(config, config.DefaultCacheBehavior).OriginPath).toBe(`/${FRONT_APP}/${VERSION}`)
     expect(config.DefaultCacheBehavior.LambdaFunctionAssociations).toEqual([
       expect.objectContaining({ EventType: 'viewer-request' })
     ])
   })
 
   it('exposes the maintenance page only under /maintenance/*', () => {
-    expect(distributionConfig(false).CacheBehaviors).toEqual([
-      expect.objectContaining({ PathPattern: '/maintenance/*', TargetOriginId: 'origin2' })
-    ])
+    const config = distributionConfig(false)
+    expect(config.CacheBehaviors).toHaveLength(1)
+    const [behaviour] = config.CacheBehaviors
+
+    expect(behaviour.PathPattern).toBe('/maintenance/*')
+    expect(originForBehavior(config, behaviour).OriginPath).toBe('/maintenance')
   })
 })
 
 describe('maintenance mode', () => {
   it('swaps the default behaviour to the maintenance origin', () => {
-    expect(distributionConfig(true).DefaultCacheBehavior.TargetOriginId).toBe('origin2')
+    const config = distributionConfig(true)
+    expect(originForBehavior(config, config.DefaultCacheBehavior).OriginPath).toBe('/maintenance')
   })
 
   it('moves the application behind /disabled/*', () => {
-    expect(distributionConfig(true).CacheBehaviors).toEqual([
-      expect.objectContaining({ PathPattern: '/disabled/*', TargetOriginId: 'origin1' })
-    ])
+    const config = distributionConfig(true)
+    expect(config.CacheBehaviors).toHaveLength(1)
+    const [behaviour] = config.CacheBehaviors
+
+    expect(behaviour.PathPattern).toBe('/disabled/*')
+    expect(originForBehavior(config, behaviour).OriginPath).toBe(`/${FRONT_APP}/${VERSION}`)
   })
 })
 
@@ -52,13 +59,15 @@ describe('known defects', () => {
   })
 
   // D2. The maintenance origin is declared without an origin access identity, so
-  // it renders S3OriginConfig: {} and CloudFront fetches anonymously. The only
-  // bucket policy grants the OAI, and public access is not otherwise allowed, so
-  // this origin should be returning 403 — meaning maintenance mode has probably
-  // never worked. Confirm against the preview stack before relying on it.
+  // CloudFront fetches anonymously (rendered as an empty-string OriginAccessIdentity
+  // since R2's S3BucketOrigin.withBucketDefaults — previously S3OriginConfig: {} with
+  // no such key at all; same "no real OAI" meaning either way). The bucket policy
+  // only grants the real OAI, and public access is not otherwise allowed, so this
+  // origin should be returning 403 — meaning maintenance mode has probably never
+  // worked. Confirm against the preview stack before relying on it.
   it.failing('serves the maintenance origin through an origin access identity', () => {
-    const origin = distributionConfig(true).Origins.find((o: any) => o.Id === 'origin2')
+    const origin = distributionConfig(true).Origins.find((o: any) => o.OriginPath === '/maintenance')
 
-    expect(origin.S3OriginConfig.OriginAccessIdentity).toBeDefined()
+    expect(origin.S3OriginConfig.OriginAccessIdentity).not.toBe('')
   })
 })
