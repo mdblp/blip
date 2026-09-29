@@ -19,7 +19,7 @@ const ls = new LambdaStack(app, edgeStackName(config), config.distDir, {
   env: {
     region: 'us-east-1' // hardcoded because it should not change with current version of AWS !
   }
-}, config.prefix);
+}, config.prefix, config.targetEnvironment);
 
 // Create ressouce needed to static hosting with cloudfront
 new StaticWebSiteStack(app, appStackName(config), config.distDir, {

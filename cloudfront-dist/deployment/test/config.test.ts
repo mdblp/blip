@@ -17,7 +17,8 @@ const VALID: NodeJS.ProcessEnv = {
   DOMAIN_NAME: 'app.ci.your-loops.test',
   ALT_DOMAIN_NAME: 'www.ci.your-loops.test',
   DNS_ZONE: 'ci.your-loops.test',
-  FRONT_APP_NAME: 'blip'
+  FRONT_APP_NAME: 'blip',
+  TARGET_ENVIRONMENT: 'ci'
 }
 
 describe('a complete environment', () => {
@@ -32,8 +33,15 @@ describe('a complete environment', () => {
       zone: 'ci.your-loops.test',
       frontAppName: 'blip',
       rootBucketName: ROOT_BUCKET_NAME,
-      maintenance: false
+      maintenance: false,
+      targetEnvironment: 'ci'
     })
+  })
+
+  it('lowercases TARGET_ENVIRONMENT to match the generated lambda filename convention', () => {
+    // server/cloudfront-gen-lambda.js lowercases it before using it to name the
+    // file LambdaStack's handler must reference; both sides must agree.
+    expect(parseEnv({ ...VALID, TARGET_ENVIRONMENT: 'CI' }).targetEnvironment).toBe('ci')
   })
 
   it('treats MAINTENANCE as enabled only for the exact string "true"', () => {
@@ -68,7 +76,8 @@ describe('an incomplete environment', () => {
     'DOMAIN_NAME',
     'ALT_DOMAIN_NAME',
     'DNS_ZONE',
-    'FRONT_APP_NAME'
+    'FRONT_APP_NAME',
+    'TARGET_ENVIRONMENT'
   ])('rejects a missing %s, naming it', (name) => {
     const env = { ...VALID }
     delete env[name]

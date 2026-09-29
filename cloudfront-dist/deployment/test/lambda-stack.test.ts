@@ -2,18 +2,19 @@
  * Property assertions for the us-east-1 Lambda@Edge stack.
  */
 import { Match } from 'aws-cdk-lib/assertions'
-import { synthEdge, PREFIX } from './helpers/synth'
+import { synthEdge, PREFIX, TARGET_ENVIRONMENT } from './helpers/synth'
 
 describe('edge function', () => {
   it('declares the function name and handler the rest of the system expects', () => {
-    // The handler name is built from STACK_PREFIX_NAME while the file it refers
-    // to is generated from TARGET_ENVIRONMENT (see server/cloudfront-gen-lambda.js).
-    // Nothing validates that coupling at deploy time; if the two diverge, every
-    // request at the edge fails with "Cannot find module".
+    // FunctionName (AWS resource naming) is built from STACK_PREFIX_NAME, which
+    // can vary across several parallel stacks. Handler must instead match the
+    // file server/cloudfront-gen-lambda.js actually generates, which is named
+    // from TARGET_ENVIRONMENT — a different, app-identity concept. The fixture
+    // constants are deliberately different values to prove this stays decoupled.
     synthEdge().template.hasResourceProperties('AWS::Lambda::Function', {
       FunctionName: `${PREFIX}-blip-request-viewer`,
       Runtime: 'nodejs22.x',
-      Handler: `cloudfront-${PREFIX}-blip-request-viewer.handler`
+      Handler: `cloudfront-${TARGET_ENVIRONMENT}-blip-request-viewer.handler`
     })
   })
 

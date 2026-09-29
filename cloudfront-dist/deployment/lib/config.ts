@@ -37,6 +37,15 @@ export interface DeploymentConfig {
   rootBucketName: string
   distDir: string
   maintenance: boolean
+  /**
+   * The application-identity environment (see server/config.app.js), distinct
+   * from `prefix`: `prefix` names AWS resources and can vary across several
+   * parallel stacks, `targetEnvironment` names the app configuration those
+   * stacks present as. `server/cloudfront-gen-lambda.js` names the generated
+   * edge handler file from this value (lowercased), so LambdaStack must build
+   * its handler reference from the same value, not from `prefix`.
+   */
+  targetEnvironment: string
 }
 
 const REQUIRED = [
@@ -47,7 +56,8 @@ const REQUIRED = [
   'DOMAIN_NAME',
   'ALT_DOMAIN_NAME',
   'DNS_ZONE',
-  'FRONT_APP_NAME'
+  'FRONT_APP_NAME',
+  'TARGET_ENVIRONMENT'
 ] as const
 
 function required(env: NodeJS.ProcessEnv, name: string): string {
@@ -88,7 +98,10 @@ export function parseEnv(env: NodeJS.ProcessEnv): DeploymentConfig {
     frontAppName: required(env, 'FRONT_APP_NAME'),
     rootBucketName: ROOT_BUCKET_NAME,
     distDir,
-    maintenance: env.MAINTENANCE === 'true'
+    maintenance: env.MAINTENANCE === 'true',
+    // Lowercased to match server/cloudfront-gen-lambda.js, which lowercases it
+    // before using it in the generated handler filename.
+    targetEnvironment: required(env, 'TARGET_ENVIRONMENT').toLowerCase()
   }
 }
 

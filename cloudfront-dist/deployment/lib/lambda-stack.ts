@@ -8,7 +8,7 @@ export class LambdaStack extends core.Stack {
 
   private functionName: string
 
-  constructor(parent: Construct, id: string, distDir: string, props: core.StackProps, prefix: string) {
+  constructor(parent: Construct, id: string, distDir: string, props: core.StackProps, prefix: string, targetEnvironment: string) {
     super(parent, id, props)
 
     this.functionName = `${prefix}-blip-request-viewer`
@@ -17,7 +17,10 @@ export class LambdaStack extends core.Stack {
       functionName: this.functionName,
       runtime: lambda.Runtime.NODEJS_22_X,    // execution environment
       code: lambda.Code.fromAsset(`${distDir}/lambda`),  // code loaded from "lambda" directory
-      handler: `cloudfront-${prefix}-blip-request-viewer.handler`,                // file is "hello", function is "handler"
+      // Built from targetEnvironment, not prefix: server/cloudfront-gen-lambda.js
+      // names the generated file from TARGET_ENVIRONMENT, and prefix can differ
+      // from it (e.g. several parallel stacks sharing one app environment).
+      handler: `cloudfront-${targetEnvironment}-blip-request-viewer.handler`,
       role: new iam.Role(this, 'AllowLambdaServiceToAssumeRole', {
         assumedBy: new iam.CompositePrincipal(
           new iam.ServicePrincipal('lambda.amazonaws.com'),

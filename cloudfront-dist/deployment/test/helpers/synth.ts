@@ -29,6 +29,10 @@ export const REGION = 'eu-west-1'
 export const ZONE = 'ci.your-loops.test'
 export const ZONE_ID = 'ZCITESTZONE0001'
 export const PREFIX = 'ci'
+// Deliberately different from PREFIX: proves the handler filename follows
+// targetEnvironment, not prefix, the way a real deploy with several parallel
+// stacks sharing one app environment would need it to.
+export const TARGET_ENVIRONMENT = 'ci-env'
 export const FRONT_APP = 'blip'
 export const VERSION = '1.2.3'
 export const BUCKET = 'com.diabeloop.yourloops-cf'
@@ -91,7 +95,7 @@ export function synthWeb(isUnderMaintenance = false): SynthResult {
 export function synthEdge(): SynthResult {
   const app = newApp()
   const stack = new LambdaStack(
-    app, EDGE_STACK_ID, FIXTURE_DIST, { env: { region: 'us-east-1' } }, PREFIX
+    app, EDGE_STACK_ID, FIXTURE_DIST, { env: { region: 'us-east-1' } }, PREFIX, TARGET_ENVIRONMENT
   )
   return { app, stack, template: Template.fromStack(stack) }
 }

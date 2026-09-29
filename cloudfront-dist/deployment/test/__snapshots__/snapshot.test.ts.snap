@@ -34,7 +34,7 @@ exports[`edge stack matches the committed baseline 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cibliprequestviewerCurrentVersionBBC422FDf339e3e0c3fa91c70609ffdc99554538": {
+    "cibliprequestviewerCurrentVersionBBC422FDfa3f111bc7972ddf76af7957d45edc10": {
       "Metadata": {
         "aws:cdk:do-not-refactor": true,
       },
@@ -57,7 +57,7 @@ exports[`edge stack matches the committed baseline 1`] = `
           "S3Key": "[ASSET_HASH]",
         },
         "FunctionName": "ci-blip-request-viewer",
-        "Handler": "cloudfront-ci-blip-request-viewer.handler",
+        "Handler": "cloudfront-ci-env-blip-request-viewer.handler",
         "Role": {
           "Fn::GetAtt": [
             "AllowLambdaServiceToAssumeRoleC9749BDE",
@@ -74,7 +74,7 @@ exports[`edge stack matches the committed baseline 1`] = `
         "Name": "/blip/ci/lambda-edge-arn",
         "Type": "String",
         "Value": {
-          "Ref": "cibliprequestviewerCurrentVersionBBC422FDf339e3e0c3fa91c70609ffdc99554538",
+          "Ref": "cibliprequestviewerCurrentVersionBBC422FDfa3f111bc7972ddf76af7957d45edc10",
         },
       },
       "Type": "AWS::SSM::Parameter",
@@ -428,7 +428,7 @@ exports[`web stack matches the committed baseline 1`] = `
         "ciblipGetParameterCustomResourcePolicy7FF09F86",
       ],
       "Properties": {
-        "Create": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"ce9881dadab5f7c1e16543c1c14a2da760b7ed82a8521aab00549323953948d6-1.2.3"}}",
+        "Create": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"a4412d4147bc72f9a9d46e3980ef099a1ec31be84cc44ac8cd64a08c7bed06ac-1.2.3"}}",
         "InstallLatestAwsSdk": true,
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -436,7 +436,7 @@ exports[`web stack matches the committed baseline 1`] = `
             "Arn",
           ],
         },
-        "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"ce9881dadab5f7c1e16543c1c14a2da760b7ed82a8521aab00549323953948d6-1.2.3"}}",
+        "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"a4412d4147bc72f9a9d46e3980ef099a1ec31be84cc44ac8cd64a08c7bed06ac-1.2.3"}}",
       },
       "Type": "Custom::AWS",
       "UpdateReplacePolicy": "Delete",
@@ -1401,7 +1401,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         "ciblipGetParameterCustomResourcePolicy7FF09F86",
       ],
       "Properties": {
-        "Create": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"ce9881dadab5f7c1e16543c1c14a2da760b7ed82a8521aab00549323953948d6-1.2.3"}}",
+        "Create": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"a4412d4147bc72f9a9d46e3980ef099a1ec31be84cc44ac8cd64a08c7bed06ac-1.2.3"}}",
         "InstallLatestAwsSdk": true,
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -1409,7 +1409,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
             "Arn",
           ],
         },
-        "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"ce9881dadab5f7c1e16543c1c14a2da760b7ed82a8521aab00549323953948d6-1.2.3"}}",
+        "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"a4412d4147bc72f9a9d46e3980ef099a1ec31be84cc44ac8cd64a08c7bed06ac-1.2.3"}}",
       },
       "Type": "Custom::AWS",
       "UpdateReplacePolicy": "Delete",
