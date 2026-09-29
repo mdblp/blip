@@ -2,7 +2,6 @@
  * CloudFront Lambda Edge - Blip Request Viewer
  * Version: {{ VERSION }}
  * Environment: {{ TARGET_ENVIRONMENT }}
- * Date: {{ GEN_DATE }}
  */
 
 const crypto = require('crypto');

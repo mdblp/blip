@@ -224,7 +224,6 @@ function genOutputFile() {
     IOS_ASSETLINKS_JSON: appleAppSiteAssociationStringified,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
-    GEN_DATE: new Date().toISOString(),
     CSP: '',
     LANGUAGES: _.keysIn(locales.resources).join(',')
   }
