@@ -109,6 +109,21 @@ describe('DNS and certificate', () => {
     })
   })
 
+  it('retains the certificate instead of letting the custom resource delete it (R3a)', () => {
+    // Ahead of R3b (moving the cert into a native us-east-1 stack): this
+    // construct's delete handler polls ACM's InUseBy for ~3 minutes then
+    // throws while the distribution still references the cert, rolling the
+    // whole stack back. Unlike a normal CDK resource, applyRemovalPolicy on
+    // DnsValidatedCertificate does NOT set CloudFormation's DeletionPolicy —
+    // it passes a RemovalPolicy property into the custom resource, which its
+    // own backing Lambda checks before deciding whether to call
+    // DeleteCertificate. CloudFormation still deletes the *tracking* resource
+    // (DeletionPolicy stays Delete); the real ACM cert is what gets orphaned.
+    synthWeb().template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
+      RemovalPolicy: 'retain'
+    })
+  })
+
   it('points both domains at the distribution by CNAME', () => {
     const { template } = synthWeb()
     template.resourceCountIs('AWS::Route53::RecordSet', 2)

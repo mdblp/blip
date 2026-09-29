@@ -82,7 +82,16 @@ export class StaticWebSiteStack extends core.Stack {
       subjectAlternativeNames: [props.altDomainName],
       region: 'us-east-1',
     });
-
+    // R3a, ahead of R3b's move to a native us-east-1 acm.Certificate: this
+    // construct's delete handler polls ACM's InUseBy for ~3 minutes then
+    // throws, rolling the stack back — a CloudFront distribution keeps a
+    // cert "in use" well past that window. Unlike a normal CDK resource,
+    // this doesn't set CloudFormation's own DeletionPolicy — it passes a
+    // RemovalPolicy property into the custom resource, read by its own
+    // backing Lambda to decide whether to call DeleteCertificate at all.
+    // R3b's removal of this construct will orphan the underlying cert
+    // instead of failing to delete it; the orphan needs manual cleanup after.
+    cert.applyRemovalPolicy(core.RemovalPolicy.RETAIN);
 
     // Create the distribution
     const appOrigin = origins.S3BucketOrigin.withOriginAccessIdentity(bucket, {

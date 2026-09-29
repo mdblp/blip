@@ -565,6 +565,7 @@ exports[`web stack matches the committed baseline 1`] = `
         "DomainName": "app.ci.your-loops.test",
         "HostedZoneId": "ZCITESTZONE0001",
         "Region": "us-east-1",
+        "RemovalPolicy": "retain",
         "ServiceToken": {
           "Fn::GetAtt": [
             "ciblipcertificateCertificateRequestorFunction7EF95024",
@@ -1472,6 +1473,7 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         "DomainName": "app.ci.your-loops.test",
         "HostedZoneId": "ZCITESTZONE0001",
         "Region": "us-east-1",
+        "RemovalPolicy": "retain",
         "ServiceToken": {
           "Fn::GetAtt": [
             "ciblipcertificateCertificateRequestorFunction7EF95024",
