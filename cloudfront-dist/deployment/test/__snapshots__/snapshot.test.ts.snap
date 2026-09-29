@@ -35,6 +35,7 @@ exports[`edge stack matches the committed baseline 1`] = `
       "Type": "AWS::IAM::Role",
     },
     "cibliprequestviewerCurrentVersionBBC422FDfa3f111bc7972ddf76af7957d45edc10": {
+      "DeletionPolicy": "Retain",
       "Metadata": {
         "aws:cdk:do-not-refactor": true,
       },
@@ -44,6 +45,7 @@ exports[`edge stack matches the committed baseline 1`] = `
         },
       },
       "Type": "AWS::Lambda::Version",
+      "UpdateReplacePolicy": "Retain",
     },
     "cibliprequestviewerD090C18F": {
       "DependsOn": [
