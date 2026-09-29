@@ -29,10 +29,22 @@ export class LambdaStack extends core.Stack {
       })
     })
 
+    // Each deploy that changes the code publishes a new Version (new logical ID),
+    // orphaning the previous one. CloudFormation would then try to delete it
+    // during cleanup — but Lambda@Edge refuses to delete a version while it's
+    // still associated with a CloudFront distribution, and even after
+    // disassociating, replicas take hours to clean up across edge locations.
+    // That race is what produces DELETE_FAILED. Retaining means CloudFormation
+    // never attempts the delete, so it can't fail; old versions accumulate in
+    // AWS until manually cleaned up out-of-band (harmless, but worth doing
+    // periodically against the per-account code storage quota).
+    const version = override.currentVersion
+    version.applyRemovalPolicy(core.RemovalPolicy.RETAIN)
+
     new ssm.StringParameter(this, 'edge-lambda-arn', {
       parameterName: `/blip/${prefix}/lambda-edge-arn`,
       description: 'CDK parameter stored for cross region Edge Lambda',
-      stringValue: override.currentVersion.functionArn
+      stringValue: version.functionArn
     })
   }
 

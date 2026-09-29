@@ -46,6 +46,18 @@ describe('edge function', () => {
       Type: 'String'
     })
   })
+
+  it('retains the published version instead of letting CloudFormation delete it', () => {
+    // Every code change publishes a new Version (new logical ID), orphaning the
+    // previous one. Lambda@Edge refuses to delete a version that's still
+    // associated with a CloudFront distribution, and replicas take hours to
+    // clean up even after disassociating — so CloudFormation's delete attempt
+    // during cleanup fails with DELETE_FAILED. Retaining means it never tries.
+    synthEdge().template.hasResource('AWS::Lambda::Version', {
+      DeletionPolicy: 'Retain',
+      UpdateReplacePolicy: 'Retain'
+    })
+  })
 })
 
 describe('known defects', () => {
