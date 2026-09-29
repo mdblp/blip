@@ -155,7 +155,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         headerAction={
           <ViewMoreLink
             dataTestId="link-device-current-settings"
-            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewCurrentSettings}`}
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesCurrentSettingsSection}`}
           />
         }
       />
@@ -169,7 +169,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
           headerAction={
             <ViewMoreLink
               dataTestId="link-device-basal-safety"
-              targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewBasalSafety}`}
+              targetRoute={`${urlPrefix}${AppUserRoute.DevicesBasalSafetySection}`}
             />
           }
         >
@@ -187,7 +187,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         headerAction={
           <ViewMoreLink
             dataTestId="link-device-parameters-history"
-            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewSettingsHistory}`}
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSettingsHistorySection}`}
           />
         }
       >
@@ -239,7 +239,7 @@ export const DeviceViewSectionsOverviewCards: FC<DeviceViewSectionsOverviewCards
         headerAction={
           <ViewMoreLink
             dataTestId="link-device-devices-history"
-            targetRoute={`${urlPrefix}${AppUserRoute.DevicesSectionsOverviewDevicesHistory}`}
+            targetRoute={`${urlPrefix}${AppUserRoute.DevicesDevicesHistorySection}`}
           />
         }
       >

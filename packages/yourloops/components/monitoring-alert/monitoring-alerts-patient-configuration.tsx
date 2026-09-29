@@ -37,6 +37,8 @@ import { useMonitoringAlertsPatientConfiguration } from './monitoring-alerts-pat
 import { MonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration'
 import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const useMonitoringAlertConfigurationStyles = makeStyles()((theme) => ({
   cancelButton: {
@@ -96,6 +98,8 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
   const { classes } = useMonitoringAlertConfigurationStyles()
   const { t } = useTranslation()
   const { user } = useAuth()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
@@ -117,8 +121,10 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
   })
 
   useEffect(() => {
-    onUnsavedChangesChange(!saveButtonDisabled)
-  }, [onUnsavedChangesChange, saveButtonDisabled])
+    if (!isMobile) {
+      onUnsavedChangesChange(!saveButtonDisabled)
+    }
+  }, [onUnsavedChangesChange, saveButtonDisabled, isMobile])
 
   return (
     <>

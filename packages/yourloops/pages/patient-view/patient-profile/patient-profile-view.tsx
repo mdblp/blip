@@ -25,91 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useState } from 'react'
-import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import { PatientPersonalInformationSection } from './sections/personal-information/patient-personal-information-section'
-import { PatientProfileViewMenu } from './patient-profile-view-menu'
-import { PatientProfileViewSection } from './patient-profile-view-section.enum'
-import { AlertsSection } from './sections/alerts-section'
+import React, { type FC } from 'react'
 import { Patient } from '../../../lib/patient/models/patient.model'
-import { RangeSection } from './sections/range-section'
-import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
-import { useAuth } from '../../../lib/auth'
-import { ConfigService } from '../../../lib/config/config.service'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { PatientProfileViewDesktop } from './patient-profile-view-desktop'
+import { PatientProfileSectionsOverview } from './patient-profile-sections-overview'
 
 interface PatientProfileViewProps {
-  patient : Patient
+  patient: Patient
 }
 
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
-  const { user } = useAuth()
-  const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
-  const [showDialog, setShowDialog] = useState(false)
-  const dateOfBirthHidden = ConfigService.getDateOfBirthHidden()
-
-
-  const confirmNavigation = (): void => {
-    setShowDialog(false)
-    if (pendingNavigationSection !== null) {
-      setSelectedSection(pendingNavigationSection)
-    }
-    setPendingNavigationSection(null)
-    setHasUnsavedChanges(false)
-  }
-
-  const cancelNavigation = (): void => {
-    setShowDialog(false)
-    setPendingNavigationSection(null)
-  }
-
-  const selectSection = (section: PatientProfileViewSection): void => {
-    if (selectedSection === PatientProfileViewSection.Alerts && hasUnsavedChanges) {
-      setShowDialog(true)
-      setPendingNavigationSection(section)
-    } else {
-      setSelectedSection(section)
-    }
-  }
-
-  const handleUnsavedChangesChange = (hasChanges: boolean): void => {
-    setHasUnsavedChanges(hasChanges)
-  }
-
-  const displaySelectedSection = (): JSX.Element => {
-    switch (selectedSection) {
-      case PatientProfileViewSection.Information:
-        return <PatientPersonalInformationSection patient={patient} dateOfBirthHidden={dateOfBirthHidden} />
-      case PatientProfileViewSection.Range:
-        return <RangeSection patient={patient} />
-      case PatientProfileViewSection.Alerts:
-        return <AlertsSection patient={patient} onUnsavedChangesChange={handleUnsavedChangesChange} />
-      default:
-        return <></>
-    }
-  }
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <Container data-testid="patient-profile-view-container" maxWidth="xl">
-      <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
-        {user.isUserHcp() &&
-          <Grid size={3}>
-            <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
-          </Grid>
-        }
-        <Grid size={9}>
-          {displaySelectedSection()}
-        </Grid>
-        {showDialog &&
-          <UnsavedChangesDialog
-            open={showDialog}
-            onConfirm={confirmNavigation}
-            onClose={cancelNavigation}
-          />
-        }
-      </Grid>
-    </Container>
+    <>
+      {isMobile
+        ? <PatientProfileSectionsOverview patient={patient} />
+        : <PatientProfileViewDesktop patient={patient} />
+      }
+    </>
   )
 }

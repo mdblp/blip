@@ -70,11 +70,13 @@ export const MainHeaderPatientNavMobile: FunctionComponent<MainHeaderPatientNavM
     }
   }
 
-  const isMatchingDeviceViewSections = pathname.includes(`${AppUserRoute.Devices}/`);
+  const isMatchingDeviceViewSections = pathname.includes(`${AppUserRoute.Devices}/`)
+
+  const isMatchingPatientProfileViewSections = pathname.includes(`${AppUserRoute.PatientProfile}/`)
 
   return (
 
-    (user?.isUserPatient() && !isMatchingDeviceViewSections) ? (
+    (user?.isUserPatient() && !isMatchingDeviceViewSections && !isMatchingPatientProfileViewSections) ? (
       <Box
         ref={appBarRefCallback}
         className={appBar}
