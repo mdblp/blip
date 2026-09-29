@@ -23,10 +23,12 @@ import { Template } from 'aws-cdk-lib/assertions'
 import { StaticWebSiteStack } from '../../lib/staticwebsite-stack'
 import { LambdaStack } from '../../lib/lambda-stack'
 import { WebStackProps } from '../../lib/props/WebStackProps'
+import { EdgeStackProps } from '../../lib/props/EdgeStackProps'
 import { legacyDistributionLogicalId } from '../../lib/legacy-distribution-ids'
 
 export const ACCOUNT = '111111111111'
 export const REGION = 'eu-west-1'
+export const EDGE_REGION = 'us-east-1'
 export const ZONE = 'ci.your-loops.test'
 export const ZONE_ID = 'ZCITESTZONE0001'
 export const PREFIX = 'ci'
@@ -57,6 +59,16 @@ export const WEB_PROPS: WebStackProps = {
   legacyDistributionLogicalId: legacyDistributionLogicalId(WEB_STACK_ID)
 }
 
+export const EDGE_PROPS: EdgeStackProps = {
+  env: { account: ACCOUNT, region: EDGE_REGION },
+  prefix: PREFIX,
+  targetEnvironment: TARGET_ENVIRONMENT,
+  frontAppName: FRONT_APP,
+  domainName: `app.${ZONE}`,
+  altDomainName: `www.${ZONE}`,
+  zone: ZONE
+}
+
 /**
  * Build an App carrying the same context the CDK CLI would inject, so the tests
  * synthesize what `cdk deploy` actually produces rather than a near-miss.
@@ -75,6 +87,12 @@ function newApp(): cdk.App {
   // the '/hostedzone/' prefix and the trailing dot.
   app.node.setContext(
     `hosted-zone:account=${ACCOUNT}:domainName=${ZONE}:region=${REGION}`,
+    { Id: `/hostedzone/${ZONE_ID}`, Name: `${ZONE}.` }
+  )
+  // R3b: the edge stack does its own hosted-zone lookup (for its own
+  // us-east-1 certificate), a different context key since region differs.
+  app.node.setContext(
+    `hosted-zone:account=${ACCOUNT}:domainName=${ZONE}:region=${EDGE_REGION}`,
     { Id: `/hostedzone/${ZONE_ID}`, Name: `${ZONE}.` }
   )
   return app
@@ -97,7 +115,7 @@ export function synthWeb(isUnderMaintenance = false): SynthResult {
 export function synthEdge(): SynthResult {
   const app = newApp()
   const stack = new LambdaStack(
-    app, EDGE_STACK_ID, FIXTURE_DIST, { env: { region: 'us-east-1' } }, PREFIX, TARGET_ENVIRONMENT
+    app, EDGE_STACK_ID, FIXTURE_DIST, EDGE_PROPS
   )
   return { app, stack, template: Template.fromStack(stack) }
 }

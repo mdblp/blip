@@ -18,9 +18,16 @@ const app = new cdk.App();
 // Create edge Lambda
 const ls = new LambdaStack(app, edgeStackName(config), config.distDir, {
   env: {
+    account: config.awsAccount, // concrete account+region, needed for this stack's own hosted-zone lookup (R3b)
     region: 'us-east-1' // hardcoded because it should not change with current version of AWS !
-  }
-}, config.prefix, config.targetEnvironment);
+  },
+  prefix: config.prefix,
+  targetEnvironment: config.targetEnvironment,
+  frontAppName: config.frontAppName,
+  domainName: config.domainName,
+  altDomainName: config.altDomainName,
+  zone: config.zone
+});
 
 // Create ressouce needed to static hosting with cloudfront
 new StaticWebSiteStack(app, appStackName(config), config.distDir, {

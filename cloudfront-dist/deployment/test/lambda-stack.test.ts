@@ -2,7 +2,7 @@
  * Property assertions for the us-east-1 Lambda@Edge stack.
  */
 import { Match } from 'aws-cdk-lib/assertions'
-import { synthEdge, PREFIX, TARGET_ENVIRONMENT } from './helpers/synth'
+import { synthEdge, PREFIX, TARGET_ENVIRONMENT, FRONT_APP, ZONE, ZONE_ID } from './helpers/synth'
 
 describe('edge function', () => {
   it('declares the function name and handler the rest of the system expects', () => {
@@ -40,9 +40,11 @@ describe('edge function', () => {
   it('publishes the version ARN to the parameter the web stack reads', () => {
     // This parameter name is the only contract between the two stacks and it is
     // a plain string on both sides, so a typo would surface as a failed deploy
-    // with no obvious cause.
+    // with no obvious cause. Named from frontAppName on both sides (R3b) — was
+    // hardcoded "blip" here, only ever matching the web stack's dynamic read
+    // side because FRONT_APP_NAME happens to always equal "blip".
     synthEdge().template.hasResourceProperties('AWS::SSM::Parameter', {
-      Name: `/blip/${PREFIX}/lambda-edge-arn`,
+      Name: `/${FRONT_APP}/${PREFIX}/lambda-edge-arn`,
       Type: 'String'
     })
   })
@@ -56,6 +58,32 @@ describe('edge function', () => {
     synthEdge().template.hasResource('AWS::Lambda::Version', {
       DeletionPolicy: 'Retain',
       UpdateReplacePolicy: 'Retain'
+    })
+  })
+})
+
+describe('certificate (R3b)', () => {
+  // Moved here from the web stack: the modern acm.Certificate creates its DNS
+  // validation records in the stack it's declared in, and can't create a
+  // us-east-1 cert from a stack deployed elsewhere (aws/aws-cdk#23931) — this
+  // stack already is the "separate us-east-1 stack" workaround that
+  // discussion names. A typed resource now, unlike the old untyped custom
+  // resource — that's the point of the migration, not incidental.
+  it('requests a certificate covering both domains, validated via DNS', () => {
+    synthEdge().template.hasResourceProperties('AWS::CertificateManager::Certificate', {
+      DomainName: `app.${ZONE}`,
+      SubjectAlternativeNames: [`www.${ZONE}`],
+      ValidationMethod: 'DNS',
+      DomainValidationOptions: Match.arrayWith([
+        Match.objectLike({ DomainName: `app.${ZONE}`, HostedZoneId: ZONE_ID })
+      ])
+    })
+  })
+
+  it('publishes the certificate ARN to the parameter the web stack reads', () => {
+    synthEdge().template.hasResourceProperties('AWS::SSM::Parameter', {
+      Name: `/${FRONT_APP}/${PREFIX}/certificate-arn`,
+      Type: 'String'
     })
   })
 })

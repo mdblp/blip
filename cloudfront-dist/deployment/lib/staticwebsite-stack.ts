@@ -73,25 +73,42 @@ export class StaticWebSiteStack extends core.Stack {
       domainName: props.zone
     });
 
-    // Create the Certificate
-    // Here this construct is deprecated in v2 however still possible to use it
-    // and we cannot migrate to the  new one due to this https://github.com/aws/aws-cdk/discussions/23931
-    const cert = new acm.DnsValidatedCertificate(this, `${id}-certificate`, {
-      hostedZone: zone,
-      domainName: props.domainName,
-      subjectAlternativeNames: [props.altDomainName],
-      region: 'us-east-1',
+    // R3b: the certificate itself now lives in the edge stack (a native
+    // us-east-1 acm.Certificate — see lib/lambda-stack.ts for why). Only its
+    // ARN crosses back here, the same way the lambda ARN already does.
+    const certParameter = new rsc.AwsCustomResource(this, `${id}-GetCertificateParameter`, {
+      policy: rsc.AwsCustomResourcePolicy.fromStatements([
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['ssm:GetParameter*'],
+          resources: [
+            this.formatArn({
+              service: 'ssm',
+              region: 'us-east-1',
+              resource: `parameter/${props.FrontAppName}/${props.prefix}/certificate-arn`
+            })
+          ]
+        })
+      ]),
+      onUpdate: {
+        service: 'SSM',
+        action: 'getParameter',
+        parameters: {
+          Name: `/${props.FrontAppName}/${props.prefix}/certificate-arn`
+        },
+        region: 'us-east-1',
+        // Deterministic from the cert's own properties, not STACK_VERSION: a
+        // certificate doesn't change on every app release the way the lambda
+        // does, so tying its refresh to the version would force a needless
+        // re-fetch — and a non-empty diff — on every ordinary deploy.
+        physicalResourceId: rsc.PhysicalResourceId.of(
+          `${props.domainName}-${props.altDomainName}`
+        )
+      }
     });
-    // R3a, ahead of R3b's move to a native us-east-1 acm.Certificate: this
-    // construct's delete handler polls ACM's InUseBy for ~3 minutes then
-    // throws, rolling the stack back — a CloudFront distribution keeps a
-    // cert "in use" well past that window. Unlike a normal CDK resource,
-    // this doesn't set CloudFormation's own DeletionPolicy — it passes a
-    // RemovalPolicy property into the custom resource, read by its own
-    // backing Lambda to decide whether to call DeleteCertificate at all.
-    // R3b's removal of this construct will orphan the underlying cert
-    // instead of failing to delete it; the orphan needs manual cleanup after.
-    cert.applyRemovalPolicy(core.RemovalPolicy.RETAIN);
+    const cert = acm.Certificate.fromCertificateArn(
+      this, `${id}-imported-certificate`, certParameter.getResponseField('Parameter.Value')
+    );
 
     // Create the distribution
     const appOrigin = origins.S3BucketOrigin.withOriginAccessIdentity(bucket, {

@@ -34,7 +34,44 @@ exports[`edge stack matches the committed baseline 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cibliprequestviewerCurrentVersionBBC422FDfa3f111bc7972ddf76af7957d45edc10": {
+    "certificatearnE930962C": {
+      "Properties": {
+        "Description": "CDK parameter stored for cross region ACM certificate",
+        "Name": "/blip/ci/certificate-arn",
+        "Type": "String",
+        "Value": {
+          "Ref": "cibliplambdaedgecertificateB725C99E",
+        },
+      },
+      "Type": "AWS::SSM::Parameter",
+    },
+    "cibliplambdaedgecertificateB725C99E": {
+      "Properties": {
+        "DomainName": "app.ci.your-loops.test",
+        "DomainValidationOptions": [
+          {
+            "DomainName": "app.ci.your-loops.test",
+            "HostedZoneId": "ZCITESTZONE0001",
+          },
+          {
+            "DomainName": "www.ci.your-loops.test",
+            "HostedZoneId": "ZCITESTZONE0001",
+          },
+        ],
+        "SubjectAlternativeNames": [
+          "www.ci.your-loops.test",
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ci-blip-lambda-edge/ci-blip-lambda-edge-certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+    },
+    "cibliprequestviewerCurrentVersionBBC422FD726324d4eb5a93d0509637db1e57ee3c": {
       "DeletionPolicy": "Retain",
       "Metadata": {
         "aws:cdk:do-not-refactor": true,
@@ -53,9 +90,7 @@ exports[`edge stack matches the committed baseline 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
-          },
+          "S3Bucket": "cdk-hnb659fds-assets-111111111111-us-east-1",
           "S3Key": "[ASSET_HASH]",
         },
         "FunctionName": "ci-blip-request-viewer",
@@ -76,7 +111,7 @@ exports[`edge stack matches the committed baseline 1`] = `
         "Name": "/blip/ci/lambda-edge-arn",
         "Type": "String",
         "Value": {
-          "Ref": "cibliprequestviewerCurrentVersionBBC422FDfa3f111bc7972ddf76af7957d45edc10",
+          "Ref": "cibliprequestviewerCurrentVersionBBC422FD726324d4eb5a93d0509637db1e57ee3c",
         },
       },
       "Type": "AWS::SSM::Parameter",
@@ -392,6 +427,57 @@ exports[`web stack matches the committed baseline 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
+    "ciblipGetCertificateParameter9978CB1E": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "ciblipGetCertificateParameterCustomResourcePolicyC8DEE11C",
+      ],
+      "Properties": {
+        "Create": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/certificate-arn"},"region":"us-east-1","physicalResourceId":{"id":"app.ci.your-loops.test-www.ci.your-loops.test"}}",
+        "InstallLatestAwsSdk": true,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+            "Arn",
+          ],
+        },
+        "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/certificate-arn"},"region":"us-east-1","physicalResourceId":{"id":"app.ci.your-loops.test-www.ci.your-loops.test"}}",
+      },
+      "Type": "Custom::AWS",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "ciblipGetCertificateParameterCustomResourcePolicyC8DEE11C": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ssm:GetParameter*",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ssm:us-east-1:111111111111:parameter/blip/ci/certificate-arn",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ciblipGetCertificateParameterCustomResourcePolicyC8DEE11C",
+        "Roles": [
+          {
+            "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "ciblipGetParameterCustomResourcePolicy7FF09F86": {
       "Properties": {
         "PolicyDocument": {
@@ -441,142 +527,6 @@ exports[`web stack matches the committed baseline 1`] = `
         "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"a4412d4147bc72f9a9d46e3980ef099a1ec31be84cc44ac8cd64a08c7bed06ac-1.2.3"}}",
       },
       "Type": "Custom::AWS",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "ciblipcertificateCertificateRequestorFunction7EF95024": {
-      "DependsOn": [
-        "ciblipcertificateCertificateRequestorFunctionServiceRoleDefaultPolicyD6952CCE",
-        "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-111111111111-eu-west-1",
-          "S3Key": "[ASSET_HASH]",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs24.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "ciblipcertificateCertificateRequestorFunctionServiceRoleDefaultPolicyD6952CCE": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.app.ci.your-loops.test",
-                    "*.www.ci.your-loops.test",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/ZCITESTZONE0001",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "ciblipcertificateCertificateRequestorFunctionServiceRoleDefaultPolicyD6952CCE",
-        "Roles": [
-          {
-            "Ref": "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "ciblipcertificateCertificateRequestorResource9C1483E6": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "DomainName": "app.ci.your-loops.test",
-        "HostedZoneId": "ZCITESTZONE0001",
-        "Region": "us-east-1",
-        "RemovalPolicy": "retain",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "ciblipcertificateCertificateRequestorFunction7EF95024",
-            "Arn",
-          ],
-        },
-        "SubjectAlternativeNames": [
-          "www.ci.your-loops.test",
-        ],
-      },
-      "Type": "AWS::CloudFormation::CustomResource",
       "UpdateReplacePolicy": "Delete",
     },
     "ciblipcloudfrontCFDistribution78F41495": {
@@ -671,8 +621,8 @@ exports[`web stack matches the committed baseline 1`] = `
           "ViewerCertificate": {
             "AcmCertificateArn": {
               "Fn::GetAtt": [
-                "ciblipcertificateCertificateRequestorResource9C1483E6",
-                "Arn",
+                "ciblipGetCertificateParameter9978CB1E",
+                "Parameter.Value",
               ],
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",
@@ -1300,6 +1250,57 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
+    "ciblipGetCertificateParameter9978CB1E": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "ciblipGetCertificateParameterCustomResourcePolicyC8DEE11C",
+      ],
+      "Properties": {
+        "Create": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/certificate-arn"},"region":"us-east-1","physicalResourceId":{"id":"app.ci.your-loops.test-www.ci.your-loops.test"}}",
+        "InstallLatestAwsSdk": true,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+            "Arn",
+          ],
+        },
+        "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/certificate-arn"},"region":"us-east-1","physicalResourceId":{"id":"app.ci.your-loops.test-www.ci.your-loops.test"}}",
+      },
+      "Type": "Custom::AWS",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "ciblipGetCertificateParameterCustomResourcePolicyC8DEE11C": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ssm:GetParameter*",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ssm:us-east-1:111111111111:parameter/blip/ci/certificate-arn",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ciblipGetCertificateParameterCustomResourcePolicyC8DEE11C",
+        "Roles": [
+          {
+            "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "ciblipGetParameterCustomResourcePolicy7FF09F86": {
       "Properties": {
         "PolicyDocument": {
@@ -1349,142 +1350,6 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
         "Update": "{"service":"SSM","action":"getParameter","parameters":{"Name":"/blip/ci/lambda-edge-arn"},"region":"us-east-1","physicalResourceId":{"id":"a4412d4147bc72f9a9d46e3980ef099a1ec31be84cc44ac8cd64a08c7bed06ac-1.2.3"}}",
       },
       "Type": "Custom::AWS",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "ciblipcertificateCertificateRequestorFunction7EF95024": {
-      "DependsOn": [
-        "ciblipcertificateCertificateRequestorFunctionServiceRoleDefaultPolicyD6952CCE",
-        "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-111111111111-eu-west-1",
-          "S3Key": "[ASSET_HASH]",
-        },
-        "Handler": "index.certificateRequestHandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs24.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "ciblipcertificateCertificateRequestorFunctionServiceRoleDefaultPolicyD6952CCE": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "acm:RequestCertificate",
-                "acm:DescribeCertificate",
-                "acm:DeleteCertificate",
-                "acm:AddTagsToCertificate",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:GetChange",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "route53:changeResourceRecordSets",
-              "Condition": {
-                "ForAllValues:StringEquals": {
-                  "route53:ChangeResourceRecordSetsActions": [
-                    "UPSERT",
-                  ],
-                  "route53:ChangeResourceRecordSetsRecordTypes": [
-                    "CNAME",
-                  ],
-                },
-                "ForAllValues:StringLike": {
-                  "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
-                    "*.app.ci.your-loops.test",
-                    "*.www.ci.your-loops.test",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":route53:::hostedzone/ZCITESTZONE0001",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "ciblipcertificateCertificateRequestorFunctionServiceRoleDefaultPolicyD6952CCE",
-        "Roles": [
-          {
-            "Ref": "ciblipcertificateCertificateRequestorFunctionServiceRole527F15BC",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "ciblipcertificateCertificateRequestorResource9C1483E6": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "DomainName": "app.ci.your-loops.test",
-        "HostedZoneId": "ZCITESTZONE0001",
-        "Region": "us-east-1",
-        "RemovalPolicy": "retain",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "ciblipcertificateCertificateRequestorFunction7EF95024",
-            "Arn",
-          ],
-        },
-        "SubjectAlternativeNames": [
-          "www.ci.your-loops.test",
-        ],
-      },
-      "Type": "AWS::CloudFormation::CustomResource",
       "UpdateReplacePolicy": "Delete",
     },
     "ciblipcloudfrontCFDistribution78F41495": {
@@ -1579,8 +1444,8 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
           "ViewerCertificate": {
             "AcmCertificateArn": {
               "Fn::GetAtt": [
-                "ciblipcertificateCertificateRequestorResource9C1483E6",
-                "Arn",
+                "ciblipGetCertificateParameter9978CB1E",
+                "Parameter.Value",
               ],
             },
             "MinimumProtocolVersion": "TLSv1.2_2021",

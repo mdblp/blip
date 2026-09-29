@@ -2,15 +2,19 @@ import * as core from 'aws-cdk-lib'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as ssm from 'aws-cdk-lib/aws-ssm'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
+import * as route53 from 'aws-cdk-lib/aws-route53'
 import { Construct } from 'constructs'
+import { EdgeStackProps } from './props/EdgeStackProps'
 
 export class LambdaStack extends core.Stack {
 
   private functionName: string
 
-  constructor(parent: Construct, id: string, distDir: string, props: core.StackProps, prefix: string, targetEnvironment: string) {
+  constructor(parent: Construct, id: string, distDir: string, props: EdgeStackProps) {
     super(parent, id, props)
 
+    const prefix = props.prefix
     this.functionName = `${prefix}-blip-request-viewer`
 
     const override = new lambda.Function(this, this.functionName, {
@@ -20,7 +24,7 @@ export class LambdaStack extends core.Stack {
       // Built from targetEnvironment, not prefix: server/cloudfront-gen-lambda.js
       // names the generated file from TARGET_ENVIRONMENT, and prefix can differ
       // from it (e.g. several parallel stacks sharing one app environment).
-      handler: `cloudfront-${targetEnvironment}-blip-request-viewer.handler`,
+      handler: `cloudfront-${props.targetEnvironment}-blip-request-viewer.handler`,
       role: new iam.Role(this, 'AllowLambdaServiceToAssumeRole', {
         assumedBy: new iam.CompositePrincipal(
           new iam.ServicePrincipal('lambda.amazonaws.com'),
@@ -42,9 +46,32 @@ export class LambdaStack extends core.Stack {
     version.applyRemovalPolicy(core.RemovalPolicy.RETAIN)
 
     new ssm.StringParameter(this, 'edge-lambda-arn', {
-      parameterName: `/blip/${prefix}/lambda-edge-arn`,
+      // Was hardcoded to `/blip/...`, read on the other side as
+      // `/${FrontAppName}/...` — only ever worked because FRONT_APP_NAME is
+      // always "blip". Named from frontAppName on both sides now.
+      parameterName: `/${props.frontAppName}/${prefix}/lambda-edge-arn`,
       description: 'CDK parameter stored for cross region Edge Lambda',
       stringValue: version.functionArn
+    })
+
+    // R3b: the certificate moves here from the web stack. The modern
+    // acm.Certificate creates its DNS validation records in the stack it's
+    // declared in, and can't create a us-east-1 cert from a stack deployed
+    // elsewhere (aws/aws-cdk#23931) — this stack already is the "separate
+    // us-east-1 stack" that discussion names as the workaround. Looked up
+    // again here rather than passed cross-stack, same reasoning as the
+    // lambda ARN: avoids CDK's experimental crossRegionReferences.
+    const zone = route53.HostedZone.fromLookup(this, 'domainName', { domainName: props.zone })
+    const cert = new acm.Certificate(this, `${id}-certificate`, {
+      domainName: props.domainName,
+      subjectAlternativeNames: [props.altDomainName],
+      validation: acm.CertificateValidation.fromDns(zone)
+    })
+
+    new ssm.StringParameter(this, 'certificate-arn', {
+      parameterName: `/${props.frontAppName}/${prefix}/certificate-arn`,
+      description: 'CDK parameter stored for cross region ACM certificate',
+      stringValue: cert.certificateArn
     })
   }
 

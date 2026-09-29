@@ -8,7 +8,7 @@
  * forgets to pin them fails these tests rather than production.
  */
 import { Match } from 'aws-cdk-lib/assertions'
-import { synthWeb, distributionConfig, ZONE, ZONE_ID, VERSION, WEB_STACK_ID } from './helpers/synth'
+import { synthWeb, distributionConfig, ZONE, ZONE_ID, VERSION, WEB_STACK_ID, FRONT_APP, PREFIX } from './helpers/synth'
 
 describe('transport security', () => {
   it('negotiates TLS 1.2 (2021 policy) over SNI', () => {
@@ -96,31 +96,29 @@ describe('origin access', () => {
 })
 
 describe('DNS and certificate', () => {
-  it('requests a us-east-1 certificate covering both domains', () => {
-    // DnsValidatedCertificate synthesizes as an untyped custom resource. When it
-    // is replaced by acm.Certificate this assertion must be rewritten against
-    // AWS::CertificateManager::Certificate — that is intentional, it makes the
-    // construct swap visible rather than silent.
-    synthWeb().template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
-      DomainName: `app.${ZONE}`,
-      SubjectAlternativeNames: [`www.${ZONE}`],
-      HostedZoneId: ZONE_ID,
-      Region: 'us-east-1'
+  // R3b moved the certificate itself into the edge stack (see
+  // lambda-stack.test.ts for AWS::CertificateManager::Certificate assertions
+  // — this is exactly the construct-swap visibility the old comment here
+  // anticipated). Only the cross-region ARN fetch lives in this stack now.
+  it('fetches the certificate ARN from the edge stack over SSM', () => {
+    synthWeb().template.hasResourceProperties('Custom::AWS', {
+      Create: Match.serializedJson(Match.objectLike({
+        service: 'SSM',
+        action: 'getParameter',
+        parameters: { Name: `/${FRONT_APP}/${PREFIX}/certificate-arn` },
+        region: 'us-east-1'
+      }))
     })
   })
 
-  it('retains the certificate instead of letting the custom resource delete it (R3a)', () => {
-    // Ahead of R3b (moving the cert into a native us-east-1 stack): this
-    // construct's delete handler polls ACM's InUseBy for ~3 minutes then
-    // throws while the distribution still references the cert, rolling the
-    // whole stack back. Unlike a normal CDK resource, applyRemovalPolicy on
-    // DnsValidatedCertificate does NOT set CloudFormation's DeletionPolicy —
-    // it passes a RemovalPolicy property into the custom resource, which its
-    // own backing Lambda checks before deciding whether to call
-    // DeleteCertificate. CloudFormation still deletes the *tracking* resource
-    // (DeletionPolicy stays Delete); the real ACM cert is what gets orphaned.
-    synthWeb().template.hasResourceProperties('AWS::CloudFormation::CustomResource', {
-      RemovalPolicy: 'retain'
+  it('derives the certificate-fetch physical ID from the domains, not STACK_VERSION', () => {
+    // A certificate doesn't change on every app release the way the lambda
+    // does — tying its refresh to the version would force a needless
+    // re-fetch, and a non-empty diff, on every ordinary deploy.
+    synthWeb().template.hasResourceProperties('Custom::AWS', {
+      Create: Match.serializedJson(Match.objectLike({
+        physicalResourceId: { id: `app.${ZONE}-www.${ZONE}` }
+      }))
     })
   })
 
