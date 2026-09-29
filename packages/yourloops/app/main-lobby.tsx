@@ -73,57 +73,55 @@ const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route a
 const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
 
-interface UserGate {
-  route: AppRoute
+interface RedirectRule {
+  targetRoute: AppRoute
+  /** user has to visit this route before pursuing other activities on yourloops **/
   isPending: (user: User) => boolean
   /**
-   * Routes on which the user is already dealing with this gate, so no redirect is issued.
-   * It MUST contain `route`, otherwise the redirect would be issued again and again.
+   * Routes on which the redirect to `targetRoute` is skipped because the user is already on a page with a bigger priority
+   * It MUST contain `targetRoute`, otherwise the redirect would be issued again and again.
    */
-  satisfiedByRoutes: AppRoute[]
+  skipRedirectOnRoutes: AppRoute[]
 }
 
 /**
- * The gates a user has to clear once logged in, in the order they are presented.
+ * The pages a user has to visit once logged in, in the order they are presented.
  *
- * Termination invariant: `getPendingUserGate` only depends on the user, so navigating cannot change
- * which gate wins, and every gate is satisfied by its own route. A redirect to `pendingGate.route`
- * therefore resolves to the same gate and returns undefined: at most one redirect is issued per user
- * state, whatever the combination of pending gates. Keep it that way when adding a new gate.
+ * Termination invariant: `getPendingRedirectRule` only depends on the user, so navigating cannot
+ * change which rule wins, and every rule skips its own `targetRoute`. A redirect to
+ * `pendingRule.targetRoute` therefore resolves to the same rule and returns undefined: at most one
+ * redirect is issued per user state, whatever the combination of pending rules. Keep it that way when
+ * adding a new rule.
  */
-export const USER_GATES: UserGate[] = [
+export const REDIRECT_RULES: RedirectRule[] = [
   {
-    route: AppRoute.CompleteSignup,
+    targetRoute: AppRoute.CompleteSignup,
     isPending: (user: User) => user.isFirstLogin(),
-    satisfiedByRoutes: [AppRoute.CompleteSignup]
+    skipRedirectOnRoutes: [AppRoute.CompleteSignup]
   },
   {
-    route: AppRoute.DblCommunication,
+    targetRoute: AppRoute.DblCommunication,
     isPending: (user: User) => user.hasToDisplayDblCommunicationPage(),
-    // The signup stepper sets the role on its last step and then displays its own completion message:
-    // it navigates to '/' by itself, do not interrupt it.
-    satisfiedByRoutes: [AppRoute.DblCommunication, AppRoute.CompleteSignup]
+    skipRedirectOnRoutes: [AppRoute.DblCommunication, AppRoute.CompleteSignup]
   },
   {
-    route: AppRoute.NewConsent,
+    targetRoute: AppRoute.NewConsent,
     isPending: (user: User) => user.hasToAcceptNewConsent(),
-    satisfiedByRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
+    skipRedirectOnRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
   },
   {
-    route: AppRoute.RenewConsent,
+    targetRoute: AppRoute.RenewConsent,
     isPending: (user: User) => user.hasToRenewConsent(),
-    satisfiedByRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
+    skipRedirectOnRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
   },
   {
-    route: AppRoute.Training,
+    targetRoute: AppRoute.Training,
     isPending: (user: User) => user.hasToDisplayTrainingInfoPage(),
-    // A user who just completed the signup has no training acknowledgment yet: let them read the
-    // completion message. Same when they are acknowledging their consents.
-    satisfiedByRoutes: [AppRoute.Training, AppRoute.CompleteSignup, AppRoute.NewConsent, AppRoute.RenewConsent]
+    skipRedirectOnRoutes: [AppRoute.Training, AppRoute.CompleteSignup, AppRoute.NewConsent, AppRoute.RenewConsent]
   }
 ]
 
-const getPendingUserGate = (user: User): UserGate | undefined => USER_GATES.find((gate: UserGate) => gate.isPending(user))
+const getPendingRedirectRule = (user: User): RedirectRule | undefined => REDIRECT_RULES.find((rule: RedirectRule) => rule.isPending(user))
 
 export const getRedirectUrl = (route: string, user: User | null, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
@@ -139,11 +137,11 @@ export const getRedirectUrl = (route: string, user: User | null, isAuthenticated
     return undefined
   }
 
-  const pendingGate = getPendingUserGate(user)
-  if (!pendingGate || pendingGate.satisfiedByRoutes.includes(route as AppRoute)) {
+  const pendingRule = getPendingRedirectRule(user)
+  if (!pendingRule || pendingRule.skipRedirectOnRoutes.includes(route as AppRoute)) {
     return undefined
   }
-  return pendingGate.route
+  return pendingRule.targetRoute
 }
 
 export const MainLobby: FC = () => {

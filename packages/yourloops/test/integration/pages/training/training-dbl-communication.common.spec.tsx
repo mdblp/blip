@@ -27,7 +27,7 @@
 
 // Regression test for a redirect loop between the onboarding "gate" pages: when a user had both a
 // pending training acknowledgment and a pending Diabeloop communication, the app bounced forever
-// between '/training' and '/dbl-communication' (see main-lobby.tsx `USER_GATES`).
+// between '/training' and '/dbl-communication' (see main-lobby.tsx `REDIRECT_RULES`).
 
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'

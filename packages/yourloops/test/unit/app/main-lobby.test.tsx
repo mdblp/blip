@@ -26,10 +26,10 @@
  */
 
 import type User from '../../../lib/auth/models/user.model'
-import { getRedirectUrl, USER_GATES } from '../../../app/main-lobby'
+import { getRedirectUrl, REDIRECT_RULES } from '../../../app/main-lobby'
 import { AppRoute } from '../../../models/enums/routes.enum'
 
-interface UserGateFlags {
+interface UserFlags {
   isFirstLogin?: boolean
   hasToAcceptNewConsent?: boolean
   hasToRenewConsent?: boolean
@@ -37,7 +37,7 @@ interface UserGateFlags {
   hasToDisplayDblCommunicationPage?: boolean
 }
 
-const buildUser = (flags: UserGateFlags = {}): User => ({
+const buildUser = (flags: UserFlags = {}): User => ({
   isFirstLogin: () => flags.isFirstLogin ?? false,
   hasToAcceptNewConsent: () => flags.hasToAcceptNewConsent ?? false,
   hasToRenewConsent: () => flags.hasToRenewConsent ?? false,
@@ -174,14 +174,14 @@ describe('Main lobby', () => {
         testGetRedirectUrl('/complete-signup', buildUser({ hasToDisplayTrainingInfoPage: true }), true, undefined)
       })
 
-      it('should be satisfied by its own route for every gate', () => {
-        USER_GATES.forEach((gate) => {
-          expect(gate.satisfiedByRoutes).toContain(gate.route)
+      it('should skip its own redirect for every rule', () => {
+        REDIRECT_RULES.forEach((rule) => {
+          expect(rule.skipRedirectOnRoutes).toContain(rule.targetRoute)
         })
       })
 
       it('should always reach a stable route, for every combination of pending gates and every route', () => {
-        const flagNames: Array<keyof UserGateFlags> = [
+        const flagNames: Array<keyof UserFlags> = [
           'isFirstLogin',
           'hasToAcceptNewConsent',
           'hasToRenewConsent',
@@ -192,7 +192,7 @@ describe('Main lobby', () => {
         const maxHops = flagNames.length + 2
 
         for (let combination = 0; combination < 2 ** flagNames.length; combination++) {
-          const flags = flagNames.reduce<UserGateFlags>((acc, flagName, index) => {
+          const flags = flagNames.reduce<UserFlags>((acc, flagName, index) => {
             acc[flagName] = (combination & (1 << index)) !== 0
             return acc
           }, {})
