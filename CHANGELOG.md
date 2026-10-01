@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3790 "Lead clinicians" column in Patients list
 
 ### Changed
+- YLP-1936 rework invitation flow (patient,members and direct share)
 - YLP-3338 Use weight unit from parameters instead of "kg"
 - YLP-3490 Update notes UI
 - YLP-3781 Fix the conflict between "communication page" and "training ack" pages
