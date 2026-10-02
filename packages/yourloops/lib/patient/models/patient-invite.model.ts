@@ -26,7 +26,6 @@
  */
 
 export interface PatientInvite {
-  id: string
   creatorId: string
   creationDate: string
 }

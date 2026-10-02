@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum NotificationType {
-  careTeamPatientInvitation,
-  careTeamProInvitation,
-  directInvitation,
+export enum NotificationMetricType {
+  shareData = 'share_data',
+  joinTeam = 'join_team'
 }

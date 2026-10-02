@@ -93,8 +93,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending ||
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
-  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
-    (teamMember.status === UserInviteStatus.Pending && !teamMember.invitationId) // This condition basically means that the logged-in user did not invite the pending user
+  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId
 
   const memberFullName = teamMember.profile?.fullName
   const memberInitials = getInitials(memberFullName)

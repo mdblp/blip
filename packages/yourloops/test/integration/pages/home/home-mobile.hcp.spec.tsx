@@ -52,7 +52,6 @@ import {
   testAckMonitoringAlertsWithErrorMobile,
   testPatientListForHcpMobile,
 } from '../../use-cases/patient-list-management'
-import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
@@ -87,7 +86,7 @@ describe('HCP home page, mobile version', () => {
     mockAnalyticsApi()
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
-    jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
+    // For testing with a mobile sized device
     mockMobileScreen();
   })
 

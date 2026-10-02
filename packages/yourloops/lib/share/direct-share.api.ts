@@ -30,7 +30,6 @@ import { getCurrentLang } from '../language'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ShareUser } from './models/share-user.model'
 import { type DirectShareAPI } from './models/direct-share-api.model'
-import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 
@@ -40,9 +39,12 @@ const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE = HttpStatus.StatusMethodN
 export default class DirectShareApi {
   static async addDirectShare(userId: string, email: string): Promise<void> {
     try {
-      const { data } = await HttpService.post<void, { email: string }>({
-        url: `/confirm/send/invite/${userId}`,
-        payload: { email },
+      const { data } = await HttpService.post<void, { patientId: string, viewerEmail: string }>({
+        url: `/crew/v1/direct-shares`,
+        payload: {
+          patientId: userId,
+          viewerEmail: email
+        },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
       }, [PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE])
       return data
@@ -60,7 +62,7 @@ export default class DirectShareApi {
   }
 
   static async removeDirectShare(patientId: string, viewerId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v1/direct-share/${patientId}/${viewerId}` })
+    await HttpService.delete({ url: `/crew/v1/direct-shares/${patientId}/${viewerId}` })
   }
 
   private static mapShareUser(directShareApiArray: DirectShareAPI[]): ShareUser[] {
@@ -69,7 +71,7 @@ export default class DirectShareApi {
       const directShareUser = directShare.patient ?? directShare.viewer
       if (directShareUser) {
         shareUsers.push({
-          status: UserInviteStatus.Accepted,
+          status: directShareUser.invitationStatus,
           user: {
             userid: directShareUser.userId,
             preferences: directShareUser.preferences ?? undefined,
