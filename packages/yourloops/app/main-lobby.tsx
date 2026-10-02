@@ -72,11 +72,60 @@ tssCache.compat = true
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
 const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
-export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
+
+interface RedirectRule {
+  targetRoute: AppRoute
+  /** user has to visit this route before pursuing other activities on yourloops **/
+  isPending: (user: User) => boolean
+  /**
+   * Routes on which the redirect to `targetRoute` is skipped because the user is already on a page with a bigger priority
+   * It MUST contain `targetRoute`, otherwise the redirect would be issued again and again.
+   */
+  skipRedirectOnRoutes: AppRoute[]
+}
+
+/**
+ * The pages a user has to visit once logged in, in the order they are presented.
+ *
+ * Termination invariant: `getPendingRedirectRule` only depends on the user, so navigating cannot
+ * change which rule wins, and every rule skips its own `targetRoute`. A redirect to
+ * `pendingRule.targetRoute` therefore resolves to the same rule and returns undefined: at most one
+ * redirect is issued per user state, whatever the combination of pending rules. Keep it that way when
+ * adding a new rule.
+ */
+export const REDIRECT_RULES: RedirectRule[] = [
+  {
+    targetRoute: AppRoute.CompleteSignup,
+    isPending: (user: User) => user.isFirstLogin(),
+    skipRedirectOnRoutes: [AppRoute.CompleteSignup]
+  },
+  {
+    targetRoute: AppRoute.DblCommunication,
+    isPending: (user: User) => user.hasToDisplayDblCommunicationPage(),
+    skipRedirectOnRoutes: [AppRoute.DblCommunication, AppRoute.CompleteSignup]
+  },
+  {
+    targetRoute: AppRoute.NewConsent,
+    isPending: (user: User) => user.hasToAcceptNewConsent(),
+    skipRedirectOnRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
+  },
+  {
+    targetRoute: AppRoute.RenewConsent,
+    isPending: (user: User) => user.hasToRenewConsent(),
+    skipRedirectOnRoutes: [AppRoute.NewConsent, AppRoute.RenewConsent]
+  },
+  {
+    targetRoute: AppRoute.Training,
+    isPending: (user: User) => user.hasToDisplayTrainingInfoPage(),
+    skipRedirectOnRoutes: [AppRoute.Training, AppRoute.CompleteSignup, AppRoute.NewConsent, AppRoute.RenewConsent]
+  }
+]
+
+const getPendingRedirectRule = (user: User): RedirectRule | undefined => REDIRECT_RULES.find((rule: RedirectRule) => rule.isPending(user))
+
+export const getRedirectUrl = (route: string, user: User | null, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
-  const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
-  const trainingPath = route === AppRoute.Training
-  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route as AppRoute)
+  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route)
 
   if (routeIsPublic && !isCurrentRouteAlwaysAccessible && isAuthenticated) {
     return '/'
@@ -84,22 +133,15 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
     return AppRoute.Login
   }
-  if (route !== AppRoute.CompleteSignup && isAuthenticated && user?.isFirstLogin()) {
-    return AppRoute.CompleteSignup
+  if (!isAuthenticated || !user) {
+    return undefined
   }
-  if (!renewConsentPath && user?.hasToAcceptNewConsent()) {
-    return AppRoute.NewConsent
+
+  const pendingRule = getPendingRedirectRule(user)
+  if (!pendingRule || pendingRule.skipRedirectOnRoutes.includes(route as AppRoute)) {
+    return undefined
   }
-  if (!renewConsentPath && user?.hasToRenewConsent()) {
-    return AppRoute.RenewConsent
-  }
-  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user?.hasToDisplayTrainingInfoPage()) {
-    return AppRoute.Training
-  }
-  if (route !== AppRoute.DblCommunication && user?.hasToDisplayDblCommunicationPage()) {
-    return AppRoute.DblCommunication
-  }
-  return undefined
+  return pendingRule.targetRoute
 }
 
 export const MainLobby: FC = () => {
