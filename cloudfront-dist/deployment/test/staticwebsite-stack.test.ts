@@ -78,6 +78,39 @@ describe('origin access', () => {
     expect(origin.S3OriginConfig.OriginAccessIdentity).toBeDefined()
   })
 
+  it('creates a SigV4 always-sign origin access control for S3', () => {
+    synthWeb().template.hasResourceProperties('AWS::CloudFront::OriginAccessControl', {
+      OriginAccessControlConfig: Match.objectLike({
+        OriginAccessControlOriginType: 's3',
+        SigningBehavior: 'always',
+        SigningProtocol: 'sigv4'
+      })
+    })
+  })
+
+  it('lets both the OAI and the OAC read objects while the origins switch over', () => {
+    // Edges pick up an origin change gradually, so across R4b some sign with the
+    // OAC and some still use the OAI. Dropping either grant early 403s the others.
+    const { template } = synthWeb()
+    const [policy] = Object.values<any>(template.findResources('AWS::S3::BucketPolicy'))
+    const reads = policy.Properties.PolicyDocument.Statement
+      .filter((s: any) => s.Effect === 'Allow' && s.Action === 's3:GetObject')
+
+    expect(reads).toContainEqual(expect.objectContaining({
+      Principal: { CanonicalUser: { 'Fn::GetAtt': [expect.stringMatching(/originAccessIdentity/), 'S3CanonicalUserId'] } }
+    }))
+    expect(reads).toContainEqual(expect.objectContaining({
+      Principal: { Service: 'cloudfront.amazonaws.com' },
+      Condition: {
+        StringEquals: {
+          'AWS:SourceArn': {
+            'Fn::Join': ['', expect.arrayContaining([{ Ref: `${WEB_STACK_ID.replace(/-/g, '')}cloudfrontCFDistribution78F41495` }])]
+          }
+        }
+      }
+    }))
+  })
+
   it('grants no anonymous principal access to the bucket', () => {
     // A wildcard principal on a Deny statement (R1's enforceSSL) denies everyone
     // over plaintext — the opposite of a grant — so only Allow statements count.

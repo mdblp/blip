@@ -716,6 +716,17 @@ exports[`web stack matches the committed baseline 1`] = `
       "Type": "Custom::CDKBucketDeployment",
       "UpdateReplacePolicy": "Delete",
     },
+    "cibliporiginAccessControl8749AE82": {
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": "ciblipcibliporiginAccessControlB512C928",
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4",
+        },
+      },
+      "Type": "AWS::CloudFront::OriginAccessControl",
+    },
     "cibliporiginAccessIdentityDC99AF16": {
       "Properties": {
         "CloudFrontOriginAccessIdentityConfig": {
@@ -917,6 +928,50 @@ exports[`web stack matches the committed baseline 1`] = `
                     "S3CanonicalUserId",
                   ],
                 },
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "comdiabeloopyourloopscfci2606EF26",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "s3:GetObject",
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":cloudfront::",
+                        {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":distribution/",
+                        {
+                          "Ref": "ciblipcloudfrontCFDistribution78F41495",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudfront.amazonaws.com",
               },
               "Resource": {
                 "Fn::Join": [
@@ -1539,6 +1594,17 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
       "Type": "Custom::CDKBucketDeployment",
       "UpdateReplacePolicy": "Delete",
     },
+    "cibliporiginAccessControl8749AE82": {
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": "ciblipcibliporiginAccessControlB512C928",
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4",
+        },
+      },
+      "Type": "AWS::CloudFront::OriginAccessControl",
+    },
     "cibliporiginAccessIdentityDC99AF16": {
       "Properties": {
         "CloudFrontOriginAccessIdentityConfig": {
@@ -1740,6 +1806,50 @@ exports[`web stack matches the committed baseline in maintenance mode 1`] = `
                     "S3CanonicalUserId",
                   ],
                 },
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "comdiabeloopyourloopscfci2606EF26",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "s3:GetObject",
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":cloudfront::",
+                        {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":distribution/",
+                        {
+                          "Ref": "ciblipcloudfrontCFDistribution78F41495",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudfront.amazonaws.com",
               },
               "Resource": {
                 "Fn::Join": [

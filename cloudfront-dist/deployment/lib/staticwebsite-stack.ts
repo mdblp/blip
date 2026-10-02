@@ -163,6 +163,26 @@ export class StaticWebSiteStack extends core.Stack {
     ;(distribution.node.defaultChild as cloudfront.CfnDistribution)
       .overrideLogicalId(props.legacyDistributionLogicalId)
 
+    // R4a: the OAC exists and the bucket already trusts it before any origin
+    // switches to it (R4b). Edges pick up an origin change gradually, so the
+    // policy must admit both the OAI and the OAC across the switch. The
+    // statement is byte-identical to the one S3BucketOrigin.withOriginAccessControl
+    // adds at bind time, so R4b leaves the bucket policy unchanged.
+    new cloudfront.S3OriginAccessControl(this, `${id}-originAccessControl`, {
+      signing: cloudfront.Signing.SIGV4_ALWAYS
+    })
+    bucket.addToResourcePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
+      actions: ['s3:GetObject'],
+      resources: [bucket.arnForObjects('*')],
+      conditions: {
+        StringEquals: {
+          'AWS:SourceArn': `arn:${core.Aws.PARTITION}:cloudfront::${core.Aws.ACCOUNT_ID}:distribution/${distribution.distributionId}`
+        }
+      }
+    }))
+
     // associate the distribution to a dns record
     new route53.CnameRecord(this, `${id}-websitealiasrecord`, {
       zone: zone,
