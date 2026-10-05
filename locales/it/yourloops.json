@@ -739,7 +739,7 @@
   "time-out-of-range-target-tooltip2": "Avviso attivato quando più del {{threshold}}% del tempo è trascorso fuori dall’intervallo ideale ({{min}}-{{max}} {{unit}}) nel periodo considerato.",
   "time-spent-hyperglycemia": "Tempo in iperglicemia",
   "time-spent-off-target": "Tempo trascorso fuori target",
-  "time-spent-severe-hypoglycemia": "Tempo trascorso in ipoglicemia grave",
+  "time-spent-hypoglycemia": "Tempo trascorso in ipoglicemia grave",
   "time-spent-without-uploaded-data": "Tempo trascorso senza dati caricati",
   "today": "Oggi",
   "too-many-clinicians-tooltip": "Un paziente può avere al massimo {{maxCliniciansCount}} clinici",

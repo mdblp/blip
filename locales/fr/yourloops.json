@@ -739,7 +739,7 @@
   "time-out-of-range-target-tooltip2": "Alerte déclenchée lorsque plus de {{threshold}}% du temps sur la période considérée est en dehors de la cible ({{min}}-{{max}} {{unit}}).",
   "time-spent-hyperglycemia": "Temps passé en hypoglycémie",
   "time-spent-off-target": "Temps passé hors de la cible",
-  "time-spent-severe-hypoglycemia": "Temps passé en hypoglycémie sévère",
+  "time-spent-hypoglycemia": "Temps passé en hypoglycémie sévère",
   "time-spent-without-uploaded-data": "Temps passé sans données chargées",
   "today": "Aujourd'hui",
   "too-many-clinicians-tooltip": "Un patient ne peut avoir que {{maxCliniciansCount}} référents",

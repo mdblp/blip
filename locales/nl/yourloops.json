@@ -739,7 +739,7 @@
   "time-out-of-range-target-tooltip2": "Waarschuwing wordt geactiveerd wanneer meer dan {{threshold}}% van de tijd in de betreffende periode buiten het doelbereik valt ({{min}}-{{max}} {{unit}}).",
   "time-spent-hyperglycemia": "Tijd in hyperglykemie",
   "time-spent-off-target": "Tijd buiten het doel",
-  "time-spent-severe-hypoglycemia": "Tijd doorgebracht in ernstige hypoglykemie",
+  "time-spent-hypoglycemia": "Tijd doorgebracht in ernstige hypoglykemie",
   "time-spent-without-uploaded-data": "Tijd zonder geüploade gegevens",
   "today": "Vandaag",
   "too-many-clinicians-tooltip": "Een patiënt kan maximaal {{maxCliniciansCount}} zorgverleners hebben",
