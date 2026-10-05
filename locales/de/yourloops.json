@@ -739,7 +739,7 @@
   "time-out-of-range-target-tooltip2": "Warnung wird ausgelöst, wenn über {{threshold}} % der Zeit im betrachteten Zeitraum außerhalb des Zielbereichs ({{min}}–{{max}} {{unit}}) verbracht wird.",
   "time-spent-hyperglycemia": "Zeit in Hyperglykämie",
   "time-spent-off-target": "Außerhalb des Zielbereichs verbrachte Zeit",
-  "time-spent-severe-hypoglycemia": "Zeit in schwerer Hypoglykämie",
+  "time-spent-hypoglycemia": "Zeit in schwerer Hypoglykämie",
   "time-spent-without-uploaded-data": "Zeit ohne hochgeladene Daten",
   "today": "Heute",
   "too-many-clinicians-tooltip": "Ein Patient kann höchstens {{maxCliniciansCount}} Behandler haben",

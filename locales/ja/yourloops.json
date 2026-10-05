@@ -556,7 +556,7 @@
   "time-out-of-range-target-tooltip1": "範囲外：{{percentage}}",
   "time-out-of-range-target-tooltip2": "目標値 （{{min}}-{{max}} {{unit}}）外にいる時間が{{threshold}}％を超えた場合に発生するアラート。",
   "time-spent-off-target": "TIRから離れていた時間",
-  "time-spent-severe-hypoglycemia": "重度の低血糖状態にいた時間",
+  "time-spent-hypoglycemia": "重度の低血糖状態にいた時間",
   "time-spent-without-uploaded-data": "データがアップロードされていない時間",
   "today": "今日",
   "tooltip-declared-derived-carbs": "レスキューカーボを含む糖質量{{total}}の記録から算出。",
