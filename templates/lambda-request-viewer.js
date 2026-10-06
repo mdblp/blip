@@ -13,6 +13,28 @@ const IOS_ASSETLINKS_URI = '/.well-known/apple-app-site-association'
 const INDEX_HTML_URI = 'index.html'
 const CONFIG_JS_URI = `config.{{ CONFIG_JS_MD5 }}.js`
 const VERSION_URI = 'version'
+// The distribution's origin path is a fixed /blip and each release's files are stored under blip/<version>/,
+// so this prefix is what makes a Lambda version serve its own release's files.
+const ORIGIN_PREFIX = '/{{ VERSION }}'
+const MAINTENANCE = {{ MAINTENANCE }}
+
+function maintenanceResponse() {
+  return {
+    status: 503,
+    statusDescription: 'Service Unavailable',
+    headers: {
+      'cache-control': [{ key: 'Cache-Control', value: 'no-store' }],
+      'content-type': [{ key: 'Content-Type', value: 'text/html; charset=utf-8' }],
+      'retry-after': [{ key: 'Retry-After', value: '3600' }],
+      'content-security-policy': [{ key: 'Content-Security-Policy', value: "default-src 'none'; style-src 'unsafe-inline'; img-src https://s3-eu-west-1.amazonaws.com; frame-ancestors 'none'; base-uri 'none'; form-action 'none'" }],
+      'referrer-policy': [{ key: 'Referrer-Policy', value: 'no-referrer' }],
+      'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
+      'x-content-type-options': [{ key: 'X-Content-Type-Options', value: 'nosniff' }],
+      'x-frame-options': [{ key: 'X-Frame-Options', value: 'DENY' }],
+    },
+    body: `{{ MAINTENANCE_HTML }}`
+  };
+}
 
 exports.handler = async (event, context, callback) => {
   const basePath = '/';
@@ -51,6 +73,11 @@ exports.handler = async (event, context, callback) => {
       body: assetLinksJson
     };
     return callback(null, response);
+  }
+
+  // Everything but the mobile app links above and /version, so the release checks still work.
+  if (MAINTENANCE && requestURI !== `${basePath}${VERSION_URI}`) {
+    return callback(null, maintenanceResponse());
   }
 
   if (filename.length > 0 && blipFiles.includes(filename)) {
@@ -129,6 +156,7 @@ exports.handler = async (event, context, callback) => {
     return callback(null, response);
   }
 
-  // Process the request normally
+  // A release file, at the root: fetch it from this release's folder
+  request.uri = `${ORIGIN_PREFIX}${requestURI}`;
   callback(null, request);
 };

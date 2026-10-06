@@ -70,6 +70,8 @@ const reMatomoJs = /(^\s+<!-- Start of Tracker Code -->\n)(.*\n)*(^\s+<!-- End o
 const reCookieBanner = /(^\s+<!-- Start of cookie-banner -->\n)(.*\n)*(^\s+<!-- End of cookie-banner -->)/m
 
 const reUrl = /(^https?:\/\/[^/]+).*/
+const reVersion = /^[0-9A-Za-z._-]+$/
+const isUnderMaintenance = process.env.MAINTENANCE === 'true'
 const reDashCase = /[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g
 const outputFilenameTemplate = 'cloudfront-{{ TARGET_ENVIRONMENT }}-blip-request-viewer.js'
 let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`
@@ -200,6 +202,19 @@ function genContentSecurityPolicy() {
   return csp
 }
 
+/**
+ * Read the maintenance page served by the lambda when MAINTENANCE=true
+ * @returns {string} The page, ready to be embedded in a template literal.
+ */
+function genMaintenanceHtml() {
+  const html = fs.readFileSync(`${templateDir}/maintenance.html`, 'utf8')
+  if (html.includes('`') || html.includes('${')) {
+    console.error('/!\\ maintenance.html must not contain ` or ${, it is embedded in a template literal /!\\')
+    process.exit(1)
+  }
+  return html
+}
+
 function genOutputFile() {
   if (lambdaTemplate === null || indexHtml === null || distribFiles === null) {
     return
@@ -225,7 +240,9 @@ function genOutputFile() {
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     CSP: '',
-    LANGUAGES: _.keysIn(locales.resources).join(',')
+    LANGUAGES: _.keysIn(locales.resources).join(','),
+    MAINTENANCE: String(isUnderMaintenance),
+    MAINTENANCE_HTML: isUnderMaintenance ? genMaintenanceHtml() : ''
   }
 
   const csp = genContentSecurityPolicy()
@@ -293,13 +310,17 @@ function withTemplate(err, data) {
 /*** Main ***/
 
 // Check required ENV variables
-if (typeof process.env.TARGET_ENVIRONMENT !== 'string' || process.env.TARGET_ENVIRONMENT.length < 1) {
-  console.error('Missing environnement variable TARGET_ENVIRONMENT')
+// TARGET_ENVIRONMENT is optional ('dev' by default, see config.app.js): it only names the generated file,
+// and the release script (cloudfront-dist/deploy.sh) doesn't depend on that name.
+if (typeof process.env.API_HOST !== 'string' || !reUrl.test(process.env.API_HOST)) {
+  console.error('Missing or invalid environnement variable API_HOST')
   process.exit(1)
 }
 
-if (typeof process.env.API_HOST !== 'string' || !reUrl.test(process.env.API_HOST)) {
-  console.error('Missing or invalid environnement variable API_HOST')
+// The version names the release's folder in the bucket, and the lambda puts it in front of every file's path.
+// Without it, config.app.js falls back to a default version whose folder doesn't exist.
+if (typeof process.env.APP_VERSION !== 'string' || !reVersion.test(process.env.APP_VERSION)) {
+  console.error(`Missing or invalid environnement variable APP_VERSION (expected ${reVersion.source})`)
   process.exit(1)
 }
 
