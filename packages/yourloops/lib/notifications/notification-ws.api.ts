@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { INotificationType } from './enums/i-notification-type.enum'
-import { InAppNotificationStatus } from './enums/notification-type.enum'
+import { type InAppNotification } from './models/notification.model'
+import { Centrifuge } from 'centrifuge'
+import appConfig from '../config/config'
 
-export interface InAppNotification {
-  id: string
-  type: INotificationType
-  userEmail: string // "Receiver email" the user email who received of the notification (recipient)
-  // depends of the type of notification, it can be a teamId or a userId
-  payload: Record<string, unknown>
-  status: InAppNotificationStatus
-  deliveredAt: string
+export default class RealTimeNotificationManager {
+  static connectToRealTimeServer(userId: string, getToken: () => Promise<string>, onNotification: (notification: InAppNotification) => void): () => void {
+    const wsUrl = appConfig.API_HOST.replace(/^http/, 'ws') + '/connection/websocket'
+    const centrifuge = new Centrifuge(wsUrl, {
+      getToken: async () => await getToken()
+    })
+
+    const sub = centrifuge.newSubscription(`notification:#auth0|${userId}`)
+    sub.on('publication', (ctx) => {
+      const notif = ctx.data as InAppNotification
+      onNotification(notif)
+    })
+
+    sub.subscribe()
+    centrifuge.connect()
+
+    // Return a cleanup/disconnect function
+    return () => {
+      sub.unsubscribe()
+      centrifuge.disconnect()
+    }
+  }
 }

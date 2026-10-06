@@ -37,6 +37,8 @@ import { render, waitFor } from '@testing-library/react'
 import { type NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
 import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
+import { InAppNotificationStatus } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import RealTimeNotificationManager from '../../../../lib/notifications/notification-ws.api'
 
 jest.mock('../../../../lib/auth/auth.hook')
 jest.mock('@auth0/auth0-react')
@@ -48,14 +50,14 @@ describe('Notification hook', () => {
   jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])
   jest.spyOn(NotificationApi, 'declineInvitation').mockResolvedValue()
   jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
-  jest.spyOn(NotificationApi, 'connectToRealTimeServer').mockReturnValue(jest.fn())
+  jest.spyOn(RealTimeNotificationManager, 'connectToRealTimeServer').mockReturnValue(jest.fn())
 
   const buildNotification = (): InAppNotification => ({
     id: 'fakeId',
     type: INotificationType.careTeamProInvitation,
     userEmail: hcp.username,
     payload: { careTeamId: 'fakeTeamId' },
-    status: 'pending',
+    status: InAppNotificationStatus.pending,
     deliveredAt: new Date().toISOString()
   })
 

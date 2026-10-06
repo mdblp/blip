@@ -35,13 +35,14 @@ import * as notificationHookMock from '../../../../lib/notifications/notificatio
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
+import { InAppNotificationStatus } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 describe('Notification', () => {
   const notif: InAppNotification = {
     id: '11',
     userEmail: 'a@example.com',
-    status: 'pending',
+    status: InAppNotificationStatus.pending,
     deliveredAt: '2021-02-18T10:00:00',
     type: INotificationType.directInvitation,
     payload: {
@@ -61,7 +62,7 @@ describe('Notification', () => {
   const teamNotif: InAppNotification = {
     id: '12',
     userEmail: 'a@example.com',
-    status: 'pending',
+    status: InAppNotificationStatus.pending,
     deliveredAt: '2021-02-18T10:00:00',
     type: INotificationType.careTeamPatientInvitation,
     payload: {

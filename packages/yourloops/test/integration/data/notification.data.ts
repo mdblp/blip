@@ -26,12 +26,13 @@
  */
 import { type InAppNotification } from '../../../lib/notifications/models/notification.model'
 import { INotificationType } from '../../../lib/notifications/models/enums/i-notification-type.enum'
+import { InAppNotificationStatus } from '../../../lib/notifications/models/enums/notification-type.enum'
 
 export const invitationTeam: InAppNotification = {
   id: 'invitationTeamId',
   type: INotificationType.careTeamPatientInvitation,
   userEmail: 'ylp.ui.test.67-patient12@diabeloop.fr',
-  status: 'pending',
+  status: InAppNotificationStatus.pending,
   deliveredAt: '',
   payload: {
     careTeamId: '63c7b7989cacc878ecce2c40',
@@ -55,7 +56,7 @@ export const invitationDirectShare: InAppNotification = {
   id: 'invitationTeamId',
   type: INotificationType.directInvitation,
   userEmail: 'ylp.ui.test-caregiver1@diabeloop.fr',
-  status: 'pending',
+  status: InAppNotificationStatus.pending,
   deliveredAt: '',
   payload: {
     senderFullName: 'Backloops test Patient1',

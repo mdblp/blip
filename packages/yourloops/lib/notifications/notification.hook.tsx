@@ -33,9 +33,15 @@ import NotificationApi from './notification.api'
 import { type NotificationContext } from './models/notification-context.model'
 import { type InAppNotification } from './models/notification.model'
 import { type NotificationProvider } from './models/notification-provider.model'
+import RealTimeNotificationManager from './notification-ws.api'
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
 const log = bows('NotificationHook')
+
+function addNotificationIfAbsent(notifications: InAppNotification[], notification: InAppNotification): InAppNotification[] {
+  const alreadyReceived = notifications.some(n => n.id === notification.id)
+  return alreadyReceived ? notifications : [...notifications, notification]
+}
 
 /** hackish way to prevent 2 or more consecutive loading */
 let lock = false
@@ -101,16 +107,14 @@ function NotificationContextImpl(): NotificationContext {
   useEffect(() => {
     if (!initialized) return
 
-    const disconnect = NotificationApi.connectToRealTimeServer(
+    const disconnectFn = RealTimeNotificationManager.connectToRealTimeServer(
       user.id,
       getAccessTokenSilently,
-      (notif) => setReceivedInvitations(prev =>
-        prev.some(n => n.id === notif.id) ? prev : [...prev, notif]
-      )
+      (notif) => setReceivedInvitations(prev => addNotificationIfAbsent(prev, notif))
     )
 
     // used a React cleanup function to disconnect from the real time-server when the component unmounts
-    return disconnect
+    return disconnectFn
   }, [initialized, user.id, getAccessTokenSilently])
 
   return {

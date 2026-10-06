@@ -52,3 +52,4 @@ YourLoops is a medical application for diabetes management developed by Diabeloo
 - Include proper error handling for medical data
 - Validate all medical calculations
 - Follow existing patterns for data processing and rendering
+- Use an enum for the status field to improve the discoverability of the different values (we avoid raw strings if we can predict their values)

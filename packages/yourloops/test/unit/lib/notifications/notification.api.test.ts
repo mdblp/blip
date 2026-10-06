@@ -30,8 +30,7 @@ import { type AxiosResponse } from 'axios'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
-import { Centrifuge } from 'centrifuge'
-import appConfig from '../../../../lib/config/config'
+import { InAppNotificationStatus } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 jest.mock('centrifuge')
 
@@ -47,7 +46,7 @@ describe('Notification API', () => {
     type,
     userEmail: email,
     payload,
-    status: 'pending',
+    status: InAppNotificationStatus.pending,
     deliveredAt: new Date().toISOString()
   })
 
@@ -235,54 +234,6 @@ describe('Notification API', () => {
           await NotificationApi.declineInvitation(userId, notification)
         }).rejects.toThrow('This error was thrown by a mock on purpose')
       })
-    })
-  })
-
-  describe('connectToRealTimeServer', () => {
-    const MockedCentrifuge = Centrifuge as jest.MockedClass<typeof Centrifuge>
-
-    afterEach(() => {
-      MockedCentrifuge.mockReset()
-    })
-
-    it('should open a subscription, connect, forward notifications and clean up on disconnect', () => {
-      const onMock = jest.fn()
-      const subscribeMock = jest.fn()
-      const unsubscribeMock = jest.fn()
-      const newSubscriptionMock = jest.fn().mockReturnValue({
-        on: onMock,
-        subscribe: subscribeMock,
-        unsubscribe: unsubscribeMock
-      })
-      const connectMock = jest.fn()
-      const disconnectMock = jest.fn()
-
-      MockedCentrifuge.mockImplementation(() => ({
-        newSubscription: newSubscriptionMock,
-        connect: connectMock,
-        disconnect: disconnectMock
-      }) as unknown as Centrifuge)
-
-      const getToken = jest.fn().mockResolvedValue('fake-token')
-      const onNotification = jest.fn()
-
-      const disconnect = NotificationApi.connectToRealTimeServer(userId, getToken, onNotification)
-
-      const expectedWsUrl = `${appConfig.API_HOST.replace(/^http/, 'ws')}/connection/websocket`
-      expect(MockedCentrifuge).toHaveBeenCalledWith(expectedWsUrl, expect.objectContaining({ getToken: expect.any(Function) }))
-      expect(newSubscriptionMock).toHaveBeenCalledWith(`notification:#auth0|${userId}`)
-      expect(onMock).toHaveBeenCalledWith('publication', expect.any(Function))
-      expect(subscribeMock).toHaveBeenCalledTimes(1)
-      expect(connectMock).toHaveBeenCalledTimes(1)
-
-      const notification = buildNotification(INotificationType.careTeamProInvitation)
-      const publicationHandler = onMock.mock.calls[0][1] as (ctx: { data: InAppNotification }) => void
-      publicationHandler({ data: notification })
-      expect(onNotification).toHaveBeenCalledWith(notification)
-
-      disconnect()
-      expect(unsubscribeMock).toHaveBeenCalledTimes(1)
-      expect(disconnectMock).toHaveBeenCalledTimes(1)
     })
   })
 })

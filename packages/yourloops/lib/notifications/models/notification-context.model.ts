@@ -33,5 +33,4 @@ export interface NotificationContext {
   update: () => void
   accept: (notification: InAppNotification) => Promise<void>
   decline: (notification: InAppNotification) => Promise<void>
-  // cancel: (notificationId: string, teamId?: string, inviteeEmail?: string) => Promise<void>
 }

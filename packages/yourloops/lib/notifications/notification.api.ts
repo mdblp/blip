@@ -28,76 +28,54 @@ import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { type InAppNotification } from './models/notification.model'
 import { INotificationType } from './models/enums/i-notification-type.enum'
-import { Centrifuge } from 'centrifuge'
-import appConfig from '../config/config'
 import { type IUser } from '../data/models/i-user.model'
+import { InAppNotificationStatus } from './models/enums/notification-type.enum'
+import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 
 
 const log = bows('Notification API')
 
 export default class NotificationApi {
 
-  static connectToRealTimeServer(userId: string, getToken: () => Promise<string>, onNotification: (notification: InAppNotification) => void): () => void {
-    const wsUrl = appConfig.API_HOST.replace(/^http/, 'ws') + '/connection/websocket'
-    const centrifuge = new Centrifuge(wsUrl, {
-      getToken: async () => await getToken()
-    })
-
-    const sub = centrifuge.newSubscription(`notification:#auth0|${userId}`)
-    sub.on('publication', (ctx) => {
-      const notif = ctx.data as InAppNotification
-      onNotification(notif)
-    })
-
-    sub.subscribe()
-    centrifuge.connect()
-
-    // Return a cleanup/disconnect function
-    return () => {
-      sub.unsubscribe()
-      centrifuge.disconnect()
-    }
-  }
-
   static async acceptInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    await NotificationApi.processInvitationUpdate(userId, { ...notification, status: 'accepted' })
+    await NotificationApi.processInvitationUpdate(userId, notification, UserInviteStatus.Accepted)
   }
 
   static async declineInvitation(userId: string, notification: InAppNotification): Promise<void> {
-    await NotificationApi.processInvitationUpdate(userId, { ...notification, status: 'rejected' })
+    await NotificationApi.processInvitationUpdate(userId, notification, UserInviteStatus.Rejected)
   }
 
   static async getReceivedInvitations(userId: string): Promise<InAppNotification[]> {
-    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=pending&userId=${userId}`)
+    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=${InAppNotificationStatus.pending}&userId=${userId}`)
   }
 
-  private static async processInvitationUpdate(userId: string, notification: InAppNotification): Promise<void> {
+  private static async processInvitationUpdate(userId: string, notification: InAppNotification, status: UserInviteStatus): Promise<void> {
     if (notification.type === INotificationType.directInvitation) {
-      await NotificationApi.updateDirectShareInvitation(userId, notification)
+      await NotificationApi.updateDirectShareInvitation(userId, notification, status)
       return
     }
-    await NotificationApi.updateTeamInvitation(userId, notification)
+    await NotificationApi.updateTeamInvitation(userId, notification, status)
   }
 
-  private static async updateDirectShareInvitation(userId: string, notification: InAppNotification): Promise<void> {
+  private static async updateDirectShareInvitation(userId: string, notification: InAppNotification, status: UserInviteStatus): Promise<void> {
     const creator = notification.payload["creator"] as IUser | undefined
     if (!creator?.userid) {
       throw new Error('Invalid direct-share invitation: missing creator')
     }
     const patientId = creator.userid
-    await HttpService.put<string, { patientId: string, viewerId: string, viewerEmail: string, invitationStatus: string, lastStatusChangedAt: string }>({
-      url: `/crew/v1/direct-shares`,
+    await HttpService.put<string, { patientId: string, viewerId: string, viewerEmail: string, invitationStatus: UserInviteStatus, lastStatusChangedAt: string }>({
+      url: '/crew/v1/direct-shares',
       payload: {
         patientId,
         viewerId: userId,
         viewerEmail: notification.userEmail,
-        invitationStatus: notification.status,
+        invitationStatus: status,
         lastStatusChangedAt: new Date().toISOString()
       }
     })
   }
 
-  private static async updateTeamInvitation(userId: string, notification: InAppNotification): Promise<void> {
+  private static async updateTeamInvitation(userId: string, notification: InAppNotification, status: UserInviteStatus): Promise<void> {
     const teamId = notification.payload["careTeamId"] as string | undefined
     if (!teamId) {
       throw Error('Invalid target team id')
@@ -114,13 +92,13 @@ export default class NotificationApi {
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
     }
-    await HttpService.put<string, { userId: string, email: string, teamId: string, invitationStatus: string, lastStatusChangedAt: string }>({
+    await HttpService.put<string, { userId: string, email: string, teamId: string, invitationStatus: UserInviteStatus, lastStatusChangedAt: string }>({
       url,
       payload: {
         userId,
         email: notification.userEmail,
         teamId,
-        invitationStatus: notification.status,
+        invitationStatus: status,
         lastStatusChangedAt: new Date().toISOString()
       }
     })

@@ -26,8 +26,9 @@
  */
 
 import NotificationApi from '../../../lib/notifications/notification.api'
+import RealTimeNotificationManager from '../../../lib/notifications/notification-ws.api'
 
 export const mockNotificationAPI = () => {
   jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])
-  jest.spyOn(NotificationApi, 'connectToRealTimeServer').mockReturnValue(jest.fn())
+  jest.spyOn(RealTimeNotificationManager, 'connectToRealTimeServer').mockReturnValue(jest.fn())
 }
