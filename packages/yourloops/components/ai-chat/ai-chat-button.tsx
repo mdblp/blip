@@ -30,11 +30,7 @@ import Popover from '@mui/material/Popover'
 import { ChatKit, useChatKit } from '@openai/chatkit-react'
 import React, { FC, useRef } from 'react'
 
-interface AiChatButtonProps {
-
-}
-
-export const AiChatButton: FC<AiChatButtonProps> = (props) => {
+export const AiChatButton: FC = () => {
   const [isChatKitVisible, setIsChatKitVisible] = React.useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -109,7 +105,6 @@ export const AiChatButton: FC<AiChatButtonProps> = (props) => {
         sx={{
           mx: 1
         }}
-        // sx={{ position: 'absolute', bottom: 80, right: 10 }}
         onClick={toggleChatKit}
         ref={buttonRef}
       >
