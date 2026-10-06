@@ -42,6 +42,7 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import Typography from '@mui/material/Typography'
 import { getUserName } from '../../lib/auth/user.util'
 import { DiabeticType } from 'medical-domain'
+import { AiChatButton } from '../ai-chat/ai-chat-button'
 import { PatientDiabeticProfileChip } from '../chips/patient-diabetic-profile-chip'
 
 interface PatientNavBarTabsProps {
@@ -215,6 +216,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         <Button data-testid="download-report" onClick={onClickPrint} startIcon={<CloudDownloadOutlined />}>
           {t('button-pdf-download-report')}
         </Button>
+        <AiChatButton />
       </Box>
     </Box>
   )
