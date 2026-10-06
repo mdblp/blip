@@ -46,11 +46,11 @@ export default class NotificationApi {
   }
 
   static async getReceivedInvitations(userId: string): Promise<InAppNotification[]> {
-    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=${InAppNotificationStatus.pending}&userId=${userId}`)
+    return await NotificationApi.getPendingNotifications(`/v2/notifications?status=${InAppNotificationStatus.Pending}&userId=${userId}`)
   }
 
   private static async processInvitationUpdate(userId: string, notification: InAppNotification, status: UserInviteStatus): Promise<void> {
-    if (notification.type === INotificationType.directInvitation) {
+    if (notification.type === INotificationType.DirectInvitation) {
       await NotificationApi.updateDirectShareInvitation(userId, notification, status)
       return
     }
@@ -82,10 +82,10 @@ export default class NotificationApi {
     }
     let url: string
     switch (notification.type) {
-      case INotificationType.careTeamProInvitation:
+      case INotificationType.CareTeamProInvitation:
         url = `/crew/v1/teams/${teamId}/members`
         break
-      case INotificationType.careTeamPatientInvitation:
+      case INotificationType.CareTeamPatientInvitation:
         url = `/crew/v1/teams/${teamId}/patients`
         break
       default:

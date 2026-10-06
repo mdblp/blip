@@ -42,9 +42,9 @@ describe('Notification', () => {
   const notif: InAppNotification = {
     id: '11',
     userEmail: 'a@example.com',
-    status: InAppNotificationStatus.pending,
+    status: InAppNotificationStatus.Pending,
     deliveredAt: '2021-02-18T10:00:00',
-    type: INotificationType.directInvitation,
+    type: INotificationType.DirectInvitation,
     payload: {
       senderFullName: 'Jeanne Dubois',
       creator: {
@@ -62,9 +62,9 @@ describe('Notification', () => {
   const teamNotif: InAppNotification = {
     id: '12',
     userEmail: 'a@example.com',
-    status: InAppNotificationStatus.pending,
+    status: InAppNotificationStatus.Pending,
     deliveredAt: '2021-02-18T10:00:00',
-    type: INotificationType.careTeamPatientInvitation,
+    type: INotificationType.CareTeamPatientInvitation,
     payload: {
       careTeamId: 'fakeTeamId',
       careTeamName: 'fakeTeamName',
@@ -102,7 +102,7 @@ describe('Notification', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
-          type: INotificationType.careTeamProInvitation,
+          type: INotificationType.CareTeamProInvitation,
           payload: { ...notif.payload, careTeamId: '0', careTeamName: 'target' }
         })
       )
@@ -114,7 +114,7 @@ describe('Notification', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
-          type: INotificationType.careTeamProInvitation,
+          type: INotificationType.CareTeamProInvitation,
           payload: { ...notif.payload, careTeamId: '0', careTeamName: 'target' }
         },
         UserRole.Caregiver
@@ -129,7 +129,7 @@ describe('Notification', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
-          type: INotificationType.careTeamPatientInvitation,
+          type: INotificationType.CareTeamPatientInvitation,
           payload: { ...notif.payload, careTeamId: '0', careTeamName: 'grenoble DIAB service' }
         },
         UserRole.Patient
@@ -151,7 +151,7 @@ describe('Notification', () => {
       })
 
       it('should display a correct icon when invitation type is a care team pro invitation', () => {
-        render(fakeNotification({ ...teamNotif, type: INotificationType.careTeamProInvitation }))
+        render(fakeNotification({ ...teamNotif, type: INotificationType.CareTeamProInvitation }))
 
         expect(screen.queryByTitle('direct-invite-icon')).toBeNull()
         expect(screen.queryByTitle('default-icon')).not.toBeNull()
@@ -159,7 +159,7 @@ describe('Notification', () => {
       })
 
       it('should display a correct icon when invitation type is a care team patient invitation', () => {
-        render(fakeNotification({ ...teamNotif, type: INotificationType.careTeamPatientInvitation }))
+        render(fakeNotification({ ...teamNotif, type: INotificationType.CareTeamPatientInvitation }))
 
         expect(screen.queryByTitle('direct-invite-icon')).toBeNull()
         expect(screen.queryByTitle('default-icon')).toBeNull()

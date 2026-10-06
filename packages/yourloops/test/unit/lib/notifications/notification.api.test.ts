@@ -46,11 +46,11 @@ describe('Notification API', () => {
     type,
     userEmail: email,
     payload,
-    status: InAppNotificationStatus.pending,
+    status: InAppNotificationStatus.Pending,
     deliveredAt: new Date().toISOString()
   })
 
-  const buildDirectShareNotification = (): InAppNotification => buildNotification(INotificationType.directInvitation, {
+  const buildDirectShareNotification = (): InAppNotification => buildNotification(INotificationType.DirectInvitation, {
     creator: { userid: patientId }
   })
 
@@ -58,7 +58,7 @@ describe('Notification API', () => {
     const url = `/v2/notifications?status=pending&userId=${userId}`
 
     it('should return the notifications returned by the API', async () => {
-      const data: InAppNotification[] = [buildNotification(INotificationType.careTeamProInvitation)]
+      const data: InAppNotification[] = [buildNotification(INotificationType.CareTeamProInvitation)]
       jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
 
       const result = await NotificationApi.getReceivedInvitations(userId)
@@ -89,7 +89,7 @@ describe('Notification API', () => {
     it('should throw an error and not call the API if the notification type is unknown', async () => {
       const httpPut = jest.spyOn(HttpService, 'put')
       const notification = {
-        ...buildNotification(INotificationType.directInvitation),
+        ...buildNotification(INotificationType.DirectInvitation),
         type: 'unknownType' as unknown as INotificationType
       }
 
@@ -129,8 +129,8 @@ describe('Notification API', () => {
     })
 
     describe.each([
-      { type: INotificationType.careTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
-      { type: INotificationType.careTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
+      { type: INotificationType.CareTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
+      { type: INotificationType.CareTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
     ])('when the notification type is $type', ({ type, expectedUrl }) => {
       it('should call the API with the correct url and payload', async () => {
         const httpPut = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
@@ -165,7 +165,7 @@ describe('Notification API', () => {
     it('should throw an error and not call the API if the notification type is unknown', async () => {
       const httpPut = jest.spyOn(HttpService, 'put')
       const notification = {
-        ...buildNotification(INotificationType.directInvitation),
+        ...buildNotification(INotificationType.DirectInvitation),
         type: 'unknownType' as unknown as INotificationType
       }
 
@@ -205,8 +205,8 @@ describe('Notification API', () => {
     })
 
     describe.each([
-      { type: INotificationType.careTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
-      { type: INotificationType.careTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
+      { type: INotificationType.CareTeamProInvitation, expectedUrl: `/crew/v1/teams/${teamId}/members` },
+      { type: INotificationType.CareTeamPatientInvitation, expectedUrl: `/crew/v1/teams/${teamId}/patients` }
     ])('when the notification type is $type', ({ type, expectedUrl }) => {
       it('should call the API with the correct url and payload', async () => {
         const httpPut = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)

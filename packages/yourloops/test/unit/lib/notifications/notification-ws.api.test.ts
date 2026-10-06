@@ -43,7 +43,7 @@ describe('RealTimeNotificationManager', ()=> {
     type,
     userEmail: 'fake@email.com',
     payload,
-    status: InAppNotificationStatus.pending,
+    status: InAppNotificationStatus.Pending,
     deliveredAt: new Date().toISOString()
   })
   describe('connectToRealTimeServer', () => {
@@ -83,7 +83,7 @@ describe('RealTimeNotificationManager', ()=> {
       expect(subscribeMock).toHaveBeenCalledTimes(1)
       expect(connectMock).toHaveBeenCalledTimes(1)
 
-      const notification = buildNotification(INotificationType.careTeamProInvitation)
+      const notification = buildNotification(INotificationType.CareTeamProInvitation)
       const publicationHandler = onMock.mock.calls[0][1] as (ctx: { data: InAppNotification }) => void
       publicationHandler({ data: notification })
       expect(onNotification).toHaveBeenCalledWith(notification)

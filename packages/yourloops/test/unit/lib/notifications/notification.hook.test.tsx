@@ -54,10 +54,10 @@ describe('Notification hook', () => {
 
   const buildNotification = (): InAppNotification => ({
     id: 'fakeId',
-    type: INotificationType.careTeamProInvitation,
+    type: INotificationType.CareTeamProInvitation,
     userEmail: hcp.username,
     payload: { careTeamId: 'fakeTeamId' },
-    status: InAppNotificationStatus.pending,
+    status: InAppNotificationStatus.Pending,
     deliveredAt: new Date().toISOString()
   })
 

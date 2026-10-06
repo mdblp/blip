@@ -108,7 +108,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
 
   let notificationText: JSX.Element
   switch (type) {
-    case INotificationType.directInvitation:
+    case INotificationType.DirectInvitation:
       notificationText = (
         <Trans
           t={t}
@@ -120,7 +120,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
         </Trans>
       )
       break
-    case INotificationType.careTeamProInvitation:
+    case INotificationType.CareTeamProInvitation:
       notificationText = (
         <Trans
           t={t}
@@ -133,7 +133,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
         </Trans>
       )
       break
-    case INotificationType.careTeamPatientInvitation:
+    case INotificationType.CareTeamPatientInvitation:
       notificationText = (
         <Trans
           t={t}
@@ -153,7 +153,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
 
 const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX.Element => {
   switch (type) {
-    case INotificationType.directInvitation:
+    case INotificationType.DirectInvitation:
       return (
         <PersonIcon
           id={`person-icon-${id}`}
@@ -161,7 +161,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
           className={className}
         />
       )
-    case INotificationType.careTeamPatientInvitation:
+    case INotificationType.CareTeamPatientInvitation:
       return (
         <MedicalServiceIcon
           id={`medical-service-icon-${id}`}
@@ -169,7 +169,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
           className={className}
         />
       )
-    case INotificationType.careTeamProInvitation:
+    case INotificationType.CareTeamProInvitation:
     default:
       return (
         <GroupIcon
@@ -216,9 +216,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const { notification, userRole, onHelp } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
-  const isACareTeamPatientInvitation = notification.type === INotificationType.careTeamPatientInvitation
-  const isADirectInvitation = notification.type === INotificationType.directInvitation
-  const metricsType = isADirectInvitation ? NotificationMetricType.shareData : NotificationMetricType.joinTeam
+  const isACareTeamPatientInvitation = notification.type === INotificationType.CareTeamPatientInvitation
+  const isADirectInvitation = notification.type === INotificationType.DirectInvitation
+  const metricsType = isADirectInvitation ? NotificationMetricType.ShareData : NotificationMetricType.JoinTeam
   const creator = isADirectInvitation ? notification.payload["creator"] as IUser | undefined : undefined
   const inviterName = isADirectInvitation ? creator?.profile?.fullName : notification.payload["careTeamName"]
   const careTeamName = notification.payload["careTeamName"] as string
@@ -286,7 +286,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     }
   }
   const handleAcceptButtonClick = (): void => {
-    userRole === UserRole.Caregiver && notification.type === INotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
+    userRole === UserRole.Caregiver && notification.type === INotificationType.CareTeamProInvitation ? onHelp() : onOpenInvitationDialog()
   }
 
   return (

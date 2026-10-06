@@ -26,10 +26,10 @@
  */
 
 export enum NotificationMetricType {
-  shareData = 'share_data',
-  joinTeam = 'join_team'
+  ShareData = 'share_data',
+  JoinTeam = 'join_team'
 }
 
 export enum InAppNotificationStatus {
-  pending = 'pending',
+  Pending = 'pending',
 }
