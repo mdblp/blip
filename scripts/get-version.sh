@@ -8,7 +8,7 @@ set -euo pipefail
 short=$(git rev-parse --short=7 HEAD)
 tag=$(git tag --points-at HEAD --list 'v*' --sort=version:refname | head -n 1)
 
-if [ -n "$tag" ]; then
+if [[ -n "$tag" ]]; then
   echo "${tag}-${short}"
 else
   echo "${short}"

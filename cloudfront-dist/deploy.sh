@@ -13,7 +13,7 @@ set -euo pipefail
 # The version is baked into the image at build time (Dockerfile ARG APP_VERSION -> /dist/VERSION). The environment may
 # repeat it (the image sets APP_VERSION too) but must not change it.
 IMAGE_VERSION=$(cat "${DIST_DIR:-/dist}/VERSION")
-if [ -n "${APP_VERSION:-}" ] && [ "$APP_VERSION" != "$IMAGE_VERSION" ]; then
+if [[ -n "${APP_VERSION:-}" ]] && [[ "$APP_VERSION" != "$IMAGE_VERSION" ]]; then
   echo "ERROR: APP_VERSION='$APP_VERSION' differs from the version of this image ('$IMAGE_VERSION'); do not set APP_VERSION at deployment" >&2
   exit 1
 fi
@@ -33,7 +33,8 @@ fail() {
 }
 
 param() {
-  aws ssm get-parameter --name "/blip/${STACK_PREFIX_NAME}/$1" --query Parameter.Value --output text
+  local name=$1
+  aws ssm get-parameter --name "/blip/${STACK_PREFIX_NAME}/${name}" --query Parameter.Value --output text
 }
 current_lambda_arn() {
   aws cloudfront get-distribution-config --id "$DIST_ID" \
@@ -49,10 +50,10 @@ switch_to() {
   etag=$(jq -r .ETag "$before")
   associations=$(jq -r '.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items // [] | .[]
                         | select(.EventType == "viewer-request") | .LambdaFunctionARN' "$before")
-  if [ "$(wc -l <<<"$associations")" != 1 ] || [ -z "$associations" ]; then
+  if [[ "$(wc -l <<<"$associations")" != 1 ]] || [[ -z "$associations" ]]; then
     fail "expected one viewer-request association on $DIST_ID, found: ${associations:-none}"
   fi
-  if [ "$associations" = "$arn" ]; then
+  if [[ "$associations" = "$arn" ]]; then
     echo "The distribution already runs $arn"
     return
   fi
@@ -80,17 +81,17 @@ verify() {
     served=''
     for _ in 1 2 3 4 5; do
       served=$(curl -fsS "https://${host}/version" || true)
-      [ "$served" = "$APP_VERSION" ] && break
+      [[ "$served" = "$APP_VERSION" ]] && break
       sleep 10
     done
-    [ "$served" = "$APP_VERSION" ] || fail "https://${host}/version returns '$served', expected '$APP_VERSION'"
+    [[ "$served" = "$APP_VERSION" ]] || fail "https://${host}/version returns '$served', expected '$APP_VERSION'"
 
     headers=$(curl -sS -o /dev/null -D - "https://${host}/")
     status=$(head -1 <<<"$headers" | awk '{print $2}')
-    if [ "$MAINTENANCE" = "true" ]; then
-      [ "$status" = 503 ] || fail "https://${host}/ returns $status, expected 503 (maintenance)"
+    if [[ "$MAINTENANCE" = "true" ]]; then
+      [[ "$status" = 503 ]] || fail "https://${host}/ returns $status, expected 503 (maintenance)"
     else
-      [ "$status" = 200 ] || fail "https://${host}/ returns $status, expected 200"
+      [[ "$status" = 200 ]] || fail "https://${host}/ returns $status, expected 200"
       grep -qi '^content-security-policy:' <<<"$headers" || fail "no Content-Security-Policy on https://${host}/"
     fi
     grep -qi '^strict-transport-security:' <<<"$headers" || fail "no Strict-Transport-Security on https://${host}/"
@@ -100,14 +101,14 @@ verify() {
 
 # 1. Get account, and where to deploy
 caller=$(aws sts get-caller-identity --output json)
-[ "$(jq -r .Account <<<"$caller")" = "$AWS_ACCOUNT" ] || fail "the AWS credentials are not for account $AWS_ACCOUNT"
+[[ "$(jq -r .Account <<<"$caller")" = "$AWS_ACCOUNT" ]] || fail "the AWS credentials are not for account $AWS_ACCOUNT"
 
 BUCKET=$(param bucket-name)
 DIST_ID=$(param distribution-id)
 FUNCTION=$(param edge-function-name)
 echo "Releasing $APP_VERSION to $STACK_PREFIX_NAME: bucket=$BUCKET distribution=$DIST_ID function=$FUNCTION maintenance=$MAINTENANCE"
 
-if [ -n "${SWITCH_TO:-}" ]; then
+if [[ -n "${SWITCH_TO:-}" ]]; then
   previous=$(current_lambda_arn)
   switch_to "$SWITCH_TO"
   verify
@@ -131,11 +132,11 @@ rm -v ./static/index.html
 shopt -s nullglob
 generated=(./lambda/cloudfront-*-blip-request-viewer.js)
 shopt -u nullglob
-[ ${#generated[@]} -eq 1 ] || fail "expected one generated Lambda file in ./lambda, found ${#generated[@]}"
+[[ ${#generated[@]} -eq 1 ]] || fail "expected one generated Lambda file in ./lambda, found ${#generated[@]}"
 cp "${generated[0]}" "$BUILD/index.js"
 (cd "$BUILD" && zip -X -q lambda.zip index.js)
 
-if [ "${DRY_RUN:-false}" = "true" ]; then
+if [[ "${DRY_RUN:-false}" = "true" ]]; then
   echo "Dry run. The distribution runs $(current_lambda_arn). The sync would make these changes:"
   aws s3 sync ./static "s3://${BUCKET}/blip/${APP_VERSION}/" --delete --dryrun
   exit 0
@@ -149,7 +150,7 @@ aws lambda update-function-code --region "$EDGE_REGION" --function-name "$FUNCTI
   --zip-file "fileb://$BUILD/lambda.zip" > /dev/null
 aws lambda wait function-updated-v2 --region "$EDGE_REGION" --function-name "$FUNCTION"
 NEW_ARN=$(aws lambda publish-version --region "$EDGE_REGION" --function-name "$FUNCTION" \
-  --description "blip ${APP_VERSION}$([ "$MAINTENANCE" = "true" ] && echo ' maintenance')" \
+  --description "blip ${APP_VERSION}$([[ "$MAINTENANCE" = "true" ]] && echo ' maintenance')" \
   --query FunctionArn --output text)
 echo "Published $NEW_ARN"
 
