@@ -49,7 +49,6 @@ microscanner
 # Build system
 server/matomo.js
 server/.npmrc
-cloudfront-dist/deployment/.env
 
 # Lambda testing
 test/lambda/dist
