@@ -273,8 +273,6 @@ jobs:
       version: ${{ steps.changelog-version.outputs.semver }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       - name: Download artifact
         uses: actions/download-artifact@v8
@@ -328,18 +326,11 @@ jobs:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
 
-      # Created before the build so that the version baked in the image (get-version.sh) includes this tag
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: v${{ steps.changelog-version.outputs.semver }}
+          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
           force_push_tag: true
-
-      - name: Compute app version
-        id: app-version
-        run: |
-          git fetch --tags --force
-          echo "version=$(scripts/get-version.sh)" >> $GITHUB_OUTPUT
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v7
@@ -348,16 +339,10 @@ jobs:
           push: true
           platforms: linux/arm64,linux/amd64
           build-args: |
-            APP_VERSION=${{ steps.app-version.outputs.version }}
+            APP_VERSION=${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
           tags: |
             ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
             ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
-
-      - name: Creating new github tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-          force_push_tag: true
 
   sbom:
     if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')

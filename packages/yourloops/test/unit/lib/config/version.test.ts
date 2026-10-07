@@ -32,6 +32,10 @@ describe('getDisplayVersion', () => {
     expect(getDisplayVersion('v3.11.0-a1b2c3d')).toBe('v3.11.0')
   })
 
+  it('should handle a version without leading v', () => {
+    expect(getDisplayVersion('3.11.0-a1b2c3d')).toBe('v3.11.0')
+  })
+
   it('should keep a pre-release tag', () => {
     expect(getDisplayVersion('v3.11.0-beta-a1b2c3d')).toBe('v3.11.0-beta')
   })

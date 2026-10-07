@@ -21,9 +21,9 @@ RUN openssl req -nodes -new -x509 -keyout blip.key -out blip.cert -subj "/C=FR/S
 RUN npm install
 
 FROM base AS final
-# Computed by CI (scripts/get-version.sh); the release uses this value, the deployment cannot override it.
+# Set by CI (<changelog semver>-<short commit id>, same as the image tag); the release uses this value, the deployment cannot override it.
 ARG APP_VERSION
-RUN test -n "$APP_VERSION" || { echo "ERROR: --build-arg APP_VERSION is required (see scripts/get-version.sh)" >&2; exit 1; }
+RUN test -n "$APP_VERSION" || { echo "ERROR: --build-arg APP_VERSION is required (e.g. 1.2.3-abcdef0)" >&2; exit 1; }
 # aws-cli, jq and zip are what cloudfront-dist/deploy.sh releases with; mailcap provides /etc/mime.types,
 # which `aws s3 sync` reads to set each file's Content-Type.
 RUN \

@@ -26,12 +26,11 @@
  */
 
 /**
- * Version to show to the user. The version set at build time is `<git tag>-<short commit id>` (e.g. `v3.11.0-a1b2c3d`),
- * or only `<short commit id>` when the commit is not tagged: we keep the tag without the commit id suffix, prefixed by `v`.
- * An untagged build (development) is displayed as is.
+ * Version to show to the user. The version set at build time is `<semver>-<short commit id>` (e.g. `3.11.0-a1b2c3d`, with or without a leading `v`):
+ * we keep the version without the commit id suffix, prefixed by `v`. Any other value (e.g. a bare commit id) is displayed as is.
  */
 export const getDisplayVersion = (version: string): string => {
-  const match = /^v?(.+)-[0-9a-f]{7}$/.exec(version)
+  const match = /^v?(.+)-[0-9a-f]{7,40}$/.exec(version)
   if (match) {
     return `v${match[1]}`
   }

@@ -25,7 +25,7 @@ the `blip-release-<prefix>` policy. The image reads:
 
 | Variable | Used for |
 |---|---|
-| `APP_VERSION` | Bucket prefix, Lambda routing, `/version`, Lambda version description. **Baked into the image at build time** (`/dist/VERSION`, computed by `scripts/get-version.sh`: `<git tag>-<short sha>`, or `<short sha>` if the commit has no `v*` tag). Do not set it at deployment: `deploy.sh` fails if it differs from the image's version |
+| `APP_VERSION` | Bucket prefix, Lambda routing, `/version`, Lambda version description. **Baked into the image at build time** (`/dist/VERSION`, set by CI as `<changelog semver>-<short commit id>`, the same as the image tag; built locally with `--build-arg APP_VERSION=<any valid version>`). Do not set it at deployment: `deploy.sh` fails if it differs from the image's version |
 | `STACK_PREFIX_NAME` | Finds the SSM parameters `/blip/<prefix>/...` |
 | `AWS_ACCOUNT` | Refuses to run if the credentials belong to another account |
 | `AWS_DEFAULT_REGION` | eu-west-3 (bucket, SSM). The Lambda is always us-east-1 |
