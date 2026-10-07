@@ -10,6 +10,15 @@
 #   SWITCH_TO=<lambda-version-arn> only switch the distribution to an already published version (fast rollback)
 set -euo pipefail
 
+# The version is baked into the image at build time (Dockerfile ARG APP_VERSION -> /dist/VERSION). The environment may
+# repeat it (the image sets APP_VERSION too) but must not change it.
+IMAGE_VERSION=$(cat "${DIST_DIR:-/dist}/VERSION")
+if [ -n "${APP_VERSION:-}" ] && [ "$APP_VERSION" != "$IMAGE_VERSION" ]; then
+  echo "ERROR: APP_VERSION='$APP_VERSION' differs from the version of this image ('$IMAGE_VERSION'); do not set APP_VERSION at deployment" >&2
+  exit 1
+fi
+export APP_VERSION="$IMAGE_VERSION"
+
 : "${APP_VERSION:?}" "${STACK_PREFIX_NAME:?}" "${AWS_ACCOUNT:?}" "${AWS_DEFAULT_REGION:?}" "${DOMAIN_NAME:?}"
 MAINTENANCE="${MAINTENANCE:-false}"
 EDGE_REGION=us-east-1
@@ -40,8 +49,9 @@ switch_to() {
   etag=$(jq -r .ETag "$before")
   associations=$(jq -r '.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items // [] | .[]
                         | select(.EventType == "viewer-request") | .LambdaFunctionARN' "$before")
-  [ "$(wc -l <<<"$associations")" = 1 ] && [ -n "$associations" ] \
-    || fail "expected one viewer-request association on $DIST_ID, found: ${associations:-none}"
+  if [ "$(wc -l <<<"$associations")" != 1 ] || [ -z "$associations" ]; then
+    fail "expected one viewer-request association on $DIST_ID, found: ${associations:-none}"
+  fi
   if [ "$associations" = "$arn" ]; then
     echo "The distribution already runs $arn"
     return

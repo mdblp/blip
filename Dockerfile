@@ -21,6 +21,9 @@ RUN openssl req -nodes -new -x509 -keyout blip.key -out blip.cert -subj "/C=FR/S
 RUN npm install
 
 FROM base AS final
+# Computed by CI (scripts/get-version.sh); the release uses this value, the deployment cannot override it.
+ARG APP_VERSION
+RUN test -n "$APP_VERSION" || { echo "ERROR: --build-arg APP_VERSION is required (see scripts/get-version.sh)" >&2; exit 1; }
 # aws-cli, jq and zip are what cloudfront-dist/deploy.sh releases with; mailcap provides /etc/mime.types,
 # which `aws s3 sync` reads to set each file's Content-Type.
 RUN \
@@ -33,7 +36,7 @@ ENV AWS_SECRET_ACCESS_KEY=
 ENV AWS_ACCOUNT=
 ENV AWS_DEFAULT_REGION=
 ENV STACK_PREFIX_NAME=
-ENV APP_VERSION=
+ENV APP_VERSION=$APP_VERSION
 ENV DOMAIN_NAME=
 ENV MAINTENANCE=false
 ENV EVIDENCE_DIR=/evidence
@@ -47,7 +50,10 @@ RUN \
   chown -v node:node /dist && \
   chmod -v 750 /dist && \
   mkdir -v /evidence && \
-  chown -v node:node /evidence
+  chown -v node:node /evidence && \
+  echo "$APP_VERSION" > /dist/VERSION && \
+  chown -v root:root /dist/VERSION && \
+  chmod -v 444 /dist/VERSION
 COPY --from=lambda --chown=node:node /server ./server
 COPY --chown=root:root --chmod=755 ./cloudfront-dist/deploy.sh ./deploy.sh
 COPY --from=content --chown=node:node /content/static-dist ./static

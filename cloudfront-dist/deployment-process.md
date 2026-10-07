@@ -25,7 +25,7 @@ the `blip-release-<prefix>` policy. The image reads:
 
 | Variable | Used for |
 |---|---|
-| `APP_VERSION` | Bucket prefix, Lambda routing, `/version`, Lambda version description |
+| `APP_VERSION` | Bucket prefix, Lambda routing, `/version`, Lambda version description. **Baked into the image at build time** (`/dist/VERSION`, computed by `scripts/get-version.sh`: `<git tag>-<short sha>`, or `<short sha>` if the commit has no `v*` tag). Do not set it at deployment: `deploy.sh` fails if it differs from the image's version |
 | `STACK_PREFIX_NAME` | Finds the SSM parameters `/blip/<prefix>/...` |
 | `AWS_ACCOUNT` | Refuses to run if the credentials belong to another account |
 | `AWS_DEFAULT_REGION` | eu-west-3 (bucket, SSM). The Lambda is always us-east-1 |
@@ -58,7 +58,7 @@ The order is what makes a release safe. Nothing users see changes before step 6.
 | # | Step | If it fails |
 |---|---|---|
 | 0 | Check the credentials' account equals `AWS_ACCOUNT`; read the three SSM parameters | Nothing changed. Fix and rerun |
-| 1 | Generate `robots.txt`, `sitemap.xml` and the Lambda (`gen-robot`, `gen-sitemap`, `gen-lambda`), remove `static/index.html`. `gen-lambda` fails if `APP_VERSION` is missing | Nothing changed |
+| 1 | Generate `robots.txt`, `sitemap.xml` and the Lambda (`gen-robot`, `gen-sitemap`, `gen-lambda`), remove `static/index.html`. `gen-lambda` fails if `APP_VERSION` is missing (`deploy.sh` takes it from `/dist/VERSION`) | Nothing changed |
 | 2 | Package the single generated Lambda file as `index.js` in a zip | Nothing changed |
 | 3 | `aws s3 sync static/ s3://<bucket>/blip/<version>/ --delete` | Files for a version that isn't served. Rerun |
 | 4 | Upload the Lambda code, wait, `publish-version` with description `blip <version>` | A published version nobody uses. Rerun (publishing unchanged code returns the same version) |
