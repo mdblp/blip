@@ -47,19 +47,19 @@ export const checkDeviceSectionCardForCurrentParameters = (): void => {
 }
 
 export const checkDeviceSectionCardForSafetyBasal = (): void => {
-  expect(screen.getByText('Values of the patient\'s safety basal profile.')).toBeVisible()
+  expect(screen.getByText('Patient\'s safety basal profile values.')).toBeVisible()
 }
 
 export const checkDeviceSectionCardForParametersHistory = async () => {
   const changeHistorySection = screen.getByTestId('device-view-overview-card-parameters-history')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Settings HistoryView moreLast update: 01/11/22 - 1:00 amAggressiveness for lunch130 %90 %Aggressiveness for breakfast100 %110 %Aggressiveness for dinner100 %90 %Hyperglycemia threshold180.1 mg/dL140.0 mg/dLHypoglycemia threshold70.0 mg/dL60.0 mg/dLAggressiveness in hyperglycemia143 %Breakfast - large150.0 gDinner - large150.0 gLunch - large70.0 gAggressiveness for breakfast100 %Aggressiveness for breakfast110 %100 %Aggressiveness for dinner100 %Aggressiveness for dinner90 %100 %Aggressiveness for lunch130 %Breakfast - average70.0 gDinner - average60.0 gLunch - average50.0 gAggressiveness in normoglycemia100 %Target glucose level100.0 mg/dLHyperglycemia threshold180.1 mg/dLHyperglycemia threshold140.0 mg/dL180.1 mg/dLHypoglycemia threshold70.0 mg/dLHypoglycemia threshold60.0 mg/dL70.0 mg/dLBreakfast - small15.0 gDinner - small20.0 gLunch - small30.0 gTotal Daily Insulin53.0 UWeight69.0 kg')
+  expect(changeHistorySection).toHaveTextContent('Settings historyView moreLast update: 01/11/22 - 1:00 amAggressiveness for lunch130 %90 %Aggressiveness for breakfast100 %110 %Aggressiveness for dinner100 %90 %Hyperglycemia threshold180.1 mg/dL140.0 mg/dLHypoglycemia threshold70.0 mg/dL60.0 mg/dLAggressiveness in hyperglycemia143 %Breakfast - large150.0 gDinner - large150.0 gLunch - large70.0 gAggressiveness for breakfast100 %Aggressiveness for breakfast110 %100 %Aggressiveness for dinner100 %Aggressiveness for dinner90 %100 %Aggressiveness for lunch130 %Breakfast - average70.0 gDinner - average60.0 gLunch - average50.0 gAggressiveness in normoglycemia100 %Target glucose level100.0 mg/dLHyperglycemia threshold180.1 mg/dLHyperglycemia threshold140.0 mg/dL180.1 mg/dLHypoglycemia threshold70.0 mg/dLHypoglycemia threshold60.0 mg/dL70.0 mg/dLBreakfast - small15.0 gDinner - small20.0 gLunch - small30.0 gTotal Daily Insulin53.0 UWeight69.0 kg')
 }
 
 export const checkDeviceSectionCardForDevicesHistory = async () => {
   const changeHistorySection = screen.getByTestId('device-view-overview-card-devices-history')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Devices HistoryView moreLast update: 26/04/19 - 2:02 amCGM manufacturerDexcom AbbottHandsetMobiGo+ DH22IMEI0123456789 111111111Software version1.12.12-DBLG1-INS-DEXG6-COMMERCIAL 1.18.0.1300-DBLG1-KAL-G6-COMMERCIALActivation code123-456-789 111-111-111CGM productG5 G6Software version1.0.0 1.1.0Pump manufacturerROCHE VICENTRAPump productInsight KaleidoSmartphone modelA212F A26')
+  expect(changeHistorySection).toHaveTextContent('Devices historyView moreLast update: 26/04/19 - 2:02 amCGM manufacturerDexcom AbbottHandsetMobiGo+ DH22IMEI0123456789 111111111Software version1.12.12-DBLG1-INS-DEXG6-COMMERCIAL 1.18.0.1300-DBLG1-KAL-G6-COMMERCIALActivation code123-456-789 111-111-111CGM productG5 G6Software version1.0.0 1.1.0Pump manufacturerROCHE VICENTRAPump productInsight KaleidoSmartphone modelA212F A26')
 }
 
 export const checkClickViewMoreCurrentSettings = async () => {
