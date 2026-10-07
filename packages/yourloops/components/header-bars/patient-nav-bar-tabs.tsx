@@ -65,7 +65,10 @@ const styles = makeStyles()((theme) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingInline: theme.spacing(3)
+      paddingInline: theme.spacing(3),
+      // Keeps the header's elevation shadow visible above the AI chat Drawer (zIndex: theme.zIndex.appBar - 1).
+      position: 'relative',
+      zIndex: theme.zIndex.appBar,
     },
     tab: {
       fontWeight: 'bold',
@@ -105,6 +108,13 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { user } = useAuth()
   const { teamId } = useParams()
   const navigate = useNavigate()
+  const [headerBottom, setHeaderBottom] = React.useState<number>(0)
+
+  const tabsContainerRefCallback = (tabsContainerElement: HTMLDivElement): void => {
+    if (tabsContainerElement) {
+      setHeaderBottom(tabsContainerElement.getBoundingClientRect().bottom)
+    }
+  }
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
@@ -119,7 +129,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const tabsIndicatorStyle = user.isUserPatient() ? {} : { style: { display: 'none' } }
 
   return (
-    <Box className={classes.tabsContainer}>
+    <Box className={classes.tabsContainer} ref={tabsContainerRefCallback}>
       <Box data-testid="subnav-patient-info" className={classes.leftSection}>
         {!user.isUserPatient() &&
           <>
@@ -216,7 +226,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         <Button data-testid="download-report" onClick={onClickPrint} startIcon={<CloudDownloadOutlined />}>
           {t('button-pdf-download-report')}
         </Button>
-        <AiChatButton />
+        <AiChatButton topOffset={headerBottom} />
       </Box>
     </Box>
   )

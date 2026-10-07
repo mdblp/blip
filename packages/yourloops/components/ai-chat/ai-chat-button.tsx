@@ -25,14 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { Drawer } from '@mui/material'
 import Button from '@mui/material/Button'
-import Popover from '@mui/material/Popover'
+import Portal from '@mui/material/Portal'
+import { useTheme } from '@mui/material/styles'
 import { ChatKit, useChatKit } from '@openai/chatkit-react'
 import React, { FC, useRef } from 'react'
 
-export const AiChatButton: FC = () => {
+interface AiChatButtonProps {
+  // Measured bottom edge (px, viewport-relative) of the header bar this button sits in.
+  topOffset?: number
+}
+
+// Fallback used until the caller's measured topOffset is available (or when none is provided).
+const MAIN_HEADER_HEIGHT = 64
+
+export const AiChatButton: FC<AiChatButtonProps> = (props) => {
+  const { topOffset: measuredTopOffset } = props
   const [isChatKitVisible, setIsChatKitVisible] = React.useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const theme = useTheme()
+  const topOffset = measuredTopOffset ? `${measuredTopOffset}px` : `${MAIN_HEADER_HEIGHT}px`
 
   const toggleChatKit = () => {
     setIsChatKitVisible(!isChatKitVisible)
@@ -108,26 +121,50 @@ export const AiChatButton: FC = () => {
         onClick={toggleChatKit}
         ref={buttonRef}
       >
-        ChatKit
+        🌍 Loopy
       </Button>
       {isChatKitVisible &&
-        <Popover
-          open
-          anchorEl={buttonRef.current}
-          onClose={toggleChatKit}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-        >
-          <ChatKit
-            style={{
-              width: '400px',
-              height: '500px',
+        // <Popover
+        //   open
+        //   anchorEl={buttonRef.current}
+        //   onClose={toggleChatKit}
+        //   anchorOrigin={{
+        //     vertical: 'top',
+        //     horizontal: 'right'
+        //   }}
+        // >
+        //   <ChatKit
+        //     style={{
+        //       width: '400px',
+        //       height: '500px',
+        //     }}
+        //     control={control}
+        //   />
+        // </Popover>
+
+        // Portal'd out of the header: a child can never render below its own ancestor's z-index.
+        <Portal>
+          <Drawer
+            variant="persistent"
+            anchor="right"
+            open
+            sx={{
+              zIndex: theme.zIndex.appBar - 1,
+              '& .MuiDrawer-paper': {
+                top: topOffset,
+                height: `calc(100% - ${topOffset})`
+              }
             }}
-            control={control}
-          />
-        </Popover>
+          >
+            <ChatKit
+              style={{
+                width: '400px',
+                height: '800px'
+              }}
+              control={control}
+            />
+          </Drawer>
+        </Portal>
       }
     </>
   )
