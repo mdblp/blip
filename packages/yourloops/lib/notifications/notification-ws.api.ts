@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CancelInvitationPayload {
-  key: string
-  target: { id: string }
-  email: string
+import { type InAppNotification } from './models/notification.model'
+import { Centrifuge } from 'centrifuge'
+import appConfig from '../config/config'
+
+export default class RealTimeNotificationManager {
+  static connectToRealTimeServer(userId: string, getToken: () => Promise<string>, onNotification: (notification: InAppNotification) => void): () => void {
+    const wsUrl = appConfig.API_HOST.replace(/^http/, 'ws') + '/connection/websocket'
+    const centrifuge = new Centrifuge(wsUrl, {
+      getToken: async () => await getToken()
+    })
+
+    const sub = centrifuge.newSubscription(`notification:#auth0|${userId}`)
+    sub.on('publication', (ctx) => {
+      const notif = ctx.data as InAppNotification
+      onNotification(notif)
+    })
+
+    sub.subscribe()
+    centrifuge.connect()
+
+    // Return a cleanup/disconnect function
+    return () => {
+      sub.unsubscribe()
+      centrifuge.disconnect()
+    }
+  }
 }

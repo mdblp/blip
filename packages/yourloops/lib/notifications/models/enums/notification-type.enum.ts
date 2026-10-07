@@ -25,8 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum NotificationType {
-  careTeamPatientInvitation,
-  careTeamProInvitation,
-  directInvitation,
+export enum NotificationMetricType {
+  ShareData = 'share_data',
+  JoinTeam = 'join_team'
+}
+
+export enum InAppNotificationStatus {
+  Pending = 'pending',
 }

@@ -27,22 +27,29 @@
 
 import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
+import { useAuth0 } from '@auth0/auth0-react'
 import { useAuth } from '../auth'
 import NotificationApi from './notification.api'
 import { type NotificationContext } from './models/notification-context.model'
-import { type Notification } from './models/notification.model'
+import { type InAppNotification } from './models/notification.model'
 import { type NotificationProvider } from './models/notification-provider.model'
+import RealTimeNotificationManager from './notification-ws.api'
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
 const log = bows('NotificationHook')
+
+function addNotificationIfAbsent(notifications: InAppNotification[], notification: InAppNotification): InAppNotification[] {
+  const alreadyReceived = notifications.some(n => n.id === notification.id)
+  return alreadyReceived ? notifications : [...notifications, notification]
+}
 
 /** hackish way to prevent 2 or more consecutive loading */
 let lock = false
 
 function NotificationContextImpl(): NotificationContext {
   const { user } = useAuth()
-  const [receivedInvitations, setReceivedInvitations] = React.useState<Notification[]>([])
-  const [sentInvitations, setSentInvitations] = React.useState<Notification[]>([])
+  const { getAccessTokenSilently } = useAuth0()
+  const [receivedInvitations, setReceivedInvitations] = React.useState<InAppNotification[]>([])
   const [initialized, setInitialized] = React.useState(false)
 
   if (!user) {
@@ -53,32 +60,21 @@ function NotificationContextImpl(): NotificationContext {
     setInitialized(false)
   }
 
-  const accept = async (notification: Notification): Promise<void> => {
+  const removeNotification = (id: string): void => {
+    setReceivedInvitations(prev => prev.filter(n => n.id !== id))
+  }
+
+  const accept = async (notification: InAppNotification): Promise<void> => {
     log.info('Accept invite', notification)
     await NotificationApi.acceptInvitation(user.id, notification)
+    removeNotification(notification.id)
   }
 
-  const decline = async (notification: Notification): Promise<void> => {
+  const decline = async (notification: InAppNotification): Promise<void> => {
     log.info('Decline invite', notification)
     await NotificationApi.declineInvitation(user.id, notification)
-    const r = await NotificationApi.getReceivedInvitations(user.id)
-    setReceivedInvitations(r)
+    removeNotification(notification.id)
   }
-
-  const cancel = async (notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> => {
-    await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
-    const invitations = await NotificationApi.getSentInvitations(user.id)
-    setSentInvitations(invitations)
-  }
-
-  const refreshSentInvitations = useCallback(async (): Promise<void> => {
-    try {
-      const invitations = await NotificationApi.getSentInvitations(user.id)
-      setSentInvitations(invitations)
-    } catch (err) {
-      log.error(err)
-    }
-  }, [user.id])
 
   const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
@@ -97,27 +93,36 @@ function NotificationContextImpl(): NotificationContext {
     log.info('init')
     lock = true
 
-    Promise.all([
-      refreshReceivedInvitations(),
-      refreshSentInvitations()
-    ])
+    // Init: Historic fetch of the notif
+    refreshReceivedInvitations()
       .finally(() => {
         setInitialized(true)
         lock = false
       })
   }
 
-  useEffect(initHook, [user, initialized, refreshReceivedInvitations, refreshSentInvitations])
+  useEffect(initHook, [user, initialized, refreshReceivedInvitations])
+
+  // real time push notifications
+  useEffect(() => {
+    if (!initialized) return
+
+    const disconnectFn = RealTimeNotificationManager.connectToRealTimeServer(
+      user.id,
+      getAccessTokenSilently,
+      (notif) => setReceivedInvitations(prev => addNotificationIfAbsent(prev, notif))
+    )
+
+    // used a React cleanup function to disconnect from the real time-server when the component unmounts
+    return disconnectFn
+  }, [initialized, user.id, getAccessTokenSilently])
 
   return {
     initialized,
     receivedInvitations,
-    sentInvitations,
     update,
     accept,
     decline,
-    cancel,
-    refreshReceivedInvitations
   }
 }
 

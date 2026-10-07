@@ -30,53 +30,58 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
 import { Notification } from '../../../../pages/notifications/notification'
-import { type Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
+import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
-import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
+import { InAppNotificationStatus } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 describe('Notification', () => {
-  const notif: NotificationModel = {
+  const notif: InAppNotification = {
     id: '11',
-    metricsType: 'share_data',
-    date: '2021-02-18T10:00:00',
-    creator: {
-      userid: '1',
-      profile: {
-        email: 'jeanne.dubois@email.com',
-        fullName: 'Jeanne Dubois'
-      } as UserAccount
-    },
-    creatorId: 'a',
-    email: 'a@example.com',
-    type: NotificationType.directInvitation
+    userEmail: 'a@example.com',
+    status: InAppNotificationStatus.Pending,
+    deliveredAt: '2021-02-18T10:00:00',
+    type: INotificationType.DirectInvitation,
+    payload: {
+      senderFullName: 'Jeanne Dubois',
+      creator: {
+        userid: '1',
+        profile: {
+          email: 'jeanne.dubois@email.com',
+          fullName: 'Jeanne Dubois',
+          firstName: 'Jeanne',
+          lastName: 'Dubois'
+        } as UserAccount
+      }
+    }
   }
 
-  const teamNotif: NotificationModel = {
+  const teamNotif: InAppNotification = {
     id: '12',
-    metricsType: 'share_data',
-    date: '2021-02-18T10:00:00',
-    creator: {
-      userid: '1',
-      profile: {
-        email: 'jeanne.dubois@email.com',
-        fullName: 'Jeanne Dubois'
-      } as UserAccount
-    },
-    creatorId: 'a',
-    email: 'a@example.com',
-    type: NotificationType.careTeamPatientInvitation,
-    target: {
-      id: 'fakeTeamId',
-      name: 'fakeTeamName'
-
+    userEmail: 'a@example.com',
+    status: InAppNotificationStatus.Pending,
+    deliveredAt: '2021-02-18T10:00:00',
+    type: INotificationType.CareTeamPatientInvitation,
+    payload: {
+      careTeamId: 'fakeTeamId',
+      careTeamName: 'fakeTeamName',
+      creator: {
+        userid: '1',
+        profile: {
+          email: 'jeanne.dubois@email.com',
+          fullName: 'Jeanne Dubois',
+          firstName: 'Jeanne',
+          lastName: 'Dubois'
+        } as UserAccount
+      }
     }
   }
 
   const fakeNotification = (
-    notification: NotificationModel = notif,
+    notification: InAppNotification = notif,
     role: UserRole = UserRole.Hcp,
     onHelp = () => _.noop
   ): JSX.Element => (
@@ -84,7 +89,6 @@ describe('Notification', () => {
       notification={notification}
       userRole={role}
       onHelp={onHelp}
-      refreshReceivedInvitations={_.noop}
     />
   )
 
@@ -98,8 +102,8 @@ describe('Notification', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
-          type: NotificationType.careTeamProInvitation,
-          target: { id: '0', name: 'target' }
+          type: INotificationType.CareTeamProInvitation,
+          payload: { ...notif.payload, careTeamId: '0', careTeamName: 'target' }
         })
       )
       expect(getByText(container, 'Jeanne Dubois invites you to join', { exact: false })).not.toBeNull()
@@ -110,8 +114,8 @@ describe('Notification', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
-          type: NotificationType.careTeamProInvitation,
-          target: { id: '0', name: 'target' }
+          type: INotificationType.CareTeamProInvitation,
+          payload: { ...notif.payload, careTeamId: '0', careTeamName: 'target' }
         },
         UserRole.Caregiver
         )
@@ -125,8 +129,8 @@ describe('Notification', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
-          type: NotificationType.careTeamPatientInvitation,
-          target: { id: '0', name: 'grenoble DIAB service' }
+          type: INotificationType.CareTeamPatientInvitation,
+          payload: { ...notif.payload, careTeamId: '0', careTeamName: 'grenoble DIAB service' }
         },
         UserRole.Patient
         )
@@ -147,7 +151,7 @@ describe('Notification', () => {
       })
 
       it('should display a correct icon when invitation type is a care team pro invitation', () => {
-        render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }))
+        render(fakeNotification({ ...teamNotif, type: INotificationType.CareTeamProInvitation }))
 
         expect(screen.queryByTitle('direct-invite-icon')).toBeNull()
         expect(screen.queryByTitle('default-icon')).not.toBeNull()
@@ -155,7 +159,7 @@ describe('Notification', () => {
       })
 
       it('should display a correct icon when invitation type is a care team patient invitation', () => {
-        render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }))
+        render(fakeNotification({ ...teamNotif, type: INotificationType.CareTeamPatientInvitation }))
 
         expect(screen.queryByTitle('direct-invite-icon')).toBeNull()
         expect(screen.queryByTitle('default-icon')).toBeNull()
@@ -166,13 +170,13 @@ describe('Notification', () => {
     describe('getDateToDisplay', () => {
       it('should display the given date', () => {
         const { container } = render(fakeNotification())
-        const expectedDate = moment.utc(notif.date).utc().format('L')
+        const expectedDate = moment.utc(notif.deliveredAt).utc().format('L')
 
         expect(getByText(container, expectedDate)).not.toBeNull()
       })
 
       it('should display today', () => {
-        const { container } = render(fakeNotification({ ...notif, date: new Date().toISOString() }))
+        const { container } = render(fakeNotification({ ...notif, deliveredAt: new Date().toISOString() }))
 
         expect(getByText(container, 'today')).not.toBeNull()
       })
@@ -180,7 +184,7 @@ describe('Notification', () => {
       it('should display yesterday', () => {
         // eslint-disable-next-line no-magic-numbers
         const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-        const { container } = render(fakeNotification({ ...notif, date: yesterday }))
+        const { container } = render(fakeNotification({ ...notif, deliveredAt: yesterday }))
 
         expect(getByText(container, 'yesterday')).not.toBeNull()
       })
@@ -190,13 +194,12 @@ describe('Notification', () => {
   describe('instanciated notification', () => {
     let container: HTMLElement | null = null
 
-    const NotificationComponent = (props: { notif: NotificationModel }): JSX.Element => {
+    const NotificationComponent = (props: { notif: InAppNotification }): JSX.Element => {
       return (
         <Notification
           notification={props.notif}
           userRole={UserRole.Hcp}
           onHelp={_.noop}
-          refreshReceivedInvitations={_.noop}
         />
       )
     }

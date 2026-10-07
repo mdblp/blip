@@ -28,7 +28,6 @@
 import TeamApi from '../../../../lib/team/team.api'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'
 import { type User } from '../../../../lib/auth'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
@@ -87,12 +86,13 @@ describe('TeamApi', () => {
   })
 
   describe('inviteMember', () => {
-    it('should invite a new member in a team and get a notification if success', async () => {
-      const data = { creatorId: 'creatorId' } as INotification
+    it('should invite a new member in a team and get the invitation and updated teams list if success', async () => {
+      const teams: Team[] = [{ name: 'team1' } as Team]
+      const data = { teams }
       jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data } as AxiosResponse)
 
-      const notification = await TeamApi.inviteMember(userId, teamId, email, role)
-      expect(notification).toEqual(data)
+      const result = await TeamApi.inviteMember(userId, teamId, email, role)
+      expect(result).toEqual(data)
       expect(HttpService.post).toHaveBeenCalledWith({
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
         payload: { role },
@@ -225,25 +225,20 @@ describe('TeamApi', () => {
   describe('removeMember', () => {
     it('should remove a member from a team', async () => {
       jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
-      await TeamApi.removeMember({ teamId, userId, email })
+      await TeamApi.removeMember({ teamId, userId })
       expect(HttpService.delete).toHaveBeenCalledWith({
-        url: `confirm/send/team/leave/${teamId}/${userId}`,
-        config: { params: { email } }
+        url: `/crew/v1/teams/${teamId}/members/${userId}`
       })
     })
   })
 
   describe('changeMemberRole', () => {
     it('should change the member role in the team', async () => {
-      const httpCall = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
+      const httpCall = jest.spyOn(HttpService, 'post').mockResolvedValueOnce(undefined)
       await TeamApi.changeMemberRole({ teamId, userId, email, role })
-      expect(httpCall).toHaveBeenNthCalledWith(1, {
-        url: `/confirm/send/team/role/${userId}`,
-        payload: { teamId, email, role }
-      })
-      expect(httpCall).toHaveBeenNthCalledWith(2, {
-        url: `/crew/v1/teams/${teamId}/members`,
-        payload: { teamId, userId, role }
+      expect(httpCall).toHaveBeenCalledWith({
+        url: `/crew/v1/teams/${teamId}/members/${userId}/change-role`,
+        payload: { teamId, email, userId, role }
       })
     })
   })

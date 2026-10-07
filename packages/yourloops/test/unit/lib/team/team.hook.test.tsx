@@ -29,18 +29,15 @@ import React from 'react'
 import { act, render, waitFor } from '@testing-library/react'
 
 import { type Team, type TeamContext, TeamContextProvider, useTeam } from '../../../../lib/team'
-import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../../lib/auth'
 import TeamApi from '../../../../lib/team/team.api'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type ITeam } from '../../../../lib/team/models/i-team.model'
-import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/notifications/notification.hook')
 describe('Team hook', () => {
   let teamHook: TeamContext
 
@@ -55,7 +52,6 @@ describe('Team hook', () => {
   const caregiverTeam = buildTeam('caregiverId', undefined, undefined, TeamType.caregiver)
   const teams: Team[] = [team1, team2, team3, team4, unmonitoredTeam, privateTeam, caregiverTeam]
 
-  const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue(['flaggedPatient'])
   const authHookFlagPatientMock = jest.fn()
   const getTeamsSpy = jest.spyOn(TeamApi, 'getTeams')
@@ -86,30 +82,29 @@ describe('Team hook', () => {
         getFlagPatients: authHookGetFlagPatientMock,
         flagPatient: authHookFlagPatientMock
       }
-    });
-    (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
-      return {
-        initialized: true,
-        sentInvitations: [],
-        cancel: notificationHookCancelMock
-      }
     })
     await mountComponent()
   })
 
   describe('removeMember', () => {
-    it('should throw an error when there is no invite', async () => {
+    it('should call the API to remove the member and refresh the teams', async () => {
       const teamMember = buildTeamMember()
-      await expect(async () => {
+      const removeMemberMock = jest.spyOn(TeamApi, 'removeMember').mockResolvedValueOnce(undefined)
+
+      await act(async () => {
         await teamHook.removeMember(teamMember, 'fakeTeamId')
-      }).rejects.toThrow()
+      })
+
+      expect(removeMemberMock).toHaveBeenCalledWith({ teamId: 'fakeTeamId', userId: teamMember.userId })
+      expect(getTeamsSpy).toHaveBeenCalledTimes(1)
     })
 
-    it('should throw an error when there is no invite for the member team', async () => {
-      const teamMember = buildTeamMember('fakeUserId')
+    it('should throw an error if the API call fails', async () => {
+      jest.spyOn(TeamApi, 'removeMember').mockRejectedValueOnce(new Error('This error was thrown by a mock on purpose'))
+
       await expect(async () => {
-        await teamHook.removeMember(teamMember, 'fakeTeamId')
-      }).rejects.toThrow()
+        await teamHook.removeMember(buildTeamMember(), 'fakeTeamId')
+      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 
@@ -163,15 +158,6 @@ describe('Team hook', () => {
   describe('inviteMember', () => {
     it('should invite and add a member in a team', async () => {
       jest.spyOn(TeamApi, 'inviteMember').mockResolvedValueOnce({
-        invitation: {
-          key: 'key',
-          type: INotificationType.medicalTeamProInvitation,
-          email: 'hcp@username.com',
-          creatorId: 'currentUserId',
-          created: 'now',
-          shortKey: 'short',
-          creator: { userid: 'currentUserId' }
-        },
         teams
       })
       const initialTeamMembersLength = team1.members.length
