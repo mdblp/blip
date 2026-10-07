@@ -124,6 +124,8 @@ Hit `CTRL+C` to stop the server.
 $ bash build.sh
 ```
 
+The edge lambda is not part of this build: it is generated at deployment time (see `cloudfront-dist/deployment-process.md`).
+
 ## Run a production server locally
 
 After that, the app is ready to be served using the static web server included in this repo:
