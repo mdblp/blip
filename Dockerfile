@@ -28,7 +28,7 @@ RUN test -n "$APP_VERSION" || { echo "ERROR: --build-arg APP_VERSION is required
 # which `aws s3 sync` reads to set each file's Content-Type.
 RUN \
   apk add --no-cache --virtual .user-deps shadow && \
-  apk --no-cache add bash aws-cli jq zip mailcap && \
+  apk --no-cache add aws-cli bash jq mailcap zip && \
   usermod -u 10669 node && groupmod -g 10669 node && \
   apk del .user-deps
 ENV AWS_ACCESS_KEY_ID=
