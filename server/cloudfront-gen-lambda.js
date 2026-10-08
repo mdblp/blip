@@ -173,6 +173,8 @@ function genContentSecurityPolicy() {
   }
   contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
   contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
+  // Real-time server (Centrifugo) websocket, served on the API host
+  contentSecurityPolicy.connectSrc.push(blipConfig.API_HOST.replace(/^http/, 'ws'))
 
   // Allow the integration of PDF files (product labels documents, settings memo) hosted on a remote server
   const settingMemoUrls = getAllSettingsMemoUrls()
