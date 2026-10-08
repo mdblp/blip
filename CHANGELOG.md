@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.11.0-beta - 2026-07-01
+## 3.11.0-rc1 - 2026-10-08
 ### Added
 - YLP-1930 Filter by clinician in Patients list
 - YLP-3790 "Lead clinicians" column in Patients list
@@ -36,6 +36,7 @@ It is based on Tidepool Blip 1.27.
 - Fix CBG in tight range color on Daily view
 - YLP-4086 publish `.well-known/apple-app-site-association` for iOS deep linking
 - YLP-4128 remove CDK and split the infrastructure from the app deployment
+- Add new CSP rule for web socket connection
 
 ## 3.10.0 - 2026-06-25
 ### Added
