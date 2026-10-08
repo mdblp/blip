@@ -115,13 +115,19 @@ jobs:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
 
+      - name: Set short commit sha
+        id: short-commit-compute
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
+          build-args: |
+            APP_VERSION=${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+          tags: ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1

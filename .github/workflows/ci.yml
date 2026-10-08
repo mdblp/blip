@@ -59,6 +59,9 @@ jobs:
       - name: Test lambda
         run: npm run test-lambda
 
+      - name: Lint release script
+        run: shellcheck cloudfront-dist/deploy.sh
+
   test-tideline:
     runs-on: ubuntu-latest
     needs: lint
@@ -323,26 +326,23 @@ jobs:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
 
+      - name: Creating new github tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+          force_push_tag: true
+
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
+          build-args: |
+            APP_VERSION=${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
           tags: |
             ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
             ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
-
-      - name: Creating new github tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: v${{ steps.changelog-version.outputs.semver }}
-          force_push_tag: true
-      - name: Creating new github tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-          force_push_tag: true
 
   sbom:
     if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')

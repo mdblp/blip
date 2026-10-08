@@ -1,6 +1,0 @@
-{
-  "app": "npx ts-node bin/staticwebsite-cdk.ts",
-  "context": {
-    "@aws-cdk/core:stackRelativeExports": "true"
-  }
-}
