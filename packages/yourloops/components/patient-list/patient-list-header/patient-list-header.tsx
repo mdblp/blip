@@ -39,6 +39,7 @@ import Badge from '@mui/material/Badge'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
+import { AiChatButton } from '../../ai-chat/ai-chat-button'
 import { type PatientListTabs } from '../models/enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
 import Tooltip from '@mui/material/Tooltip'
@@ -164,6 +165,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 </span>
               </Tooltip>
             }
+            <AiChatButton />
             <Tooltip title={columnSettingsButtonTooltipTitle}>
                 <span>
                   <Button
