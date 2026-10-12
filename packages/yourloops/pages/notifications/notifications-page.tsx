@@ -69,7 +69,9 @@ export const NotificationsPage: FunctionComponent = () => {
   const { user } = useAuth()
   const notificationsHook = useNotification()
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
-  const notifications = notificationsHook.receivedInvitations
+  const rawNotifications = notificationsHook.receivedInvitations
+
+  const notifications = rawNotifications.filter((notification) => !!notification.payload)
 
   setPageTitle(t('breadcrumb-notifications'))
 
