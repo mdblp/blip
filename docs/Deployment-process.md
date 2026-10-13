@@ -1,9 +1,7 @@
-# Releasing the YourLoops web app (after the Terraform migration)
+# Releasing the YourLoops web app
 
-Once migrated (`terraform-migration-plan.md`), a release deploys two things: the static files and the
-edge Lambda code. It deploys them from the blip Docker image, which stays the single artifact we ship.
-The infrastructure it deploys into (bucket, distribution, certificate, DNS, the Lambda *function*) is
-Terraform's, in `diabeloop-infrastructure`, and a release never changes it.
+A release deploys two things: the static files and the edge Lambda code.
+It deploys them from the blip Docker image, which is the single shipped artifact.
 
 ## What a release changes, and what it doesn't
 
@@ -15,8 +13,7 @@ Terraform's, in `diabeloop-infrastructure`, and a release never changes it.
 | — | DNS records |
 
 The distribution's origin path is a fixed `/blip`. The edge Lambda, built for one version, rewrites
-`/<file>` to `/<version>/<file>`, so switching the Lambda version switches the site. Terraform ignores
-that one attribute (`lambda_function_association`), so `terragrunt plan` stays clean after a release.
+`/<file>` to `/<version>/<file>`, so switching the Lambda version switches the site.
 
 ## Inputs
 
@@ -25,7 +22,6 @@ the `blip-release-<prefix>` policy. The image reads:
 
 | Variable | Used for |
 |---|---|
-| `APP_VERSION` | Bucket prefix, Lambda routing, `/version`, Lambda version description. **Baked into the image at build time** (`/dist/VERSION`, set by CI as `<changelog semver>-<short commit id>`, the same as the image tag; built locally with `--build-arg APP_VERSION=<any valid version>`). Do not set it at deployment: `deploy.sh` fails if it differs from the image's version |
 | `STACK_PREFIX_NAME` | Finds the SSM parameters `/blip/<prefix>/...` |
 | `AWS_ACCOUNT` | Refuses to run if the credentials belong to another account |
 | `AWS_DEFAULT_REGION` | eu-west-3 (bucket, SSM). The Lambda is always us-east-1 |
@@ -68,7 +64,7 @@ The order is what makes a release safe. Nothing users see changes before step 6.
 
 No invalidation: files are cached under `/<version>/<file>`, so a new version never hits an old cache
 entry. `index.html`, `config.<hash>.js` and `/version` come from the Lambda and aren't cached by
-CloudFront. (Assumption V2 in the migration plan; confirmed on sandbox before relying on it.)
+CloudFront.
 
 Every step can be rerun. After a failure, the answer is always to rerun the same image with the same
 env file.
@@ -93,8 +89,7 @@ Each run writes a folder under the mounted `/evidence`:
   sent. They differ only in the viewer-request ARN
 - `s3-sync.log`: every file uploaded or deleted
 
-Attach it to the release in MatrixRequirements alongside the existing test results. Infra changes are
-recorded separately, as the archived `terragrunt plan` in the infra repo's pull request.
+Attach it to the release as evidences alongside the existing test results.
 
 ## Maintenance mode
 

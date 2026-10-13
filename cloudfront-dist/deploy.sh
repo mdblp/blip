@@ -72,8 +72,11 @@ switch_to() {
 }
 
 # Check what the distribution serves, on its own host and on DOMAIN_NAME once the domain is attached.
+# The urls checked are collected in VERIFIED_URLS, for the evidence.
+VERIFIED_URLS=()
 verify() {
   local hosts host served status headers
+  VERIFIED_URLS=()
   hosts=$(aws cloudfront get-distribution --id "$DIST_ID" --output json \
     | jq -r --arg domain "$DOMAIN_NAME" '.Distribution.DomainName,
         (.Distribution.DistributionConfig.Aliases.Items // [] | .[] | select(. == $domain))')
@@ -96,6 +99,7 @@ verify() {
     fi
     grep -qi '^strict-transport-security:' <<<"$headers" || fail "no Strict-Transport-Security on https://${host}/"
     echo "Verified https://${host}/: version $served, status $status"
+    VERIFIED_URLS+=("https://${host}/")
   done
 }
 
@@ -114,7 +118,8 @@ if [[ -n "${SWITCH_TO:-}" ]]; then
   verify
   jq -n --arg env "$STACK_PREFIX_NAME" --arg version "$APP_VERSION" --arg distribution "$DIST_ID" \
         --arg previous "$previous" --arg current "$SWITCH_TO" --arg operator "$(jq -r .Arn <<<"$caller")" \
-        '{mode: "switch", $env, $version, $distribution, lambda: {$previous, $current}, $operator}' \
+        '{mode: "switch", $env, $version, $distribution, lambda: {$previous, $current}, $operator, urls: $ARGS.positional}' \
+        --args "${VERIFIED_URLS[@]}" \
     > "$EVIDENCE/release.json"
   echo "Switched $STACK_PREFIX_NAME to $SWITCH_TO. Evidence: $EVIDENCE"
   exit 0
@@ -162,6 +167,7 @@ verify
 jq -n --arg env "$STACK_PREFIX_NAME" --arg version "$APP_VERSION" --arg bucket "$BUCKET" \
       --arg distribution "$DIST_ID" --arg previous "$PREVIOUS_ARN" --arg current "$NEW_ARN" \
       --arg operator "$(jq -r .Arn <<<"$caller")" --arg maintenance "$MAINTENANCE" \
-      '{mode: "release", $env, $version, $bucket, $distribution, lambda: {$previous, $current}, $operator, $maintenance}' \
+      '{mode: "release", $env, $version, $bucket, $distribution, lambda: {$previous, $current}, $operator, $maintenance, urls: $ARGS.positional}' \
+      --args "${VERIFIED_URLS[@]}" \
   > "$EVIDENCE/release.json"
 echo "Released $APP_VERSION to $STACK_PREFIX_NAME. Evidence: $EVIDENCE"
