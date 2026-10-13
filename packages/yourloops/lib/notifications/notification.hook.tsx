@@ -39,6 +39,10 @@ const ReactNotificationContext = React.createContext<NotificationContext>({} as 
 const log = bows('NotificationHook')
 
 function addNotificationIfAbsent(notifications: InAppNotification[], notification: InAppNotification): InAppNotification[] {
+  if (!notification.payload) {
+    return notifications
+  }
+
   const alreadyReceived = notifications.some(n => n.id === notification.id)
   return alreadyReceived ? notifications : [...notifications, notification]
 }

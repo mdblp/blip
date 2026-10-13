@@ -87,7 +87,7 @@ export const invitationDirectShare: InAppNotification = {
 }
 
 export const invitationDirectShareWithEmptyPayload: InAppNotification = {
-  id: 'invitationTeamId',
+  id: 'invitationEmptyPayloadId',
   type: INotificationType.DirectInvitation,
   userEmail: 'ylp.ui.test-caregiver1@diabeloop.fr',
   status: InAppNotificationStatus.Pending,
