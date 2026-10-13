@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,9 +69,7 @@ export const NotificationsPage: FunctionComponent = () => {
   const { user } = useAuth()
   const notificationsHook = useNotification()
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
-  const rawNotifications = notificationsHook.receivedInvitations
-
-  const notifications = rawNotifications.filter((notification) => !!notification.payload)
+  const notifications = notificationsHook.receivedInvitations
 
   setPageTitle(t('breadcrumb-notifications'))
 
