@@ -319,18 +319,17 @@ jobs:
           driver-opts: |
             image=moby/buildkit:v0.10.6
 
-      - name: Log in to the Nexus registry
-        uses: docker/login-action@v4
+      - name: Login to ECR
+        uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.REGISTRY }}
-          username: ${{ secrets.NEXUS_USERNAME }}
-          password: ${{ secrets.NEXUS_PASSWORD }}
+          registry: ${{ secrets.ECR_AWS_ACCOUNT_NUMBER }}.dkr.ecr.eu-west-3.amazonaws.com
+          username: ${{ secrets.ECR_ACCESS_KEY }}
+          password: ${{ secrets.ECR_SECRET_ACCESS_KEY }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
           tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-          force_push_tag: true
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v7
@@ -341,8 +340,8 @@ jobs:
           build-args: |
             APP_VERSION=${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
           tags: |
-            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
+            ${{ secrets.ECR_AWS_ACCOUNT_NUMBER }}.dkr.ecr.eu-west-3.amazonaws.com/yourloops/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+            ${{ secrets.ECR_AWS_ACCOUNT_NUMBER }}.dkr.ecr.eu-west-3.amazonaws.com/yourloops/blip:${{ steps.changelog-version.outputs.semver }}
 
   sbom:
     if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
