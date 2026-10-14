@@ -241,7 +241,7 @@ to it (`cloudfront-dist/deploy.sh`).
 3. Execute the image with credentials allowed to use the `blip-release-<env>` IAM policy:
    `docker run --rm --env-file blip.env -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v "$PWD/evidence:/evidence" blip-deploy`
 
-See [the release process](cloudfront-dist/deployment-process.md) for the dry run, maintenance mode and rollback.
+See [the release process](docs/deployment-process.md) for the dry run, maintenance mode and rollback.
 
 ## Documentation for developers
 
