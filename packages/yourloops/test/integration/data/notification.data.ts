@@ -31,6 +31,7 @@ import { InAppNotificationStatus } from '../../../lib/notifications/models/enums
 export const invitationTeam: InAppNotification = {
   id: 'invitationTeamId',
   type: INotificationType.CareTeamPatientInvitation,
+  senderId: 'dec0816009d32',
   userEmail: 'ylp.ui.test.67-patient12@diabeloop.fr',
   status: InAppNotificationStatus.Pending,
   deliveredAt: '',
@@ -55,6 +56,7 @@ export const invitationTeam: InAppNotification = {
 export const invitationDirectShare: InAppNotification = {
   id: 'invitationTeamId',
   type: INotificationType.DirectInvitation,
+  senderId: 'patient1',
   userEmail: 'ylp.ui.test-caregiver1@diabeloop.fr',
   status: InAppNotificationStatus.Pending,
   deliveredAt: '',

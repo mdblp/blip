@@ -28,7 +28,6 @@ import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { type InAppNotification } from './models/notification.model'
 import { INotificationType } from './models/enums/i-notification-type.enum'
-import { type IUser } from '../data/models/i-user.model'
 import { InAppNotificationStatus } from './models/enums/notification-type.enum'
 import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 
@@ -58,11 +57,10 @@ export default class NotificationApi {
   }
 
   private static async updateDirectShareInvitation(userId: string, notification: InAppNotification, status: UserInviteStatus): Promise<void> {
-    const creator = notification.payload["creator"] as IUser | undefined
-    if (!creator?.userid) {
-      throw new Error('Invalid direct-share invitation: missing creator')
+    if (!notification.senderId) {
+      throw new Error('Invalid direct-share invitation: missing senderId')
     }
-    const patientId = creator.userid
+    const patientId = notification.senderId
     await HttpService.put<string, { patientId: string, viewerId: string, viewerEmail: string, invitationStatus: UserInviteStatus, lastStatusChangedAt: string }>({
       url: '/crew/v1/direct-shares',
       payload: {
