@@ -41,17 +41,18 @@ describe('Notification API', () => {
 
   const patientId = 'fakePatientId'
 
-  const buildNotification = (type: INotificationType, payload: Record<string, unknown> = { careTeamId: teamId }, senderId = 'fakeSenderId'): InAppNotification => ({
+  const buildNotification = (type: INotificationType, payload: Record<string, unknown> = { careTeamId: teamId }): InAppNotification => ({
     id: 'fakeNotificationId',
     type,
-    senderId,
     userEmail: email,
     payload,
     status: InAppNotificationStatus.Pending,
     deliveredAt: new Date().toISOString()
   })
 
-  const buildDirectShareNotification = (): InAppNotification => buildNotification(INotificationType.DirectInvitation, {}, patientId)
+  const buildDirectShareNotification = (): InAppNotification => buildNotification(INotificationType.DirectInvitation, {
+    senderId: patientId
+  })
 
   describe('getReceivedInvitations', () => {
     const url = `/v2/notifications?status=pending&userId=${userId}`
@@ -128,7 +129,7 @@ describe('Notification API', () => {
 
       it('should throw an error and not call the API if the senderId is missing', async () => {
         const httpPut = jest.spyOn(HttpService, 'put')
-        const notification = { ...buildDirectShareNotification(), senderId: '' }
+        const notification = { ...buildDirectShareNotification(), payload: { senderId: '' } }
 
         await expect(async () => {
           await NotificationApi.acceptInvitation(userId, notification)
@@ -214,7 +215,7 @@ describe('Notification API', () => {
 
       it('should throw an error and not call the API if the senderId is missing', async () => {
         const httpPut = jest.spyOn(HttpService, 'put')
-        const notification = { ...buildDirectShareNotification(), senderId: '' }
+        const notification = { ...buildDirectShareNotification(), payload: { senderId: '' } }
 
         await expect(async () => {
           await NotificationApi.declineInvitation(userId, notification)

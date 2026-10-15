@@ -41,7 +41,6 @@ describe('RealTimeNotificationManager', ()=> {
   const buildNotification = (type: INotificationType, payload: Record<string, unknown> = { careTeamId: teamId }): InAppNotification => ({
     id: 'fakeNotificationId',
     type,
-    senderId: 'fakeSenderId',
     userEmail: 'fake@email.com',
     payload,
     status: InAppNotificationStatus.Pending,

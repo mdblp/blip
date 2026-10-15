@@ -41,12 +41,12 @@ jest.mock('../../../../lib/notifications/notification.hook')
 describe('Notification', () => {
   const notif: InAppNotification = {
     id: '11',
-    senderId: '1',
     userEmail: 'a@example.com',
     status: InAppNotificationStatus.Pending,
     deliveredAt: '2021-02-18T10:00:00',
     type: INotificationType.DirectInvitation,
     payload: {
+      senderId: '1',
       creator: {
         userid: '1',
         profile: {
@@ -61,7 +61,6 @@ describe('Notification', () => {
 
   const teamNotif: InAppNotification = {
     id: '12',
-    senderId: '1',
     userEmail: 'a@example.com',
     status: InAppNotificationStatus.Pending,
     deliveredAt: '2021-02-18T10:00:00',

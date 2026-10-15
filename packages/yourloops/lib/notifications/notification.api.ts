@@ -57,10 +57,11 @@ export default class NotificationApi {
   }
 
   private static async updateDirectShareInvitation(userId: string, notification: InAppNotification, status: UserInviteStatus): Promise<void> {
-    if (!notification.senderId) {
+    const senderId = notification.payload["senderId"] as string | undefined
+    if (!senderId) {
       throw new Error('Invalid direct-share invitation: missing senderId')
     }
-    const patientId = notification.senderId
+    const patientId = senderId
     await HttpService.put<string, { patientId: string, viewerId: string, viewerEmail: string, invitationStatus: UserInviteStatus, lastStatusChangedAt: string }>({
       url: '/crew/v1/direct-shares',
       payload: {

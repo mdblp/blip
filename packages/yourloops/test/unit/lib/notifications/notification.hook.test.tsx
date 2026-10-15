@@ -55,9 +55,8 @@ describe('Notification hook', () => {
   const buildNotification = (): InAppNotification => ({
     id: 'fakeId',
     type: INotificationType.CareTeamProInvitation,
-    senderId: 'fakeSenderId',
     userEmail: hcp.username,
-    payload: { careTeamId: 'fakeTeamId' },
+    payload: { careTeamId: 'fakeTeamId', senderId: 'fakeSenderId', },
     status: InAppNotificationStatus.Pending,
     deliveredAt: new Date().toISOString()
   })

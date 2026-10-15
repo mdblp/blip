@@ -31,7 +31,6 @@ import { InAppNotificationStatus } from './enums/notification-type.enum'
 export interface InAppNotification {
   id: string
   type: INotificationType
-  senderId: string
   userEmail: string // "Receiver email" the user email who received of the notification (recipient)
   // depends of the type of notification, it can be a teamId or a userId
   payload: Record<string, unknown>
