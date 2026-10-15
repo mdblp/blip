@@ -37,6 +37,7 @@ export const invitationTeam: InAppNotification = {
   payload: {
     careTeamId: '63c7b7989cacc878ecce2c40',
     careTeamName: 'sysReq-67-team2',
+    senderId: 'dec0816009d32',
     creator: {
       userid: 'dec0816009d32',
       profile: {
@@ -69,6 +70,7 @@ export const invitationDirectShare: InAppNotification = {
   status: InAppNotificationStatus.Pending,
   deliveredAt: '',
   payload: {
+    senderId: 'patient1',
     senderFullName: 'Backloops test Patient1',
     creator: {
       userid: 'patient1',

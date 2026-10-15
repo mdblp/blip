@@ -51,7 +51,7 @@ describe('Notification API', () => {
   })
 
   const buildDirectShareNotification = (): InAppNotification => buildNotification(INotificationType.DirectInvitation, {
-    creator: { userid: patientId }
+    senderId: patientId
   })
 
   describe('getReceivedInvitations', () => {
@@ -125,6 +125,16 @@ describe('Notification API', () => {
         await expect(async () => {
           await NotificationApi.acceptInvitation(userId, notification)
         }).rejects.toThrow('This error was thrown by a mock on purpose')
+      })
+
+      it('should throw an error and not call the API if the senderId is missing', async () => {
+        const httpPut = jest.spyOn(HttpService, 'put')
+        const notification = { ...buildDirectShareNotification(), payload: { senderId: '' } }
+
+        await expect(async () => {
+          await NotificationApi.acceptInvitation(userId, notification)
+        }).rejects.toThrow('Invalid direct-share invitation: missing senderId')
+        expect(httpPut).not.toHaveBeenCalled()
       })
     })
 
@@ -201,6 +211,16 @@ describe('Notification API', () => {
         await expect(async () => {
           await NotificationApi.declineInvitation(userId, notification)
         }).rejects.toThrow('This error was thrown by a mock on purpose')
+      })
+
+      it('should throw an error and not call the API if the senderId is missing', async () => {
+        const httpPut = jest.spyOn(HttpService, 'put')
+        const notification = { ...buildDirectShareNotification(), payload: { senderId: '' } }
+
+        await expect(async () => {
+          await NotificationApi.declineInvitation(userId, notification)
+        }).rejects.toThrow('Invalid direct-share invitation: missing senderId')
+        expect(httpPut).not.toHaveBeenCalled()
       })
     })
 
