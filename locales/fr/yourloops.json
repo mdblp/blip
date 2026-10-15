@@ -785,7 +785,7 @@
   "total-insulin-days-tooltip": "**Insuline totale délivrée :** est la somme de toutes les injections d'insuline en basale et en bolus (en unités).",
   "total-insulin-how-calculate-tooltip": "**Comment nous calculons cela : **(%) est la quantité totale de basale ou de bolus respectivement divisée par la quantité totale d'insuline délivrée sur la période.",
   "training": "Formation",
-  "training-body": "Un nouveau document de formation est disponible, merci d'en prendre connaissance avant de continuer sur yourLoops.",
+  "training-body": "Un nouveau document de formation est disponible, merci d'en prendre connaissance avant de continuer sur YourLoops.",
   "training-checkbox": "Case à cocher de validation de lecture de la formation",
   "training-subject": "Sujet de la formation",
   "trends": "Tendances",
