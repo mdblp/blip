@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.11.0-rc2 - 2026-10-14
+## 3.11.0-rc3 - 2026-10-15
 ### Added
 - YLP-1930 Filter by clinician in Patients list
 - YLP-3790 "Lead clinicians" column in Patients list
@@ -38,6 +38,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-4128 remove CDK and split the infrastructure from the app deployment
 - Add new CSP rule for web socket connection
 - YLP-4141 Ignore notifications with an empty payload
+- YLP-4145 Caregiver unable to accept/reject a direct share invitation
 
 ## 3.10.0 - 2026-06-25
 ### Added
