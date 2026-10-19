@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.11.0-rc3 - 2026-10-15
+## 3.11.0 - 2026-10-19
 ### Added
 - YLP-1930 Filter by clinician in Patients list
 - YLP-3790 "Lead clinicians" column in Patients list
