@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.12.0-beta - UNRELEASED
+## 3.12.0-beta - 2026-10-22
 
 ## 3.11.0 - 2026-10-19
 ### Added
