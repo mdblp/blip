@@ -41,6 +41,12 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
           node-version: ${{ env.node-version }}
+      - name: Authenticate to Nexus npm registry
+        uses: ./.github/actions/nexus-npm-auth
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+
       - name: Install npm dependencies
         run: npm ci
 
@@ -124,12 +130,20 @@ jobs:
         id: short-commit-compute
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Authenticate to Nexus npm registry
+        uses: ./.github/actions/nexus-npm-auth
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
+          secrets: |
+            nexus_token=${{ env.NEXUS_TOKEN }}
           build-args: |
             APP_VERSION=${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
           tags: ${{ secrets.ECR_AWS_ACCOUNT_NUMBER }}.dkr.ecr.eu-west-3.amazonaws.com/yourloops/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
