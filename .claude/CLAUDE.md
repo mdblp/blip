@@ -47,6 +47,11 @@ YourLoops is a medical application for diabetes management developed by Diabeloo
 - Ensure proper medical unit handling and precision
 - Consider patient safety in all calculations
 
+## Testing
+- Integration test files must be named with a role suffix matching the user role they test: `.hcp.spec.tsx`, `.caregiver.spec.tsx`, or `.patient.spec.tsx`
+- Use `.common.spec.tsx` for integration tests covering features that are not role-specific
+- This naming is required for the `integration-test-hcp`, `integration-test-caregiver`, `integration-test-patient`, and `integration-test-common` npm scripts to correctly select tests by role
+
 ## Development Practices
 - Use feature branches: `feature/YLP-XXXX-description`
 - Include proper error handling for medical data

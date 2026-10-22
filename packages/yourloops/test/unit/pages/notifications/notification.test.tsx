@@ -46,7 +46,7 @@ describe('Notification', () => {
     deliveredAt: '2021-02-18T10:00:00',
     type: INotificationType.DirectInvitation,
     payload: {
-      senderFullName: 'Jeanne Dubois',
+      senderId: '1',
       creator: {
         userid: '1',
         profile: {
