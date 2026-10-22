@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ export const invitationTeam: InAppNotification = {
   payload: {
     careTeamId: '63c7b7989cacc878ecce2c40',
     careTeamName: 'sysReq-67-team2',
+    senderId: 'dec0816009d32',
     creator: {
       userid: 'dec0816009d32',
       profile: {
@@ -52,6 +53,16 @@ export const invitationTeam: InAppNotification = {
     }
   }
 }
+
+export const invitationTeamWithEmptyPayload: InAppNotification = {
+  id: 'invitationEmptyPayloadId',
+  type: INotificationType.CareTeamPatientInvitation,
+  userEmail: 'ylp.ui.test.67-patient12@diabeloop.fr',
+  status: InAppNotificationStatus.Pending,
+  deliveredAt: '',
+  payload: null as unknown as Record<string, unknown>
+}
+
 export const invitationDirectShare: InAppNotification = {
   id: 'invitationTeamId',
   type: INotificationType.DirectInvitation,
@@ -59,6 +70,7 @@ export const invitationDirectShare: InAppNotification = {
   status: InAppNotificationStatus.Pending,
   deliveredAt: '',
   payload: {
+    senderId: 'patient1',
     senderFullName: 'Backloops test Patient1',
     creator: {
       userid: 'patient1',
@@ -74,4 +86,13 @@ export const invitationDirectShare: InAppNotification = {
       }
     }
   }
+}
+
+export const invitationDirectShareWithEmptyPayload: InAppNotification = {
+  id: 'invitationEmptyPayloadId',
+  type: INotificationType.DirectInvitation,
+  userEmail: 'ylp.ui.test-caregiver1@diabeloop.fr',
+  status: InAppNotificationStatus.Pending,
+  deliveredAt: '',
+  payload: null as unknown as Record<string, unknown>
 }

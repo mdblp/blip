@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,10 @@ const ReactNotificationContext = React.createContext<NotificationContext>({} as 
 const log = bows('NotificationHook')
 
 function addNotificationIfAbsent(notifications: InAppNotification[], notification: InAppNotification): InAppNotification[] {
+  if (!notification.payload) {
+    return notifications
+  }
+
   const alreadyReceived = notifications.some(n => n.id === notification.id)
   return alreadyReceived ? notifications : [...notifications, notification]
 }
@@ -78,7 +82,9 @@ function NotificationContextImpl(): NotificationContext {
 
   const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
-      const invitations = await NotificationApi.getReceivedInvitations(user.id)
+      const rawInvitations = await NotificationApi.getReceivedInvitations(user.id)
+      const invitations = rawInvitations.filter((notification) => !!notification.payload)
+
       setReceivedInvitations(invitations)
     } catch (err) {
       log.error(err)
