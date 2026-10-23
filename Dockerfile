@@ -21,7 +21,7 @@ RUN openssl req -nodes -new -x509 -keyout blip.key -out blip.cert -subj "/C=FR/S
 # The server lockfile resolves some packages from Nexus, which requires authentication.
 RUN --mount=type=secret,id=nexus_token \
     echo "//nexus.ci.diabeloop.eu/repository/npm-diabeloop/:_auth=$(cat /run/secrets/nexus_token)" > /tmp/.npmrc && \
-    npm install --userconfig /tmp/.npmrc; \
+    npm install --ignore-scripts --userconfig /tmp/.npmrc; \
     status=$?; rm -f /tmp/.npmrc; exit $status
 
 FROM base AS final
