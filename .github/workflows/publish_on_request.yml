@@ -44,8 +44,8 @@ jobs:
       - name: Authenticate to Nexus npm registry
         uses: ./.github/actions/nexus-npm-auth
         with:
-          username: ${{ secrets.NEXUS_USERNAME }}
-          password: ${{ secrets.NEXUS_PASSWORD }}
+          username: ${{ secrets.NEXUS_RO_USERNAME }}
+          password: ${{ secrets.NEXUS_RO_PASSWORD }}
 
       - name: Install npm dependencies
         run: npm ci
@@ -133,8 +133,8 @@ jobs:
       - name: Authenticate to Nexus npm registry
         uses: ./.github/actions/nexus-npm-auth
         with:
-          username: ${{ secrets.NEXUS_USERNAME }}
-          password: ${{ secrets.NEXUS_PASSWORD }}
+          username: ${{ secrets.NEXUS_RO_USERNAME }}
+          password: ${{ secrets.NEXUS_RO_PASSWORD }}
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v7
