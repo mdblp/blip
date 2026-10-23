@@ -31,7 +31,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayoutMobile } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
-import { act, screen, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
@@ -129,7 +129,9 @@ describe('Caregiver home page', () => {
 
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
-    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+    await waitFor(() => {
+      expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+    })
     expect(within(dataGridRow).getByText('Patient')).toBeInTheDocument()
     expect(within(dataGridRow).getByText('TIR')).toBeInTheDocument()
     expect(within(dataGridRow).getByText('Embett Akim')).toBeInTheDocument()
