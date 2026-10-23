@@ -63,7 +63,9 @@ describe('Devices view for Caregiver', () => {
   })
 
   it('should render correct layout', async () => {
-    renderPage(devicesRoute)
+    await act(async () => {
+      renderPage(devicesRoute)
+    })
     await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
