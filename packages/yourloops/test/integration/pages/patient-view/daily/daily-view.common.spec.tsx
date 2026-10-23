@@ -179,7 +179,9 @@ describe('Daily view for anyone', () => {
       mockDataAPI(twoWeeksOfCbg)
 
       const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue({ Data : {} as Blob, Name : 'report.zip' })
-      renderPage(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
 
       const generateReportButton = await screen.findByText('Download report')
       expect(generateReportButton).toBeVisible()
@@ -235,7 +237,9 @@ describe('Daily view for anyone', () => {
       mockDataAPI(twoWeeksOfCbg)
 
       const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockRejectedValue(new Error(t('error-http-40x')))
-      renderPage(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
 
       const generateReportButton = await screen.findByText('Download report')
       expect(generateReportButton).toBeVisible()
