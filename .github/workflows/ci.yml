@@ -29,7 +29,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -59,7 +59,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -89,7 +89,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -117,7 +117,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -144,7 +144,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -171,7 +171,7 @@ jobs:
           cache-dependency-path: package-lock.json
           node-version: ${{ env.node-version }}
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -199,7 +199,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -227,7 +227,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -255,7 +255,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -283,7 +283,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -311,7 +311,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -403,7 +403,7 @@ jobs:
           tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
