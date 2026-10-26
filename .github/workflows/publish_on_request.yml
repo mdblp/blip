@@ -42,7 +42,7 @@ jobs:
           cache-dependency-path: package-lock.json
           node-version: ${{ env.node-version }}
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
@@ -131,7 +131,7 @@ jobs:
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Authenticate to Nexus npm registry
-        uses: ./.github/actions/nexus-npm-auth
+        uses: mdblp/.github/.github/actions/nexus-npm-auth@main
         with:
           username: ${{ secrets.NEXUS_RO_USERNAME }}
           password: ${{ secrets.NEXUS_RO_PASSWORD }}
