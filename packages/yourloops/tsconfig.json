@@ -6,6 +6,7 @@
     "outDir": "./dist",
     "jsx": "react",
     "diagnostics": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "moduleResolution": "Node",
     "esModuleInterop": true,
