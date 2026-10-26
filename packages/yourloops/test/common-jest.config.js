@@ -93,13 +93,10 @@ module.exports = {
     BUILD_CONFIG: {
       ASSETS_URL: 'fake-url',
       TEST: true,
-      CBG_BUCKETS_ENABLED: false,
       COOKIE_BANNER_CLIENT_ID: '',
       DEV: false,
-      ECPS_ENABLED: true,
       YLP820_BASAL_TIME: 0,
       VERSION: '3.0.2',
-      LATEST_RELEASE: '2000-01-01',
       API_HOST: 'http://localhost:3000',
       BRANDING: 'diabeloop/blue',
       YLPZ_RA_LAD_FR: 'YLPZ-RA-LAD-001-fr-Rev9',

@@ -32,8 +32,6 @@ declare const BUILD_CONFIG: AppConfig | string
 
 const DUMMY_DOMAIN = 'example.com'
 const DUMMY_URL = `https://${DUMMY_DOMAIN}/`
-/** default to 30 min */
-const defaultSessionTimeout = 1800000
 
 const defaultConfig: AppConfig = {
   VERSION: '0.0.0',
@@ -41,20 +39,15 @@ const defaultConfig: AppConfig = {
   DOMAIN_NAME: window.location.hostname,
   LATEST_TERMS: '1970-01-01',
   LATEST_TRAINING: '1970-01-01',
-  LATEST_RELEASE: '2022-03-03',
   CONTACT_SUPPORT_WEB_URL: DUMMY_URL,
   HELP_WEB_URL: DUMMY_URL,
   ASSETS_URL: DUMMY_URL,
   BRANDING: 'diabeloop_blue',
   METRICS_SERVICE: 'disabled',
-  TERMS_PRIVACY_DATE: '',
   COOKIE_BANNER_CLIENT_ID: 'disabled',
   YLP820_BASAL_TIME: 5000,
-  SESSION_TIMEOUT: defaultSessionTimeout,
   DEV: true,
   TEST: false,
-  CBG_BUCKETS_ENABLED: true,
-  ECPS_ENABLED: true,
   AUTH0_DOMAIN: '',
   AUTH0_ISSUER: '',
   AUTH0_CLIENT_ID: '',
