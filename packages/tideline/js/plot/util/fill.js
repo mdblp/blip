@@ -210,6 +210,7 @@ function drawFill(pool, opts = defaults) {
     // Background rect for the chip
     const chipGroup = parent.append('g')
       .classed('d3-line-guide-chip', true)
+      .classed(line.chip.class, true)
 
     const textEl = chipGroup.append('text')
       .classed('d3-line-guide-chip-label', true)

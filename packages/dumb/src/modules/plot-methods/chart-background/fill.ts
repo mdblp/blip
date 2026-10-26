@@ -40,14 +40,25 @@ interface Guideline {
 }
 
 export const getBgGuidelines = (targetValue: string | undefined, chart: { options: { bgClasses: BgClasses }}): Guideline[] => {
+  const lowValue = chart.options.bgClasses.low
+  const highValue = chart.options.bgClasses.target
+
   const defaultGuidelines: Guideline[] = [
     {
       class: 'd3-line-bg-threshold-low',
-      height: chart.options.bgClasses.low
+      height: lowValue,
+      chip: {
+        label: lowValue.toString(),
+        class: 'd3-line-bg-low-chip'
+      }
     },
     {
       class: 'd3-line-bg-threshold-high',
-      height: chart.options.bgClasses.target
+      height: highValue,
+      chip: {
+        label: highValue.toString(),
+        class: 'd3-line-bg-high-chip'
+      }
     }
   ]
 
