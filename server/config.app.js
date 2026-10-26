@@ -65,7 +65,6 @@ const config = {
   API_HOST: stringOption(process.env.API_HOST, null),
   LATEST_TERMS: stringOption(process.env.LATEST_TERMS, '1970-01-01'),
   LATEST_TRAINING: stringOption(process.env.LATEST_TRAINING, '1970-01-01'),
-  LATEST_RELEASE: stringOption(process.env.LATEST_RELEASE, '2022-03-03'),
   CONTACT_SUPPORT_WEB_URL: stringOption(process.env.CONTACT_SUPPORT_WEB_URL, 'https://example.com/'),
   HELP_WEB_URL: stringOption(process.env.HELP_WEB_URL, 'https://example.com/'),
   ASSETS_URL: stringOption(process.env.ASSETS_URL, 'https://example.com/'),
@@ -73,9 +72,6 @@ const config = {
   METRICS_SERVICE: stringOption(process.env.METRICS_SERVICE, 'disabled'),
   COOKIE_BANNER_CLIENT_ID: stringOption(process.env.COOKIE_BANNER_CLIENT_ID, 'disabled'),
   YLP820_BASAL_TIME: integerFromText(process.env.YLP820_BASAL_TIME, 5000),
-  CBG_BUCKETS_ENABLED: booleanFromText(process.env.CBG_BUCKETS_ENABLED, true),
-  ECPS_ENABLED: booleanFromText(process.env.ECPS_ENABLED, true),
-  SESSION_TIMEOUT: integerFromText(process.env.SESSION_TIMEOUT, 30 * 60 * 1000), // default: 30min
   DEV: isDev || isTest,
   TEST: isTest,
   AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || 'yourloops-dev.eu.auth0.com',
