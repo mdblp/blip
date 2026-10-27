@@ -33,7 +33,6 @@ import { getMaxIobValue } from '../../data/util/iob'
 
 const COMMON_TICK_SIZE_OUTER = 0
 
-const BASAL_TICKS_COUNT = 2
 const BOLUS_TICKS_COUNT = 2
 const IOB_TICKS_COUNT = 2
 
@@ -179,13 +178,10 @@ function createScaleBasal(data, pool) {
  */
 export function createYAxisBasal(tidelineData, pool) {
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-  const basalTickValues = [0, 1]
 
-  const axis = d3
-    .axisLeft(scale)
-    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
-    .ticks(BASAL_TICKS_COUNT)
-    .tickValues(basalTickValues)
+  // The basal pool's axis is hidden via CSS (#pool-poolBasal-yAxis); thresholds are shown
+  // via guideline lines/chips (see getBasalGuidelines) instead of axis ticks.
+  const axis = d3.axisLeft(scale)
 
   return { axis, scale }
 }

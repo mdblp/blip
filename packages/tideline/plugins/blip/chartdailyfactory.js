@@ -18,6 +18,7 @@
 
 import * as d3 from 'd3'
 import {
+  getBasalGuidelines,
   getBgGuidelines,
   getDataWithoutSuperpositionEvents,
   getTargetValueAtDate,
@@ -426,7 +427,12 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // setup axis & main y scale
   poolBasal.axisScaleFn(createYAxisBasal)
   // add background fill rectangles to basal pool
-  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, { endpoints: chart.endpoints, isDaily: true }))
+  const basalExtent = d3.extent(tidelineData.medicalData.basal, (d) => d.rate)
+  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, {
+    endpoints: chart.endpoints,
+    isDaily: true,
+    guidelines: getBasalGuidelines(basalExtent)
+  }))
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {

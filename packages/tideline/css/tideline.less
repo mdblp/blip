@@ -81,8 +81,9 @@ svg {
   }
 }
 
-// the BG pool's thresholds are shown via guideline lines/chips instead of an axis
-#pool-poolBG-yAxis {
+// the BG and basal pools' thresholds are shown via guideline lines/chips instead of an axis
+#pool-poolBG-yAxis,
+#pool-poolBasal-yAxis {
   display: none;
 }
 
@@ -186,7 +187,8 @@ svg {
   &.d3-line-bg-threshold-trends {
     stroke-dasharray: 9, 9;
   }
-  &.d3-line-bg-threshold-very-high {
+  &.d3-line-bg-threshold-very-high,
+  &.d3-line-basal-threshold {
     stroke: @ticks;
   }
 }
@@ -217,7 +219,8 @@ svg {
       fill: @bg-high-chip-text;
     }
   }
-  &.d3-line-bg-very-high-chip {
+  &.d3-line-bg-very-high-chip,
+  &.d3-line-basal-chip {
     .d3-line-guide-chip-bg {
       fill: @chart-chip-background;
     }

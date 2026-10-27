@@ -26,9 +26,8 @@
  */
 
 import type { BgClasses } from 'medical-domain'
-import i18next from 'i18next'
 
-const t = i18next.t.bind(i18next)
+const BASAL_GUIDELINE_VALUES = [0, 1]
 
 interface Guideline {
   class: string
@@ -91,4 +90,18 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: { option
   })
 
   return defaultGuidelines
+}
+
+export const getBasalGuidelines = (extent: [number, number]): Guideline[] => {
+  return BASAL_GUIDELINE_VALUES
+    // "0" is always drawn; other guideline values are only drawn if our data reaches them
+    .filter((value) => value === 0 || extent[1] >= value)
+    .map((value) => ({
+      class: 'd3-line-basal-threshold',
+      height: value,
+      chip: {
+        label: value.toString(),
+        class: 'd3-line-basal-chip'
+      }
+    }))
 }
