@@ -20,6 +20,7 @@ import * as d3 from 'd3'
 import {
   getBasalGuidelines,
   getBgGuidelines,
+  getIobGuidelines,
   getDataWithoutSuperpositionEvents,
   getTargetValueAtDate,
   getSuperpositionEvents,
@@ -50,6 +51,7 @@ import i18next from 'i18next'
 import _ from 'lodash'
 
 import { MGDL_UNITS } from 'medical-domain'
+import { getMaxIobValue } from '../../js/data/util/iob'
 import oneDay from '../../js/oneday'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
@@ -455,8 +457,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     poolIob?.axisScaleFn(createYAxisIob)
 
     // add background fill rectangles to IOB pool
+    const maxIobValue = getMaxIobValue(tidelineData.medicalData)
     poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
-      isDaily: true
+      isDaily: true,
+      guidelines: getIobGuidelines(maxIobValue)
     }))
 
     // add IOB curve to IOB pool

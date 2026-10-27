@@ -34,7 +34,6 @@ import { getMaxIobValue } from '../../data/util/iob'
 const COMMON_TICK_SIZE_OUTER = 0
 
 const BOLUS_TICKS_COUNT = 2
-const IOB_TICKS_COUNT = 2
 
 const IOB_DISPLAY_PADDING_RATIO = 0.1
 
@@ -199,14 +198,9 @@ export function createYAxisIob(tidelineData, pool) {
   const maxIobValue = getMaxIobValue(tidelineData.medicalData)
   const scale = createScaleIob(maxIobValue, pool)
 
-  const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
-  const iobTickValues = [0, formattedMaxIobValue]
-
-  const axis = d3
-    .axisLeft(scale)
-    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
-    .ticks(IOB_TICKS_COUNT)
-    .tickValues(iobTickValues)
+  // The IOB pool's axis is hidden via CSS (#pool-poolIob-yAxis); thresholds are shown
+  // via guideline lines/chips (see getIobGuidelines) instead of axis ticks.
+  const axis = d3.axisLeft(scale)
 
   return { axis, scale }
 }

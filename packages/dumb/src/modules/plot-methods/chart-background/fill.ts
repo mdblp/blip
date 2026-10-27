@@ -105,3 +105,29 @@ export const getBasalGuidelines = (extent: [number, number]): Guideline[] => {
       }
     }))
 }
+
+export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
+  const guidelines: Guideline[] = [{
+    class: 'd3-line-iob-threshold',
+    height: 0,
+    chip: {
+      label: '0',
+      class: 'd3-line-iob-chip'
+    }
+  }]
+
+  if (maxIobValue > 0) {
+    const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
+
+    guidelines.push({
+      class: 'd3-line-iob-threshold',
+      height: formattedMaxIobValue,
+      chip: {
+        label: formattedMaxIobValue.toString(),
+        class: 'd3-line-iob-chip'
+      }
+    })
+  }
+
+  return guidelines
+}
