@@ -31,11 +31,18 @@ import commonbolus from './commonbolus'
 import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import { getMaxIobValue } from '../../data/util/iob'
 
-const COMMON_TICK_SIZE_OUTER = 0
-
-const BOLUS_TICKS_COUNT = 2
-
 const IOB_DISPLAY_PADDING_RATIO = 0.1
+
+/**
+ * The BG, bolus, basal and IOB pools all hide their Y axis entirely via CSS
+ * (#pool-<poolId>-yAxis); thresholds are shown via guideline lines/chips instead
+ * (see getBgGuidelines/getBolusGuidelines/getBasalGuidelines/getIobGuidelines in dumb).
+ * @param {ScaleLinear | ScalePower} scale
+ * @returns {Axis}
+ */
+function createHiddenAxis(scale) {
+  return d3.axisLeft(scale)
+}
 
 /**
  * @param {MedicalDataService} tidelineData
@@ -99,12 +106,22 @@ export function createYAxisBG(tidelineData, pool) {
   /** @type {[number, number]} */
   const extent = d3.extent(allBG, (d) => d.value)
   const scale = createScaleBG(tidelineData, pool, Array.from(extent), SMBG_SIZE/2)
-
-  // The BG pool's axis is hidden via CSS (#pool-poolBG-yAxis); thresholds are shown
-  // via guideline lines/chips (see getBgGuidelines) instead of axis ticks.
-  const axis = d3.axisLeft(scale)
+  const axis = createHiddenAxis(scale)
 
   return { axis, scale }
+}
+
+/**
+ * @param {Datum[]} data
+ * @returns {number}
+ */
+function getMaxBolusValue(data) {
+  // for boluses the recommended can exceed the value
+  return data.reduce((p, c) => {
+    /** @type{number} */
+    const v = commonbolus.getProgrammed(c)
+    return Math.max(p, (Number.isFinite(v) ? v : 0))
+  }, 0)
 }
 
 /**
@@ -115,17 +132,19 @@ export function createYAxisBG(tidelineData, pool) {
 function createScaleBolus(data, pool) {
   const bolusRatio = 0.35
   const poolHeight = pool.height()
-  // for boluses the recommended can exceed the value
-  /** @type {number} */
-  const maxValue = data.reduce((p, c) => {
-    /** @type{number} */
-    const v = commonbolus.getProgrammed(c)
-    return Math.max(p, (Number.isFinite(v) ? v : 0))
-  }, 0)
-  const bolusDomain = [0, maxValue]
+  const bolusDomain = [0, getMaxBolusValue(data)]
   const bolusRange = [poolHeight, bolusRatio * poolHeight]
 
   return d3.scaleSqrt(bolusDomain, bolusRange)
+}
+
+/**
+ * @param {MedicalDataService} tidelineData
+ * @returns {number}
+ */
+export function getMaxBolusValueFromTidelineData(tidelineData) {
+  const allBolus = tidelineData.medicalData.bolus.concat(tidelineData.medicalData.wizards)
+  return getMaxBolusValue(allBolus)
 }
 
 /**
@@ -137,22 +156,7 @@ function createScaleBolus(data, pool) {
 export function createYAxisBolus(tidelineData, pool) {
   const allBolus = tidelineData.medicalData.bolus.concat(tidelineData.medicalData.wizards)
   const scale = createScaleBolus(allBolus, pool)
-  // set up y-axis for bolus
-  const bolusTickValues = [0, 1, 5]
-  const maxBolusValue = scale.domain()[1]
-  // Add additional legends
-  while (maxBolusValue > bolusTickValues[bolusTickValues.length - 1] && bolusTickValues.length < 7) {
-    const currentMax = bolusTickValues[bolusTickValues.length - 1]
-    const bolusTick = currentMax < 20 ? 5 : 10
-    // [0, 5, 10, 15, 20, 30, 40]
-    bolusTickValues.push(currentMax + bolusTick)
-  }
-
-  const axis = d3
-    .axisLeft(scale)
-    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
-    .ticks(BOLUS_TICKS_COUNT)
-    .tickValues(bolusTickValues)
+  const axis = createHiddenAxis(scale)
 
   return { axis, scale }
 }
@@ -177,10 +181,7 @@ function createScaleBasal(data, pool) {
  */
 export function createYAxisBasal(tidelineData, pool) {
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-
-  // The basal pool's axis is hidden via CSS (#pool-poolBasal-yAxis); thresholds are shown
-  // via guideline lines/chips (see getBasalGuidelines) instead of axis ticks.
-  const axis = d3.axisLeft(scale)
+  const axis = createHiddenAxis(scale)
 
   return { axis, scale }
 }
@@ -197,10 +198,7 @@ function createScaleIob(maxIobValue, pool) {
 export function createYAxisIob(tidelineData, pool) {
   const maxIobValue = getMaxIobValue(tidelineData.medicalData)
   const scale = createScaleIob(maxIobValue, pool)
-
-  // The IOB pool's axis is hidden via CSS (#pool-poolIob-yAxis); thresholds are shown
-  // via guideline lines/chips (see getIobGuidelines) instead of axis ticks.
-  const axis = d3.axisLeft(scale)
+  const axis = createHiddenAxis(scale)
 
   return { axis, scale }
 }

@@ -29,6 +29,11 @@ import type { BgClasses } from 'medical-domain'
 
 const BASAL_GUIDELINE_VALUES = [0, 1]
 
+// Shared, neutral guideline style used by every chart whose guidelines aren't
+// a clinical BG threshold (i.e. everything but BG's low/high/target lines)
+const NEUTRAL_THRESHOLD_CLASS = 'd3-line-neutral-threshold'
+const NEUTRAL_CHIP_CLASS = 'd3-line-neutral-chip'
+
 interface Guideline {
   class: string
   height: number
@@ -65,11 +70,11 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: { option
   // If the max of our data is lower than the very high threshold, don't draw that guideline
   if (extent[1] >= veryHighValue) {
     defaultGuidelines.push({
-      class: 'd3-line-bg-threshold-very-high',
+      class: NEUTRAL_THRESHOLD_CLASS,
       height: veryHighValue,
       chip: {
         label: veryHighValue.toString(),
-        class: 'd3-line-bg-very-high-chip'
+        class: NEUTRAL_CHIP_CLASS
       }
     })
   }
@@ -97,22 +102,22 @@ export const getBasalGuidelines = (extent: [number, number]): Guideline[] => {
     // "0" is always drawn; other guideline values are only drawn if our data reaches them
     .filter((value) => value === 0 || extent[1] >= value)
     .map((value) => ({
-      class: 'd3-line-basal-threshold',
+      class: NEUTRAL_THRESHOLD_CLASS,
       height: value,
       chip: {
         label: value.toString(),
-        class: 'd3-line-basal-chip'
+        class: NEUTRAL_CHIP_CLASS
       }
     }))
 }
 
 export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
   const guidelines: Guideline[] = [{
-    class: 'd3-line-iob-threshold',
+    class: NEUTRAL_THRESHOLD_CLASS,
     height: 0,
     chip: {
       label: '0',
-      class: 'd3-line-iob-chip'
+      class: NEUTRAL_CHIP_CLASS
     }
   }]
 
@@ -120,14 +125,35 @@ export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
     const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
 
     guidelines.push({
-      class: 'd3-line-iob-threshold',
+      class: NEUTRAL_THRESHOLD_CLASS,
       height: formattedMaxIobValue,
       chip: {
         label: formattedMaxIobValue.toString(),
-        class: 'd3-line-iob-chip'
+        class: NEUTRAL_CHIP_CLASS
       }
     })
   }
 
   return guidelines
+}
+
+export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
+  const guidelineValues = [0, 1, 5]
+
+  // Add additional guidelines, up to 7, to cover the data's max value
+  while (maxBolusValue > guidelineValues[guidelineValues.length - 1] && guidelineValues.length < 7) {
+    const currentMax = guidelineValues[guidelineValues.length - 1]
+    const step = currentMax < 20 ? 5 : 10
+    // [0, 1, 5, 10, 15, 20, 30, 40]
+    guidelineValues.push(currentMax + step)
+  }
+
+  return guidelineValues.map((value) => ({
+    class: NEUTRAL_THRESHOLD_CLASS,
+    height: value,
+    chip: {
+      label: value.toString(),
+      class: NEUTRAL_CHIP_CLASS
+    }
+  }))
 }

@@ -20,10 +20,11 @@ import * as d3 from 'd3'
 import {
   getBasalGuidelines,
   getBgGuidelines,
-  getIobGuidelines,
+  getBolusGuidelines,
   getDataWithoutSuperpositionEvents,
-  getTargetValueAtDate,
+  getIobGuidelines,
   getSuperpositionEvents,
+  getTargetValueAtDate,
   isDBLG2,
   plotAlarmEvent,
   plotBasal,
@@ -35,9 +36,9 @@ import {
   plotEventSuperposition,
   plotIob,
   plotMeal,
+  plotNewNoteButton,
   plotNightMode,
   plotNote,
-  plotNewNoteButton,
   plotPhysicalActivity,
   plotRescueCarbs,
   plotReservoirChange,
@@ -55,7 +56,13 @@ import { getMaxIobValue } from '../../js/data/util/iob'
 import oneDay from '../../js/oneday'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
-import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
+import {
+  createYAxisBasal,
+  createYAxisBG,
+  createYAxisBolus,
+  createYAxisIob,
+  getMaxBolusValueFromTidelineData
+} from '../../js/plot/util/scales'
 
 import Pool from '../../js/pool'
 
@@ -389,9 +396,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // setup axis & main y scale
   poolBolus.axisScaleFn(createYAxisBolus)
   // add background fill rectangles to bolus pool
+  const maxBolusValue = getMaxBolusValueFromTidelineData(tidelineData)
   poolBolus.addPlotType({ type: 'fill' }, fill(poolBolus, {
     endpoints: chart.endpoints,
-    isDaily: true
+    isDaily: true,
+    guidelines: getBolusGuidelines(maxBolusValue)
   }))
 
   // quick bolus data to wizard pool
