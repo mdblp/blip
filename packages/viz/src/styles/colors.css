@@ -16,7 +16,7 @@
  */
 
 :root {
-  --basal: var(--grey-25);
+  --basal: var(--grey-color-25);
   --basal-automated: var(--info-color-50);
   --text-on-basal: var(--text-color-primary);
   --text-on-basal-automated: var(--text-color-primary);
@@ -69,6 +69,7 @@
   --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-50);
   --bg-very-high: var(--warning-color-main);
+  --chart-chip-background: var(--grey-color-10);
   --night-mode: var(--info-color-10);
   --text-hover: #00D3D9;
   --blue-green-light: #12D3D8;

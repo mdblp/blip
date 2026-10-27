@@ -81,6 +81,11 @@ svg {
   }
 }
 
+// the BG pool's thresholds are shown via guideline lines/chips instead of an axis
+#pool-poolBG-yAxis {
+  display: none;
+}
+
 // day axis in two-week view
 .d3-axis.d3-day-axis {
   text {
@@ -181,6 +186,9 @@ svg {
   &.d3-line-bg-threshold-trends {
     stroke-dasharray: 9, 9;
   }
+  &.d3-line-bg-threshold-very-high {
+    stroke: @ticks;
+  }
 }
 
 .d3-line-guide-chip {
@@ -207,6 +215,14 @@ svg {
     }
     .d3-line-guide-chip-label {
       fill: @bg-high-chip-text;
+    }
+  }
+  &.d3-line-bg-very-high-chip {
+    .d3-line-guide-chip-bg {
+      fill: @chart-chip-background;
+    }
+    .d3-line-guide-chip-label {
+      fill: @chart-chip-text;
     }
   }
 }

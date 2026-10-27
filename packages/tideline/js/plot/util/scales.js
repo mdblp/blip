@@ -29,7 +29,6 @@ import * as d3 from 'd3'
 
 import commonbolus from './commonbolus'
 import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
-import format from '../../data/util/format'
 import { getMaxIobValue } from '../../data/util/iob'
 
 const COMMON_TICK_SIZE_OUTER = 0
@@ -90,58 +89,23 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 }
 
 /**
- * @param {MedicalDataService} tidelineData
- * @param {[number, number]} extent
- * @param {string} targetValue
- * @returns {string[]} The displayed ticks
- */
-function createTicksBG(tidelineData, extent, targetValue) {
-  /** @type {"mg/dL" | "mmol/L"} */
-  const bgUnits = _.get(tidelineData, 'opts.bgUnits', MGDL_UNITS)
-  const bgValues = _.values(_.omit(tidelineData.opts.bgClasses, ['veryHigh', 'veryLow']))
-  const ticks = _.map(bgValues, (value) => format.tooltipBGValue(value))
-  ticks.sort((a, b) => a - b)
-  const targetBoundary = getTargetBoundary(tidelineData, bgUnits)
-
-  if (extent[0] === extent[1]) {
-    extent[1] = _.max([extent[1], targetBoundary])
-  }
-  // if the min of our data is greater than any of the defaultTicks, remove that tick
-  ticks.forEach((tick) => {
-    if (extent[1] < tick) {
-      ticks.pop()
-    }
-  })
-
-  if (targetValue) {
-    ticks.push(targetValue)
-  }
-
-  return ticks
-}
-
-/**
  * Create the Y-Axis SVG and scale for BG graph
  * @param {MedicalDataService} tidelineData
  * @param {Pool} pool Parent pool
- * @param {string} targetValue
  * @returns {{ axis: Axis, scale: ScaleLinear }}
  */
-export function createYAxisBG(tidelineData, pool, targetValue) {
+export function createYAxisBG(tidelineData, pool) {
   const SMBG_SIZE = 16
 
   const allBG = tidelineData.medicalData.cbg.concat(tidelineData.medicalData.smbg)
   /** @type {[number, number]} */
   const extent = d3.extent(allBG, (d) => d.value)
   const scale = createScaleBG(tidelineData, pool, Array.from(extent), SMBG_SIZE/2)
-  const ticks = createTicksBG(tidelineData, Array.from(extent), targetValue)
-  const bgTickFormat = tidelineData.opts.bgUnits === MGDL_UNITS ? 'd' : '.1f'
 
-  const axis = d3
-    .axisLeft(scale)
-    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
-    .tickValues(ticks)
-    .tickFormat(d3.format(bgTickFormat))
+  // The BG pool's axis is hidden via CSS (#pool-poolBG-yAxis); thresholds are shown
+  // via guideline lines/chips (see getBgGuidelines) instead of axis ticks.
+  const axis = d3.axisLeft(scale)
+
   return { axis, scale }
 }
 

@@ -281,13 +281,16 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const hasParameters = Array.isArray(parametersHistory) && Array.isArray(currentParameters)
   let targetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, targetDate) : undefined
 
+  const allBG = tidelineData.medicalData.cbg.concat(tidelineData.medicalData.smbg)
+  const bgExtent = d3.extent(allBG, (d) => d.value)
+
   // setup axis & main y scale
-  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
+  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG))
 
   const bgFill = fill(poolBG, {
     endpoints: chart.endpoints,
     isDaily: true,
-    guidelines: getBgGuidelines(targetValue, chart)
+    guidelines: getBgGuidelines(targetValue, chart, bgExtent)
   })
   poolBG.addPlotType({ type: 'fill' }, bgFill)
 
@@ -507,9 +510,8 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       targetValue = newTargetValue
 
       // Update the "Target" line height
-      bgFill.updateGuidelines(getBgGuidelines(targetValue, chart))
-      // Update the tick value on the Y axis
-      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
+      bgFill.updateGuidelines(getBgGuidelines(targetValue, chart, bgExtent))
+      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG))
       poolBG.updateAxes()
     }
   })

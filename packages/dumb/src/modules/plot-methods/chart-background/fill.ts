@@ -39,9 +39,10 @@ interface Guideline {
   }
 }
 
-export const getBgGuidelines = (targetValue: string | undefined, chart: { options: { bgClasses: BgClasses }}): Guideline[] => {
+export const getBgGuidelines = (targetValue: string | undefined, chart: { options: { bgClasses: BgClasses }}, extent: [number, number]): Guideline[] => {
   const lowValue = chart.options.bgClasses.low
   const highValue = chart.options.bgClasses.target
+  const veryHighValue = chart.options.bgClasses.high
 
   const defaultGuidelines: Guideline[] = [
     {
@@ -62,6 +63,18 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: { option
     }
   ]
 
+  // If the max of our data is lower than the very high threshold, don't draw that guideline
+  if (extent[1] >= veryHighValue) {
+    defaultGuidelines.push({
+      class: 'd3-line-bg-threshold-very-high',
+      height: veryHighValue,
+      chip: {
+        label: veryHighValue.toString(),
+        class: 'd3-line-bg-very-high-chip'
+      }
+    })
+  }
+
   if (!targetValue) {
     return defaultGuidelines
   }
@@ -72,7 +85,7 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: { option
     class: 'd3-line-bg-target',
     height: targetValueNumber,
     chip: {
-      label: t('target'),
+      label: targetValueNumber.toString(),
       class: 'd3-line-bg-target-chip'
     }
   })
