@@ -70,18 +70,6 @@ import {
 } from '../../../use-cases/patient-data-visualisation'
 import { renderPage } from '../../../utils/render'
 
-/**
- * @see https://github.com/testing-library/react-testing-library/issues/651
- * @description SVGElement.getBBox is not implemented in JSDOM yet.
- */
-Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
-  writable: true,
-  value: jest.fn().mockReturnValue({
-    x: 0,
-    y: 0
-  })
-});
-
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
 
