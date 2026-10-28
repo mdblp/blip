@@ -305,8 +305,8 @@ describe('Daily view for anyone', () => {
         renderPage(dailyRoute)
       })
 
-      await checkGlucoseChartYAxis()
-      await checkBolusChartYAxisForSmallBoluses()
+      checkGlucoseChartYAxis()
+      checkBolusChartYAxisForSmallBoluses()
     })
 
     it('should display the target defined at the required date', async () => {
@@ -319,7 +319,7 @@ describe('Daily view for anyone', () => {
         renderPage(routeAtDate)
       })
 
-      await checkGlucoseChartYAxisAtDate()
+      checkGlucoseChartYAxisAtDate()
     })
   })
 })

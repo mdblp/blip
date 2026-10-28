@@ -131,7 +131,10 @@ export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
 }
 
 export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
-  const guidelineValues = BOLUS_GUIDELINE_VALUES
+  // Copy before mutating below: BOLUS_GUIDELINE_VALUES is shared across calls, and .push()ing
+  // onto it directly would permanently grow it, leaking a larger dataset's ladder into every
+  // later call with a smaller maxBolusValue.
+  const guidelineValues = [...BOLUS_GUIDELINE_VALUES]
 
   // Add additional guidelines, up to 7, to cover the data's max value
   while (maxBolusValue > guidelineValues[guidelineValues.length - 1] && guidelineValues.length < 7) {

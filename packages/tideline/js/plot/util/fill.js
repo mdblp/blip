@@ -192,11 +192,15 @@ function drawFill(pool, opts = defaults) {
     const g = chipsGroup
       .join('g')
       .attr('id', pool.id() + '_guideline_chips')
+      .attr('data-testid', pool.id() + '_guideline_chips')
       .attr('transform', `translate(0,${pool.yPosition()})`)
 
     g
       .selectAll('g.d3-line-guide-chip')
-      .data(guidelinesWithChips, (guideline) => guideline.chip.class)
+      // Keyed by height, not by chip.class: several guidelines on the same chart (e.g. every
+      // bolus guideline above the first) share the same neutral chip class, so keying by class
+      // would collide and confuse d3's enter/update/exit matching across re-renders.
+      .data(guidelinesWithChips, (guideline) => guideline.height)
       .join('g')
       .attr('class', (guideline) => `d3-line-guide-chip ${guideline.chip.class}`)
       .each(function(guideline) {
