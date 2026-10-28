@@ -120,6 +120,8 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
     group.select(`#${id}_guidelines`).remove()
+    // Chips are not in the pool's own group, see Pool#chipGroup
+    mainSVG.select(`#${id}_guideline_chips`).remove()
   }
 
   // non-chainable methods
@@ -138,6 +140,14 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
 
   this.parent = function() {
     return mainSVG
+  }
+
+  /**
+   * The container-wide group hosting the guideline chips of every pool.
+   * It sits outside the pools' clip path so chips can be drawn in the axis gutter.
+   */
+  this.chipGroup = function() {
+    return mainSVG.select('#tidelineChips')
   }
 
   this.width = function() {

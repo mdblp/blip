@@ -27,7 +27,8 @@
 
 import type { BgClasses } from 'medical-domain'
 
-const BASAL_GUIDELINE_VALUES = [0, 1]
+const BASAL_GUIDELINE_VALUES = [1]
+const BOLUS_GUIDELINE_VALUES = [1, 5]
 
 // Shared, neutral guideline style used by every chart whose guidelines aren't
 // a clinical BG threshold (i.e. everything but BG's low/high/target lines)
@@ -43,7 +44,9 @@ interface Guideline {
   }
 }
 
-export const getBgGuidelines = (targetValue: string | undefined, chart: { options: { bgClasses: BgClasses }}, extent: [number, number]): Guideline[] => {
+export const getBgGuidelines = (targetValue: string | undefined, chart: {
+  options: { bgClasses: BgClasses }
+}, extent: [number, number]): Guideline[] => {
   const lowValue = chart.options.bgClasses.low
   const highValue = chart.options.bgClasses.target
   const veryHighValue = chart.options.bgClasses.high
@@ -99,8 +102,7 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: { option
 
 export const getBasalGuidelines = (extent: [number, number]): Guideline[] => {
   return BASAL_GUIDELINE_VALUES
-    // "0" is always drawn; other guideline values are only drawn if our data reaches them
-    .filter((value) => value === 0 || extent[1] >= value)
+    .filter((value) => extent[1] >= value)
     .map((value) => ({
       class: NEUTRAL_THRESHOLD_CLASS,
       height: value,
@@ -112,39 +114,30 @@ export const getBasalGuidelines = (extent: [number, number]): Guideline[] => {
 }
 
 export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
-  const guidelines: Guideline[] = [{
+  if (maxIobValue <= 0) {
+    return []
+  }
+
+  const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
+
+  return [{
     class: NEUTRAL_THRESHOLD_CLASS,
-    height: 0,
+    height: formattedMaxIobValue,
     chip: {
-      label: '0',
+      label: formattedMaxIobValue.toString(),
       class: NEUTRAL_CHIP_CLASS
     }
   }]
-
-  if (maxIobValue > 0) {
-    const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
-
-    guidelines.push({
-      class: NEUTRAL_THRESHOLD_CLASS,
-      height: formattedMaxIobValue,
-      chip: {
-        label: formattedMaxIobValue.toString(),
-        class: NEUTRAL_CHIP_CLASS
-      }
-    })
-  }
-
-  return guidelines
 }
 
 export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
-  const guidelineValues = [0, 1, 5]
+  const guidelineValues = BOLUS_GUIDELINE_VALUES
 
   // Add additional guidelines, up to 7, to cover the data's max value
   while (maxBolusValue > guidelineValues[guidelineValues.length - 1] && guidelineValues.length < 7) {
     const currentMax = guidelineValues[guidelineValues.length - 1]
-    const step = currentMax < 20 ? 5 : 10
-    // [0, 1, 5, 10, 15, 20, 30, 40]
+    const step = currentMax < 10 ? 5 : 10
+    // [0, 1, 5, 10, 20, 30, 40]
     guidelineValues.push(currentMax + step)
   }
 
