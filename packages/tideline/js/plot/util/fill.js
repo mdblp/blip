@@ -197,10 +197,11 @@ function drawFill(pool, opts = defaults) {
 
     g
       .selectAll('g.d3-line-guide-chip')
-      // Keyed by height, not by chip.class: several guidelines on the same chart (e.g. every
-      // bolus guideline above the first) share the same neutral chip class, so keying by class
-      // would collide and confuse d3's enter/update/exit matching across re-renders.
-      .data(guidelinesWithChips, (guideline) => guideline.height)
+      // Keyed by class + height together, since neither is unique on its own: several
+      // guidelines on the same chart (e.g. every bolus guideline above the first) share the
+      // same neutral class, while a target guideline can coincide in height with a low/high/
+      // very-high one. Either collision alone would confuse d3's enter/update/exit matching.
+      .data(guidelinesWithChips, (guideline) => `${guideline.class}_${guideline.height}`)
       .join('g')
       .attr('class', (guideline) => `d3-line-guide-chip ${guideline.chip.class}`)
       .each(function(guideline) {

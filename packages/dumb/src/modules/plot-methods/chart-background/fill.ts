@@ -88,6 +88,12 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: {
 
   const targetValueNumber = Number(targetValue)
 
+  // A corrupted/unexpected device parameter could make targetValue a non-numeric string; skip
+  // the guideline rather than draw a line at height NaN with a chip reading "NaN".
+  if (!Number.isFinite(targetValueNumber)) {
+    return defaultGuidelines
+  }
+
   defaultGuidelines.push({
     class: 'd3-line-bg-target',
     height: targetValueNumber,
@@ -140,7 +146,7 @@ export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
   while (maxBolusValue > guidelineValues[guidelineValues.length - 1] && guidelineValues.length < 7) {
     const currentMax = guidelineValues[guidelineValues.length - 1]
     const step = currentMax < 10 ? 5 : 10
-    // [0, 1, 5, 10, 20, 30, 40]
+    // [1, 5, 10, 20, 30, 40, 50]
     guidelineValues.push(currentMax + step)
   }
 

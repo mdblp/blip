@@ -89,7 +89,7 @@ export { ZenModeTooltip } from './components/tooltips/zen-mode-tooltip/zen-mode-
 
 // Daily plot methods
 export { getBasalGuidelines, getBgGuidelines, getBolusGuidelines, getIobGuidelines } from './modules/plot-methods/chart-background/fill'
-export { createYAxisBG, createYAxisBasal, createYAxisBolus, createYAxisIob, getMaxBolusValueFromTidelineData } from './modules/plot-methods/chart-background/scales-y-axis'
+export { createYAxisBG, createYAxisBasal, createYAxisBolus, createYAxisIob } from './modules/plot-methods/chart-background/scales-y-axis'
 export { plotAlarmEvent } from './modules/plot-methods/charts/events/alarm-event'
 export { plotBasal } from './modules/plot-methods/charts/basal-rates/basal-rate'
 export { plotBolus } from './modules/plot-methods/charts/bolus-carbs/bolus'

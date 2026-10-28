@@ -311,12 +311,16 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
 
   /**
    * @param {AxisScaleFunc} fn
+   * @param {{ axis: Axis, scale: ScaleContinuousNumeric } | null} initialAxisScale Already-computed
+   * result of calling `fn`, to use for this initial call instead of invoking `fn` again. Lets a
+   * caller that already needed to run `fn` once (e.g. to read a value back out of it) avoid
+   * doing so a second time here.
    * @returns {AxisScaleFunc}
    */
-  this.axisScaleFn = function(fn = null) {
+  this.axisScaleFn = function(fn = null, initialAxisScale = null) {
     if (fn !== null) {
       defaultAxisScaleFn = fn
-      const axisScale = fn(container.tidelineData, this)
+      const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
       yScale = axisScale.scale
       yAxis = axisScale.axis
     }

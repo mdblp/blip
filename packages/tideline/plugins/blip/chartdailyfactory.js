@@ -27,8 +27,6 @@ import {
   getBolusGuidelines,
   getDataWithoutSuperpositionEvents,
   getIobGuidelines,
-  getMaxBolusValueFromTidelineData,
-  getMaxIobValue,
   getSuperpositionEvents,
   getTargetValueAtDate,
   isDBLG2,
@@ -289,11 +287,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const hasParameters = Array.isArray(parametersHistory) && Array.isArray(currentParameters)
   let targetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, targetDate) : undefined
 
-  const allBG = tidelineData.medicalData.cbg.concat(tidelineData.medicalData.smbg)
-  const bgExtent = d3.extent(allBG, (d) => d.value)
-
   // setup axis & main y scale
-  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG))
+  const bgAxisScale = createYAxisBG(tidelineData, poolBG)
+  const bgExtent = bgAxisScale.extent
+  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG), bgAxisScale)
 
   const bgFill = fill(poolBG, {
     endpoints: chart.endpoints,
@@ -392,13 +389,13 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
 
   // setup axis & main y scale
-  poolBolus.axisScaleFn(createYAxisBolus)
+  const bolusAxisScale = createYAxisBolus(tidelineData, poolBolus)
+  poolBolus.axisScaleFn(createYAxisBolus, bolusAxisScale)
   // add background fill rectangles to bolus pool
-  const maxBolusValue = getMaxBolusValueFromTidelineData(tidelineData)
   poolBolus.addPlotType({ type: 'fill' }, fill(poolBolus, {
     endpoints: chart.endpoints,
     isDaily: true,
-    guidelines: getBolusGuidelines(maxBolusValue)
+    guidelines: getBolusGuidelines(bolusAxisScale.maxBolusValue)
   }))
 
   // quick bolus data to wizard pool
@@ -434,13 +431,13 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
 
   // setup axis & main y scale
-  poolBasal.axisScaleFn(createYAxisBasal)
+  const basalAxisScale = createYAxisBasal(tidelineData, poolBasal)
+  poolBasal.axisScaleFn(createYAxisBasal, basalAxisScale)
   // add background fill rectangles to basal pool
-  const basalExtent = d3.extent(tidelineData.medicalData.basal, (d) => d.rate)
   poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, {
     endpoints: chart.endpoints,
     isDaily: true,
-    guidelines: getBasalGuidelines(basalExtent)
+    guidelines: getBasalGuidelines(basalAxisScale.extent)
   }))
 
   // add basal data to basal pool
@@ -461,13 +458,13 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   if (isDblg2Patient) {
     // IOB pool
     // setup axis & main y scale
-    poolIob?.axisScaleFn(createYAxisIob)
+    const iobAxisScale = createYAxisIob(tidelineData, poolIob)
+    poolIob?.axisScaleFn(createYAxisIob, iobAxisScale)
 
     // add background fill rectangles to IOB pool
-    const maxIobValue = getMaxIobValue(tidelineData.medicalData)
     poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
       isDaily: true,
-      guidelines: getIobGuidelines(maxIobValue)
+      guidelines: getIobGuidelines(iobAxisScale.maxIobValue)
     }))
 
     // add IOB curve to IOB pool
