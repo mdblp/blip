@@ -87,6 +87,7 @@
   --bg-history-deleted-plain:rgba(251,89,81,1);
   --bg-history-deleted-soft:rgba(251,89,81,0.1);
   --activeValue: var(--blip-color-primary-light);
+  --text: var(--text-color-primary);
 }
 
 
