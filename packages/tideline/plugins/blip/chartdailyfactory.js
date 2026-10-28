@@ -18,11 +18,17 @@
 
 import * as d3 from 'd3'
 import {
+  createYAxisBasal,
+  createYAxisBG,
+  createYAxisBolus,
+  createYAxisIob,
   getBasalGuidelines,
   getBgGuidelines,
   getBolusGuidelines,
   getDataWithoutSuperpositionEvents,
   getIobGuidelines,
+  getMaxBolusValueFromTidelineData,
+  getMaxIobValue,
   getSuperpositionEvents,
   getTargetValueAtDate,
   isDBLG2,
@@ -52,17 +58,9 @@ import i18next from 'i18next'
 import _ from 'lodash'
 
 import { MGDL_UNITS } from 'medical-domain'
-import { getMaxIobValue } from '../../js/data/util/iob'
 import oneDay from '../../js/oneday'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
-import {
-  createYAxisBasal,
-  createYAxisBG,
-  createYAxisBolus,
-  createYAxisIob,
-  getMaxBolusValueFromTidelineData
-} from '../../js/plot/util/scales'
 
 import Pool from '../../js/pool'
 
