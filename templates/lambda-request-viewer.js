@@ -17,6 +17,12 @@ const VERSION_URI = 'version'
 // so this prefix is what makes a Lambda version serve its own release's files.
 const ORIGIN_PREFIX = '/{{ VERSION }}'
 const MAINTENANCE = {{ MAINTENANCE }}
+// BHT2 IP addresses (exact matches) that still get the application during maintenance
+const MAINTENANCE_ALLOWED_IPS = {{ MAINTENANCE_ALLOWED_IPS }}
+
+function isAllowedDuringMaintenance(clientIp) {
+  return MAINTENANCE_ALLOWED_IPS.includes(clientIp)
+}
 
 function maintenanceResponse() {
   return {
@@ -75,8 +81,9 @@ exports.handler = async (event, context, callback) => {
     return callback(null, response);
   }
 
-  // Everything but the mobile app links above and /version, so the release checks still work.
-  if (MAINTENANCE && requestURI !== `${basePath}${VERSION_URI}`) {
+  // Everything but the mobile app links above, /version (so the release checks still work) and the allowed IPs.
+  // `clientIp` is set by CloudFront itself (the viewer's address), not by a client header.
+  if (MAINTENANCE && requestURI !== `${basePath}${VERSION_URI}` && !isAllowedDuringMaintenance(request.clientIp)) {
     return callback(null, maintenanceResponse());
   }
 

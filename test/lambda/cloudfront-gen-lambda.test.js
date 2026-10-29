@@ -9,13 +9,13 @@ const maintenanceLambda = require('../../dist/lambda/cloudfront-test-maintenance
 // Set by test-lambda.sh
 const APP_VERSION = process.env.APP_VERSION
 
-function viewerRequest(uri) {
+function viewerRequest(uri, clientIp = '2001:cdba::3257:9652') {
   return {
     Records: [
       {
         cf: {
           config: { distributionId: 'TESTS' },
-          request: { uri, method: 'GET', clientIp: '2001:cdba::3257:9652', headers: {} }
+          request: { uri, method: 'GET', clientIp, headers: {} }
         }
       }
     ]
@@ -166,6 +166,20 @@ describe('CloudFront Lambda Generator in maintenance mode', function () {
       expect(response.headers['content-security-policy'][0].value).to.contain("default-src 'none'")
       expect(response.headers['strict-transport-security'][0].value).to.contain('max-age=')
       expect(response.headers['cache-control'][0].value).to.be.equal('no-store')
+    })
+  }
+
+  for (const clientIp of ['192.0.2.10', '198.51.100.20']) {
+    it(`Should serve the application to the allowed IP ${clientIp}`, async () => {
+      const response = await handler(viewerRequest('/', clientIp), null)
+      expect(response.status).to.be.equal(200)
+    })
+  }
+
+  for (const clientIp of ['192.0.2.11', '198.51.100.21', '2001:cdba::3257:9652']) {
+    it(`Should return the maintenance page to ${clientIp}`, async () => {
+      const response = await handler(viewerRequest('/', clientIp), null)
+      expect(response.status).to.be.equal(503)
     })
   }
 

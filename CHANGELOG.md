@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3686 TypeScript version update
 - YLP-4160 Authenticate to Nexus npm registry with NEXUS_TOKEN
 - YLP-4168 Minor dependencies version update
+- YLP-4189 Disable yourloops maintenance page for BHT2 IPs
 
 ## 3.11.0 - 2026-10-19
 ### Added
