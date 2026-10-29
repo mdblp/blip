@@ -73,11 +73,11 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: {
   // If the max of our data is lower than the very high threshold, don't draw that guideline
   if (extent[1] >= veryHighValue) {
     defaultGuidelines.push({
-      class: NEUTRAL_THRESHOLD_CLASS,
+      class: 'd3-line-bg-threshold-other',
       height: veryHighValue,
       chip: {
         label: veryHighValue.toString(),
-        class: NEUTRAL_CHIP_CLASS
+        class: 'd3-line-bg-other-chip'
       }
     })
   }

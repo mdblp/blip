@@ -66,10 +66,13 @@
   --bg-low-chip-background: var(--error-color-10);
   --bg-high-chip-text: var(--warning-color-dark);
   --bg-high-chip-background: var(--warning-color-10);
+  --bg-other-chip-background: var(--grey-color-10);
+  --bg-other-chip-text: var(--dark-blue-main);
   --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-50);
   --bg-very-high: var(--warning-color-main);
-  --chart-chip-background: var(--grey-color-10);
+  --chart-chip-background: var(--info-color-10);
+  --chart-guideline-stroke: var(--dark-blue-color-20);
   --night-mode: var(--info-color-10);
   --text-hover: #00D3D9;
   --blue-green-light: #12D3D8;
