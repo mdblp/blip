@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
 import bows from 'bows'
 import { type User } from '../auth'
@@ -40,7 +39,7 @@ import HttpStatus from '../http/models/enums/http-status.enum'
 
 const log = bows('Team API')
 
-interface ChangeMemberRoleFirstPayload {
+interface ChangeMemberRoleBaseArgs {
   teamId: string
   email: string
   role: TeamMemberRole.admin | TeamMemberRole.member
@@ -50,24 +49,23 @@ interface InviteMemberPayload {
   role: TeamMemberRole
 }
 
-interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
+interface ChangeMemberRoleArgs extends ChangeMemberRoleBaseArgs {
   userId: string
 }
 
-interface ChangeMemberRoleSecondPayload {
+interface ChangeMemberRolePayload {
   teamId: string
   userId: string
+  email: string
   role: TeamMemberRole.admin | TeamMemberRole.member
 }
 
 interface RemoveMemberArgs {
   teamId: string
   userId: string
-  email: string
 }
 
 interface InviteMemberResult {
-  invitation: INotification
   teams: Team[]
 }
 
@@ -75,7 +73,7 @@ const HCP_ROUTE = 'hcps'
 const PATIENTS_ROUTE = 'patients'
 
 export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE = 'patient-already-invited-in-team'
-const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
+export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
 
 export default class TeamApi {
   static async getTeams(user: User): Promise<Team[]> {
@@ -140,22 +138,14 @@ export default class TeamApi {
     await HttpService.delete({ url: `/crew/v1/teams/${teamId}/members/${userId}` })
   }
 
-  static async removeMember({ teamId, userId, email }: RemoveMemberArgs): Promise<void> {
-    await HttpService.delete({
-      url: `confirm/send/team/leave/${teamId}/${userId}`,
-      config: { params: { email } }
-    })
+  static async removeMember({ teamId, userId }: RemoveMemberArgs): Promise<void> {
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}/members/${userId}` })
   }
 
   static async changeMemberRole({ teamId, userId, email, role }: ChangeMemberRoleArgs): Promise<void> {
-    await HttpService.put<void, ChangeMemberRoleFirstPayload>({
-      url: `/confirm/send/team/role/${userId}`,
-      payload: { teamId, email, role }
-    })
-
-    await HttpService.put<void, ChangeMemberRoleSecondPayload>({
-      url: `/crew/v1/teams/${teamId}/members`,
-      payload: { teamId, userId, role }
+    await HttpService.post<void, ChangeMemberRolePayload>({
+      url: `/crew/v1/teams/${teamId}/members/${userId}/change-role`,
+      payload: { teamId, email, userId, role }
     })
   }
 

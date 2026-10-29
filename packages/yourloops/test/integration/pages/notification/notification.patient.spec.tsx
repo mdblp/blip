@@ -25,14 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act } from 'react'
+import { screen } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { patient1Info } from '../../data/patient.api.data'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { anotherTeam, buildTeamOne, buildTeamTwo } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
-import { invitationTeam } from '../../data/notification.data'
+import { invitationTeam, invitationTeamWithEmptyPayload } from '../../data/notification.data'
 import { checkAcceptTeamInvite, checkPatientAcceptTeamInvite } from '../../assert/notification-join-team.assert'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
@@ -52,5 +53,27 @@ describe('Notification page for patient', () => {
 
     await checkPatientAcceptTeamInvite()
     await checkAcceptTeamInvite()
+  })
+
+  it('should not display a notification with an empty payload', async () => {
+    jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationTeamWithEmptyPayload, invitationTeam])
+
+    await act(async () => {
+      renderPage(AppUserRoute.Notifications)
+    })
+
+    expect(await screen.findAllByTestId('notification-line')).toHaveLength(1)
+    expect(document.querySelector('[data-notificationid="invitationEmptyPayloadId"]')).not.toBeInTheDocument()
+  })
+
+  it('should display the no-pending-invite message when all notifications have an empty payload', async () => {
+    jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationTeamWithEmptyPayload])
+
+    await act(async () => {
+      renderPage(AppUserRoute.Notifications)
+    })
+
+    expect(await screen.findByText('No pending notifications')).toBeInTheDocument()
+    expect(screen.queryByTestId('notification-line')).not.toBeInTheDocument()
   })
 })

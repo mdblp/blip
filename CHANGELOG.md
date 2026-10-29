@@ -2,12 +2,20 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.11.0-beta - 2026-07-01
+## 3.12.0-beta - 2026-10-23
+### Engineering
+- YLP-3466 Remove unused env variables
+- YLP-3686 TypeScript version update
+- YLP-4160 Authenticate to Nexus npm registry with NEXUS_TOKEN
+- YLP-4168 Minor dependencies version update
+
+## 3.11.0 - 2026-10-19
 ### Added
 - YLP-1930 Filter by clinician in Patients list
 - YLP-3790 "Lead clinicians" column in Patients list
 
 ### Changed
+- YLP-1936 rework invitation flow (patient,members and direct share)
 - YLP-3338 Use weight unit from parameters instead of "kg"
 - YLP-3490 Update notes UI
 - YLP-3781 Fix the conflict between "communication page" and "training ack" pages
@@ -34,6 +42,10 @@ It is based on Tidepool Blip 1.27.
 - Remove "Readings In Range" stat support
 - Fix CBG in tight range color on Daily view
 - YLP-4086 publish `.well-known/apple-app-site-association` for iOS deep linking
+- YLP-4128 remove CDK and split the infrastructure from the app deployment
+- Add new CSP rule for web socket connection
+- YLP-4141 Ignore notifications with an empty payload
+- YLP-4145 Caregiver unable to accept/reject a direct share invitation
 
 ## 3.10.0 - 2026-06-25
 ### Added

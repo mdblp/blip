@@ -1,7 +1,6 @@
 .git
 .gitignore
 npm-debug.log
-cloudfront-dist/deployment/node_modules
 config/*
 !config/local.sh
 !config/env.docker.sh

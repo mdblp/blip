@@ -28,11 +28,12 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockCaregiverUser } from '../mock/direct-share.api.mock'
-import NotificationApi from '../../../lib/notifications/notification.api'
-import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
-import { type Notification } from '../../../lib/notifications/models/notification.model'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { patient1Id } from '../data/patient.api.data'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+
+const newCaregiverUserId = 'new-caregiver-user-id'
 
 export const checkCaregiversListLayout = async () => {
   const addCaregiverButton = screen.getByRole('button', { name: 'Add caregiver' })
@@ -62,12 +63,10 @@ export const checkAddCaregiverSuccess = async (newCaregiverEmail: string) => {
   const inviteButton = within(addCaregiverDialog).getByRole('button', { name: 'Invite' })
   expect(inviteButton).toBeEnabled()
 
-  jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([{
-    email: newCaregiverEmail,
-    type: NotificationType.directInvitation,
-    target: { id: 'target-id' },
-    id: 'my-id'
-  } as Notification])
+  jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValueOnce([
+    { status: UserInviteStatus.Accepted, user: mockCaregiverUser },
+    { status: UserInviteStatus.Pending, user: { userid: newCaregiverUserId, username: newCaregiverEmail, role: UserRole.Caregiver } }
+  ])
   await userEvent.click(inviteButton)
 
   expect(DirectShareApi.addDirectShare).toHaveBeenCalledWith(patient1Id, newCaregiverEmail)
@@ -172,7 +171,7 @@ export const checkRemoveCaregiverSuccess = async (caregiverEmail: string) => {
 
   await userEvent.click(removeButton)
 
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('my-id', 'target-id', caregiverEmail)
+  expect(DirectShareApi.removeDirectShare).toHaveBeenCalledWith(patient1Id, newCaregiverUserId)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
   const removeCaregiverSuccessfulSnackbar = screen.getByTestId('alert-snackbar')

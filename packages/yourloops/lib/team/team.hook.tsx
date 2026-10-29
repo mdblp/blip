@@ -40,7 +40,6 @@ import _ from 'lodash'
 import { errorTextFromException } from '../utils'
 import metrics from '../metrics'
 import { useAuth } from '../auth'
-import { useNotification } from '../notifications/notification.hook'
 import TeamApi from './team.api'
 import TeamUtils from './team.util'
 import { type Team } from './models/team.model'
@@ -56,7 +55,6 @@ const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
-  const notificationHook = useNotification()
   const [teams, setTeams] = useState<Team[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
@@ -154,18 +152,10 @@ function TeamContextImpl(): TeamContext {
   }
 
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
-    if (member.status === UserInviteStatus.Pending) {
-      if (!member.invitationId) {
-        throw new Error('Missing invite!')
-      }
-      await notificationHook.cancel(member.invitationId, teamId, member.email)
-    } else {
-      await TeamApi.removeMember({
-        teamId,
-        userId: member.userId,
-        email: member.email
-      })
-    }
+    await TeamApi.removeMember({
+      teamId,
+      userId: member.userId
+    })
     refresh()
   }
 

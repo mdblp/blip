@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.11.0-beta",
+  "version": "3.12.0-beta",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -10,12 +10,11 @@
     "packages/*"
   ],
   "scripts": {
-    "bump-version": "VERSION=$VERSION npm run bump-version:workspace && npm run bump-version:server && npm run bump-version:cloudfront-dist",
-    "bump-version:cloudfront-dist": "cd cloudfront-dist/deployment && npm version $VERSION --no-git-tag-version",
+    "bump-version": "VERSION=$VERSION npm run bump-version:workspace && npm run bump-version:server",
     "bump-version:server": "cd server && npm version $VERSION --no-git-tag-version",
     "bump-version:workspace": "npm version $VERSION --no-git-tag-version && npm version $VERSION --no-git-tag-version --workspaces",
     "mrproper": "npm run mrproper --workspaces",
-    "postmrproper": "rm -rf deploy node_modules cloudfront-dist/deployment/node_modules server/node_modules",
+    "postmrproper": "rm -rf deploy node_modules server/node_modules",
     "clean": "npm run clean --workspaces --if-present",
     "postclean": "rm -rf dist reports",
     "copy-css": "npm run copy-files -w dumb",
@@ -24,7 +23,7 @@
     "postbuild": "mkdir dist && cp -r public dist && mv packages/yourloops/dist dist/static",
     "gen-robot": "node server/gen-robot-txt.js",
     "gen-sitemap": "node server/gen-sitemap-xml.js",
-    "gen-lambda": "cd server && npm install && node cloudfront-gen-lambda.js",
+    "gen-lambda": "cd server && npm install --userconfig ../.npmrc && node cloudfront-gen-lambda.js",
     "lint": "eslint templates server && npm run lint-blip && npm run lint --workspaces --if-present",
     "lint-blip": "eslint packages",
     "lint-fix-blip": "npm run lint-blip -- --fix",
@@ -136,12 +135,15 @@
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
     "ts-loader": "^9.5.0",
-    "typescript": "^5.2.2",
+    "typescript": "^6.0.3",
     "typescript-plugin-css-modules": "^5.0.2",
     "voilab-pdf-table": "0.5.1",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.2.2",
     "webpack-subresource-integrity": "^5.1.0"
+  },
+  "overrides": {
+    "@ranfdev/deepobj": "1.0.4"
   }
 }

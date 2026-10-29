@@ -28,6 +28,7 @@
 import { type Preferences } from '../../auth/models/preferences.model'
 import { type UserAccount } from '../../auth/models/user-account.model'
 import { type Settings } from '../../auth/models/settings.model'
+import type { UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
 
 export interface DirectShareUser {
   userId: string
@@ -36,4 +37,5 @@ export interface DirectShareUser {
   settings?: Settings | null
   email: string
   idVerified: boolean
+  invitationStatus: UserInviteStatus
 }

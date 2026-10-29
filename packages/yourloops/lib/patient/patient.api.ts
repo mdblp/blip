@@ -25,10 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import HttpService from '../http/http.service'
-import { type INotification } from '../notifications/models/i-notification.model'
-import { getCurrentLang } from '../language'
-import { UserRole } from '../auth/models/enums/user-role.enum'
-import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient } from './models/patient.model'
 import { type MonitoringAlertsParameters } from 'medical-domain'
@@ -51,8 +47,8 @@ interface InvitePatientArgs {
   email: string
 }
 
-interface InvitePatientPayload extends InvitePatientArgs {
-  role: UserRole
+interface InvitePatientPayload {
+  email: string
 }
 
 
@@ -85,14 +81,12 @@ export default class PatientApi {
     return data
   }
 
-  static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotification> {
+  static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<void> {
     try {
-      const { data } = await HttpService.post<INotification, InvitePatientPayload>({
-        url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRole.Patient },
-        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+      await HttpService.post<void, InvitePatientPayload>({
+        url: `/crew/v1/teams/${teamId}/patients`,
+        payload: { email }
       }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE])
-      return data
     } catch (error) {
       if (error.response.status === PATIENT_ALREADY_IN_TEAM_ERROR_CODE) {
         throw new Error(PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE)

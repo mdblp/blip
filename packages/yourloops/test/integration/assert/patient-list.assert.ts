@@ -28,7 +28,6 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
-import NotificationApi from '../../../lib/notifications/notification.api'
 import PatientApi from '../../../lib/patient/patient.api'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import {
@@ -769,7 +768,6 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
   await userEvent.click(removeInviteButton)
 
   // We check that the API has been properly called
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInviteId', undefined, pendingPatient.profile.email)
   expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, pendingPatient.userid)
 
   // We check that the alert is successful
@@ -814,7 +812,6 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   await userEvent.click(removeInviteButton)
 
   // We check that the API has been properly called
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInviteId', undefined, pendingPatient.profile.email)
   expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, pendingPatient.userid)
   expect(PatientApi.invitePatient).toHaveBeenCalledWith({ teamId: myThirdTeamId, email: pendingPatient.profile.email })
 

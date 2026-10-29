@@ -4,6 +4,23 @@ const util = require('util')
 const zlib = require('zlib')
 const chai = require('chai')
 const lambda = require('../../dist/lambda/cloudfront-test-blip-request-viewer')
+const maintenanceLambda = require('../../dist/lambda/cloudfront-test-maintenance-blip-request-viewer')
+
+// Set by test-lambda.sh
+const APP_VERSION = process.env.APP_VERSION
+
+function viewerRequest(uri) {
+  return {
+    Records: [
+      {
+        cf: {
+          config: { distributionId: 'TESTS' },
+          request: { uri, method: 'GET', clientIp: '2001:cdba::3257:9652', headers: {} }
+        }
+      }
+    ]
+  }
+}
 
 describe('CloudFront Lambda Generator', function () {
   const { expect } = chai
@@ -103,10 +120,18 @@ describe('CloudFront Lambda Generator', function () {
     expect(indexHTML.indexOf(configHash)).to.be.above(0)
   })
 
-  it('Should proceed the request to CloudFront for others requests', async () => {
+  it('Should proceed the request to CloudFront for distribution files, in the release folder', async () => {
     testBase.Records[0].cf.request.uri = '/branding_diabeloop_blue_favicon.ico'
     const response = await handler(testBase, null)
     expect(response).to.be.equal(testBase.Records[0].cf.request)
+    expect(response.uri).to.be.equal(`/${APP_VERSION}/branding_diabeloop_blue_favicon.ico`)
+  })
+
+  it('Should return the version', async () => {
+    testBase.Records[0].cf.request.uri = '/version'
+    const response = await handler(testBase, null)
+    expect(response.status).to.be.equal(200)
+    expect(response.body).to.be.equal(APP_VERSION)
   })
 
   it('Should request a redirect for distributions files', async () => {
@@ -124,5 +149,35 @@ describe('CloudFront Lambda Generator', function () {
         }]
       }
     })
+  })
+})
+
+describe('CloudFront Lambda Generator in maintenance mode', function () {
+  const { expect } = chai
+  /** @type {(string, object) => Promise<object>} */
+  const handler = util.promisify(maintenanceLambda.handler)
+
+  for (const uri of ['/', '/index.html', '/patients/abcd/data', '/branding_diabeloop_blue_favicon.ico']) {
+    it(`Should return the maintenance page for ${uri}`, async () => {
+      const response = await handler(viewerRequest(uri), null)
+      expect(response.status).to.be.equal(503)
+      expect(response.body.startsWith('<!DOCTYPE html>')).to.be.true
+      expect(response.body).to.contain('YourLoops is currently undergoing maintenance')
+      expect(response.headers['content-security-policy'][0].value).to.contain("default-src 'none'")
+      expect(response.headers['strict-transport-security'][0].value).to.contain('max-age=')
+      expect(response.headers['cache-control'][0].value).to.be.equal('no-store')
+    })
+  }
+
+  it('Should still return the version', async () => {
+    const response = await handler(viewerRequest('/version'), null)
+    expect(response.status).to.be.equal(200)
+    expect(response.body).to.be.equal(APP_VERSION)
+  })
+
+  it('Should still return the mobile app links', async () => {
+    const response = await handler(viewerRequest('/.well-known/assetlinks.json'), null)
+    expect(response.status).to.be.equal(200)
+    expect(response.headers['content-type'][0].value).to.be.equal('application/json')
   })
 })

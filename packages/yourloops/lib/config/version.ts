@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type TeamMemberRole } from '../../team/models/enums/team-member-role.enum'
-import { type UserAccount } from '../../auth/models/user-account.model'
-import { type INotificationType } from './enums/i-notification-type.enum'
-
-export interface INotification {
-  key: string
-  type: INotificationType
-  /** Current user email */
-  email: string
-  /** User who create the invite == creator.userid? */
-  creatorId: string
-  /** Undocumented value */
-  context?: null
-  /** Notification creation date */
-  created: string
-  target?: {
-    /** TeamID */
-    id: string
-    /** Team name */
-    name: string
+/**
+ * Version to show to the user. The version set at build time is `<semver>-<short commit id>` (e.g. `3.11.0-a1b2c3d`, with or without a leading `v`):
+ * we keep the version without the commit id suffix, prefixed by `v`. Any other value (e.g. a bare commit id) is displayed as is.
+ */
+export const getDisplayVersion = (version: string): string => {
+  const match = /^v?(.+)-[0-9a-f]{7,40}$/.exec(version)
+  if (match) {
+    return `v${match[1]}`
   }
-  /** The role we will have in the team */
-  role?: TeamMemberRole
-  /** Undocumented value */
-  shortKey: string
-  /** Some information on the user who created this notification */
-  creator: {
-    userid: string
-    profile?: UserAccount
-  }
+  return /^v?\d+\.\d+/.test(version) ? `v${version.replace(/^v/, '')}` : version
 }

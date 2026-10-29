@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { act } from 'react'
 import { renderPage } from '../../utils/render'
-import { act } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import NotificationApi from '../../../../lib/notifications/notification.api'
@@ -39,7 +40,7 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { invitationDirectShare } from '../../data/notification.data'
+import { invitationDirectShare, invitationDirectShareWithEmptyPayload } from '../../data/notification.data'
 import { testNotificationManagementForCaregiver } from '../../use-cases/notification-management'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
@@ -53,7 +54,6 @@ describe('Notification page for caregiver', () => {
       profile: { firstName: 'caregiverFirstName', lastName: 'caregiverLastName' }
     } as IUser,
     status: UserInviteStatus.Accepted,
-    invitation: invitationDirectShare
   }
 
   beforeAll(() => {
@@ -75,5 +75,16 @@ describe('Notification page for caregiver', () => {
     })
 
     await testNotificationManagementForCaregiver()
+  })
+
+  it('should not display a notification with an empty payload', async () => {
+    jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationDirectShareWithEmptyPayload, invitationDirectShare])
+
+    await act(async () => {
+      renderPage(AppUserRoute.Notifications)
+    })
+
+    expect(await screen.findAllByTestId('notification-line')).toHaveLength(1)
+    expect(document.querySelector('[data-notificationid="invitationEmptyPayloadId"]')).not.toBeInTheDocument()
   })
 })

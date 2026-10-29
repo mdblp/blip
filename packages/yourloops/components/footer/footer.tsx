@@ -47,6 +47,7 @@ import { useAuth } from '../../lib/auth'
 import { useLocation } from 'react-router-dom'
 import { commonStyleFooter } from './shared/footer-style'
 import { FooterLink } from './footer-link'
+import { getDisplayVersion } from '../../lib/config/version'
 
 export const footerWebStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
@@ -261,7 +262,7 @@ export const Footer: FunctionComponent = () => {
                 style={`${classes.commonLink} ${classes.appVersionLink}`}
                 isExternal
               >
-                <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
+                <span className={classes.versionSpan}>{getDisplayVersion(config.VERSION).substring(0, 20)}</span>
               </FooterLink>
             </span>
           </Tooltip>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CancelInvitationPayload {
-  key: string
-  target: { id: string }
-  email: string
-}
+import { getDisplayVersion } from '../../../../lib/config/version'
+
+describe('getDisplayVersion', () => {
+  it('should remove the commit id suffix of a tagged build', () => {
+    expect(getDisplayVersion('v3.11.0-a1b2c3d')).toBe('v3.11.0')
+  })
+
+  it('should handle a version without leading v', () => {
+    expect(getDisplayVersion('3.11.0-a1b2c3d')).toBe('v3.11.0')
+  })
+
+  it('should keep a pre-release tag', () => {
+    expect(getDisplayVersion('v3.11.0-beta-a1b2c3d')).toBe('v3.11.0-beta')
+  })
+
+  it('should display an untagged build as is', () => {
+    expect(getDisplayVersion('460db25')).toBe('460db25')
+  })
+
+  it('should add a single v to a plain version', () => {
+    expect(getDisplayVersion('3.11.0')).toBe('v3.11.0')
+    expect(getDisplayVersion('v3.11.0')).toBe('v3.11.0')
+  })
+})
