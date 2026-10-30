@@ -96,6 +96,9 @@ Attach it to the release as evidences alongside the existing test results.
 1. Set `MAINTENANCE=true` in the env file and run **the version currently in production**. The files
    are already there (sync uploads nothing), and the new Lambda answers every request except `/version`
    with the maintenance page (503, `Retry-After`, CSP, HSTS), except the mobile app links (`/.well-known/...`), which keep working.
+   IP addresses listed (comma separated IPv4) in the `MAINTENANCE_ALLOWED_IPS` env variable still get the application:
+   the Lambda compares them to the viewer IP given by CloudFront. IPv6 clients are never allowed. A request executed from one
+   of these IPs gets a 200 instead of the 503 the post-release check expects.
 2. To leave maintenance, run the same image with `MAINTENANCE=false`.
 
 Each switch takes as long as a distribution deployment (a few minutes). No infrastructure change, no

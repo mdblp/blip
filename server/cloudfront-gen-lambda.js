@@ -72,7 +72,8 @@ const reCookieBanner = /(^\s+<!-- Start of cookie-banner -->\n)(.*\n)*(^\s+<!-- 
 const reUrl = /(^https?:\/\/[^/]+).*/
 const reVersion = /^[0-9A-Za-z._-]+$/
 const isUnderMaintenance = process.env.MAINTENANCE === 'true'
-const reDashCase = /[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g
+const reIpv4 = /^(25[0-5]|2[0-4]\d|1?\d?\d)(\.(25[0-5]|2[0-4]\d|1?\d?\d)){3}$/
+const reDashCase =/[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g
 const outputFilenameTemplate = 'cloudfront-{{ TARGET_ENVIRONMENT }}-blip-request-viewer.js'
 let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`
 const configMd5 = getHash(configJs)
@@ -106,6 +107,22 @@ const contentSecurityPolicy = {
   connectSrc: ["'self'", 'data:', '{{ API_HOST }}'],
   frameSrc: [],
   objectSrc: []
+}
+
+/**
+ * Read the IP addresses allowed during maintenance from MAINTENANCE_ALLOWED_IPS (comma separated IPv4)
+ * @returns {string[]}
+ */
+function getMaintenanceAllowedIps() {
+  const ips = (process.env.MAINTENANCE_ALLOWED_IPS ?? '')
+    .split(',')
+    .map((ip) => ip.trim())
+    .filter((ip) => ip.length > 0)
+  const invalidIp = ips.find((ip) => !reIpv4.test(ip))
+  if (invalidIp !== undefined) {
+    throw new Error(`Invalid IPv4 address in MAINTENANCE_ALLOWED_IPS: ${invalidIp}`)
+  }
+  return ips
 }
 
 /** @type {string} */
@@ -244,7 +261,8 @@ function genOutputFile() {
     CSP: '',
     LANGUAGES: _.keysIn(locales.resources).join(','),
     MAINTENANCE: String(isUnderMaintenance),
-    MAINTENANCE_HTML: isUnderMaintenance ? genMaintenanceHtml() : ''
+    MAINTENANCE_HTML: isUnderMaintenance ? genMaintenanceHtml() : '',
+    MAINTENANCE_ALLOWED_IPS: JSON.stringify(getMaintenanceAllowedIps())
   }
 
   const csp = genContentSecurityPolicy()

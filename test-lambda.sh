@@ -12,5 +12,5 @@ cp -v 'templates/index.html' 'dist/static/'
 cp -v "branding/diabeloop/blue/favicon.ico" 'dist/static/branding_diabeloop_blue_favicon.ico'
 npm run gen-lambda
 # The same release, built for maintenance mode
-TARGET_ENVIRONMENT='test-maintenance' MAINTENANCE='true' npm run gen-lambda
+TARGET_ENVIRONMENT='test-maintenance' MAINTENANCE='true' MAINTENANCE_ALLOWED_IPS='192.0.2.10,198.51.100.20' npm run gen-lambda
 mocha test/lambda/cloudfront-gen-lambda.test.js
