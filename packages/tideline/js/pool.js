@@ -304,12 +304,10 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
    * doing so a second time here.
    * @returns {AxisScaleFunc}
    */
-  this.axisScaleFn = function(fn = null, initialAxisScale = null) {
-    if (fn !== null) {
-      defaultAxisScaleFn = fn
-      const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
-      yScale = axisScale.scale
-    }
+  this.axisScaleFn = function(fn, initialAxisScale = null) {
+    defaultAxisScaleFn = fn
+    const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
+    yScale = axisScale.scale
     return defaultAxisScaleFn
   }
 
@@ -320,10 +318,8 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
    * @param {GuidelinesFn} fn
    * @returns {GuidelinesFn}
    */
-  this.guidelinesFn = function(fn = null) {
-    if (fn !== null) {
-      defaultGuidelinesFn = fn
-    }
+  this.guidelinesFn = function(fn) {
+    defaultGuidelinesFn = fn
     return defaultGuidelinesFn
   }
 
