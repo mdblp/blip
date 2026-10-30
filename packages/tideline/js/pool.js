@@ -29,6 +29,8 @@ import { drawLegend } from './plot/util/legend'
  * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
  *
  * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { axis: Axis, scale: ScaleContinuousNumeric }} AxisScaleFunc
+ * @typedef {{ class: string, height: number, chip?: { label: string, class: string } }} Guideline
+ * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
  * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
  * @typedef {{ name: string; baseline: number }[]} Legends
  */
@@ -65,6 +67,8 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   let plotTypes = []
   /** @type {AxisScaleFunc} */
   let defaultAxisScaleFn = null
+  /** @type {GuidelinesFn} */
+  let defaultGuidelinesFn = null
 
   this.destroy = function() {
     plotTypes.forEach((plotType) => {
@@ -93,6 +97,15 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       const axisScale = defaultAxisScaleFn(container.tidelineData, this)
       yScale = axisScale.scale
       yAxis = axisScale.axis
+
+      if (_.isFunction(defaultGuidelinesFn)) {
+        // The guideline lines/chips are owned by this pool's "fill" plot type (see
+        // fill.updateGuidelines in plot/util/fill.js); recompute them here, from the same
+        // axisScale just rebuilt above, so they never drift from a stale, chart-creation-time
+        // snapshot while the Y scale keeps adapting to newly loaded data.
+        const fillPlotType = plotTypes.find(({ type, plot }) => type === 'fill' && _.isFunction(plot.updateGuidelines))
+        fillPlotType?.plot.updateGuidelines(defaultGuidelinesFn(axisScale))
+      }
     }
 
     plotTypes.forEach((plotType) => {
@@ -325,6 +338,20 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       yAxis = axisScale.axis
     }
     return defaultAxisScaleFn
+  }
+
+  /**
+   * Registers how to rebuild this pool's guideline lines/chips from the axisScale object
+   * produced by its axisScaleFn. render() calls it every time it rebuilds the scale, so
+   * guidelines stay derived from the same (fresh) data as the scale they're drawn against.
+   * @param {GuidelinesFn} fn
+   * @returns {GuidelinesFn}
+   */
+  this.guidelinesFn = function(fn = null) {
+    if (fn !== null) {
+      defaultGuidelinesFn = fn
+    }
+    return defaultGuidelinesFn
   }
 
   /**

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, fireEvent, queries, screen, within } from '@testing-library/react'
+import { BoundFunctions, fireEvent, queries, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import { getTranslation } from '../../utils/i18n'
@@ -401,4 +401,14 @@ export const checkBolusChartYAxisForSmallBoluses = () => {
   expect(screen.getByTestId('poolBolus_guideline_chips')).toHaveTextContent('15')
   // Check that the next tick (10) is not visible
   expect(screen.getByTestId('poolBolus_guideline_chips')).not.toHaveTextContent('1510')
+}
+
+export const checkBolusAndGlucoseChartGuidelinesRecomputedAfterNewDayData = async () => {
+  // The Bolus guideline ladder must grow to cover the newly loaded, much bigger bolus
+  await waitFor(() => {
+    expect(screen.getByTestId('poolBolus_guideline_chips')).toHaveTextContent('151020304050')
+  }, { timeout: 10000 })
+
+  // The BG "very high" guideline must appear, now that a loaded CBG value crosses it
+  expect(screen.getByTestId('poolBG_guideline_chips')).toHaveTextContent('70180250')
 }

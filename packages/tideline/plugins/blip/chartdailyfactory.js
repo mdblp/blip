@@ -291,6 +291,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const bgAxisScale = createYAxisBG(tidelineData, poolBG)
   const bgExtent = bgAxisScale.extent
   poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG), bgAxisScale)
+  poolBG.guidelinesFn((axisScale) => getBgGuidelines(targetValue, chart, axisScale.extent))
 
   const bgFill = fill(poolBG, {
     endpoints: chart.endpoints,
@@ -391,6 +392,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // setup axis & main y scale
   const bolusAxisScale = createYAxisBolus(tidelineData, poolBolus)
   poolBolus.axisScaleFn(createYAxisBolus, bolusAxisScale)
+  poolBolus.guidelinesFn((axisScale) => getBolusGuidelines(axisScale.maxBolusValue))
   // add background fill rectangles to bolus pool
   poolBolus.addPlotType({ type: 'fill' }, fill(poolBolus, {
     endpoints: chart.endpoints,
@@ -433,6 +435,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // setup axis & main y scale
   const basalAxisScale = createYAxisBasal(tidelineData, poolBasal)
   poolBasal.axisScaleFn(createYAxisBasal, basalAxisScale)
+  poolBasal.guidelinesFn((axisScale) => getBasalGuidelines(axisScale.extent))
   // add background fill rectangles to basal pool
   poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, {
     endpoints: chart.endpoints,
@@ -460,6 +463,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     // setup axis & main y scale
     const iobAxisScale = createYAxisIob(tidelineData, poolIob)
     poolIob?.axisScaleFn(createYAxisIob, iobAxisScale)
+    poolIob?.guidelinesFn((axisScale) => getIobGuidelines(axisScale.maxIobValue))
 
     // add background fill rectangles to IOB pool
     poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
@@ -523,9 +527,12 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     if (newTargetValue !== targetValue) {
       targetValue = newTargetValue
 
-      // Update the "Target" line height
-      bgFill.updateGuidelines(getBgGuidelines(targetValue, chart, bgExtent))
-      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG))
+      // Update the "Target" line height, from a freshly recomputed extent rather than the
+      // one captured at chart creation, so the BG "very high" guideline reflects data loaded
+      // since then too
+      const newBgAxisScale = createYAxisBG(tidelineData, poolBG)
+      bgFill.updateGuidelines(getBgGuidelines(targetValue, chart, newBgAxisScale.extent))
+      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG), newBgAxisScale)
       poolBG.updateAxes()
     }
   })
