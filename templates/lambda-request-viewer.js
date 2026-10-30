@@ -17,7 +17,7 @@ const VERSION_URI = 'version'
 // so this prefix is what makes a Lambda version serve its own release's files.
 const ORIGIN_PREFIX = '/{{ VERSION }}'
 const MAINTENANCE = {{ MAINTENANCE }}
-// BHT2 IP addresses (exact matches) that still get the application during maintenance
+// IP addresses (exact matches) that still get the application during maintenance
 const MAINTENANCE_ALLOWED_IPS = {{ MAINTENANCE_ALLOWED_IPS }}
 
 function isAllowedDuringMaintenance(clientIp) {
