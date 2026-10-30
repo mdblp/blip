@@ -51,6 +51,7 @@ import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import { patient2Info, patientPregnancyInfo } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import {
+  getBolusAndBgGuidelinesNewDayData,
   getCompleteDailyViewData,
   getCompleteDailyViewDataDblg2,
   getTargetValueChangesData,
@@ -61,6 +62,7 @@ import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import {
+  testBolusAndGlucoseChartGuidelinesRecomputeOnDayChange,
   testDailyViewChartsDblg1,
   testDailyViewChartsDblg2,
   testDailyViewTooltipsAndValuesMgdl,
@@ -69,18 +71,6 @@ import {
   testNotesFailure
 } from '../../../use-cases/patient-data-visualisation'
 import { renderPage } from '../../../utils/render'
-
-/**
- * @see https://github.com/testing-library/react-testing-library/issues/651
- * @description SVGElement.getBBox is not implemented in JSDOM yet.
- */
-Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
-  writable: true,
-  value: jest.fn().mockReturnValue({
-    x: 0,
-    y: 0
-  })
-});
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -305,8 +295,8 @@ describe('Daily view for anyone', () => {
         renderPage(dailyRoute)
       })
 
-      await checkGlucoseChartYAxis()
-      await checkBolusChartYAxisForSmallBoluses()
+      checkGlucoseChartYAxis()
+      checkBolusChartYAxisForSmallBoluses()
     })
 
     it('should display the target defined at the required date', async () => {
@@ -319,7 +309,24 @@ describe('Daily view for anyone', () => {
         renderPage(routeAtDate)
       })
 
-      await checkGlucoseChartYAxisAtDate()
+      checkGlucoseChartYAxisAtDate()
+    })
+
+    it('should recompute the Bolus and Glucose chart guidelines when new data is loaded after navigating to a day outside the initially loaded range', async () => {
+      dayjs.extend(weekArrayPlugin)
+      dayjs.extend(weekdaysPlugin)
+
+      const newDayData = getBolusAndBgGuidelinesNewDayData()
+      jest.spyOn(DataApi, 'getPatientDataRange').mockResolvedValue(newDayData.dataRange)
+      jest.spyOn(DataApi, 'getPatientData')
+        .mockResolvedValueOnce(getTargetValueChangesData().data)
+        .mockResolvedValueOnce(newDayData.data)
+
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
+
+      await testBolusAndGlucoseChartGuidelinesRecomputeOnDayChange()
     })
   })
 })

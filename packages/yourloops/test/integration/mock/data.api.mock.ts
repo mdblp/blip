@@ -1553,13 +1553,19 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
   }
 }
 
+// Cloned from the same base dataset (dataRange included) rather than re-declaring the range by
+// hand, so the two can't drift apart: a narrower, hand-typed range here previously excluded data
+// outside its hours (e.g. the confidential mode event at 2am), even though the underlying .data
+// still contained it.
+const baseCompleteDailyViewData = getCompleteDailyViewData()
+
 export const completeDailyViewDataMmol: Data = {
-  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
-  data: JSON.parse(JSON.stringify(getCompleteDailyViewData().data))
+  dataRange: baseCompleteDailyViewData.dataRange,
+  data: JSON.parse(JSON.stringify(baseCompleteDailyViewData.data))
 }
 
-completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(getCompleteDailyViewData().data.cbg)
-completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(getCompleteDailyViewData().data.smbg)
+completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(baseCompleteDailyViewData.data.cbg)
+completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(baseCompleteDailyViewData.data.smbg)
 
 export const smallDataSet: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],

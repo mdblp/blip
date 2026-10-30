@@ -2375,3 +2375,71 @@ export const getTargetValueChangesData = (): Data => {
   }
 }
 
+/**
+ * A single day of data, loaded on top of getTargetValueChangesData() once the patient
+ * navigates to it: a much bigger bolus (to grow the Bolus chart's guideline ladder) and a
+ * CBG value above the "very high" BG threshold (to add the BG chart's "very high" guideline).
+ * Used to assert the guideline chips get recomputed from this newly loaded data, rather than
+ * staying stuck with the guidelines computed from the data loaded at chart creation.
+ */
+export const getBolusAndBgGuidelinesNewDayData = (): Data => {
+  return {
+    dataRange: ['2000-10-25T00:00:00Z', '2022-10-31T00:00:00Z'],
+    data: {
+      alarmEvents: [],
+      basal: [],
+      bolus: [
+        {
+          "epoch": 972932100000,
+          "displayOffset": -120,
+          "normalTime": "2000-10-30T18:55:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "bigBolusId",
+          "type": DatumType.Bolus,
+          "source": Source.Diabeloop,
+          "subType": BolusSubtype.Normal,
+          "normal": 42,
+          "prescriptor": Prescriptor.Manual,
+          "wizard": null,
+          "expectedNormal": 42,
+          "isoWeekday": WeekDays.Monday
+        }
+      ],
+      cbg: [
+        {
+          "epoch": 972919800000,
+          "displayOffset": -120,
+          "normalTime": "2000-10-30T15:30:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "veryHighCbgId",
+          "type": DatumType.Cbg,
+          "source": Source.Diabeloop,
+          "units": Unit.MilligramPerDeciliter,
+          "value": 260,
+          "localDate": "2000-10-30",
+          "isoWeekday": WeekDays.Monday,
+          "msPer24": 55800000,
+          "deviceName": "Unknown"
+        }
+      ],
+      confidentialModes: [],
+      deviceParametersChanges: [],
+      eatingShortlyEvents: [],
+      iob: [],
+      messages: [],
+      meals: [],
+      nightModes: [],
+      physicalActivities: [],
+      pumpSettings: [],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
+    }
+  }
+}
+

@@ -16,7 +16,7 @@
  */
 
 :root {
-  --basal: var(--grey-25);
+  --basal: var(--grey-color-25);
   --basal-automated: var(--info-color-50);
   --text-on-basal: var(--text-color-primary);
   --text-on-basal-automated: var(--text-color-primary);
@@ -62,9 +62,17 @@
   --bg-target-threshold: var(--info-color-50);
   --bg-target-chip-text: var(--dark-blue-main);
   --bg-target-chip-background: var(--info-color-10);
+  --bg-low-chip-text: var(--error-color-dark);
+  --bg-low-chip-background: var(--error-color-10);
+  --bg-high-chip-text: var(--warning-color-dark);
+  --bg-high-chip-background: var(--warning-color-10);
+  --bg-other-chip-background: var(--grey-color-10);
+  --bg-other-chip-text: var(--dark-blue-main);
   --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-50);
   --bg-very-high: var(--warning-color-main);
+  --chart-chip-background: var(--info-color-10);
+  --chart-guideline-stroke: var(--dark-blue-color-20);
   --night-mode: var(--info-color-10);
   --text-hover: #00D3D9;
   --blue-green-light: #12D3D8;
@@ -82,6 +90,7 @@
   --bg-history-deleted-plain:rgba(251,89,81,1);
   --bg-history-deleted-soft:rgba(251,89,81,0.1);
   --activeValue: var(--blip-color-primary-light);
+  --text: var(--text-color-primary);
 }
 
 

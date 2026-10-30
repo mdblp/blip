@@ -25,10 +25,11 @@ import { drawLegend } from './plot/util/legend'
  * @typedef {import('./tidelinedata').Datum} Datum
  * @typedef {import("./oneday").OneDay} OneDay
  * @typedef {{ type: string; name: string; plot: function; pan: boolean; data: Datum[]; }} PlotType
- * @typedef { import('d3').Axis } Axis
  * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
  *
- * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { axis: Axis, scale: ScaleContinuousNumeric }} AxisScaleFunc
+ * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { scale: ScaleContinuousNumeric }} AxisScaleFunc
+ * @typedef {{ class: string, height: number, chip?: { label: string, class: string } }} Guideline
+ * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
  * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
  * @typedef {{ name: string; baseline: number }[]} Legends
  */
@@ -59,12 +60,12 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   /** @type {ScaleContinuousNumeric} */
   let xScale = null
   let yScale = null
-  /** @type {Axis} */
-  let yAxis = null
   /** @type {PlotType[]} */
   let plotTypes = []
   /** @type {AxisScaleFunc} */
   let defaultAxisScaleFn = null
+  /** @type {GuidelinesFn} */
+  let defaultGuidelinesFn = null
 
   this.destroy = function() {
     plotTypes.forEach((plotType) => {
@@ -78,7 +79,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     group = null
     xScale = null
     yScale = null
-    yAxis = null
     plotTypes = null
     container = null
   }
@@ -92,7 +92,15 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     if (updateScale && _.isFunction(defaultAxisScaleFn)) {
       const axisScale = defaultAxisScaleFn(container.tidelineData, this)
       yScale = axisScale.scale
-      yAxis = axisScale.axis
+
+      if (_.isFunction(defaultGuidelinesFn)) {
+        // The guideline lines/chips are owned by this pool's "fill" plot type (see
+        // fill.updateGuidelines in plot/util/fill.js); recompute them here, from the same
+        // axisScale just rebuilt above, so they never drift from a stale, chart-creation-time
+        // snapshot while the Y scale keeps adapting to newly loaded data.
+        const fillPlotType = plotTypes.find(({ type, plot }) => type === 'fill' && _.isFunction(plot.updateGuidelines))
+        fillPlotType?.plot.updateGuidelines(defaultGuidelinesFn(axisScale))
+      }
     }
 
     plotTypes.forEach((plotType) => {
@@ -107,8 +115,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
 
-    this.drawAxes()
-    this.updateAxes()
     this.drawLabel()
     this.drawLegend()
   }
@@ -120,6 +126,8 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
     group.select(`#${id}_guidelines`).remove()
+    // Chips are not in the pool's own group, see Pool#chipGroup
+    mainSVG.select(`#${id}_guideline_chips`).remove()
   }
 
   // non-chainable methods
@@ -138,6 +146,14 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
 
   this.parent = function() {
     return mainSVG
+  }
+
+  /**
+   * The container-wide group hosting the guideline chips of every pool.
+   * It sits outside the pools' clip path so chips can be drawn in the axis gutter.
+   */
+  this.chipGroup = function() {
+    return mainSVG.select('#tidelineChips')
   }
 
   this.width = function() {
@@ -184,25 +200,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       drawLegend(legendGroup, legend.name, shouldDisplayEatingShortlyLegend)
     })
   })
-
-  this.drawAxes = _.once(function() {
-    if (yAxis) {
-      const axisGroup = mainSVG.select('#tidelineYAxes')
-      axisGroup.append('g')
-        .attr('class', 'd3-y d3-axis')
-        .attr('id', `pool-${id}-yAxis`)
-        .attr('data-testid', `pool-${id}-yAxis`)
-        .attr('transform', 'translate(' + (container.axisGutter() - 1) + ',' + yPosition + ')')
-    }
-  })
-
-  this.updateAxes = function() {
-    if (yAxis) {
-      const axisGroup = mainSVG.select('#tidelineYAxes')
-      axisGroup.select(`#pool-${id}-yAxis`).call(yAxis)
-    }
-    return this
-  }
 
   // getters & setters
   this.id = function(x, selection) {
@@ -301,16 +298,29 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
 
   /**
    * @param {AxisScaleFunc} fn
+   * @param {{ scale: ScaleContinuousNumeric } | null} initialAxisScale Already-computed
+   * result of calling `fn`, to use for this initial call instead of invoking `fn` again. Lets a
+   * caller that already needed to run `fn` once (e.g. to read a value back out of it) avoid
+   * doing so a second time here.
    * @returns {AxisScaleFunc}
    */
-  this.axisScaleFn = function(fn = null) {
-    if (fn !== null) {
-      defaultAxisScaleFn = fn
-      const axisScale = fn(container.tidelineData, this)
-      yScale = axisScale.scale
-      yAxis = axisScale.axis
-    }
+  this.axisScaleFn = function(fn, initialAxisScale = null) {
+    defaultAxisScaleFn = fn
+    const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
+    yScale = axisScale.scale
     return defaultAxisScaleFn
+  }
+
+  /**
+   * Registers how to rebuild this pool's guideline lines/chips from the axisScale object
+   * produced by its axisScaleFn. render() calls it every time it rebuilds the scale, so
+   * guidelines stay derived from the same (fresh) data as the scale they're drawn against.
+   * @param {GuidelinesFn} fn
+   * @returns {GuidelinesFn}
+   */
+  this.guidelinesFn = function(fn) {
+    defaultGuidelinesFn = fn
+    return defaultGuidelinesFn
   }
 
   /**
