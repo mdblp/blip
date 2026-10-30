@@ -35,12 +35,6 @@ interface PoolHeight {
   height: () => number
 }
 
-/** A scale paired with the (hidden) axis built from it, as returned to the caller's pool.render() */
-interface YAxisScale<Scale extends d3.ScaleContinuousNumeric<number, number>> {
-  axis: d3.Axis<d3.NumberValue>
-  scale: Scale
-}
-
 // SMBG circles are drawn at this diameter; half of it is used as top/bottom padding on the BG
 // scale's range so they're never clipped by the pool's edges
 const SMBG_DIAMETER = 16
@@ -56,15 +50,6 @@ const BOLUS_SCALE_TOP_RATIO = 0.35
 // We display 10% more than the max rate/IOB value to avoid cutting off the top of the curve
 const BASAL_SCALE_HEADROOM_RATIO = 1.1
 const IOB_SCALE_HEADROOM_RATIO = 1.1
-
-/**
- * The BG, bolus, basal and IOB pools all hide their Y axis entirely via CSS
- * (#pool-<poolId>-yAxis); thresholds are shown via guideline lines/chips instead
- * (see getBgGuidelines/getBolusGuidelines/getBasalGuidelines/getIobGuidelines in this module).
- */
-const createHiddenAxis = (scale: d3.ScaleContinuousNumeric<number, number>): d3.Axis<d3.NumberValue> => {
-  return d3.axisLeft(scale)
-}
 
 const createScaleBG = (
   tidelineData: MedicalDataService,
@@ -97,7 +82,7 @@ const createScaleBG = (
 }
 
 /**
- * Create the Y-Axis SVG and scale for BG graph
+ * Create the Y-Axis scale for BG graph
  *
  * Also returns the raw BG value extent it computed, so callers building the BG guidelines
  * (see getBgGuidelines) can reuse it instead of re-scanning the same cbg/smbg arrays.
@@ -105,13 +90,12 @@ const createScaleBG = (
 export const createYAxisBG = (
   tidelineData: MedicalDataService,
   pool: PoolHeight
-): YAxisScale<d3.ScaleLinear<number, number>> & { extent: [number | undefined, number | undefined] } => {
+): { scale: d3.ScaleLinear<number, number>, extent: [number | undefined, number | undefined] } => {
   const allBgValues: Array<Cbg | Smbg> = [...tidelineData.medicalData.cbg, ...tidelineData.medicalData.smbg]
   const extent = d3.extent(allBgValues, (d) => d.value)
   const scale = createScaleBG(tidelineData, pool, extent, SMBG_DIAMETER / 2)
-  const axis = createHiddenAxis(scale)
 
-  return { axis, scale, extent }
+  return { scale, extent }
 }
 
 const getAllBolusEvents = (tidelineData: MedicalDataService): Array<Bolus | Wizard> => {
@@ -157,12 +141,11 @@ const createScaleBolus = (maxBolusValue: number, pool: PoolHeight): d3.ScalePowe
 export const createYAxisBolus = (
   tidelineData: MedicalDataService,
   pool: PoolHeight
-): YAxisScale<d3.ScalePower<number, number>> & { maxBolusValue: number } => {
+): { scale: d3.ScalePower<number, number>, maxBolusValue: number } => {
   const maxBolusValue = getMaxBolusValue(getAllBolusEvents(tidelineData))
   const scale = createScaleBolus(maxBolusValue, pool)
-  const axis = createHiddenAxis(scale)
 
-  return { axis, scale, maxBolusValue }
+  return { scale, maxBolusValue }
 }
 
 const createScaleBasal = (maxRate: number, pool: PoolHeight): d3.ScalePower<number, number> => {
@@ -173,7 +156,7 @@ const createScaleBasal = (maxRate: number, pool: PoolHeight): d3.ScalePower<numb
 }
 
 /**
- * Create the Y-Axis SVG and scale for basal graph
+ * Create the Y-Axis scale for basal graph
  *
  * Also returns the raw basal rate extent it computed, so callers building the basal guidelines
  * (see getBasalGuidelines) can reuse it instead of re-scanning the same basal array.
@@ -181,12 +164,11 @@ const createScaleBasal = (maxRate: number, pool: PoolHeight): d3.ScalePower<numb
 export const createYAxisBasal = (
   tidelineData: MedicalDataService,
   pool: PoolHeight
-): YAxisScale<d3.ScalePower<number, number>> & { extent: [number | undefined, number | undefined] } => {
+): { scale: d3.ScalePower<number, number>, extent: [number | undefined, number | undefined] } => {
   const extent = d3.extent(tidelineData.medicalData.basal, (d) => d.rate)
   const scale = createScaleBasal(extent[1] ?? 0, pool)
-  const axis = createHiddenAxis(scale)
 
-  return { axis, scale, extent }
+  return { scale, extent }
 }
 
 const createScaleIob = (maxIobValue: number, pool: PoolHeight): d3.ScaleLinear<number, number> => {
@@ -197,7 +179,7 @@ const createScaleIob = (maxIobValue: number, pool: PoolHeight): d3.ScaleLinear<n
 }
 
 /**
- * Create the Y-Axis SVG and scale for the IOB graph
+ * Create the Y-Axis scale for the IOB graph
  *
  * Also returns the max IOB value it computed, so callers building the IOB guidelines
  * (see getIobGuidelines) can reuse it instead of recomputing it from the same pump settings.
@@ -205,10 +187,9 @@ const createScaleIob = (maxIobValue: number, pool: PoolHeight): d3.ScaleLinear<n
 export const createYAxisIob = (
   tidelineData: MedicalDataService,
   pool: PoolHeight
-): YAxisScale<d3.ScaleLinear<number, number>> & { maxIobValue: number } => {
+): { scale: d3.ScaleLinear<number, number>, maxIobValue: number } => {
   const maxIobValue = getMaxIobValue(tidelineData.medicalData)
   const scale = createScaleIob(maxIobValue, pool)
-  const axis = createHiddenAxis(scale)
 
-  return { axis, scale, maxIobValue }
+  return { scale, maxIobValue }
 }

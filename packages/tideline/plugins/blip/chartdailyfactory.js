@@ -533,7 +533,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       const newBgAxisScale = createYAxisBG(tidelineData, poolBG)
       bgFill.updateGuidelines(getBgGuidelines(targetValue, chart, newBgAxisScale.extent))
       poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG), newBgAxisScale)
-      poolBG.updateAxes()
     }
   })
 

@@ -25,10 +25,9 @@ import { drawLegend } from './plot/util/legend'
  * @typedef {import('./tidelinedata').Datum} Datum
  * @typedef {import("./oneday").OneDay} OneDay
  * @typedef {{ type: string; name: string; plot: function; pan: boolean; data: Datum[]; }} PlotType
- * @typedef { import('d3').Axis } Axis
  * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
  *
- * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { axis: Axis, scale: ScaleContinuousNumeric }} AxisScaleFunc
+ * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { scale: ScaleContinuousNumeric }} AxisScaleFunc
  * @typedef {{ class: string, height: number, chip?: { label: string, class: string } }} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
  * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
@@ -61,8 +60,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   /** @type {ScaleContinuousNumeric} */
   let xScale = null
   let yScale = null
-  /** @type {Axis} */
-  let yAxis = null
   /** @type {PlotType[]} */
   let plotTypes = []
   /** @type {AxisScaleFunc} */
@@ -82,7 +79,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     group = null
     xScale = null
     yScale = null
-    yAxis = null
     plotTypes = null
     container = null
   }
@@ -96,7 +92,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     if (updateScale && _.isFunction(defaultAxisScaleFn)) {
       const axisScale = defaultAxisScaleFn(container.tidelineData, this)
       yScale = axisScale.scale
-      yAxis = axisScale.axis
 
       if (_.isFunction(defaultGuidelinesFn)) {
         // The guideline lines/chips are owned by this pool's "fill" plot type (see
@@ -120,8 +115,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
 
-    this.drawAxes()
-    this.updateAxes()
     this.drawLabel()
     this.drawLegend()
   }
@@ -207,25 +200,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       drawLegend(legendGroup, legend.name, shouldDisplayEatingShortlyLegend)
     })
   })
-
-  this.drawAxes = _.once(function() {
-    if (yAxis) {
-      const axisGroup = mainSVG.select('#tidelineYAxes')
-      axisGroup.append('g')
-        .attr('class', 'd3-y d3-axis')
-        .attr('id', `pool-${id}-yAxis`)
-        .attr('data-testid', `pool-${id}-yAxis`)
-        .attr('transform', 'translate(' + (container.axisGutter() - 1) + ',' + yPosition + ')')
-    }
-  })
-
-  this.updateAxes = function() {
-    if (yAxis) {
-      const axisGroup = mainSVG.select('#tidelineYAxes')
-      axisGroup.select(`#pool-${id}-yAxis`).call(yAxis)
-    }
-    return this
-  }
 
   // getters & setters
   this.id = function(x, selection) {
@@ -324,7 +298,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
 
   /**
    * @param {AxisScaleFunc} fn
-   * @param {{ axis: Axis, scale: ScaleContinuousNumeric } | null} initialAxisScale Already-computed
+   * @param {{ scale: ScaleContinuousNumeric } | null} initialAxisScale Already-computed
    * result of calling `fn`, to use for this initial call instead of invoking `fn` again. Lets a
    * caller that already needed to run `fn` once (e.g. to read a value back out of it) avoid
    * doing so a second time here.
@@ -335,7 +309,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       defaultAxisScaleFn = fn
       const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
       yScale = axisScale.scale
-      yAxis = axisScale.axis
     }
     return defaultAxisScaleFn
   }
