@@ -165,19 +165,14 @@ function drawFill(pool, opts = defaults) {
       .join('g')
       .attr('id', pool.id() + '_guidelines')
 
-    const lines = g
-      .selectAll('line')
+    g.selectAll('line')
       .data(opts.guidelines)
       .join('line')
       .attr('x1', opts.xScale.range()[0])
       .attr('x2', opts.xScale.range()[1])
       .attr('y1', (d) => yScale(d.height))
       .attr('y2', (d) => yScale(d.height))
-      .classed('d3-line-guide', true)
-
-    lines.each(function(guideline) {
-      this.classList.add(guideline['class'])
-    })
+      .attr('class', (d) => `d3-line-guide ${d.class}`)
   }
 
   // Draws the guidelines' chips, separately from the guideline lines: chips sit in the
