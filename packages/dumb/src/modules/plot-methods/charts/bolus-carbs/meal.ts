@@ -432,9 +432,6 @@ export const plotMeal = (
 ): PlotFunction<Wizard> => {
   const options = _.defaults(opts, defaults) as MealOptions
 
-  const yScale = pool.yScale()
-  const top = yScale.range()[0]
-
   const xPosition = (d: Wizard): number => {
     if (!options.xScale) {
       throw new Error('xScale is not initialized')
@@ -449,14 +446,6 @@ export const plotMeal = (
       return BOLUS_WIDTH / 2
     }
     return BOLUS_WIDTH
-  }
-
-  const bolusHeight = (d: Wizard): number => {
-    const bolus = getBolusFromInsulinEvent(d)
-    if (!bolus) {
-      return 0
-    }
-    return top - yScale(getDelivered(bolus))
   }
 
   // Carb circle positioning
@@ -488,6 +477,17 @@ export const plotMeal = (
 
     if (!options.xScale) {
       throw new Error('xScale is not initialized')
+    }
+
+    const yScale = pool.yScale()
+    const top = yScale.range()[0]
+
+    const bolusHeight = (d: Wizard): number => {
+      const bolus = getBolusFromInsulinEvent(d)
+      if (!bolus) {
+        return 0
+      }
+      return top - yScale(getDelivered(bolus))
     }
 
     const helpers = createMealHelpers(yScale)

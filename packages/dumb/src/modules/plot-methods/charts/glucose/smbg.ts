@@ -42,7 +42,7 @@ import { createIdGenerator } from '../../../../utils/id-generator/id-generator.u
 const idGen = createIdGenerator(DailyPlotElement.Smbg)
 
 // SMBG circle size (diameter is 16, radius is 7 accounting for 1px stroke)
-const SMBG_SIZE = 16
+export const SMBG_SIZE = 16
 const SMBG_RADIUS = SMBG_SIZE / 2 - 1
 
 type SmbgOptions = PlotOptions<Smbg> & {

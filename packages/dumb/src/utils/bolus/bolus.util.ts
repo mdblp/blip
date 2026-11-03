@@ -82,6 +82,16 @@ export const getProgrammed = (bolus?: Bolus): number | undefined => {
   return Number.isFinite(bolus.expectedNormal) ? bolus.expectedNormal : bolus.normal
 }
 
+/**
+ * The larger of a bolus's expected and actually-delivered amounts, so an interrupted bolus
+ * still sizes/sorts off its original programmed amount rather than what was cut short.
+ */
+export const getMaxProgrammedBolusAmount = (bolus: Bolus): number => {
+  const expectedNormal = Number.isFinite(bolus.expectedNormal) ? bolus.expectedNormal as number : 0
+  const normal = Number.isFinite(bolus.normal) ? bolus.normal : 0
+  return Math.max(expectedNormal, normal)
+}
+
 export const getRecommended = (wizard: Wizard): number => {
   if (!wizard.recommended) {
     return Number.NaN

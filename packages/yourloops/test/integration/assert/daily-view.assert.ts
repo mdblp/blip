@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, fireEvent, queries, screen, within } from '@testing-library/react'
+import { BoundFunctions, fireEvent, queries, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import { getTranslation } from '../../utils/i18n'
@@ -317,7 +317,11 @@ const checkDailyViewChartsCommon = () => {
   const basalChartLabel = screen.getByTestId('poolBasal-chart-label')
   expect(basalChartLabel).toHaveTextContent('Basal Rates (U/h)')
 
-  expect(screen.getByTestId('pool-poolBolus-yAxis')).toHaveTextContent('01510152030')
+  // The highest programmed bolus in this data is 25U, which extends the guideline ladder to 1, 5, 10, 20, 30
+  expect(screen.getByTestId('poolBolus_guideline_chips')).toHaveTextContent('15102030')
+
+  // The basal rate in this data never reaches the 1 U/h guideline threshold, so no chip is shown
+  expect(screen.getByTestId('poolBasal_guideline_chips')).toHaveTextContent('')
 }
 
 export const checkDailyViewChartsDblg1 = () => {
@@ -334,6 +338,9 @@ export const checkDailyViewChartsDblg2 = () => {
 
   const iobChartLabel = screen.getByTestId('poolIob-chart-label')
   expect(iobChartLabel).toHaveTextContent('Active insulin (U)')
+
+  // No TotalDailyInsulin pump parameter is set in this data, so the guideline falls back to the default max IOB value (45)
+  expect(screen.getByTestId('poolIob_guideline_chips')).toHaveTextContent('45')
 
   const bolusChartLegend = screen.getByTestId('poolBolus_legend_bolus')
   expect(bolusChartLegend).toHaveTextContent('Meal without carb counting')
@@ -382,16 +389,26 @@ export const checkTimeInRangeDefaultStats = async () => {
   expect(TIRDT1.getByTestId('cbg-percentage-stat-timeInRangeDt1-timeInRangeDt1')).toHaveTextContent('15m20%')
 }
 
-export const checkGlucoseChartYAxis = async () => {
-  expect(screen.getByTestId('pool-poolBG-yAxis')).toHaveTextContent('70180120')
+export const checkGlucoseChartYAxis = () => {
+  expect(screen.getByTestId('poolBG_guideline_chips')).toHaveTextContent('70180120')
 }
 
-export const checkGlucoseChartYAxisAtDate = async () => {
-  expect(screen.getByTestId('pool-poolBG-yAxis')).toHaveTextContent('70180100')
+export const checkGlucoseChartYAxisAtDate = () => {
+  expect(screen.getByTestId('poolBG_guideline_chips')).toHaveTextContent('70180100')
 }
 
-export const checkBolusChartYAxisForSmallBoluses = async () => {
-  expect(screen.getByTestId('pool-poolBolus-yAxis')).toHaveTextContent('015')
+export const checkBolusChartYAxisForSmallBoluses = () => {
+  expect(screen.getByTestId('poolBolus_guideline_chips')).toHaveTextContent('15')
   // Check that the next tick (10) is not visible
-  expect(screen.getByTestId('pool-poolBolus-yAxis')).not.toHaveTextContent('01510')
+  expect(screen.getByTestId('poolBolus_guideline_chips')).not.toHaveTextContent('1510')
+}
+
+export const checkBolusAndGlucoseChartGuidelinesRecomputedAfterNewDayData = async () => {
+  // The Bolus guideline ladder must grow to cover the newly loaded, much bigger bolus
+  await waitFor(() => {
+    expect(screen.getByTestId('poolBolus_guideline_chips')).toHaveTextContent('151020304050')
+  }, { timeout: 10000 })
+
+  // The BG "very high" guideline must appear, now that a loaded CBG value crosses it
+  expect(screen.getByTestId('poolBG_guideline_chips')).toHaveTextContent('70180250')
 }

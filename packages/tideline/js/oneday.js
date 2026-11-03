@@ -64,6 +64,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   const navigatedDelay = 200
   const minHeight = 400
   const minWidth = 300
+  /** Left gutter, wide enough to host the guideline chips */
   const axisGutter = 35
   /** The number of days we pre-render the SVG */
   const renderDaysBuffer = 2
@@ -102,6 +103,11 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       .append('g')
       .attr('id', 'tidelinePools')
       .attr('clip-path', 'url(#mainClipPath)')
+    // Guideline chips are rendered in the axis gutter, i.e. outside of #mainClipPath,
+    // which starts at the gutter's right edge. Drawing them inside a pool would get them
+    // clipped, so they live in their own group, appended after the pools so they paint
+    // on top of the data (SVG paints in DOM order).
+    container.mainGroup.append('g').attr('id', 'tidelineChips')
     container.mainGroup.append('g').attr('id', 'tidelineLabels')
     container.mainGroup.append('g').attr('id', 'tidelineYAxes')
 

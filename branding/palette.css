@@ -50,7 +50,8 @@
   --pink-dark: #a11159;
   --pink-color-20: #FAD1E6;
 
-  --grey-25: #D5D5D5;
+  --grey-color-25: #D5D5D5;
+  --grey-color-10: #EEEEEE;
 
   /* Components */
   --card-header-background-color: #eee;

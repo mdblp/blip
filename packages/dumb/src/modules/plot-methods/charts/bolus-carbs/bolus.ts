@@ -36,7 +36,7 @@ import { type PlotFunction } from '../../../../models/plot-function.model'
 import { type PlotOptions } from '../../../../models/plot-options.model'
 import { type PlotSelection } from '../../../../models/plot-selection.model'
 import { type Pool } from '../../../../models/pool.model'
-import { getBolusType, isBolusWithDelivered, isBolusWithUndelivered } from '../../../../utils/bolus/bolus.util'
+import { getBolusType, getMaxProgrammedBolusAmount, isBolusWithDelivered, isBolusWithUndelivered } from '../../../../utils/bolus/bolus.util'
 import { drawVerticalRectangle, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
@@ -101,19 +101,10 @@ const getDelivered = (bolus: Bolus): number => {
 }
 
 /**
- * Get the programmed amount from a bolus
- */
-const getProgrammed = (bolus: Bolus): number => {
-  const expectedNormal = Number.isFinite(bolus.expectedNormal) ? (bolus.expectedNormal ?? 0) : 0
-  const normal = Number.isFinite(bolus.normal) ? bolus.normal : 0
-  return Math.max(expectedNormal, normal)
-}
-
-/**
  * Get the maximum value for sorting
  */
 const getMaxValue = (bolus: Bolus): number => {
-  const programmed = getProgrammed(bolus)
+  const programmed = getMaxProgrammedBolusAmount(bolus)
   if (Number.isNaN(programmed)) {
     return Number.NaN
   }
@@ -191,11 +182,11 @@ export const plotBolus = (
 
     const getBolusId = (d: Bolus): string => idGen.elementId(d, 'rect')
 
-    const getUndeliveredYPosition = (d: Bolus): number => yScale(getProgrammed(d))
+    const getUndeliveredYPosition = (d: Bolus): number => yScale(getMaxProgrammedBolusAmount(d))
 
     const getUndeliveredHeight = (d: Bolus): number => {
       const delivered = getDelivered(d)
-      const programmed = getProgrammed(d)
+      const programmed = getMaxProgrammedBolusAmount(d)
       return yScale(delivered) - yScale(programmed)
     }
 

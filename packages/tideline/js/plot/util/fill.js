@@ -24,6 +24,11 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
+/** Space between a guideline chip's right edge and the chart's left edge, in pixels */
+const CHIP_GAP = 4
+/** Space between a guideline chip's label and its background's edges, in pixels */
+const CHIP_PADDING = { x: 6, y: 4 }
+
 const defaults = {
   duration: 3,
   midnightWidth: 1,
@@ -44,6 +49,13 @@ const defaults = {
 function drawFill(pool, opts = defaults) {
   _.defaults(opts, defaults)
 
+  // The last guidelines array actually drawn, so fill(selection) - called on every
+  // Pool.render() tick, including pan/zoom-driven re-renders where the scale and guidelines
+  // haven't changed - can skip the expensive teardown-and-rebuild (see drawChip's getBBox
+  // reflow) when opts.guidelines is still the same array it drew last time. A new array
+  // (assigned by updateGuidelines) always triggers a redraw.
+  let lastDrawnGuidelines = null
+
   function fill(selection) {
     opts.xScale = pool.xScale().copy()
 
@@ -52,8 +64,10 @@ function drawFill(pool, opts = defaults) {
       selection.attr('class', opts.fillClass)
     }
 
-    if (opts.guidelines) {
+    if (opts.guidelines && opts.guidelines !== lastDrawnGuidelines) {
       fill.drawGuidelines()
+      fill.drawGuidelineChips()
+      lastDrawnGuidelines = opts.guidelines
     }
 
     selection.each(function(/** @type {Datum[]} */ currentData) {
@@ -149,6 +163,8 @@ function drawFill(pool, opts = defaults) {
   fill.updateGuidelines = function(newGuidelines) {
     opts.guidelines = newGuidelines
     fill.drawGuidelines()
+    fill.drawGuidelineChips()
+    lastDrawnGuidelines = newGuidelines
   }
 
   fill.drawGuidelines = function() {
@@ -158,23 +174,43 @@ function drawFill(pool, opts = defaults) {
       .join('g')
       .attr('id', pool.id() + '_guidelines')
 
-    const lines = g
-      .selectAll('line')
+    g.selectAll('line')
       .data(opts.guidelines)
       .join('line')
       .attr('x1', opts.xScale.range()[0])
       .attr('x2', opts.xScale.range()[1])
       .attr('y1', (d) => yScale(d.height))
       .attr('y2', (d) => yScale(d.height))
-      .classed('d3-line-guide', true)
+      .attr('class', (d) => `d3-line-guide ${d.class}`)
+  }
 
-    lines.each(function(line) {
-      this.classList.add(line['class'])
+  // Draws the guidelines' chips, separately from the guideline lines: chips sit in the
+  // axis gutter, which is outside the pools' clip path, so they are drawn in the
+  // container's chip group rather than in the pool's own (clipped) group. That group is
+  // translated to the pool's vertical position so chip coordinates stay in pool space.
+  fill.drawGuidelineChips = function() {
+    const yScale = pool.yScale()
+    const guidelinesWithChips = (opts.guidelines || []).filter((guideline) => guideline.chip)
 
-      if (line.chip) {
-        fill.drawChip(line, yScale, this)
-      }
-    })
+    const chipsGroup = pool.chipGroup().selectAll('#' + pool.id() + '_guideline_chips').data([guidelinesWithChips])
+    const g = chipsGroup
+      .join('g')
+      .attr('id', pool.id() + '_guideline_chips')
+      .attr('data-testid', pool.id() + '_guideline_chips')
+      .attr('transform', `translate(0,${pool.yPosition()})`)
+
+    g
+      .selectAll('g.d3-line-guide-chip')
+      // Keyed by class + height together, since neither is unique on its own: several
+      // guidelines on the same chart (e.g. every bolus guideline above the first) share the
+      // same neutral class, while a target guideline can coincide in height with a low/high/
+      // very-high one. Either collision alone would confuse d3's enter/update/exit matching.
+      .data(guidelinesWithChips, (guideline) => `${guideline.class}_${guideline.height}`)
+      .join('g')
+      .attr('class', (guideline) => `d3-line-guide-chip ${guideline.chip.class}`)
+      .each(function(guideline) {
+        fill.drawChip(guideline, yScale, this)
+      })
   }
 
   fill.drawVerticalLines = function (selection, currentData) {
@@ -201,33 +237,32 @@ function drawFill(pool, opts = defaults) {
       })
   }
 
-  fill.drawChip = function (line, yScale, element) {
-    // Add a text chip to the line
-    const parent = d3.select(element.parentNode)
-    const yPos = yScale(line.height)
-    const xPos = opts.xScale.range()[0] + 15 // left edge
+  fill.drawChip = function (guideline, yScale, element) {
+    // (Re)draw the chip's contents into its already-created/classed <g>
+    const chipGroup = d3.select(element)
+    chipGroup.selectAll('*').remove()
 
-    // Background rect for the chip
-    const chipGroup = parent.append('g')
-      .classed('d3-line-guide-chip', true)
+    const yPos = yScale(guideline.height)
+    // The label is right-anchored (see .d3-line-guide-chip-label), so the chip's right
+    // edge ends up CHIP_GAP left of the chart's left edge, in the axis gutter
+    const xPos = opts.xScale.range()[0] - CHIP_GAP - CHIP_PADDING.x
 
     const textEl = chipGroup.append('text')
       .classed('d3-line-guide-chip-label', true)
       .attr('x', xPos)
       .attr('y', yPos)
       .attr('dy', '0.35em') // vertical centering
-      .text(line.chip.label)
+      .text(guideline.chip.label)
 
     // Size the background rect based on the rendered text
     const bbox = textEl.node().getBBox()
-    const padding = { x: 6, y: 4 }
 
     chipGroup.insert('rect', 'text') // insert <rect> before <text> so it's behind
       .classed('d3-line-guide-chip-bg', true)
-      .attr('x', bbox.x - padding.x)
-      .attr('y', bbox.y - padding.y)
-      .attr('width', bbox.width + padding.x * 2)
-      .attr('height', bbox.height + padding.y * 2)
+      .attr('x', bbox.x - CHIP_PADDING.x)
+      .attr('y', bbox.y - CHIP_PADDING.y)
+      .attr('width', bbox.width + CHIP_PADDING.x * 2)
+      .attr('height', bbox.height + CHIP_PADDING.y * 2)
       .attr('rx', 8) // rounded corners
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 :root {
-  --basal: var(--grey-25);
+  --basal: var(--grey-color-25);
   --basal-automated: var(--info-color-50);
   --text-on-basal: var(--text-color-primary);
   --text-on-basal-automated: var(--text-color-primary);
