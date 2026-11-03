@@ -31,6 +31,7 @@ import type Cbg from './domains/models/medical/datum/cbg.model'
 import type ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
 import type DeviceParameterChange from './domains/models/medical/datum/device-parameter-change.model'
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
+import type Fill from './domains/models/medical/datum/fill.model'
 import type Meal from './domains/models/medical/datum/meal.model'
 import type Note from './domains/models/medical/datum/note.model'
 import type PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
@@ -56,6 +57,7 @@ export {
   type DateFilter,
   type DeviceParameterChange,
   DurationUnit,
+  type Fill,
   type Meal,
   type MedicalData,
   type Note,

@@ -35,7 +35,7 @@ const BOLUS_GUIDELINE_VALUES = [1, 5]
 const NEUTRAL_THRESHOLD_CLASS = 'd3-line-neutral-threshold'
 const NEUTRAL_CHIP_CLASS = 'd3-line-neutral-chip'
 
-interface Guideline {
+export interface Guideline {
   class: string
   height: number
   chip?: {
