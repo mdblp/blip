@@ -44,6 +44,10 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   const maxHeight = 300
 
   let mainSVG = d3.select('#' + container.id())
+  // The container-wide group hosting the guideline chips of every pool (see Pool#chipGroup).
+  // Resolved once here since #tidelineChips is created by the OneDay container before any pool
+  // is constructed, and cached rather than re-queried by DOM id on every render.
+  let chipGroup = mainSVG.select('#tidelineChips')
   let id = ''
   let dataTestId = ''
   let yPosition = 0
@@ -74,12 +78,15 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
     mainSVG = null
+    chipGroup = null
     labels = null
     legends = null
     group = null
     xScale = null
     yScale = null
     plotTypes = null
+    defaultAxisScaleFn = null
+    defaultGuidelinesFn = null
     container = null
   }
 
@@ -153,7 +160,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
    * It sits outside the pools' clip path so chips can be drawn in the axis gutter.
    */
   this.chipGroup = function() {
-    return mainSVG.select('#tidelineChips')
+    return chipGroup
   }
 
   this.width = function() {
@@ -297,7 +304,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   }
 
   /**
-   * @param {AxisScaleFunc} fn
+   * @param {AxisScaleFunc} [fn] Omit to use this as a getter for the currently registered fn.
    * @param {{ scale: ScaleContinuousNumeric } | null} initialAxisScale Already-computed
    * result of calling `fn`, to use for this initial call instead of invoking `fn` again. Lets a
    * caller that already needed to run `fn` once (e.g. to read a value back out of it) avoid
@@ -305,6 +312,12 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
    * @returns {AxisScaleFunc}
    */
   this.axisScaleFn = function(fn, initialAxisScale = null) {
+    // Called as a getter (no fn, e.g. a bare axisScaleFn()): return the currently registered
+    // one instead of throwing by calling a non-function below.
+    if (typeof fn !== 'function') {
+      return defaultAxisScaleFn
+    }
+
     defaultAxisScaleFn = fn
     const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
     yScale = axisScale.scale

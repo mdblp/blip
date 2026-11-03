@@ -293,7 +293,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // later recompute (be it from guidelinesFn on new data, or from the emitter.on('navigated')
   // handler on a target value change) always derive them the same way, from a fresh axisScale.
   const getBgGuidelinesFromAxisScale = (axisScale) => getBgGuidelines(targetValue, chart, axisScale.extent)
-  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG), bgAxisScale)
+  poolBG.axisScaleFn(createYAxisBG, bgAxisScale)
   poolBG.guidelinesFn(getBgGuidelinesFromAxisScale)
 
   const bgFill = fill(poolBG, {
@@ -544,7 +544,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       // since then too
       const newBgAxisScale = createYAxisBG(tidelineData, poolBG)
       bgFill.updateGuidelines(getBgGuidelinesFromAxisScale(newBgAxisScale))
-      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG), newBgAxisScale)
+      poolBG.axisScaleFn(createYAxisBG, newBgAxisScale)
     }
   })
 

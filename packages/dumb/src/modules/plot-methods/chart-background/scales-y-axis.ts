@@ -29,7 +29,7 @@ import * as d3 from 'd3'
 import MedicalDataService, { type Bolus, type Cbg, convertBG, MGDL_UNITS, type Smbg, type Wizard } from 'medical-domain'
 import { getMaxIobValue } from '../charts/active-insulin/iob'
 import { SMBG_SIZE } from '../charts/glucose/smbg'
-import { getBolusFromInsulinEvent } from '../../../utils/bolus/bolus.util'
+import { getBolusFromInsulinEvent, getMaxProgrammedBolusAmount } from '../../../utils/bolus/bolus.util'
 
 /** The minimal pool shape these Y-axis factories need: just the pool's rendered height in pixels */
 interface PoolHeight {
@@ -106,14 +106,7 @@ const getAllBolusEvents = (tidelineData: MedicalDataService): Array<Bolus | Wiza
  */
 const getProgrammedBolusAmount = (insulinEvent: Bolus | Wizard): number => {
   const bolus = getBolusFromInsulinEvent(insulinEvent)
-  if (!bolus) {
-    return 0
-  }
-
-  const expectedNormal = Number.isFinite(bolus.expectedNormal) ? bolus.expectedNormal as number : 0
-  const normal = Number.isFinite(bolus.normal) ? bolus.normal : 0
-
-  return Math.max(expectedNormal, normal)
+  return bolus ? getMaxProgrammedBolusAmount(bolus) : 0
 }
 
 const getMaxBolusValue = (insulinEvents: Array<Bolus | Wizard>): number => {

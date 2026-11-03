@@ -26,7 +26,7 @@
  */
 
 import { type Bolus, BolusSubtype, DatumType, Prescriptor, type Wizard } from 'medical-domain'
-import { getBolusType, getDelivered, getProgrammed, getRecommended, isInterruptedBolus } from './bolus.util'
+import { getBolusType, getDelivered, getMaxProgrammedBolusAmount, getProgrammed, getRecommended, isInterruptedBolus } from './bolus.util'
 import { BolusType } from '../../models/enums/bolus-type.enum'
 
 const normalBolus = { normal: 5 } as Bolus
@@ -36,6 +36,8 @@ const cancelledBolus = { normal: 2, expectedNormal: 5 } as Bolus
 const immediatelyCancelledBolus = { normal: 0, expectedNormal: 5 } as Bolus
 
 const invalidBolus = { normal: NaN } as Bolus
+
+const overDeliveredBolus = { normal: 7, expectedNormal: 5 } as Bolus
 
 describe('BolusUtil', function () {
   describe('getBolusType', () => {
@@ -91,6 +93,24 @@ describe('BolusUtil', function () {
 
     it('should return the `expectedNormal` of a cancelled `normal` bolus', () => {
       expect(getProgrammed(cancelledBolus)).toEqual(cancelledBolus.expectedNormal)
+    })
+  })
+
+  describe('getMaxProgrammedBolusAmount', () => {
+    it('should return `normal` on a no-frills `normal` bolus', () => {
+      expect(getMaxProgrammedBolusAmount(normalBolus)).toEqual(normalBolus.normal)
+    })
+
+    it('should return the `expectedNormal` of a cancelled `normal` bolus, where it exceeds `normal`', () => {
+      expect(getMaxProgrammedBolusAmount(cancelledBolus)).toEqual(cancelledBolus.expectedNormal)
+    })
+
+    it('should return `normal` when it exceeds `expectedNormal`, unlike getProgrammed', () => {
+      expect(getMaxProgrammedBolusAmount(overDeliveredBolus)).toEqual(overDeliveredBolus.normal)
+    })
+
+    it('should return 0 on an invalid `normal` bolus with no `expectedNormal`', () => {
+      expect(getMaxProgrammedBolusAmount(invalidBolus)).toEqual(0)
     })
   })
 

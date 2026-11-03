@@ -44,9 +44,18 @@ interface Guideline {
   }
 }
 
+const getNeutralGuideline = (value: number): Guideline => ({
+  class: NEUTRAL_THRESHOLD_CLASS,
+  height: value,
+  chip: {
+    label: value.toString(),
+    class: NEUTRAL_CHIP_CLASS
+  }
+})
+
 export const getBgGuidelines = (targetValue: string | undefined, chart: {
   options: { bgClasses: BgClasses }
-}, extent: [number, number]): Guideline[] => {
+}, extent: [number | undefined, number | undefined]): Guideline[] => {
   const lowValue = chart.options.bgClasses.low
   const highValue = chart.options.bgClasses.target
   const veryHighValue = chart.options.bgClasses.high
@@ -70,8 +79,9 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: {
     }
   ]
 
-  // If the max of our data is lower than the very high threshold, don't draw that guideline
-  if (extent[1] >= veryHighValue) {
+  // If the max of our data is lower than the very high threshold (or there's no data at all),
+  // don't draw that guideline
+  if (extent[1] !== undefined && extent[1] >= veryHighValue) {
     defaultGuidelines.push({
       class: 'd3-line-bg-threshold-other',
       height: veryHighValue,
@@ -106,17 +116,10 @@ export const getBgGuidelines = (targetValue: string | undefined, chart: {
   return defaultGuidelines
 }
 
-export const getBasalGuidelines = (extent: [number, number]): Guideline[] => {
+export const getBasalGuidelines = (extent: [number | undefined, number | undefined]): Guideline[] => {
   return BASAL_GUIDELINE_VALUES
-    .filter((value) => extent[1] >= value)
-    .map((value) => ({
-      class: NEUTRAL_THRESHOLD_CLASS,
-      height: value,
-      chip: {
-        label: value.toString(),
-        class: NEUTRAL_CHIP_CLASS
-      }
-    }))
+    .filter((value) => extent[1] !== undefined && extent[1] >= value)
+    .map(getNeutralGuideline)
 }
 
 export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
@@ -126,14 +129,7 @@ export const getIobGuidelines = (maxIobValue: number): Guideline[] => {
 
   const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
 
-  return [{
-    class: NEUTRAL_THRESHOLD_CLASS,
-    height: formattedMaxIobValue,
-    chip: {
-      label: formattedMaxIobValue.toString(),
-      class: NEUTRAL_CHIP_CLASS
-    }
-  }]
+  return [getNeutralGuideline(formattedMaxIobValue)]
 }
 
 export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
@@ -142,7 +138,8 @@ export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
   // later call with a smaller maxBolusValue.
   const guidelineValues = [...BOLUS_GUIDELINE_VALUES]
 
-  // Add additional guidelines, up to 7, to cover the data's max value
+  // Add additional guidelines, up to 7 steps (ladder tops out at 50), to cover the data's max
+  // value where possible
   while (maxBolusValue > guidelineValues[guidelineValues.length - 1] && guidelineValues.length < 7) {
     const currentMax = guidelineValues[guidelineValues.length - 1]
     const step = currentMax < 10 ? 5 : 10
@@ -150,12 +147,5 @@ export const getBolusGuidelines = (maxBolusValue: number): Guideline[] => {
     guidelineValues.push(currentMax + step)
   }
 
-  return guidelineValues.map((value) => ({
-    class: NEUTRAL_THRESHOLD_CLASS,
-    height: value,
-    chip: {
-      label: value.toString(),
-      class: NEUTRAL_CHIP_CLASS
-    }
-  }))
+  return guidelineValues.map(getNeutralGuideline)
 }

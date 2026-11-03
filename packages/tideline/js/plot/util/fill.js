@@ -49,6 +49,13 @@ const defaults = {
 function drawFill(pool, opts = defaults) {
   _.defaults(opts, defaults)
 
+  // The last guidelines array actually drawn, so fill(selection) - called on every
+  // Pool.render() tick, including pan/zoom-driven re-renders where the scale and guidelines
+  // haven't changed - can skip the expensive teardown-and-rebuild (see drawChip's getBBox
+  // reflow) when opts.guidelines is still the same array it drew last time. A new array
+  // (assigned by updateGuidelines) always triggers a redraw.
+  let lastDrawnGuidelines = null
+
   function fill(selection) {
     opts.xScale = pool.xScale().copy()
 
@@ -57,9 +64,10 @@ function drawFill(pool, opts = defaults) {
       selection.attr('class', opts.fillClass)
     }
 
-    if (opts.guidelines) {
+    if (opts.guidelines && opts.guidelines !== lastDrawnGuidelines) {
       fill.drawGuidelines()
       fill.drawGuidelineChips()
+      lastDrawnGuidelines = opts.guidelines
     }
 
     selection.each(function(/** @type {Datum[]} */ currentData) {
@@ -156,6 +164,7 @@ function drawFill(pool, opts = defaults) {
     opts.guidelines = newGuidelines
     fill.drawGuidelines()
     fill.drawGuidelineChips()
+    lastDrawnGuidelines = newGuidelines
   }
 
   fill.drawGuidelines = function() {
