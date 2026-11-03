@@ -28,16 +28,13 @@
 import * as d3 from 'd3'
 import MedicalDataService, { type Bolus, type Cbg, convertBG, MGDL_UNITS, type Smbg, type Wizard } from 'medical-domain'
 import { getMaxIobValue } from '../charts/active-insulin/iob'
+import { SMBG_SIZE } from '../charts/glucose/smbg'
 import { getBolusFromInsulinEvent } from '../../../utils/bolus/bolus.util'
 
 /** The minimal pool shape these Y-axis factories need: just the pool's rendered height in pixels */
 interface PoolHeight {
   height: () => number
 }
-
-// SMBG circles are drawn at this diameter; half of it is used as top/bottom padding on the BG
-// scale's range so they're never clipped by the pool's edges
-const SMBG_DIAMETER = 16
 
 // The BG scale never needs to display more than this, in mg/dL (and its mmol/L equivalent)
 const MAX_CBG_MGDL = 401
@@ -93,7 +90,7 @@ export const createYAxisBG = (
 ): { scale: d3.ScaleLinear<number, number>, extent: [number | undefined, number | undefined] } => {
   const allBgValues: Array<Cbg | Smbg> = [...tidelineData.medicalData.cbg, ...tidelineData.medicalData.smbg]
   const extent = d3.extent(allBgValues, (d) => d.value)
-  const scale = createScaleBG(tidelineData, pool, extent, SMBG_DIAMETER / 2)
+  const scale = createScaleBG(tidelineData, pool, extent, SMBG_SIZE / 2)
 
   return { scale, extent }
 }
