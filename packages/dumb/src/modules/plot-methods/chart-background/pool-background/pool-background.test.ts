@@ -29,8 +29,8 @@ import * as d3 from 'd3'
 import type MedicalDataService from 'medical-domain'
 import { DatumType, type Fill } from 'medical-domain'
 import { plotPoolBackground } from './pool-background'
-import { type Pool } from '../../../models/pool.model'
-import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/pool.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
 
 describe('plotPoolBackground', () => {
   const xScale = d3.scaleUtc().domain([new Date('2023-01-01T00:00:00Z'), new Date('2023-01-02T00:00:00Z')]).range([0, 2400])

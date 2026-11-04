@@ -26,16 +26,15 @@
  */
 
 import * as d3 from 'd3'
-import _ from 'lodash'
 
 import { type Fill } from 'medical-domain'
-import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
-import { type PlotFunction } from '../../../models/plot-function.model'
-import { type PlotOptions } from '../../../models/plot-options.model'
-import { type PlotSelection } from '../../../models/plot-selection.model'
-import { type Pool } from '../../../models/pool.model'
-import { drawVerticalRectangle } from '../../../utils/daily-chart/daily-chart.util'
-import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/pool.model'
+import { drawVerticalRectangle } from '../../../../utils/daily-chart/daily-chart.util'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 const HOUR_LINE_WIDTH = 0.5
 const MIDNIGHT_LINE_WIDTH = 1
@@ -76,7 +75,7 @@ export const plotPoolBackground = (
   pool: Pool<Fill>,
   opts: Partial<PoolBackgroundOptions> = {}
 ): PlotFunction<Fill> => {
-  const options = _.defaults(opts, defaults) as PoolBackgroundOptions
+  const options = { ...defaults, ...opts } as PoolBackgroundOptions
 
   return (selection: PlotSelection<Fill>): void => {
     // Initialize xScale from pool

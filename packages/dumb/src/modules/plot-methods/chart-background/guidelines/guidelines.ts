@@ -26,16 +26,15 @@
  */
 
 import * as d3 from 'd3'
-import _ from 'lodash'
 
 import { type Fill } from 'medical-domain'
-import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
-import { type PlotFunction } from '../../../models/plot-function.model'
-import { type PlotOptions } from '../../../models/plot-options.model'
-import { type PlotSelection } from '../../../models/plot-selection.model'
-import { type Pool } from '../../../models/pool.model'
-import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
-import { type Guideline } from './guidelines.util'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Guideline } from '../../../../models/guideline.model'
+import { type Pool } from '../../../../models/pool.model'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 /** Space between a chip's right edge and the chart's left edge, in pixels */
 const CHIP_GAP = 4
@@ -82,7 +81,7 @@ export const plotGuidelines = (
   pool: GuidelinesPool,
   opts: Partial<GuidelinesOptions> = {}
 ): PlotFunction<Fill> => {
-  const options = _.defaults(opts, defaults) as GuidelinesOptions
+  const options = { ...defaults, ...opts } as GuidelinesOptions
 
   return (selection: PlotSelection<Fill>): void => {
     // Initialize xScale from pool
