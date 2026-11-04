@@ -160,14 +160,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
    */
   container.loadingInProgress = false
 
-  container.emitter.on('clickInPool', ({ offsetX /*, datum */ }) => {
-    // Event use when we want to add a message (note)
-    /** @type {Date} */
-    const date = container.xScale.invert(offsetX + axisGutter)
-    const m = moment.utc(date)
-    container.emitter.emit('clickToDate', m)
-  })
-
   /**
    * Throttle the navigated event, we do not need so much updates.
    * It also slow everything too much.

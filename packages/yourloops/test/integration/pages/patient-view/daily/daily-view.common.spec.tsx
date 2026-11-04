@@ -42,6 +42,7 @@ import { t } from '../../../../../lib/language'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   checkBolusChartYAxisForSmallBoluses,
+  checkGlucoseChartTarget,
   checkGlucoseChartYAxis,
   checkGlucoseChartYAxisAtDate,
   checkTimeChangeIndicator,
@@ -296,6 +297,7 @@ describe('Daily view for anyone', () => {
       })
 
       checkGlucoseChartYAxis()
+      checkGlucoseChartTarget(120)
       checkBolusChartYAxisForSmallBoluses()
     })
 
@@ -310,6 +312,7 @@ describe('Daily view for anyone', () => {
       })
 
       checkGlucoseChartYAxisAtDate()
+      checkGlucoseChartTarget(100)
     })
 
     it('should recompute the Bolus and Glucose chart guidelines when new data is loaded after navigating to a day outside the initially loaded range', async () => {

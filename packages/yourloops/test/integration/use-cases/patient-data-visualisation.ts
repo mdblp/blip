@@ -61,6 +61,7 @@ import {
   checkNoteCommentEditSuccess,
   checkNoteCreateContent,
   checkNoteCreateFailure,
+  checkNoteCreateFromChartBackground,
   checkNoteCreateSuccess,
   checkNoteEditContent,
   checkNoteEditFailure,
@@ -219,6 +220,7 @@ export const testNotesFailure = async () => {
 const checkNotes = async (date: Date) => {
   await checkNoteView(date)
   await checkNoteCreateContent()
+  await checkNoteCreateFromChartBackground()
   await checkNoteEditContent()
   await checkNoteCommentEditContent()
   await checkNoteCreateSuccess()

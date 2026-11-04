@@ -176,6 +176,20 @@ export const checkNoteCreateContent = async () => {
   expect(screen.queryByTestId('create-note-dialog')).not.toBeInTheDocument()
 }
 
+export const checkNoteCreateFromChartBackground = async () => {
+  const notesLaneBackground = document.getElementById('poolMessages_fill') as HTMLElement
+  const [timeSlot] = within(notesLaneBackground).getAllByTestId(/^poolMessages_poolBackground_group_/)
+
+  fireEvent.click(timeSlot)
+
+  const dialog = await screen.findByTestId('create-note-dialog')
+  expect(dialog).toBeVisible()
+  expect(within(dialog).getByPlaceholderText('Type a new note here ...')).toBeVisible()
+
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+  expect(screen.queryByTestId('create-note-dialog')).not.toBeInTheDocument()
+}
+
 export const checkNoteEditContent = async () => {
   const note = screen.getByTestId(`note_group_${NOTE_ID}`)
   fireEvent.click(note)

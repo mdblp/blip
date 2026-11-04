@@ -27,9 +27,9 @@
 
 import * as d3 from 'd3'
 import MedicalDataService, { type Bolus, type Cbg, convertBG, MGDL_UNITS, type Smbg, type Wizard } from 'medical-domain'
-import { getMaxIobValue } from '../charts/active-insulin/iob'
-import { SMBG_SIZE } from '../charts/glucose/smbg'
-import { getBolusFromInsulinEvent, getMaxProgrammedBolusAmount } from '../../../utils/bolus/bolus.util'
+import { getMaxIobValue } from '../../charts/active-insulin/iob'
+import { SMBG_SIZE } from '../../charts/glucose/smbg'
+import { getBolusFromInsulinEvent, getMaxProgrammedBolusAmount } from '../../../../utils/bolus/bolus.util'
 
 /** The minimal pool shape these Y-axis factories need: just the pool's rendered height in pixels */
 interface PoolHeight {

@@ -28,6 +28,7 @@
 // Models & Enums
 export { type BgPrefs } from './models/blood-glucose.model'
 export { Device } from './models/device.model'
+export { type Guideline } from './models/guideline.model'
 export { LayoutColumnType } from './models/enums/layout-column-type.enum'
 export { SafetyBasalItem } from './models/safety-basal-item.model'
 
@@ -88,8 +89,8 @@ export { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-too
 export { ZenModeTooltip } from './components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
 
 // Daily plot methods
-export { getBasalGuidelines, getBgGuidelines, getBolusGuidelines, getIobGuidelines } from './modules/plot-methods/chart-background/fill'
-export { createYAxisBG, createYAxisBasal, createYAxisBolus, createYAxisIob } from './modules/plot-methods/chart-background/scales-y-axis'
+export { getBasalGuidelines, getBgGuidelines, getBolusGuidelines, getIobGuidelines } from './modules/plot-methods/chart-background/guidelines/guidelines.util'
+export { createYAxisBG, createYAxisBasal, createYAxisBolus, createYAxisIob } from './modules/plot-methods/chart-background/scales/scales-y-axis'
 export { plotAlarmEvent } from './modules/plot-methods/charts/events/alarm-event'
 export { plotBasal } from './modules/plot-methods/charts/basal-rates/basal-rate'
 export { plotBolus } from './modules/plot-methods/charts/bolus-carbs/bolus'
@@ -98,12 +99,14 @@ export { plotConfidentialMode } from './modules/plot-methods/charts/common/confi
 export { plotDeviceParameterChange } from './modules/plot-methods/charts/events/device-parameter-change'
 export { plotEatingShortly } from './modules/plot-methods/charts/bolus-carbs/eating-shortly'
 export { plotEventSuperposition } from './modules/plot-methods/charts/events/event-superposition'
+export { plotGuidelines } from './modules/plot-methods/chart-background/guidelines/guidelines'
 export { getMaxIobValue, plotIob } from './modules/plot-methods/charts/active-insulin/iob'
 export { plotMeal } from './modules/plot-methods/charts/bolus-carbs/meal'
 export { plotNightMode } from './modules/plot-methods/charts/events/night-mode'
 export { plotNote } from './modules/plot-methods/charts/header/note'
 export { plotNewNoteButton } from './modules/plot-methods/charts/header/new-note-button'
 export { plotPhysicalActivity } from './modules/plot-methods/charts/events/physical-activity'
+export { plotPoolBackground } from './modules/plot-methods/chart-background/pool-background/pool-background'
 export { plotRescueCarbs } from './modules/plot-methods/charts/bolus-carbs/rescue-carbs'
 export { plotReservoirChange } from './modules/plot-methods/charts/events/reservoir-change'
 export { plotSmbg } from './modules/plot-methods/charts/glucose/smbg'
