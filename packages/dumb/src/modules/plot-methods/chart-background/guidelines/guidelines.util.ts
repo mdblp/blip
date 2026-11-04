@@ -26,6 +26,7 @@
  */
 
 import type { BgClasses } from 'medical-domain'
+import { type Guideline } from '../../../../models/guideline.model'
 
 const BASAL_GUIDELINE_VALUES = [1]
 const BOLUS_GUIDELINE_VALUES = [1, 5]
@@ -34,15 +35,6 @@ const BOLUS_GUIDELINE_VALUES = [1, 5]
 // a clinical BG threshold (i.e. everything but BG's low/high/target lines)
 const NEUTRAL_THRESHOLD_CLASS = 'd3-line-neutral-threshold'
 const NEUTRAL_CHIP_CLASS = 'd3-line-neutral-chip'
-
-interface Guideline {
-  class: string
-  height: number
-  chip?: {
-    label: string
-    class: string
-  }
-}
 
 const getNeutralGuideline = (value: number): Guideline => ({
   class: NEUTRAL_THRESHOLD_CLASS,

@@ -30,11 +30,13 @@ import { drawLegend } from './plot/util/legend'
  * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
  *
  * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { scale: ScaleContinuousNumeric }} AxisScaleFunc
- * @typedef {{ class: string, height: number, chip?: { label: string, class: string } }} Guideline
+ * @typedef {import('dumb').Guideline} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
  * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
  * @typedef {{ name: string; baseline: number }[]} Legends
  */
+
+const guidelinesPlotName = 'guidelines'
 
 /**
  * A pool: An horizontal graph for the daily view
@@ -49,7 +51,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   // The container-wide group hosting the guideline chips of every pool (see Pool#chipGroup).
   // Resolved once here since #tidelineChips is created by the OneDay container before any pool
   // is constructed, and cached rather than re-queried by DOM id on every render.
-  let chipGroup = mainSVG.select('#tidelineChips')
+  let chipsContainer = mainSVG.select('#tidelineChips')
   let id = ''
   let dataTestId = ''
   let yPosition = 0
@@ -70,8 +72,23 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   let plotTypes = []
   /** @type {AxisScaleFunc} */
   let defaultAxisScaleFn = null
+  /** @type {ReturnType<AxisScaleFunc>} */
+  let axisScale = null
   /** @type {GuidelinesFn} */
   let defaultGuidelinesFn = null
+  /** @type {Guideline[]} */
+  let guidelines = []
+  let guidelinesPlot = null
+
+  const updateGuidelines = () => {
+    guidelines = _.isFunction(defaultGuidelinesFn) && axisScale ? defaultGuidelinesFn(axisScale) : []
+  }
+
+  const rebuildAxisScale = () => {
+    axisScale = defaultAxisScaleFn(container.tidelineData, this)
+    yScale = axisScale.scale
+    updateGuidelines()
+  }
 
   this.destroy = function() {
     plotTypes.forEach((plotType) => {
@@ -80,7 +97,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
     mainSVG = null
-    chipGroup = null
+    chipsContainer = null
     labels = null
     legends = null
     group = null
@@ -88,7 +105,10 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     yScale = null
     plotTypes = null
     defaultAxisScaleFn = null
+    axisScale = null
     defaultGuidelinesFn = null
+    guidelines = []
+    guidelinesPlot = null
     container = null
   }
 
@@ -99,23 +119,14 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
    */
   this.render = function(poolData, updateScale = false) {
     if (updateScale && _.isFunction(defaultAxisScaleFn)) {
-      const axisScale = defaultAxisScaleFn(container.tidelineData, this)
-      yScale = axisScale.scale
-
-      if (_.isFunction(defaultGuidelinesFn)) {
-        // The guideline lines/chips are owned by this pool's "fill" plot type (see
-        // fill.updateGuidelines in plot/util/fill.js); recompute them here, from the same
-        // axisScale just rebuilt above, so they never drift from a stale, chart-creation-time
-        // snapshot while the Y scale keeps adapting to newly loaded data.
-        const fillPlotType = plotTypes.find(({ type, plot }) => type === 'fill' && _.isFunction(plot.updateGuidelines))
-        fillPlotType?.plot.updateGuidelines(defaultGuidelinesFn(axisScale))
-      }
+      rebuildAxisScale()
     }
 
+    const poolDataByType = _.groupBy(poolData, 'type')
     plotTypes.forEach((plotType) => {
       const { type, name } = plotType
       if (type in container.dataFill) {
-        const data = _.filter(poolData, { type })
+        const data = poolDataByType[type] ?? []
         const dataGroup = group.selectAll(`#${id}_${name}`).data([data])
         const dataGroupWithId = dataGroup.join('g').attr('id', `${id}_${name}`)
         dataGroupWithId.call(plotType.plot)
@@ -134,9 +145,26 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
         group.select(`#${id}_${name}`).remove()
       }
     })
-    group.select(`#${id}_guidelines`).remove()
     // Chips are not in the pool's own group, see Pool#chipGroup
-    mainSVG.select(`#${id}_guideline_chips`).remove()
+    chipsContainer.select(`#${id}_guideline_chips`).remove()
+  }
+
+  /**
+   * Rebuild the Y scale and the guidelines from the current data, then redraw the guidelines.
+   * To call when an input of the GuidelinesFn other than the data (e.g. the target value) changes.
+   */
+  this.refreshGuidelines = function() {
+    if (!_.isFunction(defaultAxisScaleFn)) {
+      return
+    }
+
+    rebuildAxisScale()
+
+    const plotGroup = group.select(`#${id}_${guidelinesPlotName}`)
+    // Not rendered yet: the first render draws them
+    if (!plotGroup.empty()) {
+      plotGroup.call(guidelinesPlot)
+    }
   }
 
   // non-chainable methods
@@ -158,11 +186,25 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   }
 
   /**
-   * The container-wide group hosting the guideline chips of every pool.
+   * The group hosting the guideline chips of this pool, at the pool position.
    * It sits outside the pools' clip path so chips can be drawn in the axis gutter.
    */
   this.chipGroup = function() {
-    return chipGroup
+    const chipGroupId = `${id}_guideline_chips`
+    return chipsContainer.selectAll(`#${chipGroupId}`)
+      .data([null])
+      .join('g')
+      .attr('id', chipGroupId)
+      .attr('data-testid', chipGroupId)
+      .attr('transform', `translate(0,${yPosition})`)
+  }
+
+  /**
+   * The guidelines computed by the GuidelinesFn from the current axis scale
+   * @returns {Guideline[]}
+   */
+  this.guidelines = function() {
+    return guidelines
   }
 
   this.width = function() {
@@ -287,14 +329,11 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   }
 
   /**
+   * Registers the Y axis scale function and (re)builds the scale and the guidelines with it
    * @param {AxisScaleFunc} [fn] Omit to use this as a getter for the currently registered fn.
-   * @param {{ scale: ScaleContinuousNumeric } | null} initialAxisScale Already-computed
-   * result of calling `fn`, to use for this initial call instead of invoking `fn` again. Lets a
-   * caller that already needed to run `fn` once (e.g. to read a value back out of it) avoid
-   * doing so a second time here.
    * @returns {AxisScaleFunc}
    */
-  this.axisScaleFn = function(fn, initialAxisScale = null) {
+  this.axisScaleFn = function(fn) {
     // Called as a getter (no fn, e.g. a bare axisScaleFn()): return the currently registered
     // one instead of throwing by calling a non-function below.
     if (typeof fn !== 'function') {
@@ -302,21 +341,31 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     }
 
     defaultAxisScaleFn = fn
-    const axisScale = initialAxisScale ?? fn(container.tidelineData, this)
-    yScale = axisScale.scale
+    rebuildAxisScale()
     return defaultAxisScaleFn
   }
 
   /**
-   * Registers how to rebuild this pool's guideline lines/chips from the axisScale object
-   * produced by its axisScaleFn. render() calls it every time it rebuilds the scale, so
-   * guidelines stay derived from the same (fresh) data as the scale they're drawn against.
+   * Registers how to compute this pool's guidelines from the axisScale object produced by its
+   * axisScaleFn. They are recomputed every time the scale is rebuilt, so they stay derived
+   * from the same (fresh) data as the scale they're drawn against.
    * @param {GuidelinesFn} fn
    * @returns {GuidelinesFn}
    */
   this.guidelinesFn = function(fn) {
     defaultGuidelinesFn = fn
+    updateGuidelines()
     return defaultGuidelinesFn
+  }
+
+  /**
+   * Add the plot drawing the guidelines computed by the GuidelinesFn. They span the whole
+   * visible width, so they are not panned with the data.
+   * @param { (pool: Pool, opts?: object) => () => void } plotFunction
+   */
+  this.addGuidelinesPlotType = function(plotFunction) {
+    guidelinesPlot = plotFunction
+    this.addPlotType({ type: 'fill', name: guidelinesPlotName, pan: false }, plotFunction)
   }
 
   /**

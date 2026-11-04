@@ -38,12 +38,14 @@ import {
   plotDeviceParameterChange,
   plotEatingShortly,
   plotEventSuperposition,
+  plotGuidelines,
   plotIob,
   plotMeal,
   plotNewNoteButton,
   plotNightMode,
   plotNote,
   plotPhysicalActivity,
+  plotPoolBackground,
   plotRescueCarbs,
   plotReservoirChange,
   plotSmbg,
@@ -54,11 +56,11 @@ import {
 import { EventEmitter } from 'events'
 import i18next from 'i18next'
 import _ from 'lodash'
+import moment from 'moment-timezone'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
-import fill from '../../js/plot/util/fill'
 
 import Pool from '../../js/pool'
 
@@ -288,24 +290,14 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   let targetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, targetDate) : undefined
 
   // setup axis & main y scale
-  const bgAxisScale = createYAxisBG(tidelineData, poolBG)
-  // Single source of truth for this pool's guidelines, so the initial draw below and every
-  // later recompute (be it from guidelinesFn on new data, or from the emitter.on('navigated')
-  // handler on a target value change) always derive them the same way, from a fresh axisScale.
-  const getBgGuidelinesFromAxisScale = (axisScale) => getBgGuidelines(targetValue, chart, axisScale.extent)
-  poolBG.axisScaleFn(createYAxisBG, bgAxisScale)
-  poolBG.guidelinesFn(getBgGuidelinesFromAxisScale)
+  poolBG.axisScaleFn(createYAxisBG)
+  poolBG.guidelinesFn((axisScale) => getBgGuidelines(targetValue, chart, axisScale.extent))
 
-  const bgFill = fill(poolBG, {
-    endpoints: chart.endpoints,
-    isDaily: true,
-    guidelines: getBgGuidelinesFromAxisScale(bgAxisScale)
-  })
-  poolBG.addPlotType({ type: 'fill' }, bgFill)
+  poolBG.addPlotType({ type: 'fill' }, plotPoolBackground(poolBG, { tidelineData }))
 
-  poolEvents.addPlotType({ type: 'fill' }, fill(poolEvents, {
-    isDaily: true
-  }))
+  poolBG.addGuidelinesPlotType(plotGuidelines(poolBG))
+
+  poolEvents.addPlotType({ type: 'fill' }, plotPoolBackground(poolEvents, { tidelineData }))
 
   poolEvents.addPlotType({ type: 'zenMode' }, plotZenMode(poolEvents, {
     tidelineData,
@@ -393,18 +385,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
 
   // setup axis & main y scale
-  const bolusAxisScale = createYAxisBolus(tidelineData, poolBolus)
-  // Single source of truth for this pool's guidelines, so the initial draw below and every
-  // later recompute (from guidelinesFn, on new data) always derive them the same way.
-  const getBolusGuidelinesFromAxisScale = (axisScale) => getBolusGuidelines(axisScale.maxBolusValue)
-  poolBolus.axisScaleFn(createYAxisBolus, bolusAxisScale)
-  poolBolus.guidelinesFn(getBolusGuidelinesFromAxisScale)
-  // add background fill rectangles to bolus pool
-  poolBolus.addPlotType({ type: 'fill' }, fill(poolBolus, {
-    endpoints: chart.endpoints,
-    isDaily: true,
-    guidelines: getBolusGuidelinesFromAxisScale(bolusAxisScale)
-  }))
+  poolBolus.axisScaleFn(createYAxisBolus)
+  poolBolus.guidelinesFn((axisScale) => getBolusGuidelines(axisScale.maxBolusValue))
+  // add background fill rectangles and guidelines to bolus pool
+  poolBolus.addPlotType({ type: 'fill' }, plotPoolBackground(poolBolus, { tidelineData }))
+  poolBolus.addGuidelinesPlotType(plotGuidelines(poolBolus))
 
   // quick bolus data to wizard pool
   poolBolus.addPlotType({ type: 'bolus' }, plotBolus(poolBolus, {
@@ -439,18 +424,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
 
   // setup axis & main y scale
-  const basalAxisScale = createYAxisBasal(tidelineData, poolBasal)
-  // Single source of truth for this pool's guidelines, so the initial draw below and every
-  // later recompute (from guidelinesFn, on new data) always derive them the same way.
-  const getBasalGuidelinesFromAxisScale = (axisScale) => getBasalGuidelines(axisScale.extent)
-  poolBasal.axisScaleFn(createYAxisBasal, basalAxisScale)
-  poolBasal.guidelinesFn(getBasalGuidelinesFromAxisScale)
-  // add background fill rectangles to basal pool
-  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, {
-    endpoints: chart.endpoints,
-    isDaily: true,
-    guidelines: getBasalGuidelinesFromAxisScale(basalAxisScale)
-  }))
+  poolBasal.axisScaleFn(createYAxisBasal)
+  poolBasal.guidelinesFn((axisScale) => getBasalGuidelines(axisScale.extent))
+  // add background fill rectangles and guidelines to basal pool
+  poolBasal.addPlotType({ type: 'fill' }, plotPoolBackground(poolBasal, { tidelineData }))
+  poolBasal.addGuidelinesPlotType(plotGuidelines(poolBasal))
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
@@ -470,18 +448,12 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   if (isDblg2Patient) {
     // IOB pool
     // setup axis & main y scale
-    const iobAxisScale = createYAxisIob(tidelineData, poolIob)
-    // Single source of truth for this pool's guidelines, so the initial draw below and every
-    // later recompute (from guidelinesFn, on new data) always derive them the same way.
-    const getIobGuidelinesFromAxisScale = (axisScale) => getIobGuidelines(axisScale.maxIobValue)
-    poolIob?.axisScaleFn(createYAxisIob, iobAxisScale)
-    poolIob?.guidelinesFn(getIobGuidelinesFromAxisScale)
+    poolIob?.axisScaleFn(createYAxisIob)
+    poolIob?.guidelinesFn((axisScale) => getIobGuidelines(axisScale.maxIobValue))
 
-    // add background fill rectangles to IOB pool
-    poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
-      isDaily: true,
-      guidelines: getIobGuidelinesFromAxisScale(iobAxisScale)
-    }))
+    // add background fill rectangles and guidelines to IOB pool
+    poolIob?.addPlotType({ type: 'fill' }, plotPoolBackground(poolIob, { tidelineData }))
+    poolIob?.addGuidelinesPlotType(plotGuidelines(poolIob))
 
     // add IOB curve to IOB pool
     poolIob?.addPlotType({ type: 'iob' }, plotIob(poolIob, {
@@ -500,15 +472,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // messages pool
   // add background fill rectangles to messages pool
-  poolMessages.addPlotType({ type: 'fill' }, fill(poolMessages, {
-    emitter,
-    isDaily: true,
-    cursor: 'cell'
-  }))
   // clicking the background at a given date starts the note creation flow at that date
-  emitter.on('clickToDate', (date) => {
-    emitter.emit('createNote', date)
-  })
+  poolMessages.addPlotType({ type: 'fill' }, plotPoolBackground(poolMessages, {
+    tidelineData,
+    onBackgroundClick: (date) => emitter.emit('createNote', moment.utc(date))
+  }))
 
   // add note images to messages pool
   poolMessages.addPlotType({ type: 'message' }, plotNote(poolMessages, {
@@ -539,12 +507,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     if (newTargetValue !== targetValue) {
       targetValue = newTargetValue
 
-      // Update the "Target" line height, from a freshly recomputed extent rather than the
-      // one captured at chart creation, so the BG "very high" guideline reflects data loaded
-      // since then too
-      const newBgAxisScale = createYAxisBG(tidelineData, poolBG)
-      bgFill.updateGuidelines(getBgGuidelinesFromAxisScale(newBgAxisScale))
-      poolBG.axisScaleFn(createYAxisBG, newBgAxisScale)
+      poolBG.refreshGuidelines()
     }
   })
 

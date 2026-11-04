@@ -147,7 +147,6 @@ The only coding conventions unique to tideline are conventions of HTML and CSS I
      	- `bgboundary.js` provides a utility for determining the class (very-low, low, target, high, very-high) of a blood glucose value given the user's (or the default) target range.
      	- `commonbolus.js` provides a utility for getting information about boluses, whether these are `bolus` events are embedded inside `wizard` events.
      	- `drawbolus.js` provides plotting functions for boluses, whether these are `bolus` events are embedded inside `wizard` events.
-        - `fill.js` generates the background fill for each data pool.
         - `legend.js` defines legend generators for all the pools that require a legend.
         - `scales.js` generates D3 scales for various diabetes data types. The functions in this utility module are at the moment specific to the plotting functions in `plot/`, not generally useful.
    + `validation` contains all the code necessary to perform client-side data validation, including schemas for all datatypes currently rendered by tideline, a small module `validate.js` providing validation functions, and our custom schema construction and validation tools in `validator/`.

@@ -304,7 +304,23 @@ export const checkEventsSuperposition = async () => {
   expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContentMultipleOccurrences}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
 }
 
+const checkPoolBackground = (poolId: string) => {
+  const backgroundPlot = document.getElementById(`${poolId}_fill`) as HTMLElement
+  expect(backgroundPlot).toBeInTheDocument()
+
+  const timeSlots = within(backgroundPlot).getAllByTestId(new RegExp(`^${poolId}_poolBackground_group_`))
+  expect(timeSlots.length).toBeGreaterThan(0)
+  timeSlots.forEach((timeSlot) => {
+    expect(timeSlot.querySelectorAll('rect.d3-fill-background')).toHaveLength(1)
+    expect(timeSlot.querySelectorAll('rect.d3-fill-hour')).toHaveLength(1)
+  })
+}
+
 const checkDailyViewChartsCommon = () => {
+  ['poolMessages', 'poolEvents', 'poolBG', 'poolBolus', 'poolBasal'].forEach(checkPoolBackground)
+  expect(screen.getByTestId('poolBG_guidelines_line_d3-line-bg-threshold-low_70')).toBeInTheDocument()
+  expect(screen.getByTestId('poolBG_guidelines_line_d3-line-bg-threshold-high_180')).toBeInTheDocument()
+
   const glucoseChartLabel = screen.getByTestId('poolBG-chart-label')
   expect(glucoseChartLabel).toHaveTextContent('Glucose (mg/dL)')
 
@@ -335,6 +351,7 @@ export const checkDailyViewChartsDblg1 = () => {
 
 export const checkDailyViewChartsDblg2 = () => {
   checkDailyViewChartsCommon()
+  checkPoolBackground('poolIob')
 
   const iobChartLabel = screen.getByTestId('poolIob-chart-label')
   expect(iobChartLabel).toHaveTextContent('Active insulin (U)')
@@ -395,6 +412,12 @@ export const checkGlucoseChartYAxis = () => {
 
 export const checkGlucoseChartYAxisAtDate = () => {
   expect(screen.getByTestId('poolBG_guideline_chips')).toHaveTextContent('70180100')
+}
+
+export const checkGlucoseChartTarget = (targetValue: number) => {
+  expect(screen.getByTestId(`poolBG_guidelines_line_d3-line-bg-target_${targetValue}`)).toBeInTheDocument()
+  // getByTestId fails if the chip is drawn more than once
+  expect(screen.getByTestId(`poolBG_guidelines_chip_d3-line-bg-target_${targetValue}`)).toHaveTextContent(`${targetValue}`)
 }
 
 export const checkBolusChartYAxisForSmallBoluses = () => {
