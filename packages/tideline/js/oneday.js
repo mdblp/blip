@@ -171,9 +171,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }, navigatedDelay)
 
   /**
-   * Use to:
-   * - Disable the ← → buttons on the nav bar (blip/Header)
-   * - DailyX sticky label transparency
+   * Use to disable the ← → buttons on the nav bar (blip/Header)
    * @param {boolean} value true if in transition
    */
   container.inTransition = (value) => {
@@ -383,12 +381,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
   }
 
-  /**
-   * 'zoomstart' & 'zoomend' events used by dailyX to change the transparency
-   * of the sticky date.
-   */
-  container.onZoomStart = () => container.emitter.emit('zoomstart')
-
   container.onZoom = (event) => {
     const { initialXScale, pools, mainGroup, loadingInProgress } = container
 
@@ -437,14 +429,10 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
 
     container.renderPoolsData()
-
-    // Update the dailyX sticky label
-    container.emitter.emit('dailyx-navigated', domain[0].valueOf())
   }
 
   container.onZoomEnd = () => {
-    const { xScale, emitter } = container
-    emitter.emit('zoomend')
+    const { xScale } = container
     nav.currentTranslation = nav.latestTranslation
 
     container.navString()
@@ -461,7 +449,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const { xScale } = container
 
     nav.pan = d3.zoom().scaleExtent([1, 1])
-    nav.pan.on('start', container.onZoomStart)
     nav.pan.on('zoom', (event) => container.onZoom(event))
     nav.pan.on('end', container.onZoomEnd)
 
@@ -476,7 +463,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.onDragStart = (event) => {
     // silence the click-and-drag listener
     event.sourceEvent.stopPropagation()
-    // Used by dailyX to make the 'stickyLabel' (previous day date) transparent:
     container.inTransition(true)
   }
   container.onDrag = function(event, /** @type {{x: Number, y: number}} */ dragValues) {

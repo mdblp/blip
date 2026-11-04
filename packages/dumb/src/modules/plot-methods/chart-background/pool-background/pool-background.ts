@@ -76,6 +76,8 @@ export const plotPoolBackground = (
   opts: Partial<PoolBackgroundOptions> = {}
 ): PlotFunction<Fill> => {
   const options = { ...defaults, ...opts } as PoolBackgroundOptions
+  // Every pool renders the same fills, so the pool id keeps element ids unique in the page
+  const ids = idGen.scoped(pool.id())
 
   return (selection: PlotSelection<Fill>): void => {
     // Initialize xScale from pool
@@ -88,11 +90,6 @@ export const plotPoolBackground = (
     const xScale = options.xScale
     const height = pool.height()
     const { onBackgroundClick } = options
-
-    // Every pool renders the same fills, so the pool id keeps element ids unique in the page
-    const poolId = pool.id()
-    const getGroupId = (d: Fill): string => `${poolId}_${idGen.groupId(d)}`
-    const getElementId = (d: Fill, elementType: string): string => `${poolId}_${idGen.elementId(d, elementType)}`
 
     // Helper functions using closure variables
     const getXPos = (d: Fill): number => xScale(d.epoch)
@@ -110,12 +107,12 @@ export const plotPoolBackground = (
       const group = enter
         .append('g')
         .classed(idGen.groupSelector(), true)
-        .attr('id', getGroupId)
-        .attr('data-testid', getGroupId)
+        .attr('id', ids.groupId)
+        .attr('data-testid', ids.groupId)
 
-      drawVerticalRectangle(group, getXPos, 0, height, getWidth, 'd3-rect-fill d3-fill-background', (d: Fill) => getElementId(d, 'background'))
+      drawVerticalRectangle(group, getXPos, 0, height, getWidth, 'd3-rect-fill d3-fill-background', (d: Fill) => ids.elementId(d, 'background'))
 
-      drawVerticalRectangle(group, getHourLineXPos, 0, height, HOUR_LINE_WIDTH, 'd3-rect-fill d3-fill-vertical-line d3-fill-hour', (d: Fill) => getElementId(d, 'hour'))
+      drawVerticalRectangle(group, getHourLineXPos, 0, height, HOUR_LINE_WIDTH, 'd3-rect-fill d3-fill-vertical-line d3-fill-hour', (d: Fill) => ids.elementId(d, 'hour'))
 
       return group
     }
@@ -149,7 +146,7 @@ export const plotPoolBackground = (
         .data((d: Fill) => d.startsAtMidnight ? [d] : [])
         .join('rect')
         .attr('class', 'd3-rect-fill d3-fill-vertical-line d3-fill-midnight')
-        .attr('id', (d: Fill) => getElementId(d, 'midnight'))
+        .attr('id', (d: Fill) => ids.elementId(d, 'midnight'))
         .attr('x', getMidnightLineXPos)
         .attr('y', 0)
         .attr('width', MIDNIGHT_LINE_WIDTH)

@@ -340,8 +340,14 @@ const checkDailyViewChartsCommon = () => {
   expect(screen.getByTestId('poolBasal_guideline_chips')).toHaveTextContent('')
 }
 
+const checkDailyViewXAxis = () => {
+  // Hour labels of each time slot, and the day label at midnight (Europe/Paris)
+  expect(document.getElementById('poolXAxis_fill')).toHaveTextContent(/^9:00 pm12:00 amMonday, August 83:00 am6:00 am9:00 am12:00 pm3:00 pm6:00 pm9:00 pm$/)
+}
+
 export const checkDailyViewChartsDblg1 = () => {
   checkDailyViewChartsCommon()
+  checkDailyViewXAxis()
 
   expect(screen.queryByTestId('poolIob-chart-label')).not.toBeInTheDocument()
 

@@ -20,8 +20,6 @@ import i18next from 'i18next'
 export const dateTimeFormats = {
   /** @returns {string} translated 'MMMM D' format */
   get MMMM_D_FORMAT() { return i18next.t('MMMM D') },
-  /** @returns {string} translated 'dddd, MMMM D' format */
-  get DDDD_MMMM_D_FORMAT() { return i18next.t('dddd, MMMM D') },
   /** @returns {string} translated 'h:mm a' format */
   get H_MM_A_FORMAT() { return i18next.t('h:mm a') }
 }
