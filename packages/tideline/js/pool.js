@@ -135,7 +135,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
 
-    this.drawLabel()
     this.drawLegend()
   }
 
@@ -212,10 +211,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   }
 
   // only once methods
-  this.drawLabel = _.once(function() {
-    plotPoolLabel(this, container.axisGutter(), labels)
-  })
-
   this.drawLegend = _.once(function() {
     if (!Array.isArray(legends) || legends.length < 1) {
       return
@@ -301,6 +296,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   this.yPosition = function(x) {
     if (!arguments.length) return yPosition
     yPosition = x
+    plotPoolLabel(this, container.axisGutter(), labels)
     return this
   }
 
