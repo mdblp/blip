@@ -44,6 +44,7 @@ export enum DailyPlotElement {
   PoolBackground = 'poolBackground',
   RescueCarbs = 'carb',
   ReservoirChange = 'reservoir',
+  ScrollBar = 'scrollBar',
   Smbg = 'smbg',
   TimezoneChange = 'timechange',
   WarmUp = 'warmup',
