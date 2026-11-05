@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -49,10 +49,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -79,10 +79,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -107,10 +107,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -134,10 +134,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -162,10 +162,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -189,10 +189,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -217,10 +217,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -245,10 +245,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -273,10 +273,10 @@ jobs:
     needs: lint
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -301,10 +301,10 @@ jobs:
     needs: [ test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
@@ -338,7 +338,7 @@ jobs:
     outputs:
       version: ${{ steps.changelog-version.outputs.semver }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Download artifact
         uses: actions/download-artifact@v8
