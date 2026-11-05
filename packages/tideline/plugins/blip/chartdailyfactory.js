@@ -35,6 +35,7 @@ import {
   plotBolus,
   plotCbg,
   plotConfidentialMode,
+  plotDailyXAxis,
   plotDeviceParameterChange,
   plotEatingShortly,
   plotEventSuperposition,
@@ -60,7 +61,6 @@ import moment from 'moment-timezone'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
-import axesDailyx from '../../js/plot/util/axes/dailyx'
 
 import Pool from '../../js/pool'
 
@@ -274,13 +274,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // x-axis pools
   // add ticks to top x-axis pool
-  poolXAxis.addPlotType({ type: 'fill' }, axesDailyx(poolXAxis, {
-    class: 'd3-top',
-    emitter,
-    leftEdge: chart.axisGutter(),
-    timePrefs: chart.options.timePrefs,
-    tidelineData
-  }))
+  poolXAxis.addPlotType({ type: 'fill' }, plotDailyXAxis(poolXAxis))
 
   const targetDate = new Date(epochLocation)
   const currentParameters = pumpSettingsPayload?.parameters

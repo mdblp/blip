@@ -147,22 +147,6 @@ const format = {
       d.setUTCMinutes(d.getUTCMinutes() + offset)
     }
     return d3.utcFormat(f)(d).toLowerCase()
-  },
-
-  /**
-   * @param {moment.Moment} m The datetime (moment) to display
-   * @returns {string} The formated DDDD_MMMM_D_FORMAT datetime
-   */
-  xAxisDayText: function(m) {
-    return m.format(dateTimeFormats.DDDD_MMMM_D_FORMAT)
-  },
-
-  /**
-   * @param {moment.Moment} m The datetime (moment) to display
-   * @returns {string} The formated H_MM_A_FORMAT datetime
-   */
-  xAxisTickText: function(m) {
-    return m.format(dateTimeFormats.H_MM_A_FORMAT)
   }
 }
 

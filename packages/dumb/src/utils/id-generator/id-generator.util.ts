@@ -76,7 +76,17 @@ export interface IdGenerator {
    * The prefix used for ID generation
    */
   readonly prefix: string
+
+  /**
+   * Generate the IDs prefixed by a scope, e.g. the pool ID when the same data is drawn in
+   * several pools, so the IDs stay unique in the page
+   * @param scope - The scope to prefix the IDs with
+   * @returns The ID methods, scoped
+   */
+  scoped: (scope: string) => ScopedIdGenerator
 }
+
+export type ScopedIdGenerator = Pick<IdGenerator, 'groupId' | 'elementId' | 'testId'>
 
 /**
  * Create an ID generator with consistent naming patterns
@@ -93,6 +103,7 @@ export interface IdGenerator {
  * const circleId = idGen.elementId(data, 'circle') // 'nightMode_circle_abc123'
  * const testId = idGen.testId(data)           // 'nightMode_group_guid-xyz' or 'nightMode_group_abc123'
  * const selector = idGen.groupSelector()      // 'd3-nightMode-group'
+ * const poolGroupId = idGen.scoped('poolBG').groupId(data) // 'poolBG_nightMode_group_abc123'
  * ```
  */
 export const createIdGenerator = (prefix: string): IdGenerator => {
@@ -102,7 +113,8 @@ export const createIdGenerator = (prefix: string): IdGenerator => {
     elementId: (d: HasId, elementType: string): string => `${prefix}_${elementType}_${d.id}`,
     testId: (d: MayHaveGuid, elementType: string = 'group'): string =>
       `${prefix}_${elementType}_${d.guid ?? d.id}`,
-    groupSelector: (): string => `d3-${prefix}-group`
+    groupSelector: (): string => `d3-${prefix}-group`,
+    scoped: (scope: string): ScopedIdGenerator => createIdGenerator(`${scope}_${prefix}`)
   }
 }
 
