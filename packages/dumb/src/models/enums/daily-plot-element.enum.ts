@@ -31,6 +31,7 @@ export enum DailyPlotElement {
   Bolus = 'bolus',
   Cbg = 'cbg',
   ConfidentialMode = 'confidential',
+  DailyXAxis = 'dailyXAxis',
   DeviceParameterChange = 'param',
   EatingShortly = 'eatingShortly',
   EventSuperposition = 'eventSuperposition',

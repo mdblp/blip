@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3466 Remove unused env variables
 - YLP-3686 TypeScript version update
 - YLP-3886 Migrate daily chart background to `dumb` package
+- YLP-4154 Migrate daily x axis to `dumb` package
 - YLP-4156 Migrate daily chart labels to `dumb` package
 - YLP-4160 Authenticate to Nexus npm registry with NEXUS_TOKEN
 - YLP-4168 Minor dependencies version update

@@ -16,7 +16,6 @@
  */
 
 import i18next from 'i18next'
-import moment from 'moment-timezone'
 import { assert, expect } from 'chai'
 
 import fmt from '../js/data/util/format'
@@ -163,38 +162,6 @@ describe('format utility', function() {
 
     it('should return an integer percentage when passed a value between 0.0 and 1.0', function() {
       expect(fmt.percentage(0.6666666666666666666666667)).to.equal('67%')
-    })
-  })
-
-  describe('xAxisDayText', function() {
-    it('should be a function', function() {
-      assert.isFunction(fmt.xAxisDayText)
-    })
-
-    it('should return `Wednesday, January 1` on a UTC timestamp at 1 am on first day of 2014', function() {
-      expect(fmt.xAxisDayText(moment.utc('2014-01-01T01:00:00.000Z'))).to.equal('Wednesday, January 1')
-    })
-
-    it('should return `Tuesday, December 31` on same UTC timestamp when passed a Pacific non-DST offset', function() {
-      expect(fmt.xAxisDayText(moment.tz('2014-01-01T01:00:00.000Z', 'US/Pacific'))).to.equal('Tuesday, December 31')
-    })
-  })
-
-  describe('xAxisTickText', function() {
-    it('should be a function', function() {
-      assert.isFunction(fmt.xAxisTickText)
-    })
-
-    it('should return return `1 am` on a UTC timestamp at 1 am', function() {
-      expect(fmt.xAxisTickText(moment.utc('2014-01-01T01:00:00.000Z'))).to.equal('1:00 am')
-    })
-
-    it('should return `5 pm` on same UTC timestamp when passed a Pacific non-DST offset', function() {
-      expect(fmt.xAxisTickText(moment.tz('2014-01-01T01:00:00.000Z', 'US/Pacific'))).to.equal('5:00 pm')
-    })
-
-    it('should return `6 pm` on same UTC timestamp when passed a Pacific DST offset', function() {
-      expect(fmt.xAxisTickText(moment.tz('2014-04-01T01:00:00.000Z', 'US/Pacific'))).to.equal('6:00 pm')
     })
   })
 })

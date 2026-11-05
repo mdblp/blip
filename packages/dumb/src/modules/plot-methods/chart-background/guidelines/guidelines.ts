@@ -82,6 +82,7 @@ export const plotGuidelines = (
   opts: Partial<GuidelinesOptions> = {}
 ): PlotFunction<Fill> => {
   const options = { ...defaults, ...opts } as GuidelinesOptions
+  const ids = idGen.scoped(pool.id())
 
   return (selection: PlotSelection<Fill>): void => {
     // Initialize xScale from pool
@@ -97,7 +98,7 @@ export const plotGuidelines = (
     const chipGuidelines = guidelines.filter((guideline: Guideline) => guideline.chip)
 
     const getY = (d: Guideline): number => yScale(d.height)
-    const getTestId = (d: Guideline, elementType: string): string => `${pool.id()}_${idGen.testId({ id: getGuidelineKey(d) }, elementType)}`
+    const getTestId = (d: Guideline, elementType: string): string => ids.testId({ id: getGuidelineKey(d) }, elementType)
 
     /**
      * Create new chip visual elements
