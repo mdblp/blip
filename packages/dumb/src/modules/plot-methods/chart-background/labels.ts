@@ -40,7 +40,7 @@ export interface PoolLabel {
 type LabelPool = {
   id: () => string
   yPosition: () => number
-  parent: () => d3.Selection<SVGGElement, unknown, null, undefined>
+  parent: () => d3.Selection<SVGElement, unknown, null, undefined>
 }
 
 /**
