@@ -305,11 +305,7 @@ export const checkEventsSuperposition = async () => {
 }
 
 const checkPoolBackground = (poolId: string) => {
-  const backgroundPlot = document.getElementById(`${poolId}_fill`) as HTMLElement
-  expect(backgroundPlot).toBeInTheDocument()
-
-  const timeSlots = within(backgroundPlot).getAllByTestId(new RegExp(`^${poolId}_poolBackground_group_`))
-  expect(timeSlots.length).toBeGreaterThan(0)
+  const timeSlots = screen.getAllByTestId(new RegExp(`^${poolId}_poolBackground_group_`))
   timeSlots.forEach((timeSlot) => {
     expect(timeSlot.querySelectorAll('rect.d3-fill-background')).toHaveLength(1)
     expect(timeSlot.querySelectorAll('rect.d3-fill-hour')).toHaveLength(1)
@@ -342,7 +338,8 @@ const checkDailyViewChartsCommon = () => {
 
 const checkDailyViewXAxis = () => {
   // Hour labels of each time slot, and the day label at midnight (Europe/Paris)
-  expect(document.getElementById('poolXAxis_fill')).toHaveTextContent(/^9:00 pm12:00 amMonday, August 83:00 am6:00 am9:00 am12:00 pm3:00 pm6:00 pm9:00 pm$/)
+  const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
+  expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm12:00 amMonday, August 83:00 am6:00 am9:00 am12:00 pm3:00 pm6:00 pm9:00 pm')
 }
 
 export const checkDailyViewChartsDblg1 = () => {
