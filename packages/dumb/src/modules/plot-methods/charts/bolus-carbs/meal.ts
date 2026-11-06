@@ -30,10 +30,10 @@ import _ from 'lodash'
 
 import { type Wizard } from 'medical-domain'
 import { BolusType } from '../../../../models/enums/bolus-type.enum'
-import { PlotFunction } from '../../../../models/plot-function.model'
-import { PlotOptions } from '../../../../models/plot-options.model'
-import { PlotSelection } from '../../../../models/plot-selection.model'
-import { Pool } from '../../../../models/pool.model'
+import { PlotFunction } from '../../../../models/plot-methods/plot-function.model'
+import { PlotOptions } from '../../../../models/plot-methods/plot-options.model'
+import { PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
+import { Pool } from '../../../../models/plot-methods/pool.model'
 import {
   getBolusFromInsulinEvent,
   getBolusType,

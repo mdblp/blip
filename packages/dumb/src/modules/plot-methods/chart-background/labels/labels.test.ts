@@ -26,7 +26,8 @@
  */
 
 import * as d3 from 'd3'
-import { plotPoolLabel, type PoolLabel } from './labels'
+import { plotPoolLabel } from './labels'
+import { type PoolLabel } from '../../../../models/plot-methods/pool-label.model'
 
 describe('plotPoolLabel', () => {
   const setup = (yPosition: number, labels: PoolLabel[]): void => {

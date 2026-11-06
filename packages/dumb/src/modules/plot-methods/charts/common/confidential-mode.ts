@@ -32,10 +32,10 @@ import _ from 'lodash'
 
 import { type ConfidentialMode } from 'medical-domain'
 import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type Pool } from '../../../../models/pool.model'
+import { type PlotFunction } from '../../../../models/plot-methods/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-methods/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
+import { type Pool } from '../../../../models/plot-methods/pool.model'
 import {
   calculateWidth,
   drawImage,

@@ -18,9 +18,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import { plotPoolLabel } from 'dumb'
-
-import { drawLegend } from './plot/util/legend'
+import { plotPoolLabel, plotPoolLegend } from 'dumb'
 
 /**
  * @typedef {import('./tidelinedata').default} MedicalDataService
@@ -33,7 +31,7 @@ import { drawLegend } from './plot/util/legend'
  * @typedef {import('dumb').Guideline} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
  * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
- * @typedef {{ name: string; baseline: number }[]} Legends
+ * @typedef {import('dumb').PoolLegend[]} Legends
  */
 
 const guidelinesPlotName = 'guidelines'
@@ -41,9 +39,8 @@ const guidelinesPlotName = 'guidelines'
 /**
  * A pool: An horizontal graph for the daily view
  * @param {OneDay} container OneDay container
- * @param shouldDisplayEatingShortlyLegend Whether to display the "Meal without carb counting" legend
  */
-function Pool(container, shouldDisplayEatingShortlyLegend = false) {
+function Pool(container) {
   const minHeight = 20
   const maxHeight = 300
 
@@ -216,21 +213,8 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     plotPoolLabel(this, container.axisGutter(), labels)
   })
 
-  this.drawLegend = _.once(function() {
-    if (!Array.isArray(legends) || legends.length < 1) {
-      return
-    }
-    legends.forEach((legend) => {
-      const x = (this.width() + container.axisGutter()).toString(10)
-      const y = (yPosition - legend.baseline).toString(10)
-      const legendGroup = mainSVG.select('#tidelineLabels')
-        .append('g')
-        .attr('id', `${id}_legend_${legend.name}`)
-        .attr('data-testid', `${id}_legend_${legend.name}`)
-        .attr('transform', `translate(${x},${y})`)
-
-      drawLegend(legendGroup, legend.name, shouldDisplayEatingShortlyLegend)
-    })
+  this.drawLegend = _.once(() => {
+    plotPoolLegend(this, container.axisGutter(), legends)
   })
 
   // getters & setters
@@ -255,9 +239,9 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     return this
   }
 
-  this.legends = function(a) {
+  this.legends = function(/** @type {Legends} */ l) {
     if (!arguments.length) return legends
-    legends = a
+    legends = l
     return this
   }
 

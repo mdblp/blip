@@ -52,7 +52,8 @@ import {
   plotSmbg,
   plotTimeZoneChange,
   plotWarmUp,
-  plotZenMode
+  plotZenMode,
+  PoolLegendType
 } from 'dumb'
 import { EventEmitter } from 'events'
 import i18next from 'i18next'
@@ -178,15 +179,13 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       }],
       baseline: options.labelBaseline
     }])
-    .legends([{ name: 'bg', baseline: options.labelBaseline }])
+    .legends([{ type: PoolLegendType.Bg, baseline: options.labelBaseline }])
     .heightRatio(2.15)
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
-  const shouldDisplayEatingShortlyLegend = isDblg2Patient && options.isEatingShortlyEnabled
-
   /** @type {Pool} */
-  const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
+  const poolBolus = new Pool(chart)
   chart.addPool(poolBolus)
   const poolBolusId = 'poolBolus'
   poolBolus
@@ -209,11 +208,12 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       baseline: options.labelBaseline
     }])
     .legends([{
-      name: 'carbs',
+      type: PoolLegendType.Carbs,
       baseline: options.labelBaseline + 18
     }, {
-      name: 'bolus',
-      baseline: options.labelBaseline
+      type: PoolLegendType.Bolus,
+      baseline: options.labelBaseline,
+      shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
     }])
     .heightRatio(1.5)
     .gutterWeight(1.5)
@@ -227,8 +227,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     .id('poolBasal', chart.poolGroup)
     .dataTestId('basal-section', poolBasalId)
     .labels([{
-      main: t('Basal Rates'),
-      light: ` (${t('U')}/${t('abbrev_duration_hour')})`,
       spans: [{
         text: t('Basal Rates'),
         className: 'label-main'
@@ -238,7 +236,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       }],
       baseline: options.labelBaseline
     }])
-    .legends([{ name: 'basal', baseline: options.labelBaseline }])
+    .legends([{ type: PoolLegendType.Basal, baseline: options.labelBaseline }])
     .heightRatio(1.0)
     .gutterWeight(1.0)
 

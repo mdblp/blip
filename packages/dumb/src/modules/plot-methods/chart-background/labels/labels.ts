@@ -26,16 +26,7 @@
  */
 
 import * as d3 from 'd3'
-
-export interface LabelSpan {
-  text: string
-  className: string
-}
-
-export interface PoolLabel {
-  spans: LabelSpan[]
-  baseline: number
-}
+import { PoolLabel } from '../../../../models/plot-methods/pool-label.model'
 
 type LabelPool = {
   id: () => string
