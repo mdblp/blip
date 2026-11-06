@@ -18,6 +18,8 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
+import { plotPoolLabel } from 'dumb'
+
 import { drawLegend } from './plot/util/legend'
 
 /**
@@ -210,27 +212,8 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   }
 
   // only once methods
-  this.drawLabel = _.once(function() {
-    if (!Array.isArray(labels) || labels.length < 1) {
-      return
-    }
-
-    const x = container.axisGutter().toString(10)
-    labels.forEach((label, labelIndex) => {
-      const y = (yPosition - label.baseline).toString(10)
-      const labelGroup = mainSVG.select('#tidelineLabels').append('text')
-      labelGroup
-        .classed('d3-pool-label', true)
-        .attr('id', `${id}_label_${labelIndex}`)
-        .attr('data-testid', `${id}-chart-label`)
-        .attr('transform', `translate(${x},${y})`)
-      label.spans.forEach((tspan, spanIndex) => {
-        labelGroup.append('tspan')
-          .attr('class', tspan.className)
-          .attr('id', `${id}_label_${labelIndex}_span_${spanIndex}`)
-          .text(tspan.text)
-      })
-    })
+  this.drawLabel = _.once(() => {
+    plotPoolLabel(this, container.axisGutter(), labels)
   })
 
   this.drawLegend = _.once(function() {
