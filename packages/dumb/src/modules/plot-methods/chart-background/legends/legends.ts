@@ -89,7 +89,7 @@ const circle = (className: string, widthFactor = 1): LegendItem => ({ type: Lege
 
 const rect = (className: string): LegendItem => ({ type: LegendItemType.Rect, className, widthFactor: RECT_WIDTH_FACTOR })
 
-const basalBadge = (className: string, labelKey: string): LegendItem => ({
+const loopModeBadge = (className: string, label: string): LegendItem => ({
   type: LegendItemType.Group,
   width: 4 * BASAL_BADGE_SIZE + SHAPE_MARGIN,
   draw: (legendGroup) => {
@@ -104,7 +104,7 @@ const basalBadge = (className: string, labelKey: string): LegendItem => ({
     badge.append('text')
       .classed('d3-basal-label', true)
       .attr('transform', `translate(${-BASAL_BADGE_SIZE * 2}, ${-BASAL_BADGE_SIZE / 2})`)
-      .text(t(labelKey))
+      .text(label)
     return badge
   }
 })
@@ -131,8 +131,8 @@ const getLegendItems = (legend: PoolLegend): LegendItem[] => {
   switch (legend.type) {
     case PoolLegendType.Basal:
       return [
-        basalBadge('d3-basal-loop-mode-off', 'M_Label'),
-        basalBadge('d3-basal-loop-mode', 'A_Label'),
+        loopModeBadge('d3-basal-loop-mode-off', t('M_Label')),
+        loopModeBadge('d3-basal-loop-mode', t('A_Label')),
         text(t('Loop mode status'), SHAPE_MARGIN)
       ]
     case PoolLegendType.Bg:
