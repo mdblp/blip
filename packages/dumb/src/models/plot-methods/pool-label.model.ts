@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PoolLabelSpan } from './pool-label-span.model'
+import { type PoolLabelSpan } from './pool-label-span.model'
 
 export interface PoolLabel {
   spans: PoolLabelSpan[]

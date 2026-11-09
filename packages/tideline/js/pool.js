@@ -30,7 +30,7 @@ import { plotPoolLabel, plotPoolLegend } from 'dumb'
  * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { scale: ScaleContinuousNumeric }} AxisScaleFunc
  * @typedef {import('dumb').Guideline} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
- * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
+ * @typedef {import('dumb').PoolLabel[]} Labels
  * @typedef {import('dumb').PoolLegend[]} Legends
  */
 

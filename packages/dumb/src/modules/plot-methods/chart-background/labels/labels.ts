@@ -25,14 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as d3 from 'd3'
-import { PoolLabel } from '../../../../models/plot-methods/pool-label.model'
+import { type PoolLabel } from '../../../../models/plot-methods/pool-label.model'
+import { type LabelsLayerPool } from '../../../../models/plot-methods/labels-layer-pool.model'
 
-type LabelPool = {
-  id: () => string
-  yPosition: () => number
-  parent: () => d3.Selection<SVGElement, unknown, null, undefined>
-}
+type LabelPool = Omit<LabelsLayerPool, 'width'>
 
 /**
  * Plot the title label(s) of a daily chart pool (e.g. "Glucose (mg/dL)"), in the chart's

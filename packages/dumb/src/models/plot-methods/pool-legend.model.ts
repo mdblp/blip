@@ -27,9 +27,19 @@
 
 import { PoolLegendType } from '../enums/pool-legend-type.enum'
 
-export interface PoolLegend {
-  type: PoolLegendType
+interface BasePoolLegend {
   baseline: number
-  /** Bolus legend only: whether to display the "Meal without carb counting" entry */
+}
+
+interface BolusPoolLegend extends BasePoolLegend {
+  type: PoolLegendType.Bolus
+  /** Whether to display the "Meal without carb counting" entry */
   shouldDisplayEatingShortly?: boolean
 }
+
+interface OtherPoolLegend extends BasePoolLegend {
+  type: PoolLegendType.Basal | PoolLegendType.Bg | PoolLegendType.Carbs
+}
+
+/** Discriminated on `type`, so that each legend only accepts its own options */
+export type PoolLegend = BolusPoolLegend | OtherPoolLegend

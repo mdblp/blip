@@ -152,6 +152,17 @@ describe('plotPoolLegend', () => {
     expect(carbs.getAttribute('cx')).toBe('-132.75')
   })
 
+  it('should vertically align all the circles on the tallest legend text, whatever their drawing order', () => {
+    jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      const height = this.textContent === 'Carbs' ? 16 : 8
+      return { width: TEXT_WIDTH, height } as DOMRect
+    })
+    setup([{ type: PoolLegendType.Carbs, baseline: 4 }])
+
+    const circles = Array.from(getLegend(PoolLegendType.Carbs).querySelectorAll('circle'))
+    expect(circles.map((circle) => circle.getAttribute('cy'))).toEqual(['-4', '-4'])
+  })
+
   it('should draw the basal legend with the automated and manual mode badges', () => {
     setup([{ type: PoolLegendType.Basal, baseline: 4 }])
 

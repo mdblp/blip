@@ -29,14 +29,8 @@ import * as d3 from 'd3'
 import { t } from 'i18next'
 import { CSS_CLASSES } from '../../../../models/constants/plot.constants'
 import { PoolLegendType } from '../../../../models/enums/pool-legend-type.enum'
-import { PoolLegend } from '../../../../models/plot-methods/pool-legend.model'
-
-type LegendPool = {
-  id: () => string
-  yPosition: () => number
-  width: () => number
-  parent: () => d3.Selection<SVGElement, unknown, null, undefined>
-}
+import { type PoolLegend } from '../../../../models/plot-methods/pool-legend.model'
+import { type LabelsLayerPool } from '../../../../models/plot-methods/labels-layer-pool.model'
 
 type LegendGroup = d3.Selection<SVGGElement, unknown, null, undefined>
 
@@ -47,13 +41,17 @@ enum LegendItemType {
   Text = 'text'
 }
 
-type LegendItem = {
+interface TextLegendItem {
   type: LegendItemType.Text
   className: string
   text: string
   /** Added to the measured text width to space it from the next item */
   widthAdjustment: number
-} | {
+  /** The legend title is spaced a bit more from the items */
+  isTitle: boolean
+}
+
+type LegendItem = TextLegendItem | {
   type: LegendItemType.Circle | LegendItemType.Rect
   className: string
   widthFactor: number
@@ -74,15 +72,20 @@ const BASAL_BADGE_SIZE = 7
 const BOLUS_RIDE_X = -12
 const BOLUS_RIDE_WIDTH = 25
 
-const LEGEND_TEXT_CLASS = 'd3-pool-legend'
-const BG_LEGEND_CLASSES = 'd3-smbg d3-circle-smbg'
-const BOLUS_LEGEND_CLASSES = `${CSS_CLASSES.BOLUS} d3-rect-bolus-legend`
+const BG_LEGEND_CLASSES = `${CSS_CLASSES.SMBG} ${CSS_CLASSES.SMBG_CIRCLE}`
+const BOLUS_LEGEND_CLASSES = `${CSS_CLASSES.BOLUS} ${CSS_CLASSES.BOLUS_LEGEND_RECT}`
 
-const text = (content: string, widthAdjustment = 0, className = LEGEND_TEXT_CLASS): LegendItem => ({
+const text = (content: string, widthAdjustment = 0, className: string = CSS_CLASSES.LEGEND_TEXT): TextLegendItem => ({
   type: LegendItemType.Text,
   className,
   text: content,
-  widthAdjustment
+  widthAdjustment,
+  isTitle: false
+})
+
+const title = (content: string, widthAdjustment = 0, className: string = CSS_CLASSES.LEGEND_TEXT): TextLegendItem => ({
+  ...text(content, widthAdjustment, className),
+  isTitle: true
 })
 
 const circle = (className: string, widthFactor = 1): LegendItem => ({ type: LegendItemType.Circle, className, widthFactor })
@@ -93,16 +96,16 @@ const loopModeBadge = (className: string, label: string): LegendItem => ({
   type: LegendItemType.Group,
   width: 4 * BASAL_BADGE_SIZE + SHAPE_MARGIN,
   draw: (legendGroup) => {
-    const badge = legendGroup.append('g').classed(`d3-basal ${className}`, true)
+    const badge = legendGroup.append('g').classed(`${CSS_CLASSES.BASAL} ${className}`, true)
     badge.append('rect')
-      .classed('d3-basal-background', true)
+      .classed(CSS_CLASSES.BASAL_LOOP_MODE_BACKGROUND, true)
       .attr('x', -BASAL_BADGE_SIZE * 4)
       .attr('y', RECT_Y)
       .attr('width', BASAL_BADGE_SIZE * 4)
       .attr('height', BASAL_BADGE_SIZE * 2)
       .attr('rx', BASAL_BADGE_SIZE / 2)
     badge.append('text')
-      .classed('d3-basal-label', true)
+      .classed(CSS_CLASSES.BASAL_LOOP_MODE_LABEL, true)
       .attr('transform', `translate(${-BASAL_BADGE_SIZE * 2}, ${-BASAL_BADGE_SIZE / 2})`)
       .text(label)
     return badge
@@ -126,14 +129,14 @@ const bolusRide: LegendItem = {
   }
 }
 
-// Items are listed in drawing order: from right to left, the legend title being the last one
+// Items are listed in drawing order: from right to left, the legend title (if any) being the last one
 const getLegendItems = (legend: PoolLegend): LegendItem[] => {
   switch (legend.type) {
     case PoolLegendType.Basal:
       return [
-        loopModeBadge('d3-basal-loop-mode-off', t('M_Label')),
-        loopModeBadge('d3-basal-loop-mode', t('A_Label')),
-        text(t('Loop mode status'), SHAPE_MARGIN)
+        loopModeBadge(CSS_CLASSES.BASAL_LOOP_MODE_OFF, t('M_Label')),
+        loopModeBadge(CSS_CLASSES.BASAL_LOOP_MODE, t('A_Label')),
+        title(t('Loop mode status'), SHAPE_MARGIN)
       ]
     case PoolLegendType.Bg:
       return [
@@ -144,15 +147,15 @@ const getLegendItems = (legend: PoolLegend): LegendItem[] => {
         circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_TIGHT_RANGE}`),
         circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_LOW}`),
         circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_VERY_LOW}`),
-        text(`${t('low')} `, 0, `${LEGEND_TEXT_CLASS} d3-pool-legend-space`),
-        text('Dexcom CGM -', 0, `${LEGEND_TEXT_CLASS} d3-pool-legend-dexcom`)
+        text(`${t('low')} `, 0, `${CSS_CLASSES.LEGEND_TEXT} ${CSS_CLASSES.LEGEND_TEXT_SPACE}`),
+        title('Dexcom CGM -', 0, `${CSS_CLASSES.LEGEND_TEXT} ${CSS_CLASSES.LEGEND_TEXT_DEXCOM}`)
       ]
     case PoolLegendType.Bolus:
       return [
         text(t('Override'), -SHAPE_MARGIN),
         bolusRide,
         text(t('Undelivered'), -SHAPE_MARGIN),
-        rect(`${BOLUS_LEGEND_CLASSES} d3-bolus-undelivered`),
+        rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_UNDELIVERED}`),
         text(t('bolus_pen'), -SHAPE_MARGIN),
         rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_PEN}`),
         text(t('Manual Bolus'), -SHAPE_MARGIN),
@@ -165,14 +168,14 @@ const getLegendItems = (legend: PoolLegend): LegendItem[] => {
         ] : []),
         text(t('Meal Bolus'), -SHAPE_MARGIN),
         rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_MEAL}`),
-        text(t('Bolus Legend'), -SHAPE_MARGIN)
+        title(t('Bolus Legend'), -SHAPE_MARGIN)
       ]
     case PoolLegendType.Carbs:
       return [
         text(t('Rescuecarbs')),
-        circle('d3-circle-rescuecarbs-legend', 1.5),
+        circle(CSS_CLASSES.RESCUE_CARB_LEGEND_CIRCLE, 1.5),
         text(t('Carbs')),
-        circle('d3-circle-carbs-legend')
+        circle(CSS_CLASSES.CARB_LEGEND_CIRCLE)
       ]
     default:
       return []
@@ -184,56 +187,57 @@ const getLegendItems = (legend: PoolLegend): LegendItem[] => {
  * of the items drawn before it.
  */
 const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void => {
-  const widths: number[] = []
+  const circles: d3.Selection<SVGCircleElement, unknown, null, undefined>[] = []
+  let offset = 0
   let textHeight = 0
 
   items.forEach((item, index) => {
-    const offset = widths.reduce((sum, width) => sum + width, 0)
-    // The legend title is spaced a bit more from the items
-    const textOffset = index === items.length - 1 ? offset + SHAPE_SIDE / 2 : offset
-
     switch (item.type) {
       case LegendItemType.Text: {
         const textElement = legendGroup.append('text')
           .classed(item.className, true)
           .text(item.text)
         const { width, height } = (textElement.node() as SVGTextElement).getBoundingClientRect()
-        widths.push(width + item.widthAdjustment)
-        textHeight = height
+        textHeight = Math.max(textHeight, height)
         if (index > 0) {
+          const textOffset = item.isTitle ? offset + SHAPE_SIDE / 2 : offset
           textElement.attr('transform', `translate(${-textOffset},0)`)
         }
+        offset += width + item.widthAdjustment
         break
       }
       case LegendItemType.Group: {
         const group = item.draw(legendGroup)
-        widths.push(item.width)
         if (index > 0) {
-          group.attr('transform', `translate(${-textOffset},0)`)
+          group.attr('transform', `translate(${-offset},0)`)
         }
+        offset += item.width
         break
       }
       case LegendItemType.Circle: {
         const radius = SHAPE_SIDE / 2
-        widths.push(SHAPE_WIDTH * item.widthFactor)
-        legendGroup.append('circle')
+        circles.push(legendGroup.append('circle')
           .classed(item.className, true)
           .attr('cx', -(offset + 2 * radius))
-          .attr('cy', -textHeight / 4)
-          .attr('r', radius)
+          .attr('r', radius))
+        offset += SHAPE_WIDTH * item.widthFactor
         break
       }
       case LegendItemType.Rect:
-        widths.push(SHAPE_WIDTH * item.widthFactor)
         legendGroup.append('rect')
           .classed(item.className, true)
           .attr('width', SHAPE_SIDE)
           .attr('height', SHAPE_SIDE)
           .attr('x', -offset - SHAPE_WIDTH)
           .attr('y', RECT_Y)
+        offset += SHAPE_WIDTH * item.widthFactor
         break
     }
   })
+
+  // Vertically center the circles on the legend texts, once all of them have been measured,
+  // so that a circle does not depend on the texts drawn before it
+  circles.forEach((circle) => circle.attr('cy', -textHeight / 4))
 }
 
 /**
@@ -252,7 +256,7 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
  * plotPoolLegend(pool, container.axisGutter(), [{ type: PoolLegendType.Bg, baseline: 4 }])
  * ```
  */
-export const plotPoolLegend = (pool: LegendPool, axisGutter: number, legends: PoolLegend[]): void => {
+export const plotPoolLegend = (pool: LabelsLayerPool, axisGutter: number, legends: PoolLegend[]): void => {
   if (!Array.isArray(legends) || legends.length < 1) {
     return
   }
