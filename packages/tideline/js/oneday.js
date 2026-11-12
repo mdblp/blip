@@ -135,7 +135,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.options = options
   container.type = 'daily'
   // container.axisGutter = axisGutter;
-  /** @type {SVGElement} */
+  /** @type {SVGElement | null} */
   container.mainSVG = null
   /** @type {SVGGElement} */
   container.mainGroup = null
