@@ -26,15 +26,17 @@
  */
 
 import * as d3 from 'd3'
-import { plotPoolLegend } from './legends'
-import { PoolLegendType } from '../../../../models/enums/pool-legend-type.enum'
-import { type PoolLegend } from '../../../../models/plot-methods/pool-legend.model'
+import { plotBasalLegend, plotBgLegend, plotBolusLegend, plotCarbsLegend } from './legends'
+import { type LabelsLayerPool } from '../../../../models/plot-methods/labels-layer-pool.model'
 
-describe('plotPoolLegend', () => {
+describe('legends', () => {
   const TEXT_WIDTH = 50
   const TEXT_HEIGHT = 12
 
-  const setup = (legends: PoolLegend[]): void => {
+  const AXIS_GUTTER = 35
+
+  /** Build a mocked pool, laid out in the chart's labels layer */
+  const setup = (): LabelsLayerPool => {
     const mainGroup = d3.select(document.body).append('svg').append('g')
     mainGroup.append('g').attr('id', 'tidelineLabels')
 
@@ -45,10 +47,10 @@ describe('plotPoolLegend', () => {
       parent: jest.fn().mockReturnValue(mainGroup)
     }
 
-    plotPoolLegend(pool, 35, legends)
+    return pool
   }
 
-  const getLegend = (type: PoolLegendType): HTMLElement => document.getElementById(`poolTest_legend_${type}`)!
+  const getLegend = (name: string): HTMLElement => document.getElementById(`poolTest_legend_${name}`)!
 
   const getTransforms = (legend: HTMLElement, selector: string): (string | null)[] => {
     return Array.from(legend.querySelectorAll(selector)).map((element) => element.getAttribute('transform'))
@@ -64,24 +66,23 @@ describe('plotPoolLegend', () => {
   })
 
   it('should draw one group per legend, right-aligned at the end of the pool and following its own baseline', () => {
-    setup([
-      { type: PoolLegendType.Carbs, baseline: 22 },
-      { type: PoolLegendType.Bolus, baseline: 4 }
-    ])
+    const pool = setup()
+    plotCarbsLegend(pool, AXIS_GUTTER, { baseline: 22 })
+    plotBolusLegend(pool, AXIS_GUTTER, { baseline: 4 })
 
-    const carbsLegend = getLegend(PoolLegendType.Carbs)
+    const carbsLegend = getLegend('carbs')
     expect(carbsLegend.getAttribute('data-testid')).toBe('poolTest_legend_carbs')
     expect(carbsLegend.getAttribute('transform')).toBe('translate(835,78)')
 
-    const bolusLegend = getLegend(PoolLegendType.Bolus)
+    const bolusLegend = getLegend('bolus')
     expect(bolusLegend.getAttribute('data-testid')).toBe('poolTest_legend_bolus')
     expect(bolusLegend.getAttribute('transform')).toBe('translate(835,96)')
   })
 
   it('should draw the glucose legend with one circle per range', () => {
-    setup([{ type: PoolLegendType.Bg, baseline: 4 }])
+    plotBgLegend(setup(), AXIS_GUTTER, { baseline: 4 })
 
-    const legend = getLegend(PoolLegendType.Bg)
+    const legend = getLegend('bg')
     expect(Array.from(legend.querySelectorAll('text')).map((text) => text.textContent)).toEqual(['high', 'low ', 'Dexcom CGM -'])
     expect(getTransforms(legend, 'text')).toEqual([null, 'translate(-143,0)', 'translate(-197.75,0)'])
 
@@ -100,9 +101,9 @@ describe('plotPoolLegend', () => {
   })
 
   it('should draw the bolus legend without the meal without carb counting entry by default', () => {
-    setup([{ type: PoolLegendType.Bolus, baseline: 4 }])
+    plotBolusLegend(setup(), AXIS_GUTTER, { baseline: 4 })
 
-    const legend = getLegend(PoolLegendType.Bolus)
+    const legend = getLegend('bolus')
     expect(legend.textContent).not.toContain('Meal without carb counting')
     expect(legend.querySelectorAll('rect')).toHaveLength(5)
     expect(legend.querySelector('rect.d3-bolus-eating-shortly')).toBeNull()
@@ -132,18 +133,18 @@ describe('plotPoolLegend', () => {
   })
 
   it('should draw the meal without carb counting entry in the bolus legend when asked to', () => {
-    setup([{ type: PoolLegendType.Bolus, baseline: 4, shouldDisplayEatingShortly: true }])
+    plotBolusLegend(setup(), AXIS_GUTTER, { baseline: 4, shouldDisplayEatingShortly: true })
 
-    const legend = getLegend(PoolLegendType.Bolus)
+    const legend = getLegend('bolus')
     expect(legend.textContent).toContain('Meal without carb counting')
     expect(legend.querySelector('rect.d3-bolus.d3-rect-bolus-legend.d3-bolus-eating-shortly')).not.toBeNull()
     expect(legend.querySelectorAll('rect')).toHaveLength(6)
   })
 
   it('should draw the carbs legend with the rescue carbs circle wider spaced', () => {
-    setup([{ type: PoolLegendType.Carbs, baseline: 4 }])
+    plotCarbsLegend(setup(), AXIS_GUTTER, { baseline: 4 })
 
-    const legend = getLegend(PoolLegendType.Carbs)
+    const legend = getLegend('carbs')
     expect(getTransforms(legend, 'text')).toEqual([null, 'translate(-73.25,0)'])
 
     const rescueCarbs = legend.querySelector('circle.d3-circle-rescuecarbs-legend')!
@@ -157,16 +158,16 @@ describe('plotPoolLegend', () => {
       const height = this.textContent === 'Carbs' ? 16 : 8
       return { width: TEXT_WIDTH, height } as DOMRect
     })
-    setup([{ type: PoolLegendType.Carbs, baseline: 4 }])
+    plotCarbsLegend(setup(), AXIS_GUTTER, { baseline: 4 })
 
-    const circles = Array.from(getLegend(PoolLegendType.Carbs).querySelectorAll('circle'))
+    const circles = Array.from(getLegend('carbs').querySelectorAll('circle'))
     expect(circles.map((circle) => circle.getAttribute('cy'))).toEqual(['-4', '-4'])
   })
 
   it('should draw the basal legend with the automated and manual mode badges', () => {
-    setup([{ type: PoolLegendType.Basal, baseline: 4 }])
+    plotBasalLegend(setup(), AXIS_GUTTER, { baseline: 4 })
 
-    const legend = getLegend(PoolLegendType.Basal)
+    const legend = getLegend('basal')
     const automated = legend.querySelector('g.d3-basal.d3-basal-loop-mode')!
     const manual = legend.querySelector('g.d3-basal.d3-basal-loop-mode-off')!
     // The manual mode badge is the rightmost one
@@ -180,17 +181,5 @@ describe('plotPoolLegend', () => {
     expect(background.getAttribute('y')).toBe('-10.75')
 
     expect(getTransforms(legend, ':scope > text')).toEqual(['translate(-66.75,0)'])
-  })
-
-  it('should not draw anything when legends is empty', () => {
-    setup([])
-
-    expect(document.getElementById('tidelineLabels')!.childElementCount).toBe(0)
-  })
-
-  it('should not draw anything when legends is undefined', () => {
-    setup(undefined as unknown as PoolLegend[])
-
-    expect(document.getElementById('tidelineLabels')!.childElementCount).toBe(0)
   })
 })

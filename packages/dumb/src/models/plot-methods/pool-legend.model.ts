@@ -25,21 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PoolLegendType } from '../enums/pool-legend-type.enum'
-
-interface BasePoolLegend {
+export interface PoolLegendOptions {
+  /** Vertical offset of the legend text baseline, above the top of the pool */
   baseline: number
 }
 
-interface BolusPoolLegend extends BasePoolLegend {
-  type: PoolLegendType.Bolus
+export interface BolusPoolLegendOptions extends PoolLegendOptions {
   /** Whether to display the "Meal without carb counting" entry */
   shouldDisplayEatingShortly?: boolean
 }
-
-interface OtherPoolLegend extends BasePoolLegend {
-  type: PoolLegendType.Basal | PoolLegendType.Bg | PoolLegendType.Carbs
-}
-
-/** Discriminated on `type`, so that each legend only accepts its own options */
-export type PoolLegend = BolusPoolLegend | OtherPoolLegend

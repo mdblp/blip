@@ -28,11 +28,18 @@
 import * as d3 from 'd3'
 import { t } from 'i18next'
 import { CSS_CLASSES } from '../../../../models/constants/plot.constants'
-import { PoolLegendType } from '../../../../models/enums/pool-legend-type.enum'
-import { type PoolLegend } from '../../../../models/plot-methods/pool-legend.model'
+import { type BolusPoolLegendOptions, type PoolLegendOptions } from '../../../../models/plot-methods/pool-legend.model'
 import { type LabelsLayerPool } from '../../../../models/plot-methods/labels-layer-pool.model'
 
 type LegendGroup = d3.Selection<SVGGElement, unknown, null, undefined>
+
+/** Used to build the legend group id, e.g. `poolBG_legend_bg` */
+enum LegendName {
+  Basal = 'basal',
+  Bg = 'bg',
+  Bolus = 'bolus',
+  Carbs = 'carbs'
+}
 
 enum LegendItemType {
   Circle = 'circle',
@@ -130,57 +137,50 @@ const bolusRide: LegendItem = {
 }
 
 // Items are listed in drawing order: from right to left, the legend title (if any) being the last one
-const getLegendItems = (legend: PoolLegend): LegendItem[] => {
-  switch (legend.type) {
-    case PoolLegendType.Basal:
-      return [
-        loopModeBadge(CSS_CLASSES.BASAL_LOOP_MODE_OFF, t('M_Label')),
-        loopModeBadge(CSS_CLASSES.BASAL_LOOP_MODE, t('A_Label')),
-        title(t('Loop mode status'), SHAPE_MARGIN)
-      ]
-    case PoolLegendType.Bg:
-      return [
-        text(t('high')),
-        circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_VERY_HIGH}`),
-        circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_HIGH}`),
-        circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_TARGET}`),
-        circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_TIGHT_RANGE}`),
-        circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_LOW}`),
-        circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_VERY_LOW}`),
-        text(`${t('low')} `, 0, `${CSS_CLASSES.LEGEND_TEXT} ${CSS_CLASSES.LEGEND_TEXT_SPACE}`),
-        title('Dexcom CGM -', 0, `${CSS_CLASSES.LEGEND_TEXT} ${CSS_CLASSES.LEGEND_TEXT_DEXCOM}`)
-      ]
-    case PoolLegendType.Bolus:
-      return [
-        text(t('Override'), -SHAPE_MARGIN),
-        bolusRide,
-        text(t('Undelivered'), -SHAPE_MARGIN),
-        rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_UNDELIVERED}`),
-        text(t('bolus_pen'), -SHAPE_MARGIN),
-        rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_PEN}`),
-        text(t('Manual Bolus'), -SHAPE_MARGIN),
-        rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_MANUAL}`),
-        text(t('Correction'), -SHAPE_MARGIN),
-        rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_CORRECTION}`),
-        ...(legend.shouldDisplayEatingShortly ? [
-          text(t('meal-without-carb-counting'), -SHAPE_MARGIN),
-          rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_EATING_SHORTLY}`)
-        ] : []),
-        text(t('Meal Bolus'), -SHAPE_MARGIN),
-        rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_MEAL}`),
-        title(t('Bolus Legend'), -SHAPE_MARGIN)
-      ]
-    case PoolLegendType.Carbs:
-      return [
-        text(t('Rescuecarbs')),
-        circle(CSS_CLASSES.RESCUE_CARB_LEGEND_CIRCLE, 1.5),
-        text(t('Carbs')),
-        circle(CSS_CLASSES.CARB_LEGEND_CIRCLE)
-      ]
-    default:
-      return []
-  }
-}
+const getBasalLegendItems = (): LegendItem[] => [
+  loopModeBadge(CSS_CLASSES.BASAL_LOOP_MODE_OFF, t('M_Label')),
+  loopModeBadge(CSS_CLASSES.BASAL_LOOP_MODE, t('A_Label')),
+  title(t('Loop mode status'), SHAPE_MARGIN)
+]
+
+const getBgLegendItems = (): LegendItem[] => [
+  text(t('high')),
+  circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_VERY_HIGH}`),
+  circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_HIGH}`),
+  circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_TARGET}`),
+  circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_TIGHT_RANGE}`),
+  circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_LOW}`),
+  circle(`${BG_LEGEND_CLASSES} ${CSS_CLASSES.BG_VERY_LOW}`),
+  text(`${t('low')} `, 0, `${CSS_CLASSES.LEGEND_TEXT} ${CSS_CLASSES.LEGEND_TEXT_SPACE}`),
+  title('Dexcom CGM -', 0, `${CSS_CLASSES.LEGEND_TEXT} ${CSS_CLASSES.LEGEND_TEXT_DEXCOM}`)
+]
+
+const getBolusLegendItems = (shouldDisplayEatingShortly: boolean): LegendItem[] => [
+  text(t('Override'), -SHAPE_MARGIN),
+  bolusRide,
+  text(t('Undelivered'), -SHAPE_MARGIN),
+  rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_UNDELIVERED}`),
+  text(t('bolus_pen'), -SHAPE_MARGIN),
+  rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_PEN}`),
+  text(t('Manual Bolus'), -SHAPE_MARGIN),
+  rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_MANUAL}`),
+  text(t('Correction'), -SHAPE_MARGIN),
+  rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_CORRECTION}`),
+  ...(shouldDisplayEatingShortly ? [
+    text(t('meal-without-carb-counting'), -SHAPE_MARGIN),
+    rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_EATING_SHORTLY}`)
+  ] : []),
+  text(t('Meal Bolus'), -SHAPE_MARGIN),
+  rect(`${BOLUS_LEGEND_CLASSES} ${CSS_CLASSES.BOLUS_MEAL}`),
+  title(t('Bolus Legend'), -SHAPE_MARGIN)
+]
+
+const getCarbsLegendItems = (): LegendItem[] => [
+  text(t('Rescuecarbs')),
+  circle(CSS_CLASSES.RESCUE_CARB_LEGEND_CIRCLE, 1.5),
+  text(t('Carbs')),
+  circle(CSS_CLASSES.CARB_LEGEND_CIRCLE)
+]
 
 /**
  * Lay out the legend items from right to left, each one shifted by the cumulated width
@@ -241,38 +241,94 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
 }
 
 /**
- * Plot the legend(s) of a daily chart pool (e.g. the glucose ranges), in the chart's
- * shared labels layer, right-aligned at the end of the pool at the pool's position.
+ * Draw a legend in the chart's shared labels layer, right-aligned at the end of the pool
+ * at the pool's position.
  *
- * Like the pool labels, `legends` is a static, pool-specific configuration set once and
- * never updated, so this renders directly rather than through a D3 enter/update/exit join.
+ * Like the pool labels, a legend is static and drawn once, so this renders directly rather
+ * than through a D3 enter/update/exit join.
+ */
+const drawLegend = (pool: LabelsLayerPool, axisGutter: number, name: LegendName, baseline: number, items: LegendItem[]): void => {
+  const container = pool.parent().select<SVGGElement>('#tidelineLabels')
+  const legendId = `${pool.id()}_legend_${name}`
+  const x = pool.width() + axisGutter
+  const y = pool.yPosition() - baseline
+
+  const legendGroup = container.append('g')
+    .attr('id', legendId)
+    .attr('data-testid', legendId)
+    .attr('transform', `translate(${x},${y})`)
+
+  drawLegendItems(legendGroup, items)
+}
+
+/**
+ * Plot the loop mode status legend (automated / manual mode badges) of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
  *
- * @param pool - The pool to draw the legend(s) for
+ * @param pool - The pool to draw the legend for
  * @param axisGutter - Width of the axis gutter, on the left of the pool
- * @param legends - The legend(s) to draw
+ * @param options - The legend options
  *
  * @example
  * ```typescript
- * plotPoolLegend(pool, container.axisGutter(), [{ type: PoolLegendType.Bg, baseline: 4 }])
+ * plotBasalLegend(poolBasal, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotPoolLegend = (pool: LabelsLayerPool, axisGutter: number, legends: PoolLegend[]): void => {
-  if (!Array.isArray(legends) || legends.length < 1) {
-    return
-  }
+export const plotBasalLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline }: PoolLegendOptions): void => {
+  drawLegend(pool, axisGutter, LegendName.Basal, baseline, getBasalLegendItems())
+}
 
-  const container = pool.parent().select<SVGGElement>('#tidelineLabels')
-  const poolId = pool.id()
-  const x = pool.width() + axisGutter
-  const y = pool.yPosition()
+/**
+ * Plot the glucose ranges legend of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the legend for
+ * @param axisGutter - Width of the axis gutter, on the left of the pool
+ * @param options - The legend options
+ *
+ * @example
+ * ```typescript
+ * plotBgLegend(poolBG, chart.axisGutter(), { baseline: 4 })
+ * ```
+ */
+export const plotBgLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline }: PoolLegendOptions): void => {
+  drawLegend(pool, axisGutter, LegendName.Bg, baseline, getBgLegendItems())
+}
 
-  legends.forEach((legend) => {
-    const legendId = `${poolId}_legend_${legend.type}`
-    const legendGroup = container.append('g')
-      .attr('id', legendId)
-      .attr('data-testid', legendId)
-      .attr('transform', `translate(${x},${y - legend.baseline})`)
+/**
+ * Plot the bolus types legend of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the legend for
+ * @param axisGutter - Width of the axis gutter, on the left of the pool
+ * @param options - The legend options
+ *
+ * @example
+ * ```typescript
+ * plotBolusLegend(poolBolus, chart.axisGutter(), { baseline: 4, shouldDisplayEatingShortly: true })
+ * ```
+ */
+export const plotBolusLegend = (
+  pool: LabelsLayerPool,
+  axisGutter: number,
+  { baseline, shouldDisplayEatingShortly = false }: BolusPoolLegendOptions
+): void => {
+  drawLegend(pool, axisGutter, LegendName.Bolus, baseline, getBolusLegendItems(shouldDisplayEatingShortly))
+}
 
-    drawLegendItems(legendGroup, getLegendItems(legend))
-  })
+/**
+ * Plot the carbs / rescue carbs legend of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the legend for
+ * @param axisGutter - Width of the axis gutter, on the left of the pool
+ * @param options - The legend options
+ *
+ * @example
+ * ```typescript
+ * plotCarbsLegend(poolBolus, chart.axisGutter(), { baseline: 22 })
+ * ```
+ */
+export const plotCarbsLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline }: PoolLegendOptions): void => {
+  drawLegend(pool, axisGutter, LegendName.Carbs, baseline, getCarbsLegendItems())
 }

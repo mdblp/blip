@@ -18,7 +18,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import { plotPoolLabel, plotPoolLegend } from 'dumb'
+import { plotPoolLabel } from 'dumb'
 
 /**
  * @typedef {import('./tidelinedata').default} MedicalDataService
@@ -31,7 +31,6 @@ import { plotPoolLabel, plotPoolLegend } from 'dumb'
  * @typedef {import('dumb').Guideline} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
  * @typedef {import('dumb').PoolLabel[]} Labels
- * @typedef {import('dumb').PoolLegend[]} Legends
  */
 
 const guidelinesPlotName = 'guidelines'
@@ -55,8 +54,6 @@ function Pool(container) {
   let gutterWeight = 0
   /** @type {Labels} Chart name for the user */
   let labels = null
-  /** @type {Legends} */
-  let legends = null
   let heightRatio = 0
   let hidden = false
   let group = null
@@ -96,7 +93,6 @@ function Pool(container) {
     mainSVG = null
     chipsContainer = null
     labels = null
-    legends = null
     group = null
     xScale = null
     yScale = null
@@ -133,7 +129,6 @@ function Pool(container) {
     })
 
     this.drawLabel()
-    this.drawLegend()
   }
 
   this.clear = function() {
@@ -213,10 +208,6 @@ function Pool(container) {
     plotPoolLabel(this, container.axisGutter(), labels)
   })
 
-  this.drawLegend = _.once(() => {
-    plotPoolLegend(this, container.axisGutter(), legends)
-  })
-
   // getters & setters
   this.id = function(x, selection) {
     if (!arguments.length) return id
@@ -236,12 +227,6 @@ function Pool(container) {
   this.labels = function(/** @type {Labels} */ l) {
     if (!arguments.length) return labels
     labels = l
-    return this
-  }
-
-  this.legends = function(/** @type {Legends} */ l) {
-    if (!arguments.length) return legends
-    legends = l
     return this
   }
 

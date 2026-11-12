@@ -32,7 +32,11 @@ import {
   isDBLG2,
   plotAlarmEvent,
   plotBasal,
+  plotBasalLegend,
+  plotBgLegend,
   plotBolus,
+  plotBolusLegend,
+  plotCarbsLegend,
   plotCbg,
   plotConfidentialMode,
   plotDailyXAxis,
@@ -52,8 +56,7 @@ import {
   plotSmbg,
   plotTimeZoneChange,
   plotWarmUp,
-  plotZenMode,
-  PoolLegendType
+  plotZenMode
 } from 'dumb'
 import { EventEmitter } from 'events'
 import i18next from 'i18next'
@@ -179,7 +182,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       }],
       baseline: options.labelBaseline
     }])
-    .legends([{ type: PoolLegendType.Bg, baseline: options.labelBaseline }])
     .heightRatio(2.15)
     .gutterWeight(1.0)
 
@@ -207,14 +209,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       }],
       baseline: options.labelBaseline
     }])
-    .legends([{
-      type: PoolLegendType.Carbs,
-      baseline: options.labelBaseline + 18
-    }, {
-      type: PoolLegendType.Bolus,
-      baseline: options.labelBaseline,
-      shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
-    }])
     .heightRatio(1.5)
     .gutterWeight(1.5)
 
@@ -236,7 +230,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       }],
       baseline: options.labelBaseline
     }])
-    .legends([{ type: PoolLegendType.Basal, baseline: options.labelBaseline }])
     .heightRatio(1.0)
     .gutterWeight(1.0)
 
@@ -264,6 +257,16 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }
 
   chart.arrangePools()
+
+  // Pool legends, drawn once the pools are laid out
+  const axisGutter = chart.axisGutter()
+  plotBgLegend(poolBG, axisGutter, { baseline: options.labelBaseline })
+  plotCarbsLegend(poolBolus, axisGutter, { baseline: options.labelBaseline + 18 })
+  plotBolusLegend(poolBolus, axisGutter, {
+    baseline: options.labelBaseline,
+    shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
+  })
+  plotBasalLegend(poolBasal, axisGutter, { baseline: options.labelBaseline })
 
   // ***
   // Initialize chart with data
