@@ -32,9 +32,12 @@ import {
   isDBLG2,
   plotAlarmEvent,
   plotBasal,
+  plotBasalLabel,
   plotBasalLegend,
+  plotBgLabel,
   plotBgLegend,
   plotBolus,
+  plotBolusLabel,
   plotBolusLegend,
   plotCarbsLegend,
   plotCbg,
@@ -42,9 +45,11 @@ import {
   plotDailyXAxis,
   plotDeviceParameterChange,
   plotEatingShortly,
+  plotEventsLabel,
   plotEventSuperposition,
   plotGuidelines,
   plotIob,
+  plotIobLabel,
   plotMeal,
   plotNewNoteButton,
   plotNightMode,
@@ -59,7 +64,6 @@ import {
   plotZenMode
 } from 'dumb'
 import { EventEmitter } from 'events'
-import i18next from 'i18next'
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
@@ -82,8 +86,6 @@ import Pool from '../../js/pool'
  * @returns {function}
  */
 function chartDailyFactory(parentElement, tidelineData, epochLocation, options = {}) {
-  const t = i18next.t.bind(i18next)
-
   const defaults = {
     bgUnits: MGDL_UNITS,
     labelBaseline: 4,
@@ -154,13 +156,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolEvents
     .id('poolEvents', chart.poolGroup)
     .dataTestId('events-section', poolEventsId)
-    .labels([{
-      spans: [{
-        text: t('Events'),
-        className: 'label-main'
-      }],
-      baseline: options.labelBaseline
-    }])
     .heightRatio(isDblg2Patient ? 0.5 : 0.4)
     .gutterWeight(1.0)
 
@@ -172,16 +167,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBG
     .id('poolBG', chart.poolGroup)
     .dataTestId('bg-section', poolBGId)
-    .labels([{
-      spans: [{
-        text: t('Glucose'),
-        className: 'label-main'
-      }, {
-        text: ` (${t(chart.options.bgUnits)})`,
-        className: 'label-light'
-      }],
-      baseline: options.labelBaseline
-    }])
     .heightRatio(2.15)
     .gutterWeight(1.0)
 
@@ -193,22 +178,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBolus
     .id('poolBolus', chart.poolGroup)
     .dataTestId('bolus-section', poolBolusId)
-    .labels([{
-      spans: [{
-        text: t('Bolus'),
-        className: 'label-main'
-      }, {
-        text: ` (${t('U')})`,
-        className: 'label-light'
-      }, {
-        text: ` & ${t('Carbohydrates')}`,
-        className: 'label-main'
-      }, {
-        text: ` (${t('g')})`,
-        className: 'label-light'
-      }],
-      baseline: options.labelBaseline
-    }])
     .heightRatio(1.5)
     .gutterWeight(1.5)
 
@@ -220,16 +189,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBasal
     .id('poolBasal', chart.poolGroup)
     .dataTestId('basal-section', poolBasalId)
-    .labels([{
-      spans: [{
-        text: t('Basal Rates'),
-        className: 'label-main'
-      }, {
-        text: ` (${t('U')}/${t('abbrev_duration_hour')})`,
-        className: 'label-light'
-      }],
-      baseline: options.labelBaseline
-    }])
     .heightRatio(1.0)
     .gutterWeight(1.0)
 
@@ -242,31 +201,29 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     poolIob
       .id(poolIobId, chart.poolGroup)
       .dataTestId('iob-section', poolIobId)
-      .labels([{
-        spans: [{
-          text: t('active-insulin'),
-          className: 'label-main'
-        }, {
-          text: ` (${t('U')})`,
-          className: 'label-light'
-        }],
-        baseline: options.labelBaseline
-      }])
       .heightRatio(1.5)
       .gutterWeight(1.5)
   }
 
   chart.arrangePools()
 
-  // Pool legends, drawn once the pools are laid out
+  // Pool labels & legends, drawn once the pools are laid out
   const axisGutter = chart.axisGutter()
-  plotBgLegend(poolBG, axisGutter, { baseline: options.labelBaseline })
-  plotCarbsLegend(poolBolus, axisGutter, { baseline: options.labelBaseline + 18 })
+  const baseline = options.labelBaseline
+  plotEventsLabel(poolEvents, axisGutter, { baseline })
+  plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits })
+  plotBgLegend(poolBG, axisGutter, { baseline })
+  plotBolusLabel(poolBolus, axisGutter, { baseline })
+  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18 })
   plotBolusLegend(poolBolus, axisGutter, {
-    baseline: options.labelBaseline,
+    baseline,
     shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
   })
-  plotBasalLegend(poolBasal, axisGutter, { baseline: options.labelBaseline })
+  plotBasalLabel(poolBasal, axisGutter, { baseline })
+  plotBasalLegend(poolBasal, axisGutter, { baseline })
+  if (poolIob) {
+    plotIobLabel(poolIob, axisGutter, { baseline })
+  }
 
   // ***
   // Initialize chart with data

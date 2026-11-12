@@ -98,6 +98,11 @@ export const CSS_CLASSES = {
   BASAL_LOOP_MODE_BACKGROUND: 'd3-basal-background',
   BASAL_LOOP_MODE_LABEL: 'd3-basal-label',
 
+  // Pool label classes
+  POOL_LABEL: 'd3-pool-label',
+  POOL_LABEL_MAIN: 'label-main',
+  POOL_LABEL_LIGHT: 'label-light',
+
   // Legend classes
   LEGEND_TEXT: 'd3-pool-legend',
   LEGEND_TEXT_SPACE: 'd3-pool-legend-space',

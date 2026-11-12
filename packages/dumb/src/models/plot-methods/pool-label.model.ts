@@ -25,9 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PoolLabelSpan } from './pool-label-span.model'
+import { type BgUnit } from 'medical-domain'
 
-export interface PoolLabel {
-  spans: PoolLabelSpan[]
+export interface PoolLabelOptions {
+  /** Vertical offset of the label text baseline, above the top of the pool */
   baseline: number
+}
+
+export interface BgPoolLabelOptions extends PoolLabelOptions {
+  /** The glucose unit displayed in the label, e.g. "Glucose (mg/dL)" */
+  bgUnits: BgUnit
 }

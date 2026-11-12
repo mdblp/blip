@@ -25,49 +25,157 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PoolLabel } from '../../../../models/plot-methods/pool-label.model'
+import { t } from 'i18next'
+import { type BgUnit } from 'medical-domain'
+import { CSS_CLASSES } from '../../../../models/constants/plot.constants'
+import { type BgPoolLabelOptions, type PoolLabelOptions } from '../../../../models/plot-methods/pool-label.model'
 import { type LabelsLayerPool } from '../../../../models/plot-methods/labels-layer-pool.model'
 
 type LabelPool = Omit<LabelsLayerPool, 'width'>
 
+interface PoolLabelSpan {
+  text: string
+  className: string
+}
+
+const main = (text: string): PoolLabelSpan => ({ text, className: CSS_CLASSES.POOL_LABEL_MAIN })
+
+const light = (text: string): PoolLabelSpan => ({ text, className: CSS_CLASSES.POOL_LABEL_LIGHT })
+
+const getEventsLabelSpans = (): PoolLabelSpan[] => [
+  main(t('Events'))
+]
+
+const getBgLabelSpans = (bgUnits: BgUnit): PoolLabelSpan[] => [
+  main(t('Glucose')),
+  light(` (${t(bgUnits)})`)
+]
+
+const getBolusLabelSpans = (): PoolLabelSpan[] => [
+  main(t('Bolus')),
+  light(` (${t('U')})`),
+  main(` & ${t('Carbohydrates')}`),
+  light(` (${t('g')})`)
+]
+
+const getBasalLabelSpans = (): PoolLabelSpan[] => [
+  main(t('Basal Rates')),
+  light(` (${t('U')}/${t('abbrev_duration_hour')})`)
+]
+
+const getIobLabelSpans = (): PoolLabelSpan[] => [
+  main(t('active-insulin')),
+  light(` (${t('U')})`)
+]
+
 /**
- * Plot the title label(s) of a daily chart pool (e.g. "Glucose (mg/dL)"), in the chart's
- * shared labels layer, left-aligned in the axis gutter at the pool's position.
+ * Draw the title label of a pool in the chart's shared labels layer, left-aligned in the
+ * axis gutter at the pool's position.
  *
- * Unlike the other chart-background plot functions, this isn't data-driven: `labels` is a
- * static, pool-specific configuration set once and never updated, so this renders directly
- * rather than through a D3 enter/update/exit join.
+ * A label is static and drawn once, so this renders directly rather than through a
+ * D3 enter/update/exit join.
+ */
+const drawLabel = (pool: LabelPool, axisGutter: number, baseline: number, spans: PoolLabelSpan[]): void => {
+  const container = pool.parent().select<SVGGElement>('#tidelineLabels')
+  const poolId = pool.id()
+  const labelId = `${poolId}_label`
+  const y = pool.yPosition() - baseline
+
+  const textGroup = container.append('text')
+    .classed(CSS_CLASSES.POOL_LABEL, true)
+    .attr('id', labelId)
+    .attr('data-testid', `${poolId}-chart-label`)
+    .attr('transform', `translate(${axisGutter},${y})`)
+
+  spans.forEach((span, spanIndex) => {
+    textGroup.append('tspan')
+      .attr('class', span.className)
+      .attr('id', `${labelId}_span_${spanIndex}`)
+      .text(span.text)
+  })
+}
+
+/**
+ * Plot the "Events" title label of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
  *
- * @param pool - The pool to draw the label(s) for
- * @param axisGutter - Width of the axis gutter, where labels are drawn
- * @param labels - The label(s) to draw, each as a list of styled spans
+ * @param pool - The pool to draw the label for
+ * @param axisGutter - Width of the axis gutter, where the label is drawn
+ * @param options - The label options
  *
  * @example
  * ```typescript
- * plotPoolLabel(pool, container.axisGutter(), labels)
+ * plotEventsLabel(poolEvents, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotPoolLabel = (pool: LabelPool, axisGutter: number, labels: PoolLabel[]): void => {
-  if (!Array.isArray(labels) || labels.length < 1) {
-    return
-  }
+export const plotEventsLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getEventsLabelSpans())
+}
 
-  const container = pool.parent().select<SVGGElement>('#tidelineLabels')
-  const poolId = pool.id()
-  const y = pool.yPosition()
+/**
+ * Plot the "Glucose (unit)" title label of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the label for
+ * @param axisGutter - Width of the axis gutter, where the label is drawn
+ * @param options - The label options
+ *
+ * @example
+ * ```typescript
+ * plotBgLabel(poolBG, chart.axisGutter(), { baseline: 4, bgUnits: MGDL_UNITS })
+ * ```
+ */
+export const plotBgLabel = (pool: LabelPool, axisGutter: number, { baseline, bgUnits }: BgPoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getBgLabelSpans(bgUnits))
+}
 
-  labels.forEach((label, labelIndex) => {
-    const textGroup = container.append('text')
-      .classed('d3-pool-label', true)
-      .attr('id', `${poolId}_label_${labelIndex}`)
-      .attr('data-testid', `${poolId}-chart-label`)
-      .attr('transform', `translate(${axisGutter},${y - label.baseline})`)
+/**
+ * Plot the "Bolus (U) & Carbohydrates (g)" title label of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the label for
+ * @param axisGutter - Width of the axis gutter, where the label is drawn
+ * @param options - The label options
+ *
+ * @example
+ * ```typescript
+ * plotBolusLabel(poolBolus, chart.axisGutter(), { baseline: 4 })
+ * ```
+ */
+export const plotBolusLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getBolusLabelSpans())
+}
 
-    label.spans.forEach((span, spanIndex) => {
-      textGroup.append('tspan')
-        .attr('class', span.className)
-        .attr('id', `${poolId}_label_${labelIndex}_span_${spanIndex}`)
-        .text(span.text)
-    })
-  })
+/**
+ * Plot the "Basal Rates (U/h)" title label of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the label for
+ * @param axisGutter - Width of the axis gutter, where the label is drawn
+ * @param options - The label options
+ *
+ * @example
+ * ```typescript
+ * plotBasalLabel(poolBasal, chart.axisGutter(), { baseline: 4 })
+ * ```
+ */
+export const plotBasalLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getBasalLabelSpans())
+}
+
+/**
+ * Plot the "Active insulin (U)" title label of a daily chart pool.
+ * The pool must be laid out (`arrangePools()`) before calling this.
+ *
+ * @param pool - The pool to draw the label for
+ * @param axisGutter - Width of the axis gutter, where the label is drawn
+ * @param options - The label options
+ *
+ * @example
+ * ```typescript
+ * plotIobLabel(poolIob, chart.axisGutter(), { baseline: 4 })
+ * ```
+ */
+export const plotIobLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getIobLabelSpans())
 }

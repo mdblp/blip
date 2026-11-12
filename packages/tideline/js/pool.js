@@ -18,8 +18,6 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import { plotPoolLabel } from 'dumb'
-
 /**
  * @typedef {import('./tidelinedata').default} MedicalDataService
  * @typedef {import('./tidelinedata').Datum} Datum
@@ -30,7 +28,6 @@ import { plotPoolLabel } from 'dumb'
  * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { scale: ScaleContinuousNumeric }} AxisScaleFunc
  * @typedef {import('dumb').Guideline} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
- * @typedef {import('dumb').PoolLabel[]} Labels
  */
 
 const guidelinesPlotName = 'guidelines'
@@ -52,8 +49,6 @@ function Pool(container) {
   let dataTestId = ''
   let yPosition = 0
   let gutterWeight = 0
-  /** @type {Labels} Chart name for the user */
-  let labels = null
   let heightRatio = 0
   let hidden = false
   let group = null
@@ -92,7 +87,6 @@ function Pool(container) {
     })
     mainSVG = null
     chipsContainer = null
-    labels = null
     group = null
     xScale = null
     yScale = null
@@ -128,7 +122,6 @@ function Pool(container) {
       }
     })
 
-    this.drawLabel()
   }
 
   this.clear = function() {
@@ -203,11 +196,6 @@ function Pool(container) {
     return container.width() - container.axisGutter()
   }
 
-  // only once methods
-  this.drawLabel = _.once(() => {
-    plotPoolLabel(this, container.axisGutter(), labels)
-  })
-
   // getters & setters
   this.id = function(x, selection) {
     if (!arguments.length) return id
@@ -221,12 +209,6 @@ function Pool(container) {
     dataTestId = x
     const group = mainSVG.select(`#${id}`)
     group.attr('data-testid', dataTestId)
-    return this
-  }
-
-  this.labels = function(/** @type {Labels} */ l) {
-    if (!arguments.length) return labels
-    labels = l
     return this
   }
 
