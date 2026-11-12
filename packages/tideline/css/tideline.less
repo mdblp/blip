@@ -18,15 +18,10 @@
 @import "tideline-breakpoints.less";
 @import "tideline-colors.less";
 // typography
-// @font-family-base shared with blip, but sizes are specific to tideline
-@font-family-base: "Roboto", "Helvetica", "Arial", sans-serif;
-@font-size-xlarge: 16px;
 @font-size-large: 14px;
 @font-size-medium: 12px;
-@font-size-small: 11px;
 
 @font-size-labels: @font-size-large;
-@font-size-axes-linear: @font-size-medium;
 @font-size-axes: @font-size-large;
 @font-size-small: @font-size-medium;
 
@@ -68,9 +63,6 @@ svg {
 .scrollThumb {
   fill: @background;
   cursor: grab;
-}
-#scrollNavInvisibleRect {
-  pointer-events: none;
 }
 
 // pool labels
@@ -180,16 +172,10 @@ svg {
 }
 
 // carbs
-.d3-rect-carbs {
-  fill: @carbs;
-}
 .d3-circle-carbs-legend {
   fill: @carbs;
   stroke: @carbs;
   stroke-width: 1.5;
-}
-.d3-rect-rescuecarbs {
-  fill: @rescuecarbs;
 }
 .d3-circle-rescuecarbs-legend {
   fill: @rescuecarbs;
@@ -254,10 +240,6 @@ svg {
 }
 
 .d3-pa {
-  &.d3-rect-picto {
-    fill: @physicalactivity;
-    opacity: 0.20;
-  }
   &.d3-rect-pa {
     fill: @physicalactivity;
     opacity: 0.25;
@@ -281,9 +263,6 @@ svg {
     opacity: 1;
     stroke: @confidentialtext;
     stroke-width: 1;
-  }
-  &.d3-confidential-text {
-    font-size: @font-size-medium;
   }
 }
 

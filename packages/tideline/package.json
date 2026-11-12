@@ -13,14 +13,10 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "mrproper": "rm -rf dist node_modules",
-    "clean": "rm -rf dist",
-    "test": "LANG=C TZ=UTC NODE_ENV=test karma start",
-    "test-debug": "TZ=UTC NODE_ENV='test' DEBUG_UNIT_TEST='true' karma --single-run=false --log-level debug start --auto-watch"
+    "clean": "rm -rf dist"
   },
   "dependencies": {
-    "crossfilter2": "1.5.4",
     "d3": "^7.9.0",
-    "events": "^3.2.0",
-    "util": "^0.12.3"
+    "events": "^3.2.0"
   }
 }
