@@ -475,41 +475,33 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   /**
-   *
-   * @param {number | null} epochLocation The date to display (center of view)
-   * @param {boolean} toMostRecent true if we want to jump to the most recent date
+   * Scroll the daily view to a specific date
+   * @param {number} epochLocation The date to display (center of view)
    */
-  container.setAtDate = function setAtDate(epochLocation, toMostRecent = false) {
-    if (toMostRecent) {
-      if (epochLocation === null) {
-        // Click on the most recent button
-        // do a smooth
-        const domain = container.getCurrentDomain()
-        const newDateMS = container.initialEndpoints[1].valueOf() - MS_IN_DAY / 2
-        const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
-        container.panToDate(new Date(newDateMS), transitionDelay)
-      } else {
-        nav.pan
-          .translateExtent([0,0])
-          .call(nav.pan.transform, d3.zoomIdentity)
-      }
-    } else if (typeof epochLocation === 'number') {
-      // This may look counter intuitive at first
-      // But it is needed in the following case:
-      // We have scroll far enough in the past
-      // to require a renderPoolsData(), then we switch
-      // to another view (basics, trends whatever)
-      // and come back.
-      // Almost nothing is render.
-      // We need to perform a pre-rendering, to be sure
-      // everything is in place
-      container.renderPoolsData()
+  container.setAtDate = function setAtDate(epochLocation) {
+    // This may look counter intuitive at first
+    // But it is needed in the following case:
+    // We have scroll far enough in the past
+    // to require a renderPoolsData(), then we switch
+    // to another view (basics, trends whatever)
+    // and come back.
+    // Almost nothing is render.
+    // We need to perform a pre-rendering, to be sure
+    // everything is in place
+    container.renderPoolsData()
 
-      const start = new Date(epochLocation - MS_IN_DAY/2)
+    const start = new Date(epochLocation - MS_IN_DAY/2)
 
-      nav.currentTranslation = -container.xScale(start) + axisGutter
-      container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
-    }
+    nav.currentTranslation = -container.xScale(start) + axisGutter
+    container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
+  }
+
+  /** Jump the daily view to the most recent date, with a smooth pan */
+  container.setToMostRecent = function setToMostRecent() {
+    const domain = container.getCurrentDomain()
+    const newDateMS = container.initialEndpoints[1].valueOf() - MS_IN_DAY / 2
+    const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
+    container.panToDate(new Date(newDateMS), transitionDelay)
   }
 
   container.destroy = function() {
