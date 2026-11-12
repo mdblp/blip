@@ -28,8 +28,8 @@
 import * as d3 from 'd3'
 import { type Bolus, BolusSubtype, DatumType, Prescriptor, type Wizard } from 'medical-domain'
 import { plotMeal } from './meal'
-import { type Pool } from '../../../../models/pool.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/plot-methods/pool.model'
+import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
 
 describe('plotMeal', () => {
   const xScale = d3.scaleTime().domain([new Date(2023, 0, 1), new Date(2023, 0, 2)]).range([0, 1000])

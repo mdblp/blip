@@ -28,7 +28,9 @@
 // Models & Enums
 export { type BgPrefs } from './models/blood-glucose.model'
 export { Device } from './models/device.model'
-export { type Guideline } from './models/guideline.model'
+export { type Guideline } from './models/plot-methods/guideline.model'
+export { type BgPoolLabelOptions, type PoolLabelOptions } from './models/plot-methods/pool-label.model'
+export { type BolusPoolLegendOptions, type PoolLegendOptions } from './models/plot-methods/pool-legend.model'
 export { LayoutColumnType } from './models/enums/layout-column-type.enum'
 export { SafetyBasalItem } from './models/safety-basal-item.model'
 
@@ -108,7 +110,19 @@ export { plotNote } from './modules/plot-methods/charts/header/note'
 export { plotNewNoteButton } from './modules/plot-methods/charts/header/new-note-button'
 export { plotPhysicalActivity } from './modules/plot-methods/charts/events/physical-activity'
 export { plotPoolBackground } from './modules/plot-methods/chart-background/pool-background/pool-background'
-export { plotPoolLabel } from './modules/plot-methods/chart-background/labels/labels'
+export {
+  plotBasalLabel,
+  plotBgLabel,
+  plotBolusLabel,
+  plotEventsLabel,
+  plotIobLabel
+} from './modules/plot-methods/chart-background/labels/labels'
+export {
+  plotBasalLegend,
+  plotBgLegend,
+  plotBolusLegend,
+  plotCarbsLegend
+} from './modules/plot-methods/chart-background/legends/legends'
 export { plotRescueCarbs } from './modules/plot-methods/charts/bolus-carbs/rescue-carbs'
 export { plotReservoirChange } from './modules/plot-methods/charts/events/reservoir-change'
 export { plotSmbg } from './modules/plot-methods/charts/glucose/smbg'

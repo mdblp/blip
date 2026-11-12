@@ -67,15 +67,20 @@ export const CSS_CLASSES = {
   BOLUS_CORRECTION: 'd3-bolus-correction',
   BOLUS_PEN: 'd3-bolus-pen',
   BOLUS_EATING_SHORTLY: 'd3-bolus-eating-shortly',
+  BOLUS_UNDELIVERED: 'd3-bolus-undelivered',
 
   // Carb classes
   CARB_GROUP: 'd3-carb-group',
   CARB_CIRCLE: 'd3-circle-carbs',
   CARB_TEXT: 'd3-carbs-text',
+  CARB_LEGEND_CIRCLE: 'd3-circle-carbs-legend',
+  RESCUE_CARB_LEGEND_CIRCLE: 'd3-circle-rescuecarbs-legend',
 
   // Glucose classes
   CBG: 'd3-cbg',
   CBG_CIRCLE: 'd3-circle-cbg',
+  SMBG: 'd3-smbg',
+  SMBG_CIRCLE: 'd3-circle-smbg',
   BG_VERY_LOW: 'd3-bg-very-low',
   BG_LOW: 'd3-bg-low',
   BG_TARGET: 'd3-bg-target',
@@ -85,6 +90,24 @@ export const CSS_CLASSES = {
   BG_LOW_FOCUS: 'd3-bg-low-focus',
   BG_TARGET_FOCUS: 'd3-bg-target-focus',
   BG_HIGH_FOCUS: 'd3-bg-high-focus',
+
+  // Basal classes
+  BASAL: 'd3-basal',
+  BASAL_LOOP_MODE: 'd3-basal-loop-mode',
+  BASAL_LOOP_MODE_OFF: 'd3-basal-loop-mode-off',
+  BASAL_LOOP_MODE_BACKGROUND: 'd3-basal-background',
+  BASAL_LOOP_MODE_LABEL: 'd3-basal-label',
+
+  // Pool label classes
+  POOL_LABEL: 'd3-pool-label',
+  POOL_LABEL_MAIN: 'label-main',
+  POOL_LABEL_LIGHT: 'label-light',
+
+  // Legend classes
+  LEGEND_TEXT: 'd3-pool-legend',
+  LEGEND_TEXT_SPACE: 'd3-pool-legend-space',
+  LEGEND_TEXT_DEXCOM: 'd3-pool-legend-dexcom',
+  BOLUS_LEGEND_RECT: 'd3-rect-bolus-legend',
 
   // Zone classes
   ZONE_RECT: 'd3-rect-zone',

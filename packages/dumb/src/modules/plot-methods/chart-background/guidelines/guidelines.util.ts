@@ -26,7 +26,7 @@
  */
 
 import type { BgClasses } from 'medical-domain'
-import { type Guideline } from '../../../../models/guideline.model'
+import { type Guideline } from '../../../../models/plot-methods/guideline.model'
 
 const BASAL_GUIDELINE_VALUES = [1]
 const BOLUS_GUIDELINE_VALUES = [1, 5]
