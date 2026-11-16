@@ -118,6 +118,7 @@ export {
   plotIobLabel
 } from './modules/plot-methods/chart-background/labels/labels'
 export {
+  LEGEND_ROW_HEIGHT,
   plotBasalLegend,
   plotBgLegend,
   plotBolusLegend,

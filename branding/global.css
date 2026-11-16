@@ -6,6 +6,9 @@ body, :global(#app) {
   min-height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
+  /* The default column is `auto`: it cannot be narrower than the widest content (min-content), so a wide
+  child (e.g. a chart sized on its container) widens the whole page on mobile, and its width never shrinks back */
+  grid-template-columns: minmax(0, 1fr);
 }
 
 img {

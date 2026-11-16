@@ -75,6 +75,11 @@ const RECT_WIDTH_FACTOR = 1.5
 // A y of 0 would put the top of the rects at the text baseline, so shift them up
 const RECT_Y = -(SHAPE_WIDTH / 2 + SHAPE_MARGIN)
 
+/** Vertical space between two rows of a legend wrapped on several rows, and between two legends */
+export const LEGEND_ROW_HEIGHT = 18
+/** Space kept between a legend and the title label sharing its line */
+const LEGEND_LABEL_GAP = 8
+
 const BASAL_BADGE_SIZE = 7
 const BOLUS_RIDE_X = -12
 const BOLUS_RIDE_WIDTH = 25
@@ -183,15 +188,44 @@ const getCarbsLegendItems = (): LegendItem[] => [
 ]
 
 /**
+ * Available width (in px) when a legend is allowed to wrap on several rows. Without it, a legend
+ * stays on one row, whatever its width.
+ */
+interface LegendWrapOptions {
+  /** The first row shares its line with the pool title label: it is shorter */
+  firstRowWidth: number
+  otherRowsWidth: number
+}
+
+const getShapeWidth = (item: LegendItem | undefined): number => {
+  switch (item?.type) {
+    case LegendItemType.Group:
+      return item.width
+    case LegendItemType.Circle:
+    case LegendItemType.Rect:
+      return SHAPE_WIDTH * item.widthFactor
+    default:
+      return 0
+  }
+}
+
+/**
  * Lay out the legend items from right to left, each one shifted by the cumulated width
  * of the items drawn before it.
+ *
+ * With `wrap`, a text and the shape following it are kept together, and move to a new row, drawn
+ * above the previous one, when they do not fit anymore in the row.
+ *
+ * @returns The number of rows of the legend
  */
-const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void => {
-  const circles: d3.Selection<SVGCircleElement, unknown, null, undefined>[] = []
+const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[], wrap?: LegendWrapOptions): number => {
+  const circles: { element: d3.Selection<SVGCircleElement, unknown, null, undefined>, rowY: number }[] = []
   let offset = 0
+  let row = 0
   let textHeight = 0
 
   items.forEach((item, index) => {
+    const rowY = row * LEGEND_ROW_HEIGHT
     switch (item.type) {
       case LegendItemType.Text: {
         const textElement = legendGroup.append('text')
@@ -199,9 +233,15 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
           .text(item.text)
         const { width, height } = (textElement.node() as SVGTextElement).getBoundingClientRect()
         textHeight = Math.max(textHeight, height)
+        const unitWidth = width + item.widthAdjustment + getShapeWidth(items[index + 1])
+        const rowWidth = row === 0 ? wrap?.firstRowWidth : wrap?.otherRowsWidth
+        if (wrap && offset > 0 && offset + unitWidth > rowWidth!) {
+          row++
+          offset = 0
+        }
         if (index > 0) {
           const textOffset = item.isTitle ? offset + SHAPE_SIDE / 2 : offset
-          textElement.attr('transform', `translate(${-textOffset},0)`)
+          textElement.attr('transform', `translate(${-textOffset},${-row * LEGEND_ROW_HEIGHT})`)
         }
         offset += width + item.widthAdjustment
         break
@@ -209,17 +249,20 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
       case LegendItemType.Group: {
         const group = item.draw(legendGroup)
         if (index > 0) {
-          group.attr('transform', `translate(${-offset},0)`)
+          group.attr('transform', `translate(${-offset},${-rowY})`)
         }
         offset += item.width
         break
       }
       case LegendItemType.Circle: {
         const radius = SHAPE_SIDE / 2
-        circles.push(legendGroup.append('circle')
-          .classed(item.className, true)
-          .attr('cx', -(offset + 2 * radius))
-          .attr('r', radius))
+        circles.push({
+          element: legendGroup.append('circle')
+            .classed(item.className, true)
+            .attr('cx', -(offset + 2 * radius))
+            .attr('r', radius),
+          rowY
+        })
         offset += SHAPE_WIDTH * item.widthFactor
         break
       }
@@ -229,7 +272,7 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
           .attr('width', SHAPE_SIDE)
           .attr('height', SHAPE_SIDE)
           .attr('x', -offset - SHAPE_WIDTH)
-          .attr('y', RECT_Y)
+          .attr('y', RECT_Y - rowY)
         offset += SHAPE_WIDTH * item.widthFactor
         break
     }
@@ -237,7 +280,9 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
 
   // Vertically center the circles on the legend texts, once all of them have been measured,
   // so that a circle does not depend on the texts drawn before it
-  circles.forEach((circle) => circle.attr('cy', -textHeight / 4))
+  circles.forEach(({ element, rowY }) => element.attr('cy', -textHeight / 4 - rowY))
+
+  return row + 1
 }
 
 /**
@@ -247,7 +292,14 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
  * Like the pool labels, a legend is static and drawn once, so this renders directly rather
  * than through a D3 enter/update/exit join.
  */
-const drawLegend = (pool: LabelsLayerPool, axisGutter: number, name: LegendName, baseline: number, items: LegendItem[]): void => {
+const drawLegend = (
+  pool: LabelsLayerPool,
+  axisGutter: number,
+  name: LegendName,
+  baseline: number,
+  items: LegendItem[],
+  wrap?: LegendWrapOptions
+): number => {
   const container = pool.parent().select<SVGGElement>('#tidelineLabels')
   const legendId = `${pool.id()}_legend_${name}`
   const x = pool.width() + axisGutter
@@ -258,7 +310,7 @@ const drawLegend = (pool: LabelsLayerPool, axisGutter: number, name: LegendName,
     .attr('data-testid', legendId)
     .attr('transform', `translate(${x},${y})`)
 
-  drawLegendItems(legendGroup, items)
+  return drawLegendItems(legendGroup, items, wrap)
 }
 
 /**
@@ -299,9 +351,15 @@ export const plotBgLegend = (pool: LabelsLayerPool, axisGutter: number, { baseli
  * Plot the bolus types legend of a daily chart pool.
  * The pool must be laid out (`arrangePools()`) before calling this.
  *
+ * The legend shares its line with the pool title label ("Bolus (U) & Carbohydrates (g)"), which must be drawn
+ * before. When the legend does not fit next to it (narrow chart), the legend wraps on rows of the full width of
+ * the pool, and the title label is moved above them, so it stays the first line of the pool header.
+ *
  * @param pool - The pool to draw the legend for
  * @param axisGutter - Width of the axis gutter, on the left of the pool
  * @param options - The legend options
+ * @returns The number of lines the header of the pool takes (legend rows and title label), to place the
+ * legends drawn above it
  *
  * @example
  * ```typescript
@@ -312,8 +370,28 @@ export const plotBolusLegend = (
   pool: LabelsLayerPool,
   axisGutter: number,
   { baseline, shouldDisplayEatingShortly = false }: BolusPoolLegendOptions
-): void => {
-  drawLegend(pool, axisGutter, LegendName.Bolus, baseline, getBolusLegendItems(shouldDisplayEatingShortly))
+): number => {
+  const items = getBolusLegendItems(shouldDisplayEatingShortly)
+  const container = pool.parent().select<SVGGElement>('#tidelineLabels')
+  const label = container.select<SVGTextElement>(`#${pool.id()}_label`)
+  const labelWidth = label.node()?.getBoundingClientRect().width ?? 0
+
+  const rowsNextToLabel = drawLegend(pool, axisGutter, LegendName.Bolus, baseline, items, {
+    firstRowWidth: pool.width() - labelWidth - LEGEND_LABEL_GAP,
+    otherRowsWidth: pool.width()
+  })
+  if (rowsNextToLabel === 1) {
+    return 1
+  }
+
+  // Not enough room next to the title label: draw the legend again on the full width, below the title
+  container.select(`#${pool.id()}_legend_${LegendName.Bolus}`).remove()
+  const rows = drawLegend(pool, axisGutter, LegendName.Bolus, baseline, items, {
+    firstRowWidth: pool.width(),
+    otherRowsWidth: pool.width()
+  })
+  label.attr('transform', `translate(${axisGutter},${pool.yPosition() - baseline - rows * LEGEND_ROW_HEIGHT})`)
+  return rows + 1
 }
 
 /**

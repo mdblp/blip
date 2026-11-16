@@ -38,7 +38,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Console} */
   const log = bows('OneDay')
 
-  _.defaults(options, { trackMetric: _.noop })
+  _.defaults(options, { trackMetric: _.noop, visibleDurationMs: MS_IN_DAY })
+  /** The duration displayed on screen (in ms): 24 hours, or less on a small screen */
+  const visibleDurationMs = options.visibleDurationMs
 
   // basic attributes
   const nav = {
@@ -63,7 +65,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** How much time we delay the update of the date title + viz widgets (in ms) */
   const navigatedDelay = 200
   const minHeight = 400
-  const minWidth = 300
+  const minWidth = 250
   /** Left gutter, wide enough to host the guideline chips */
   const axisGutter = 35
   /** The number of days we pre-render the SVG */
@@ -236,12 +238,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
   container.panForward = function() {
     const domain = container.getCurrentDomain()
-    container.panToDate(new Date(domain.center.valueOf() + MS_IN_DAY))
+    container.panToDate(new Date(domain.center.valueOf() + visibleDurationMs))
   }
 
   container.panBack = function() {
     const domain = container.getCurrentDomain()
-    container.panToDate(new Date(domain.center.valueOf() - MS_IN_DAY))
+    container.panToDate(new Date(domain.center.valueOf() - visibleDurationMs))
   }
 
   /**
@@ -293,7 +295,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const currentDomain = container.xScale.domain()
     const start = currentDomain[0]
     const end = currentDomain[1]
-    const center = new Date(start.valueOf() + MS_IN_DAY / 2)
+    const center = new Date(start.valueOf() + visibleDurationMs / 2)
     return { start, end, center }
   }
 
@@ -455,6 +457,42 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.initialXScale = xScale.copy()
 
     container.mainGroup.call(nav.pan)
+    // d3.zoom sets 'touch-action: none' on its element, which gives every touch gesture to the horizontal
+    // pan and blocks the page scroll on mobile. Let the browser handle vertical swipes (page scroll),
+    // and keep the horizontal ones for navigating between days.
+    // Set on the svg too: the effective touch-action is the intersection of the ancestors' values.
+    container.mainGroup.style('touch-action', 'pan-y')
+    container.mainSVG.style('touch-action', 'pan-y')
+
+    // touch-action alone is not enough: d3-zoom's touchmove handler calls preventDefault() on every
+    // touchmove, which cancels the native scroll. Decide the direction of a one finger gesture first,
+    // and give the vertical ones back to the browser (page scroll) by not calling d3-zoom.
+    const d3TouchMove = container.mainGroup.on('touchmove.zoom')
+    const AXIS_LOCK_THRESHOLD_PX = 8
+    let touchStart = null
+    let touchAxis = null
+    // Capture phase on the svg: d3-zoom stops the propagation of touchstart on the group
+    container.mainSVG.node().addEventListener('touchstart', (event) => {
+      const touch = event.touches[0]
+      touchStart = event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null
+      touchAxis = null
+    }, { capture: true, passive: true })
+    container.mainGroup.on('touchmove.zoom', function(event, ...args) {
+      if (touchStart && event.touches.length === 1) {
+        if (touchAxis === null) {
+          const dx = Math.abs(event.touches[0].clientX - touchStart.x)
+          const dy = Math.abs(event.touches[0].clientY - touchStart.y)
+          if (Math.max(dx, dy) < AXIS_LOCK_THRESHOLD_PX) {
+            return
+          }
+          touchAxis = dy > dx ? 'y' : 'x'
+        }
+        if (touchAxis === 'y') {
+          return
+        }
+      }
+      d3TouchMove.call(this, event, ...args)
+    })
 
     return container
   }
@@ -523,6 +561,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       .attr('width', nav.scrollThumbRadius * 2)
       .attr('height', nav.scrollThumbRadius/3 * 2)
       .classed('scrollThumb', true)
+      // The scrollbar thumb is dragged horizontally: it must keep every touch gesture
+      .style('touch-action', 'none')
       .call(nav.drag)
 
     return container
@@ -540,7 +580,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
         // Click on the most recent button
         // do a smooth
         const domain = container.getCurrentDomain()
-        const newDateMS = container.initialEndpoints[1].valueOf() - MS_IN_DAY / 2
+        const newDateMS = container.initialEndpoints[1].valueOf() - visibleDurationMs / 2
         const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
         container.panToDate(new Date(newDateMS), transitionDelay)
       } else {
@@ -560,7 +600,14 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       // everything is in place
       container.renderPoolsData()
 
-      const start = new Date(epochLocation - MS_IN_DAY/2)
+      let start = new Date(epochLocation - visibleDurationMs / 2)
+      // The default location is the center of the last 24 hours of data. When less than 24 hours are displayed,
+      // its center would not show the latest data: display the end of the data instead.
+      const endOfData = container.initialEndpoints[1].valueOf()
+      const isLatestDayLocation = Math.abs(epochLocation + MS_IN_DAY / 2 - endOfData) < 1000
+      if (visibleDurationMs < MS_IN_DAY && isLatestDayLocation) {
+        start = new Date(endOfData - visibleDurationMs)
+      }
 
       nav.currentTranslation = -container.xScale(start) + axisGutter
       container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
@@ -690,7 +737,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
 
     const minusOne = moment.utc(last).tz(lastTimezone)
-    minusOne.subtract(1, 'day')
+    if (visibleDurationMs === MS_IN_DAY) {
+      // Calendar day: keeps the 23h/25h days of the daylight saving time changes
+      minusOne.subtract(1, 'day')
+    } else {
+      minusOne.subtract(visibleDurationMs, 'milliseconds')
+    }
     // initialEndpoints ~= set the zoom (time axis) value of the displayed chart
     container.initialEndpoints = [minusOne.toDate(), last.toDate()]
     container.endpoints = [first.toDate(), last.toDate()]

@@ -30,6 +30,7 @@ import {
   getSuperpositionEvents,
   getTargetValueAtDate,
   isDBLG2,
+  LEGEND_ROW_HEIGHT,
   plotAlarmEvent,
   plotBasal,
   plotBasalLabel,
@@ -67,7 +68,7 @@ import { EventEmitter } from 'events'
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import { MGDL_UNITS } from 'medical-domain'
+import { MGDL_UNITS, MS_IN_DAY } from 'medical-domain'
 import oneDay from '../../js/oneday'
 
 import Pool from '../../js/pool'
@@ -76,6 +77,29 @@ import Pool from '../../js/pool'
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
  * @typedef {import('../../js/pool').default } Pool
  */
+
+/** Under this width (in px), the chart is too narrow to display 24 hours readably: display fewer hours */
+const SMALL_SCREEN_MAX_WIDTH = 640
+const SMALL_SCREEN_VISIBLE_DURATION_MS = 4 * 60 * 60 * 1000
+/** Space (in px) kept free on the right of the chart on a small screen, so its border is not cut */
+const SMALL_SCREEN_RIGHT_MARGIN = 16
+const SMALL_SCREEN_MIN_CHART_WIDTH = 250
+const DEFAULT_MIN_CHART_WIDTH = 640
+
+/**
+ * The width of the element, limited to the room left between its left edge and the right edge of the screen.
+ * The element can be wider than the screen when a parent overflows it: the chart must stay inside the screen.
+ * @param {HTMLElement} element
+ * @returns {number}
+ */
+function getVisibleWidth(element) {
+  const screenWidth = document.documentElement.clientWidth
+  if (screenWidth === 0) {
+    return element.offsetWidth
+  }
+  const left = element.getBoundingClientRect().left + window.scrollX
+  return Math.min(element.offsetWidth, Math.floor(screenWidth - left))
+}
 
 /**
  * Create a 'One Day' chart object that is a wrapper around Tideline components
@@ -101,7 +125,13 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     throw new Error('Sorry, you must provide a DOM element! :(')
   }
 
-  const width = Math.max(640, parentElement.offsetWidth)
+  // An element without layout (offsetWidth 0: hidden, tests) is handled as a large screen.
+  const isSmallScreen = parentElement.offsetWidth > 0 && parentElement.offsetWidth < SMALL_SCREEN_MAX_WIDTH
+  const width = isSmallScreen
+    ? Math.max(SMALL_SCREEN_MIN_CHART_WIDTH, getVisibleWidth(parentElement) - SMALL_SCREEN_RIGHT_MARGIN)
+    : Math.max(DEFAULT_MIN_CHART_WIDTH, parentElement.offsetWidth)
+  // The chart is re-created on resize, so the window is chosen again when the screen size changes
+  _.defaults(options, { visibleDurationMs: isSmallScreen ? SMALL_SCREEN_VISIBLE_DURATION_MS : MS_IN_DAY })
   const height = Math.max(480, parentElement.offsetHeight)
   const emitter = new EventEmitter()
   // set up bgClasses for current observed patient data
@@ -214,11 +244,12 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits })
   plotBgLegend(poolBG, axisGutter, { baseline })
   plotBolusLabel(poolBolus, axisGutter, { baseline })
-  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18 })
-  plotBolusLegend(poolBolus, axisGutter, {
+  // On a narrow chart, the bolus legend wraps on several rows, below the pool title: the carbs legend is drawn above them
+  const bolusHeaderLines = plotBolusLegend(poolBolus, axisGutter, {
     baseline,
     shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
   })
+  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + LEGEND_ROW_HEIGHT * bolusHeaderLines })
   plotBasalLabel(poolBasal, axisGutter, { baseline })
   plotBasalLegend(poolBasal, axisGutter, { baseline })
   if (poolIob) {

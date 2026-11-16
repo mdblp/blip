@@ -26,7 +26,7 @@
  */
 
 import * as d3 from 'd3'
-import { plotBasalLegend, plotBgLegend, plotBolusLegend, plotCarbsLegend } from './legends'
+import { LEGEND_ROW_HEIGHT, plotBasalLegend, plotBgLegend, plotBolusLegend, plotCarbsLegend } from './legends'
 import { type LabelsLayerPool } from '../../../../models/plot-methods/labels-layer-pool.model'
 
 describe('legends', () => {
@@ -130,6 +130,56 @@ describe('legends', () => {
     const ride = legend.querySelector('g.d3-rect-bolus-legend')!
     expect(ride.getAttribute('transform')).toBe('translate(-47,0)')
     expect(ride.querySelectorAll('path')).toHaveLength(2)
+  })
+
+  it('should keep the bolus legend on one row when it fits next to the pool title label', () => {
+    const rows = plotBolusLegend(setup(), AXIS_GUTTER, { baseline: 4 })
+
+    expect(rows).toBe(1)
+  })
+
+  describe('on a narrow pool', () => {
+    const NARROW_POOL_WIDTH = 250
+
+    const setupNarrow = (labelWidth: number): LabelsLayerPool => {
+      const pool = setup()
+      jest.spyOn(pool, 'width').mockReturnValue(NARROW_POOL_WIDTH)
+      pool.parent().select('#tidelineLabels').append('text').attr('id', 'poolTest_label')
+      jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+        return { width: this.id === 'poolTest_label' ? labelWidth : TEXT_WIDTH, height: TEXT_HEIGHT } as DOMRect
+      })
+      return pool
+    }
+
+    it('should wrap the bolus legend on the full width and move the title label above it', () => {
+      const pool = setupNarrow(90)
+      const label = pool.parent().select('#poolTest_label').attr('transform', 'translate(35,96)')
+      const lines = plotBolusLegend(pool, AXIS_GUTTER, { baseline: 4 })
+
+      const legend = getLegend('bolus')
+      // 250 px per row: 3 entries (70 px each) per row, and the legend title (Bolus) on a third row, with the title label above them
+      const rowsY = Array.from(legend.querySelectorAll('rect')).map((rect) => Number(rect.getAttribute('y')))
+      expect(rowsY[0]).toBe(-10.75)
+      expect(Math.min(...rowsY)).toBe(-10.75 - LEGEND_ROW_HEIGHT)
+      expect(lines).toBe(4)
+      expect(document.querySelectorAll('#poolTest_legend_bolus')).toHaveLength(1)
+      expect(label.attr('transform')).toBe(`translate(35,${100 - 4 - 3 * LEGEND_ROW_HEIGHT})`)
+
+      // Every text stays inside the pool, on the right of its left edge
+      Array.from(legend.querySelectorAll(':scope > text')).forEach((text) => {
+        const translateX = Number(/translate\((-?[\d.]+),/.exec(text.getAttribute('transform') ?? 'translate(0,')![1])
+        expect(-translateX + TEXT_WIDTH).toBeLessThanOrEqual(NARROW_POOL_WIDTH)
+      })
+    })
+
+    it('should not wrap the glucose legend', () => {
+      const pool = setupNarrow(100)
+      plotBgLegend(pool, AXIS_GUTTER, { baseline: 4 })
+
+      getTransforms(getLegend('bg'), 'text').forEach((transform) => {
+        expect(transform === null || transform.endsWith(',0)')).toBe(true)
+      })
+    })
   })
 
   it('should draw the meal without carb counting entry in the bolus legend when asked to', () => {
