@@ -81,6 +81,51 @@ describe('Tooltip hook', () => {
       expect(left).toBe(offsetLeft + 10)
     })
 
+    describe('on a narrow screen', () => {
+      const SCREEN_WIDTH = 400
+      const tooltipWidth = 200
+      const makeDiv = (parentLeft = 0): HTMLDivElement => ({
+        getBoundingClientRect: () => ({ top: 0, left: 0, width: tooltipWidth, height }),
+        offsetParent: { getBoundingClientRect: () => ({ left: parentLeft }) }
+      } as unknown as HTMLDivElement)
+
+      beforeEach(() => {
+        jest.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(SCREEN_WIDTH)
+      })
+
+      afterEach(() => {
+        jest.restoreAllMocks()
+      })
+
+      it('should keep a tooltip inside the screen when it would be cut on the right', () => {
+        const props = { offset: { top: 0 }, position: { top: 0, left: 350 }, side: 'right' } as TooltipHookProps
+        const { result } = renderHook(() => useTooltip(props))
+        const { left } = result.current.calculateOffset(makeDiv())
+        expect(left).toBe(SCREEN_WIDTH - 8 - tooltipWidth)
+      })
+
+      it('should keep a tooltip inside the screen when it would be cut on the left', () => {
+        const props = { offset: { top: 0 }, position: { top: 0, left: 20 }, side: 'left' } as TooltipHookProps
+        const { result } = renderHook(() => useTooltip(props))
+        const { left } = result.current.calculateOffset(makeDiv())
+        expect(left).toBe(8)
+      })
+
+      it('should take the left of the offset parent into account', () => {
+        const props = { offset: { top: 0 }, position: { top: 0, left: 350 }, side: 'right' } as TooltipHookProps
+        const { result } = renderHook(() => useTooltip(props))
+        const { left } = result.current.calculateOffset(makeDiv(50))
+        expect(left).toBe(SCREEN_WIDTH - 8 - tooltipWidth - 50)
+      })
+
+      it('should not move a tooltip that is already inside the screen', () => {
+        const props = { offset: { top: 0 }, position: { top: 0, left: 100 }, side: 'right' } as TooltipHookProps
+        const { result } = renderHook(() => useTooltip(props))
+        const { left } = result.current.calculateOffset(makeDiv())
+        expect(left).toBe(110)
+      })
+    })
+
     it('should return correct values when side is bottom and tailDiv is null', () => {
       const props = { ...defaultProps, side: 'bottom' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))

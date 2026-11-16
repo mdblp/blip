@@ -131,7 +131,8 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     ? Math.max(SMALL_SCREEN_MIN_CHART_WIDTH, getVisibleWidth(parentElement) - SMALL_SCREEN_RIGHT_MARGIN)
     : Math.max(DEFAULT_MIN_CHART_WIDTH, parentElement.offsetWidth)
   // The chart is re-created on resize, so the window is chosen again when the screen size changes
-  _.defaults(options, { visibleDurationMs: isSmallScreen ? SMALL_SCREEN_VISIBLE_DURATION_MS : MS_IN_DAY })
+  // The scroll bar under the chart is not usable by touch on a small screen: the chart is panned by swiping
+  _.defaults(options, { visibleDurationMs: isSmallScreen ? SMALL_SCREEN_VISIBLE_DURATION_MS : MS_IN_DAY, showScrollNav: !isSmallScreen })
   const height = Math.max(480, parentElement.offsetHeight)
   const emitter = new EventEmitter()
   // set up bgClasses for current observed patient data

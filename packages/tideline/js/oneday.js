@@ -29,6 +29,32 @@ import * as d3 from 'd3'
 
 import { MS_IN_DAY } from 'medical-domain'
 
+/** The medical data types displayed on the daily chart (the fills, which cover the whole last day, are not data) */
+const DAILY_DATA_TYPES = [
+  'basal', 'bolus', 'cbg', 'meals', 'smbg', 'messages', 'physicalActivities', 'wizards',
+  'confidentialModes', 'zenModes', 'deviceParametersChanges', 'reservoirChanges', 'warmUps'
+]
+
+/**
+ * @param {MedicalDataService} td
+ * @returns {number | null} The epoch (ms) of the latest datum displayed on the daily chart, null if none
+ */
+function getLastDataEpoch(td) {
+  let last = null
+  DAILY_DATA_TYPES.forEach((type) => {
+    const data = td?.medicalData?.[type]
+    if (Array.isArray(data)) {
+      data.forEach((datum) => {
+        const epoch = Number.isFinite(datum.epochEnd) ? datum.epochEnd : datum.epoch
+        if (Number.isFinite(epoch) && (last === null || epoch > last)) {
+          last = epoch
+        }
+      })
+    }
+  })
+  return last
+}
+
 /**
  * @param {import('events').EventEmitter} emitter
  * @param {OneDayOptions} options
@@ -38,7 +64,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Console} */
   const log = bows('OneDay')
 
-  _.defaults(options, { trackMetric: _.noop, visibleDurationMs: MS_IN_DAY })
+  _.defaults(options, { trackMetric: _.noop, visibleDurationMs: MS_IN_DAY, showScrollNav: true })
   /** The duration displayed on screen (in ms): 24 hours, or less on a small screen */
   const visibleDurationMs = options.visibleDurationMs
 
@@ -565,6 +591,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       .style('touch-action', 'none')
       .call(nav.drag)
 
+    // Hidden, not removed: the code updating the thumb position keeps working
+    container.scrollNav.attr('display', options.showScrollNav ? null : 'none')
+
     return container
   }
 
@@ -601,12 +630,20 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       container.renderPoolsData()
 
       let start = new Date(epochLocation - visibleDurationMs / 2)
-      // The default location is the center of the last 24 hours of data. When less than 24 hours are displayed,
-      // its center would not show the latest data: display the end of the data instead.
+      // The default location is the center of the last day of data. When less than 24 hours are displayed, it
+      // would not show the latest data: center the view on the latest datum instead.
       const endOfData = container.initialEndpoints[1].valueOf()
       const isLatestDayLocation = Math.abs(epochLocation + MS_IN_DAY / 2 - endOfData) < 1000
       if (visibleDurationMs < MS_IN_DAY && isLatestDayLocation) {
-        start = new Date(endOfData - visibleDurationMs)
+        const lastDataEpoch = getLastDataEpoch(container.tidelineData)
+        if (lastDataEpoch !== null) {
+          const centeredStart = lastDataEpoch - visibleDurationMs / 2
+          // Stay inside the data range
+          const latestStart = endOfData - visibleDurationMs
+          start = new Date(Math.max(container.endpoints[0].valueOf(), Math.min(centeredStart, latestStart)))
+        } else {
+          start = new Date(endOfData - visibleDurationMs)
+        }
       }
 
       nav.currentTranslation = -container.xScale(start) + axisGutter

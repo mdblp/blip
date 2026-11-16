@@ -40,6 +40,23 @@ export interface TooltipHookReturn {
 }
 
 const DEFAULT_PADDING = 10
+/** Minimal space (in px) kept between a tooltip and the edges of the screen */
+const VIEWPORT_MARGIN = 8
+
+/**
+ * Keep the tooltip horizontally inside the screen (a tooltip close to the right edge of a narrow screen would
+ * be cut). The left is relative to the offset parent of the tooltip, it is converted to the screen to be compared.
+ */
+const keepInViewport = (mainDiv: HTMLDivElement, left: number, width: number): number => {
+  const viewportWidth = document.documentElement.clientWidth
+  if (viewportWidth === 0 || width + 2 * VIEWPORT_MARGIN > viewportWidth) {
+    return left
+  }
+  const parentLeft = mainDiv.offsetParent?.getBoundingClientRect().left ?? 0
+  const minLeft = VIEWPORT_MARGIN - parentLeft
+  const maxLeft = viewportWidth - VIEWPORT_MARGIN - width - parentLeft
+  return Math.min(Math.max(left, minLeft), maxLeft)
+}
 
 const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
   const {
@@ -107,7 +124,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     const padding = getHorizontalPadding(side)
 
     const top = position.top + computedOffset.top
-    const left = position.left + computedOffset.left + padding
+    const left = keepInViewport(mainDiv, position.left + computedOffset.left + padding, tooltipRect.width)
 
     return { top, left }
   }, [offset, position.left, position.top, side])

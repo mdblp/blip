@@ -31,6 +31,8 @@ import Box from '@mui/material/Box'
 import { Button } from "@mui/material"
 import SettingsIcon from '@mui/icons-material/Settings';
 import Popover from '@mui/material/Popover'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Draggable, { DraggableProps } from 'react-draggable'
 import type { ParameterConfig, ParametersChange } from 'medical-domain'
@@ -48,6 +50,8 @@ interface ShowParametersAtProps {
 
 export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props) => {
   const { t } = useTranslation()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { parameters, history, date } = props
   const [anchorElement, setAnchorElement] = React.useState<Element | null>(null)
   const open = Boolean(anchorElement)
@@ -77,9 +81,12 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
             variant="outlined"
             className={classes.secondaryButton}
             onClick={showParameters}
-            startIcon={<SettingsIcon />}
+            // On mobile, only the icon is displayed
+            aria-label={t('show-parameters-at-title-button')}
+            startIcon={isMobile ? undefined : <SettingsIcon />}
+            sx={isMobile ? { minWidth: 0, paddingX: 1.5 } : undefined}
           >
-            {t('show-parameters-at-title-button')}
+            {isMobile ? <SettingsIcon /> : t('show-parameters-at-title-button')}
           </Button>
 
           {open &&
@@ -100,7 +107,9 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
               >
                 <Box
                   sx={{
-                    minWidth: 400,
+                    minWidth: { xs: 0, sm: 400 },
+                    maxWidth: '100vw',
+                    boxSizing: 'border-box',
                     maxHeight: 700,
                     padding: '24px',
                     borderRadius: '24px',

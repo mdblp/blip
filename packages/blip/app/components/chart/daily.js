@@ -57,6 +57,9 @@ import metrics from 'yourloops/lib/metrics'
  * @typedef { import('../../index').DatePicker } DatePicker
  */
 
+/** Width (in px) a tooltip is supposed to take at most, to choose on which side of a datum it is displayed */
+const TOOLTIP_ESTIMATED_WIDTH = 260
+
 class DailyChart extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
@@ -574,7 +577,13 @@ class Daily extends React.Component {
     const datumEpoch = datum.data.eventsCount ? datum.data.events[0].epoch : datum.data.epoch
     const hoursOffset = (datumEpoch - epochLocation) / TimeService.MS_IN_HOUR
     datum.top = rect.top + rect.height / 2
-    if (hoursOffset > 5) {
+    // The tooltip goes on the side where there is the more room, else it would be out of a narrow screen
+    const spaceOnLeft = rect.left
+    const spaceOnRight = document.documentElement.clientWidth - (rect.left + rect.width)
+    const hasNoRoomOnRight = spaceOnRight < TOOLTIP_ESTIMATED_WIDTH && spaceOnLeft > spaceOnRight
+    const hasNoRoomOnLeft = spaceOnLeft < TOOLTIP_ESTIMATED_WIDTH && spaceOnRight > spaceOnLeft
+    const isOnTheRightOfTheChart = hoursOffset > 5
+    if ((isOnTheRightOfTheChart || hasNoRoomOnRight) && !hasNoRoomOnLeft) {
       datum.side = 'left'
       datum.left = rect.left
     } else {
