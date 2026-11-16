@@ -81,8 +81,6 @@ import Pool from '../../js/pool'
 /** Under this width (in px), the chart is too narrow to display 24 hours readably: display fewer hours */
 const SMALL_SCREEN_MAX_WIDTH = 640
 const SMALL_SCREEN_VISIBLE_DURATION_MS = 4 * 60 * 60 * 1000
-/** Space (in px) kept free on the right of the chart on a small screen, so its border is not cut */
-const SMALL_SCREEN_RIGHT_MARGIN = 16
 const SMALL_SCREEN_MIN_CHART_WIDTH = 250
 const DEFAULT_MIN_CHART_WIDTH = 640
 
@@ -128,7 +126,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // An element without layout (offsetWidth 0: hidden, tests) is handled as a large screen.
   const isSmallScreen = parentElement.offsetWidth > 0 && parentElement.offsetWidth < SMALL_SCREEN_MAX_WIDTH
   const width = isSmallScreen
-    ? Math.max(SMALL_SCREEN_MIN_CHART_WIDTH, getVisibleWidth(parentElement) - SMALL_SCREEN_RIGHT_MARGIN)
+    ? Math.max(SMALL_SCREEN_MIN_CHART_WIDTH, getVisibleWidth(parentElement))
     : Math.max(DEFAULT_MIN_CHART_WIDTH, parentElement.offsetWidth)
   // The chart is re-created on resize, so the window is chosen again when the screen size changes
   // The scroll bar under the chart is not usable by touch on a small screen: the chart is panned by swiping

@@ -216,6 +216,21 @@ a.js-home {
   padding-bottom: 5px;
 }
 
+// Daily view on mobile: no box (border, rounded corners, padding) around the chart, which takes the whole width
+@media (max-width: 599px) {
+  #tidelineMain.daily {
+    .container-box-inner {
+      padding-left: 0;
+    }
+
+    .light-rounded-border {
+      border: none;
+      border-radius: 0;
+      padding: 0;
+    }
+  }
+}
+
 .patient-data-content-daily {
   min-height: @patient-data-chart-daily-height;
   position: relative;
