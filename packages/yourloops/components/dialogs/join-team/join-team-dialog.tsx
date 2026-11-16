@@ -32,7 +32,7 @@ import { type Team } from '../../../lib/team'
 
 export interface JoinTeamDialogProps {
   onClose: () => void
-  onAccept: (teamId: string) => Promise<void>
+  onAccept: (teamId: string, teamCode: string) => Promise<void>
   teamName?: string
 }
 
@@ -47,7 +47,7 @@ export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) =>
 
   const onCompletePolicyConfirmStep = async (): Promise<void> => {
     setIsInProgress(true)
-    await onAccept(team.id)
+    await onAccept(team.id, team.code)
   }
 
   return (

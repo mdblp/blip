@@ -140,7 +140,7 @@ export const checkJoinTeamDialog = async () => {
   await userEvent.click(checkPolicy)
   expect(addCareTeamButton).toBeEnabled()
   await userEvent.click(addCareTeamButton)
-  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(anotherTeam.id, patient1Id)
+  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(anotherTeam.id, patient1Id, anotherTeam.code)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
 }
