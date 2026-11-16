@@ -28,8 +28,8 @@
 import * as d3 from 'd3'
 import { DatumType, type Fill } from 'medical-domain'
 import { plotDailyXAxis } from './daily-x-axis'
-import { type Pool } from '../../../../models/pool.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type Pool } from '../../../../models/plot-methods/pool.model'
+import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
 
 describe('plotDailyXAxis', () => {
   const xScale = d3.scaleUtc().domain([new Date('2023-01-01T00:00:00Z'), new Date('2023-01-02T00:00:00Z')]).range([0, 2400])

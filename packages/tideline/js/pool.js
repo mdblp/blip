@@ -18,10 +18,6 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import { plotPoolLabel } from 'dumb'
-
-import { drawLegend } from './plot/util/legend'
-
 /**
  * @typedef {import('./tidelinedata').default} MedicalDataService
  * @typedef {import('./tidelinedata').Datum} Datum
@@ -32,8 +28,6 @@ import { drawLegend } from './plot/util/legend'
  * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { scale: ScaleContinuousNumeric }} AxisScaleFunc
  * @typedef {import('dumb').Guideline} Guideline
  * @typedef {(axisScale: ReturnType<AxisScaleFunc>) => Guideline[]} GuidelinesFn
- * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
- * @typedef {{ name: string; baseline: number }[]} Legends
  */
 
 const guidelinesPlotName = 'guidelines'
@@ -41,9 +35,8 @@ const guidelinesPlotName = 'guidelines'
 /**
  * A pool: An horizontal graph for the daily view
  * @param {OneDay} container OneDay container
- * @param shouldDisplayEatingShortlyLegend Whether to display the "Meal without carb counting" legend
  */
-function Pool(container, shouldDisplayEatingShortlyLegend = false) {
+function Pool(container) {
   const minHeight = 20
   const maxHeight = 300
 
@@ -56,10 +49,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   let dataTestId = ''
   let yPosition = 0
   let gutterWeight = 0
-  /** @type {Labels} Chart name for the user */
-  let labels = null
-  /** @type {Legends} */
-  let legends = null
   let heightRatio = 0
   let hidden = false
   let group = null
@@ -98,8 +87,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     })
     mainSVG = null
     chipsContainer = null
-    labels = null
-    legends = null
     group = null
     xScale = null
     yScale = null
@@ -135,8 +122,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       }
     })
 
-    this.drawLabel()
-    this.drawLegend()
   }
 
   this.clear = function() {
@@ -211,28 +196,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     return container.width() - container.axisGutter()
   }
 
-  // only once methods
-  this.drawLabel = _.once(() => {
-    plotPoolLabel(this, container.axisGutter(), labels)
-  })
-
-  this.drawLegend = _.once(function() {
-    if (!Array.isArray(legends) || legends.length < 1) {
-      return
-    }
-    legends.forEach((legend) => {
-      const x = (this.width() + container.axisGutter()).toString(10)
-      const y = (yPosition - legend.baseline).toString(10)
-      const legendGroup = mainSVG.select('#tidelineLabels')
-        .append('g')
-        .attr('id', `${id}_legend_${legend.name}`)
-        .attr('data-testid', `${id}_legend_${legend.name}`)
-        .attr('transform', `translate(${x},${y})`)
-
-      drawLegend(legendGroup, legend.name, shouldDisplayEatingShortlyLegend)
-    })
-  })
-
   // getters & setters
   this.id = function(x, selection) {
     if (!arguments.length) return id
@@ -246,18 +209,6 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
     dataTestId = x
     const group = mainSVG.select(`#${id}`)
     group.attr('data-testid', dataTestId)
-    return this
-  }
-
-  this.labels = function(/** @type {Labels} */ l) {
-    if (!arguments.length) return labels
-    labels = l
-    return this
-  }
-
-  this.legends = function(a) {
-    if (!arguments.length) return legends
-    legends = a
     return this
   }
 

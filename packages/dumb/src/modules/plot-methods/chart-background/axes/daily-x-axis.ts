@@ -30,9 +30,9 @@ import moment from 'moment-timezone'
 
 import { type Fill } from 'medical-domain'
 import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type Pool } from '../../../../models/pool.model'
+import { type PlotFunction } from '../../../../models/plot-methods/plot-function.model'
+import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
+import { type Pool } from '../../../../models/plot-methods/pool.model'
 import { getDayFormat, getHourMinuteFormat } from '../../../../utils/datetime/datetime.util'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
