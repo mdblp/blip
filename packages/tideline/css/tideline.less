@@ -21,10 +21,6 @@
 @font-size-large: 14px;
 @font-size-medium: 12px;
 
-@font-size-labels: @font-size-large;
-@font-size-axes: @font-size-large;
-@font-size-small: @font-size-medium;
-
 svg {
   display: block;
   margin: 0 auto;
@@ -40,7 +36,7 @@ svg {
     stroke: @ticks;
   }
   text {
-    font-size: @font-size-axes;
+    font-size: @font-size-large;
     fill: @text;
     &.d3-day-label {
       dominant-baseline: hanging;
@@ -68,7 +64,7 @@ svg {
 // pool labels
 .d3-pool-label {
   tspan {
-    font-size: @font-size-labels;
+    font-size: @font-size-large;
     fill: @text;
     &.label-main {
       font-weight: 600;
@@ -85,7 +81,7 @@ svg {
 
 // pool legends
 .d3-pool-legend {
-  font-size: @font-size-axes;
+  font-size: @font-size-large;
   text-anchor: end;
   fill: var(--stat--default, @text);
 
@@ -187,7 +183,7 @@ svg {
 }
 .d3-zen-text {
   fill: #FFFFFF;
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   dominant-baseline: central;
   text-anchor: middle;
 }
@@ -205,7 +201,7 @@ svg {
 }
 .d3-superposition-text {
   fill: #FFFFFF;
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   font-weight: bold;
   dominant-baseline: central;
   text-anchor: middle;
@@ -213,7 +209,7 @@ svg {
 }
 .d3-confidential-text {
   fill: @confidentialtext;
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   dominant-baseline: central;
   text-anchor: middle;
   text-align: center;
@@ -223,7 +219,7 @@ svg {
 }
 .d3-carbs-text {
   fill: var(--carbs-text, @text);
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   dominant-baseline: central;
   text-anchor: middle;
   font-weight: bold;

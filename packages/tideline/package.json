@@ -13,7 +13,8 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "mrproper": "rm -rf dist node_modules",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "echo \"tideline has no unit tests\""
   },
   "dependencies": {
     "d3": "^7.9.0",
