@@ -29,11 +29,11 @@ import * as d3 from 'd3'
 
 import { type Fill } from 'medical-domain'
 import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
-import { type PlotFunction } from '../../../../models/plot-function.model'
-import { type PlotOptions } from '../../../../models/plot-options.model'
-import { type PlotSelection } from '../../../../models/plot-selection.model'
-import { type Guideline } from '../../../../models/guideline.model'
-import { type Pool } from '../../../../models/pool.model'
+import { type PlotFunction } from '../../../../models/plot-methods/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-methods/plot-options.model'
+import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
+import { type Guideline } from '../../../../models/plot-methods/guideline.model'
+import { type Pool } from '../../../../models/plot-methods/pool.model'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
 /** Space between a chip's right edge and the chart's left edge, in pixels */
