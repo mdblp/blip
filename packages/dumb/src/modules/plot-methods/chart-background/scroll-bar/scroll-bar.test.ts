@@ -26,15 +26,15 @@
  */
 
 import * as d3 from 'd3'
-import { type DailyScrollBarOptions, type DailyScrollBarSelection, plotDailyScrollBar } from './daily-scroll-bar'
+import { type ScrollBarOptions, type ScrollBarSelection, plotScrollBar } from './scroll-bar'
 
-describe('plotDailyScrollBar', () => {
+describe('plotScrollBar', () => {
   // The thumb center moves from 59 (axis gutter + thumb radius) to 1059: 100 px per day
   const start = new Date('2023-01-01T00:00:00.000Z')
   const end = new Date('2023-01-11T00:00:00.000Z')
   const atDay = (day: number): Date => new Date(start.valueOf() + day * 24 * 60 * 60 * 1000)
 
-  const buildOptions = (options: Partial<DailyScrollBarOptions> = {}): DailyScrollBarOptions => ({
+  const buildOptions = (options: Partial<ScrollBarOptions> = {}): ScrollBarOptions => ({
     start,
     end,
     width: 1083,
@@ -46,13 +46,13 @@ describe('plotDailyScrollBar', () => {
     ...options
   })
 
-  const render = (date: Date, options: DailyScrollBarOptions = buildOptions()): {
-    plot: (selection: DailyScrollBarSelection) => void
-    selection: DailyScrollBarSelection
+  const render = (date: Date, options: ScrollBarOptions = buildOptions()): {
+    plot: (selection: ScrollBarSelection) => void
+    selection: ScrollBarSelection
   } => {
     const svg = d3.select(document.body).append('svg')
-    const selection = svg.append('g').datum(date) as unknown as DailyScrollBarSelection
-    const plot = plotDailyScrollBar(options)
+    const selection = svg.append('g').datum(date) as unknown as ScrollBarSelection
+    const plot = plotScrollBar(options)
     plot(selection)
     return { plot, selection }
   }

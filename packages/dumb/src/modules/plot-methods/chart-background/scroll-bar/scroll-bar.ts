@@ -35,7 +35,7 @@ const THUMB_RADIUS = 24
 const GUTTER_ID = `${DailyPlotElement.ScrollBar}_gutter`
 const THUMB_ID = `${DailyPlotElement.ScrollBar}_thumb`
 
-export interface DailyScrollBarOptions {
+export interface ScrollBarOptions {
   /** Oldest date the view can reach: the thumb is at the left end of the bar */
   start: Date
   /** Most recent date the view can reach: the thumb is at the right end of the bar */
@@ -51,7 +51,7 @@ export interface DailyScrollBarOptions {
 }
 
 /** The datum is the left edge of the view */
-export type DailyScrollBarSelection = d3.Selection<SVGGElement, Date, d3.BaseType, unknown>
+export type ScrollBarSelection = d3.Selection<SVGGElement, Date, d3.BaseType, unknown>
 
 /**
  * Plot the scroll bar below the daily chart
@@ -65,11 +65,11 @@ export type DailyScrollBarSelection = d3.Selection<SVGGElement, Date, d3.BaseTyp
  *
  * @example
  * ```typescript
- * const renderScrollBar = plotDailyScrollBar({ start, end, width, axisGutter, canDrag, onDragStart, onDrag, onDragEnd })
+ * const renderScrollBar = plotScrollBar({ start, end, width, axisGutter, canDrag, onDragStart, onDrag, onDragEnd })
  * scrollBarGroup.datum(viewStart).call(renderScrollBar)
  * ```
  */
-export const plotDailyScrollBar = (options: DailyScrollBarOptions): ((selection: DailyScrollBarSelection) => void) => {
+export const plotScrollBar = (options: ScrollBarOptions): ((selection: ScrollBarSelection) => void) => {
   const { start, end, width, axisGutter, canDrag, onDragStart, onDrag, onDragEnd } = options
 
   const scale = d3.scaleUtc()
@@ -94,7 +94,7 @@ export const plotDailyScrollBar = (options: DailyScrollBarOptions): ((selection:
     })
     .on('end', () => onDragEnd())
 
-  return (selection: DailyScrollBarSelection): void => {
+  return (selection: ScrollBarSelection): void => {
     selection.each(function (this: SVGGElement) {
       const container = d3.select(this)
       const date = container.datum() as Date

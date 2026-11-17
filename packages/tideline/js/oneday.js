@@ -28,7 +28,7 @@ import moment from 'moment-timezone'
 import * as d3 from 'd3'
 
 import { MS_IN_DAY } from 'medical-domain'
-import { plotDailyScrollBar } from 'dumb'
+import { plotScrollBar } from 'dumb'
 
 /**
  * @param {import('events').EventEmitter} emitter
@@ -459,7 +459,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.setScrollNav = function() {
     container.scrollNav.attr('transform', `translate(0,${height - (nav.scrollNavHeight * 2 / 5)})`)
 
-    renderScrollBar = plotDailyScrollBar({
+    renderScrollBar = plotScrollBar({
       start: container.endpoints[0],
       end: container.initialEndpoints[0],
       width,
