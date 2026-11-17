@@ -21,9 +21,6 @@ import moment from 'moment-timezone'
 /* js/data/ */
 import './format.test'
 
-/* js/plot/ */
-import './commonbolus.test'
-
 window.d3 = require('d3')
 
 moment.locale('en')

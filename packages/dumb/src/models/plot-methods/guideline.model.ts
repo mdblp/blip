@@ -25,46 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type { BgClasses } from 'medical-domain'
-import i18next from 'i18next'
-
-const t = i18next.t.bind(i18next)
-
-interface Guideline {
+export interface Guideline {
   class: string
   height: number
   chip?: {
     label: string
     class: string
   }
-}
-
-export const getBgGuidelines = (targetValue: string | undefined, chart: { options: { bgClasses: BgClasses }}): Guideline[] => {
-  const defaultGuidelines: Guideline[] = [
-    {
-      class: 'd3-line-bg-threshold-low',
-      height: chart.options.bgClasses.low
-    },
-    {
-      class: 'd3-line-bg-threshold-high',
-      height: chart.options.bgClasses.target
-    }
-  ]
-
-  if (!targetValue) {
-    return defaultGuidelines
-  }
-
-  const targetValueNumber = Number(targetValue)
-
-  defaultGuidelines.push({
-    class: 'd3-line-bg-target',
-    height: targetValueNumber,
-    chip: {
-      label: t('target'),
-      class: 'd3-line-bg-target-chip'
-    }
-  })
-
-  return defaultGuidelines
 }

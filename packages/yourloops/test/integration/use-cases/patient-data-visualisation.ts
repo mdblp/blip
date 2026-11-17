@@ -28,6 +28,8 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
+  checkBolusAndGlucoseChartGuidelinesRecomputedAfterNewDayData,
+  checkBolusChartYAxisForSmallBoluses,
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltipsDblg2,
   checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
@@ -38,6 +40,7 @@ import {
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
   checkEventsSuperposition,
+  checkGlucoseChartYAxis,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
 import {
@@ -58,6 +61,7 @@ import {
   checkNoteCommentEditSuccess,
   checkNoteCreateContent,
   checkNoteCreateFailure,
+  checkNoteCreateFromChartBackground,
   checkNoteCreateSuccess,
   checkNoteEditContent,
   checkNoteEditFailure,
@@ -79,6 +83,7 @@ import {
   checkTotalInsulinStatWidget
 } from '../assert/stats.assert'
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
+import { getTranslation } from '../../utils/i18n'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -192,6 +197,20 @@ export const testTrendsWeekDayFilter = async () => {
   await userEvent.click(screen.getByTestId('day-filter-monday'))
 }
 
+export const testBolusAndGlucoseChartGuidelinesRecomputeOnDayChange = async () => {
+  checkGlucoseChartYAxis()
+  checkBolusChartYAxisForSmallBoluses()
+
+  // Navigate to a day in year 2000, well outside the initially loaded ~2-week window,
+  // so the app has to fetch new data for it
+  await userEvent.click(screen.getByTestId('daily-chart-title-date'))
+  await userEvent.click(screen.getByRole('button', { name: 'Select year' }))
+  await userEvent.click(screen.getByRole('option', { name: '2000' }))
+  await userEvent.click(screen.getByRole('button', { name: getTranslation('button-ok') }))
+
+  await checkBolusAndGlucoseChartGuidelinesRecomputedAfterNewDayData()
+}
+
 export const testNotesFailure = async () => {
   await checkNoteCreateFailure()
   await checkNoteAddCommentFailure()
@@ -201,6 +220,7 @@ export const testNotesFailure = async () => {
 const checkNotes = async (date: Date) => {
   await checkNoteView(date)
   await checkNoteCreateContent()
+  await checkNoteCreateFromChartBackground()
   await checkNoteEditContent()
   await checkNoteCommentEditContent()
   await checkNoteCreateSuccess()

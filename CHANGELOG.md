@@ -3,12 +3,20 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.12.0-beta - 2026-10-23
+### Changed
+- YLP-4155 Update Daily Y axis to use guidelines + chips
+
 ### Engineering
 - YLP-3466 Remove unused env variables
 - YLP-3686 TypeScript version update
+- YLP-3886 Migrate daily chart background to `dumb` package
+- YLP-4154 Migrate daily x axis to `dumb` package
+- YLP-4156 Migrate daily chart labels to `dumb` package
+- YLP-4157 Migrate daily chart legends to `dumb` package
 - YLP-4160 Authenticate to Nexus npm registry with NEXUS_TOKEN
 - YLP-4168 Minor dependencies version update
 - YLP-4189 Disable yourloops maintenance page for allowed IPs
+- YLP-4197 GitHub workflows dependencies update
 
 ## 3.11.0 - 2026-10-19
 ### Added

@@ -64,6 +64,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   const navigatedDelay = 200
   const minHeight = 400
   const minWidth = 300
+  /** Left gutter, wide enough to host the guideline chips */
   const axisGutter = 35
   /** The number of days we pre-render the SVG */
   const renderDaysBuffer = 2
@@ -102,6 +103,11 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       .append('g')
       .attr('id', 'tidelinePools')
       .attr('clip-path', 'url(#mainClipPath)')
+    // Guideline chips are rendered in the axis gutter, i.e. outside of #mainClipPath,
+    // which starts at the gutter's right edge. Drawing them inside a pool would get them
+    // clipped, so they live in their own group, appended after the pools so they paint
+    // on top of the data (SVG paints in DOM order).
+    container.mainGroup.append('g').attr('id', 'tidelineChips')
     container.mainGroup.append('g').attr('id', 'tidelineLabels')
     container.mainGroup.append('g').attr('id', 'tidelineYAxes')
 
@@ -154,14 +160,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
    */
   container.loadingInProgress = false
 
-  container.emitter.on('clickInPool', ({ offsetX /*, datum */ }) => {
-    // Event use when we want to add a message (note)
-    /** @type {Date} */
-    const date = container.xScale.invert(offsetX + axisGutter)
-    const m = moment.utc(date)
-    container.emitter.emit('clickToDate', m)
-  })
-
   /**
    * Throttle the navigated event, we do not need so much updates.
    * It also slow everything too much.
@@ -173,9 +171,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }, navigatedDelay)
 
   /**
-   * Use to:
-   * - Disable the ← → buttons on the nav bar (blip/Header)
-   * - DailyX sticky label transparency
+   * Use to disable the ← → buttons on the nav bar (blip/Header)
    * @param {boolean} value true if in transition
    */
   container.inTransition = (value) => {
@@ -385,12 +381,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
   }
 
-  /**
-   * 'zoomstart' & 'zoomend' events used by dailyX to change the transparency
-   * of the sticky date.
-   */
-  container.onZoomStart = () => container.emitter.emit('zoomstart')
-
   container.onZoom = (event) => {
     const { initialXScale, pools, mainGroup, loadingInProgress } = container
 
@@ -439,14 +429,10 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
 
     container.renderPoolsData()
-
-    // Update the dailyX sticky label
-    container.emitter.emit('dailyx-navigated', domain[0].valueOf())
   }
 
   container.onZoomEnd = () => {
-    const { xScale, emitter } = container
-    emitter.emit('zoomend')
+    const { xScale } = container
     nav.currentTranslation = nav.latestTranslation
 
     container.navString()
@@ -463,7 +449,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const { xScale } = container
 
     nav.pan = d3.zoom().scaleExtent([1, 1])
-    nav.pan.on('start', container.onZoomStart)
     nav.pan.on('zoom', (event) => container.onZoom(event))
     nav.pan.on('end', container.onZoomEnd)
 
@@ -478,7 +463,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.onDragStart = (event) => {
     // silence the click-and-drag listener
     event.sourceEvent.stopPropagation()
-    // Used by dailyX to make the 'stickyLabel' (previous day date) transparent:
     container.inTransition(true)
   }
   container.onDrag = function(event, /** @type {{x: Number, y: number}} */ dragValues) {

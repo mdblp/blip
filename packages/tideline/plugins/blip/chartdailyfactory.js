@@ -18,25 +18,44 @@
 
 import * as d3 from 'd3'
 import {
+  createYAxisBasal,
+  createYAxisBG,
+  createYAxisBolus,
+  createYAxisIob,
+  getBasalGuidelines,
   getBgGuidelines,
+  getBolusGuidelines,
   getDataWithoutSuperpositionEvents,
-  getTargetValueAtDate,
+  getIobGuidelines,
   getSuperpositionEvents,
+  getTargetValueAtDate,
   isDBLG2,
   plotAlarmEvent,
   plotBasal,
+  plotBasalLabel,
+  plotBasalLegend,
+  plotBgLabel,
+  plotBgLegend,
   plotBolus,
+  plotBolusLabel,
+  plotBolusLegend,
+  plotCarbsLegend,
   plotCbg,
   plotConfidentialMode,
+  plotDailyXAxis,
   plotDeviceParameterChange,
   plotEatingShortly,
+  plotEventsLabel,
   plotEventSuperposition,
+  plotGuidelines,
   plotIob,
+  plotIobLabel,
   plotMeal,
+  plotNewNoteButton,
   plotNightMode,
   plotNote,
-  plotNewNoteButton,
   plotPhysicalActivity,
+  plotPoolBackground,
   plotRescueCarbs,
   plotReservoirChange,
   plotSmbg,
@@ -45,14 +64,11 @@ import {
   plotZenMode
 } from 'dumb'
 import { EventEmitter } from 'events'
-import i18next from 'i18next'
 import _ from 'lodash'
+import moment from 'moment-timezone'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
-import axesDailyx from '../../js/plot/util/axes/dailyx'
-import fill from '../../js/plot/util/fill'
-import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
 
 import Pool from '../../js/pool'
 
@@ -70,8 +86,6 @@ import Pool from '../../js/pool'
  * @returns {function}
  */
 function chartDailyFactory(parentElement, tidelineData, epochLocation, options = {}) {
-  const t = i18next.t.bind(i18next)
-
   const defaults = {
     bgUnits: MGDL_UNITS,
     labelBaseline: 4,
@@ -142,13 +156,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolEvents
     .id('poolEvents', chart.poolGroup)
     .dataTestId('events-section', poolEventsId)
-    .labels([{
-      spans: [{
-        text: t('Events'),
-        className: 'label-main'
-      }],
-      baseline: options.labelBaseline
-    }])
     .heightRatio(isDblg2Patient ? 0.5 : 0.4)
     .gutterWeight(1.0)
 
@@ -160,53 +167,17 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBG
     .id('poolBG', chart.poolGroup)
     .dataTestId('bg-section', poolBGId)
-    .labels([{
-      spans: [{
-        text: t('Glucose'),
-        className: 'label-main'
-      }, {
-        text: ` (${t(chart.options.bgUnits)})`,
-        className: 'label-light'
-      }],
-      baseline: options.labelBaseline
-    }])
-    .legends([{ name: 'bg', baseline: options.labelBaseline }])
     .heightRatio(2.15)
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
-  const shouldDisplayEatingShortlyLegend = isDblg2Patient && options.isEatingShortlyEnabled
-
   /** @type {Pool} */
-  const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
+  const poolBolus = new Pool(chart)
   chart.addPool(poolBolus)
   const poolBolusId = 'poolBolus'
   poolBolus
     .id('poolBolus', chart.poolGroup)
     .dataTestId('bolus-section', poolBolusId)
-    .labels([{
-      spans: [{
-        text: t('Bolus'),
-        className: 'label-main'
-      }, {
-        text: ` (${t('U')})`,
-        className: 'label-light'
-      }, {
-        text: ` & ${t('Carbohydrates')}`,
-        className: 'label-main'
-      }, {
-        text: ` (${t('g')})`,
-        className: 'label-light'
-      }],
-      baseline: options.labelBaseline
-    }])
-    .legends([{
-      name: 'carbs',
-      baseline: options.labelBaseline + 18
-    }, {
-      name: 'bolus',
-      baseline: options.labelBaseline
-    }])
     .heightRatio(1.5)
     .gutterWeight(1.5)
 
@@ -218,19 +189,6 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBasal
     .id('poolBasal', chart.poolGroup)
     .dataTestId('basal-section', poolBasalId)
-    .labels([{
-      main: t('Basal Rates'),
-      light: ` (${t('U')}/${t('abbrev_duration_hour')})`,
-      spans: [{
-        text: t('Basal Rates'),
-        className: 'label-main'
-      }, {
-        text: ` (${t('U')}/${t('abbrev_duration_hour')})`,
-        className: 'label-light'
-      }],
-      baseline: options.labelBaseline
-    }])
-    .legends([{ name: 'basal', baseline: options.labelBaseline }])
     .heightRatio(1.0)
     .gutterWeight(1.0)
 
@@ -243,21 +201,29 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     poolIob
       .id(poolIobId, chart.poolGroup)
       .dataTestId('iob-section', poolIobId)
-      .labels([{
-        spans: [{
-          text: t('active-insulin'),
-          className: 'label-main'
-        }, {
-          text: ` (${t('U')})`,
-          className: 'label-light'
-        }],
-        baseline: options.labelBaseline
-      }])
       .heightRatio(1.5)
       .gutterWeight(1.5)
   }
 
   chart.arrangePools()
+
+  // Pool labels & legends, drawn once the pools are laid out
+  const axisGutter = chart.axisGutter()
+  const baseline = options.labelBaseline
+  plotEventsLabel(poolEvents, axisGutter, { baseline })
+  plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits })
+  plotBgLegend(poolBG, axisGutter, { baseline })
+  plotBolusLabel(poolBolus, axisGutter, { baseline })
+  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18 })
+  plotBolusLegend(poolBolus, axisGutter, {
+    baseline,
+    shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
+  })
+  plotBasalLabel(poolBasal, axisGutter, { baseline })
+  plotBasalLegend(poolBasal, axisGutter, { baseline })
+  if (poolIob) {
+    plotIobLabel(poolIob, axisGutter, { baseline })
+  }
 
   // ***
   // Initialize chart with data
@@ -266,13 +232,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // x-axis pools
   // add ticks to top x-axis pool
-  poolXAxis.addPlotType({ type: 'fill' }, axesDailyx(poolXAxis, {
-    class: 'd3-top',
-    emitter,
-    leftEdge: chart.axisGutter(),
-    timePrefs: chart.options.timePrefs,
-    tidelineData
-  }))
+  poolXAxis.addPlotType({ type: 'fill' }, plotDailyXAxis(poolXAxis))
 
   const targetDate = new Date(epochLocation)
   const currentParameters = pumpSettingsPayload?.parameters
@@ -282,18 +242,14 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   let targetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, targetDate) : undefined
 
   // setup axis & main y scale
-  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
+  poolBG.axisScaleFn(createYAxisBG)
+  poolBG.guidelinesFn((axisScale) => getBgGuidelines(targetValue, chart, axisScale.extent))
 
-  const bgFill = fill(poolBG, {
-    endpoints: chart.endpoints,
-    isDaily: true,
-    guidelines: getBgGuidelines(targetValue, chart)
-  })
-  poolBG.addPlotType({ type: 'fill' }, bgFill)
+  poolBG.addPlotType({ type: 'fill' }, plotPoolBackground(poolBG, { tidelineData }))
 
-  poolEvents.addPlotType({ type: 'fill' }, fill(poolEvents, {
-    isDaily: true
-  }))
+  poolBG.addGuidelinesPlotType(plotGuidelines(poolBG))
+
+  poolEvents.addPlotType({ type: 'fill' }, plotPoolBackground(poolEvents, { tidelineData }))
 
   poolEvents.addPlotType({ type: 'zenMode' }, plotZenMode(poolEvents, {
     tidelineData,
@@ -382,11 +338,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // setup axis & main y scale
   poolBolus.axisScaleFn(createYAxisBolus)
-  // add background fill rectangles to bolus pool
-  poolBolus.addPlotType({ type: 'fill' }, fill(poolBolus, {
-    endpoints: chart.endpoints,
-    isDaily: true
-  }))
+  poolBolus.guidelinesFn((axisScale) => getBolusGuidelines(axisScale.maxBolusValue))
+  // add background fill rectangles and guidelines to bolus pool
+  poolBolus.addPlotType({ type: 'fill' }, plotPoolBackground(poolBolus, { tidelineData }))
+  poolBolus.addGuidelinesPlotType(plotGuidelines(poolBolus))
 
   // quick bolus data to wizard pool
   poolBolus.addPlotType({ type: 'bolus' }, plotBolus(poolBolus, {
@@ -422,8 +377,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // setup axis & main y scale
   poolBasal.axisScaleFn(createYAxisBasal)
-  // add background fill rectangles to basal pool
-  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, { endpoints: chart.endpoints, isDaily: true }))
+  poolBasal.guidelinesFn((axisScale) => getBasalGuidelines(axisScale.extent))
+  // add background fill rectangles and guidelines to basal pool
+  poolBasal.addPlotType({ type: 'fill' }, plotPoolBackground(poolBasal, { tidelineData }))
+  poolBasal.addGuidelinesPlotType(plotGuidelines(poolBasal))
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
@@ -444,11 +401,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     // IOB pool
     // setup axis & main y scale
     poolIob?.axisScaleFn(createYAxisIob)
+    poolIob?.guidelinesFn((axisScale) => getIobGuidelines(axisScale.maxIobValue))
 
-    // add background fill rectangles to IOB pool
-    poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
-      isDaily: true
-    }))
+    // add background fill rectangles and guidelines to IOB pool
+    poolIob?.addPlotType({ type: 'fill' }, plotPoolBackground(poolIob, { tidelineData }))
+    poolIob?.addGuidelinesPlotType(plotGuidelines(poolIob))
 
     // add IOB curve to IOB pool
     poolIob?.addPlotType({ type: 'iob' }, plotIob(poolIob, {
@@ -467,15 +424,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // messages pool
   // add background fill rectangles to messages pool
-  poolMessages.addPlotType({ type: 'fill' }, fill(poolMessages, {
-    emitter,
-    isDaily: true,
-    cursor: 'cell'
-  }))
   // clicking the background at a given date starts the note creation flow at that date
-  emitter.on('clickToDate', (date) => {
-    emitter.emit('createNote', date)
-  })
+  poolMessages.addPlotType({ type: 'fill' }, plotPoolBackground(poolMessages, {
+    tidelineData,
+    onBackgroundClick: (date) => emitter.emit('createNote', moment.utc(date))
+  }))
 
   // add note images to messages pool
   poolMessages.addPlotType({ type: 'message' }, plotNote(poolMessages, {
@@ -506,11 +459,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     if (newTargetValue !== targetValue) {
       targetValue = newTargetValue
 
-      // Update the "Target" line height
-      bgFill.updateGuidelines(getBgGuidelines(targetValue, chart))
-      // Update the tick value on the Y axis
-      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
-      poolBG.updateAxes()
+      poolBG.refreshGuidelines()
     }
   })
 
