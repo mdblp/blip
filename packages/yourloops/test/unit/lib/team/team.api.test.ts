@@ -41,6 +41,7 @@ import type { BgUnit } from 'medical-domain'
 describe('TeamApi', () => {
   const userId = 'userId'
   const teamId = 'teamId'
+  const teamCode = '123456789'
   const email = 'email@test.com'
   const role = TeamMemberRole.admin
   const hcpUser = { id: 'fakeUserId', isUserHcp: () => true } as User
@@ -321,10 +322,10 @@ describe('TeamApi', () => {
   describe('joinTeam', () => {
     it('should join a team', async () => {
       jest.spyOn(HttpService, 'post').mockResolvedValueOnce(undefined)
-      await TeamApi.joinTeam(teamId, userId)
+      await TeamApi.joinTeam(teamId, userId, teamCode)
       expect(HttpService.post).toHaveBeenCalledWith({
         url: `/crew/v1/teams/${teamId}/patients`,
-        payload: { userId }
+        payload: { userId, code: teamCode }
       }, [409])
     })
   })

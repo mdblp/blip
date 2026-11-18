@@ -174,8 +174,8 @@ function TeamContextImpl(): TeamContext {
     return await TeamApi.getTeamFromCode(code)
   }
 
-  const joinTeam = async (teamId: string): Promise<void> => {
-    await TeamApi.joinTeam(teamId, user.id)
+  const joinTeam = async (teamId: string, teamCode: string): Promise<void> => {
+    await TeamApi.joinTeam(teamId, user.id, teamCode)
     refresh()
   }
 

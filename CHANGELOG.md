@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3466 Remove unused env variables
 - YLP-3686 TypeScript version update
 - YLP-3886 Migrate daily chart background to `dumb` package
+- YLP-4148 Patients shall not be able to join a team without providing the team code
 - YLP-4154 Migrate daily x axis to `dumb` package
 - YLP-4156 Migrate daily chart labels to `dumb` package
 - YLP-4157 Migrate daily chart legends to `dumb` package

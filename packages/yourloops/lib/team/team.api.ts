@@ -180,11 +180,11 @@ export default class TeamApi {
     }
   }
 
-  static async joinTeam(teamId: string, userId: string): Promise<void> {
+  static async joinTeam(teamId: string, userId: string, teamCode: string): Promise<void> {
     try {
-      await HttpService.post<void, { userId: string }>({
+      await HttpService.post<void, { userId: string, code: string }>({
         url: `/crew/v1/teams/${teamId}/patients`,
-        payload: { userId }
+        payload: { userId, code: teamCode }
       }, [PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE])
     } catch (error) {
       if (error.response.status === PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE) {
