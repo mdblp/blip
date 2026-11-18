@@ -42,6 +42,8 @@ import { t } from '../../../../../lib/language'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   checkBolusChartYAxisForSmallBoluses,
+  checkDailyScrollBarDrag,
+  checkDailyScrollBarFollowsNavigation,
   checkGlucoseChartTarget,
   checkGlucoseChartYAxis,
   checkGlucoseChartYAxisAtDate,
@@ -149,6 +151,26 @@ describe('Daily view for anyone', () => {
   })
 
   describe('with 2 weeks of data', () => {
+    it('should move the scroll bar thumb with the daily navigation', async () => {
+      mockDataAPI(twoWeeksOfCbg)
+
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
+
+      await checkDailyScrollBarFollowsNavigation()
+    })
+
+    it('should navigate to the oldest data when dragging the scroll bar thumb to the left end', async () => {
+      mockDataAPI(twoWeeksOfCbg)
+
+      await act(async () => {
+        renderPage(dailyRoute)
+      })
+
+      await checkDailyScrollBarDrag()
+    })
+
     it('should generate CSV or PDF properly', async () => {
       dayjs.extend(weekArrayPlugin)
       dayjs.extend(weekdaysPlugin)
