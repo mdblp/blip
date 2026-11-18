@@ -17,7 +17,7 @@
 
 /**
  * @typedef {import('./tidelinedata').Datum} Datum
- * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void }} OneDayOptions
+ * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void; visibleDuration?: number; minWidth?: number }} OneDayOptions
  * @typedef {import('./pool').default} Pool
  * @typedef {{poolGroup:SVGGElement;id:(v?:string)=>string|OneDay;options:OneDayOptions;tidelineData:MedicalDataService;pools:Pool[];width:(v?:number)=>number|OneDay;axisGutter:()=>number;data:(td?:MedicalDataService)=>Datum[]|OneDay;setAxes:()=>OneDay;filterDataForRender:(d:Datum[])=>Datum[]}} OneDay
  */
@@ -38,7 +38,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Console} */
   const log = bows('OneDay')
 
-  _.defaults(options, { trackMetric: _.noop })
+  _.defaults(options, { trackMetric: _.noop, visibleDuration: MS_IN_DAY, minWidth: 300 })
 
   // basic attributes
   const nav = {
@@ -63,7 +63,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** How much time we delay the update of the date title + viz widgets (in ms) */
   const navigatedDelay = 200
   const minHeight = 400
-  const minWidth = 300
+  const minWidth = options.minWidth
+  /** The duration (in ms) displayed in the chart */
+  const visibleDuration = options.visibleDuration
   /** Left gutter, wide enough to host the guideline chips */
   const axisGutter = 35
   /** The number of days we pre-render the SVG */
@@ -236,12 +238,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
   container.panForward = function() {
     const domain = container.getCurrentDomain()
-    container.panToDate(new Date(domain.center.valueOf() + MS_IN_DAY))
+    container.panToDate(new Date(domain.center.valueOf() + visibleDuration))
   }
 
   container.panBack = function() {
     const domain = container.getCurrentDomain()
-    container.panToDate(new Date(domain.center.valueOf() - MS_IN_DAY))
+    container.panToDate(new Date(domain.center.valueOf() - visibleDuration))
   }
 
   /**
@@ -293,7 +295,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const currentDomain = container.xScale.domain()
     const start = currentDomain[0]
     const end = currentDomain[1]
-    const center = new Date(start.valueOf() + MS_IN_DAY / 2)
+    const center = new Date(start.valueOf() + visibleDuration / 2)
     return { start, end, center }
   }
 
@@ -540,7 +542,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
         // Click on the most recent button
         // do a smooth
         const domain = container.getCurrentDomain()
-        const newDateMS = container.initialEndpoints[1].valueOf() - MS_IN_DAY / 2
+        const newDateMS = container.initialEndpoints[1].valueOf() - visibleDuration / 2
         const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
         container.panToDate(new Date(newDateMS), transitionDelay)
       } else {
@@ -560,7 +562,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       // everything is in place
       container.renderPoolsData()
 
-      const start = new Date(epochLocation - MS_IN_DAY/2)
+      const start = new Date(epochLocation - visibleDuration / 2)
 
       nav.currentTranslation = -container.xScale(start) + axisGutter
       container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
@@ -689,10 +691,15 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       log.error('The endpoints of your data are less than 24 hours apart.')
     }
 
-    const minusOne = moment.utc(last).tz(lastTimezone)
-    minusOne.subtract(1, 'day')
+    const visibleStart = moment.utc(last).tz(lastTimezone)
+    if (visibleDuration === MS_IN_DAY) {
+      // Keep the calendar day subtraction (DST aware)
+      visibleStart.subtract(1, 'day')
+    } else {
+      visibleStart.subtract(visibleDuration, 'milliseconds')
+    }
     // initialEndpoints ~= set the zoom (time axis) value of the displayed chart
-    container.initialEndpoints = [minusOne.toDate(), last.toDate()]
+    container.initialEndpoints = [visibleStart.toDate(), last.toDate()]
     container.endpoints = [first.toDate(), last.toDate()]
 
     return container

@@ -248,6 +248,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           onShowNoteThread={showViewNoteDialog}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
                           isEatingShortlyEnabled={isEatingShortlyEnabled}
+                          isMobile={isMobile}
                           ref={dailyChartRef}
                         />
                         {createMessageDatetime &&
