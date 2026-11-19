@@ -342,6 +342,54 @@ const checkDailyViewXAxis = () => {
   expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm12:00 amMonday, August 83:00 am6:00 am9:00 am12:00 pm3:00 pm6:00 pm9:00 pm')
 }
 
+const getScrollBarThumb = (): HTMLElement => screen.getByTestId('scrollBar_thumb')
+
+const getScrollBarThumbX = (): number => Number(getScrollBarThumb().getAttribute('x'))
+
+const checkDailyScrollBar = () => {
+  const scrollBar = document.getElementById('tidelineScrollNav') as HTMLElement
+  expect(within(scrollBar).getByTestId('scrollBar_gutter')).toBeInTheDocument()
+  expect(within(scrollBar).getByTestId('scrollBar_thumb')).toBeInTheDocument()
+}
+
+// The navigation buttons are disabled while the view pans
+const clickDailyNavButton = async (testId: string) => {
+  const button = screen.getByTestId(testId)
+  await waitFor(() => expect(button).toBeEnabled())
+  await userEvent.click(button)
+}
+
+export const checkDailyScrollBarFollowsNavigation = async () => {
+  checkDailyScrollBar()
+  const mostRecentX = getScrollBarThumbX()
+
+  await clickDailyNavButton('button-nav-back')
+  await waitFor(() => expect(getScrollBarThumbX()).toBeLessThan(mostRecentX))
+  await waitFor(() => expect(screen.getByTestId('button-nav-back')).toBeEnabled())
+  const previousDayX = getScrollBarThumbX()
+
+  await clickDailyNavButton('button-nav-back')
+  await waitFor(() => expect(getScrollBarThumbX()).toBeLessThan(previousDayX))
+
+  await clickDailyNavButton('button-nav-mostrecent')
+  // More than a day away, the pan lasts 1 s
+  await waitFor(() => expect(getScrollBarThumbX()).toBe(mostRecentX), { timeout: 3000 })
+}
+
+export const checkDailyScrollBarDrag = async () => {
+  const title = screen.getByTestId('daily-chart-title-date')
+  expect(title).toHaveTextContent('Wed, Jan 15, 2020')
+
+  // Drag the thumb past the left end of the bar: it stops on the oldest data
+  fireEvent.mouseDown(getScrollBarThumb(), { view: window, clientX: 600, clientY: 0 })
+  fireEvent.mouseMove(window, { view: window, clientX: 0, clientY: 0 })
+  fireEvent.mouseUp(window, { view: window, clientX: 0, clientY: 0 })
+
+  // The left end of the bar is the axis gutter
+  await waitFor(() => expect(getScrollBarThumbX()).toBe(35))
+  await waitFor(() => expect(title).toHaveTextContent('Wed, Jan 1, 2020'))
+}
+
 export const checkDailyViewChartsDblg1 = () => {
   checkDailyViewChartsCommon()
   checkDailyViewXAxis()

@@ -12,6 +12,15 @@ YourLoops is a medical application for diabetes management developed by Diabeloo
 
 ## Code Style & Conventions
 
+## Code Rules
+- Simplest working solution. No over-engineering.
+- No abstractions for single-use operations.
+- No speculative features or "you might also want..."
+- Read the file before modifying it. Never edit blind.
+- No docstrings or type annotations on code not being changed.
+- No error handling for scenarios that cannot happen.
+- Three similar lines is better than a premature abstraction.
+
 ### TypeScript/React
 - Use functional components with TypeScript
 - Follow React hooks patterns

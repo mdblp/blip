@@ -109,5 +109,5 @@ export interface TeamContext {
   /**
    * Join a specific team.
    */
-  joinTeam: (teamId: string) => Promise<void>
+  joinTeam: (teamId: string, teamCode: string) => Promise<void>
 }
