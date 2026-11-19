@@ -29,6 +29,7 @@ import { BoundFunctions, fireEvent, queries, screen, waitFor, within } from '@te
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import { getTranslation } from '../../utils/i18n'
+import { type Router } from '../models/router.model'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
@@ -340,6 +341,60 @@ const checkDailyViewXAxis = () => {
   // Hour labels of each time slot, and the day label at midnight (Europe/Paris)
   const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
   expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm12:00 amMonday, August 83:00 am6:00 am9:00 am12:00 pm3:00 pm6:00 pm9:00 pm')
+}
+
+export const checkDailyViewChartMobileLayout = async () => {
+  const chartContainer = await screen.findByTestId('tidelineContainer', {}, { timeout: 3000 })
+  // The chart may first be rendered before the mobile screen is detected, then re-created
+  await waitFor(() => {
+    expect(chartContainer.querySelector('svg')).toHaveClass('d3-daily-mobile')
+  }, { timeout: 3000 })
+
+  // The chart takes the whole screen width, without the surrounding card
+  expect(chartContainer.closest('.patient-data-content-inner')).toHaveClass('patient-data-content-inner-mobile')
+  expect(screen.getByTestId('daily-header')).toHaveStyle({ justifyContent: 'center' })
+
+  // No scroll bar below the chart
+  expect(document.getElementById('tidelineScrollNav')).toBeNull()
+  expect(document.querySelector('.scrollThumb')).toBeNull()
+}
+
+export const checkDailyViewXAxisMobile = () => {
+  // One tick every hour, and the day label at midnight (Europe/Paris)
+  const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
+  expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm12:00 amMonday, August 81:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm')
+}
+
+export const checkDailyViewAtMostRecentData = () => {
+  // The chart ends at the hour following the most recent datum: we can't go further
+  expect(screen.getByTestId('button-nav-next')).toBeDisabled()
+  expect(screen.getByTestId('button-nav-mostrecent')).toBeDisabled()
+}
+
+/**
+ * @param router The application router, holding the displayed date in the URL
+ * @param expectedDate The date (ISO string) at the center of the chart
+ */
+const checkDailyViewCenterDate = async (router: Router, expectedDate: string) => {
+  // Wait for the end of the chart transition
+  await waitFor(() => {
+    expect(new URLSearchParams(router.state.location.search).get('date')).toBe(expectedDate)
+  }, { timeout: 3000 })
+}
+
+export const checkDailyViewMobileNavigation = async (router: Router) => {
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+
+  // The 4 hours before the most recent ones (centered on 17:00 UTC)
+  await checkDailyViewCenterDate(router, '2022-08-08T13:00:00.000Z')
+  expect(screen.getByTestId('button-nav-next')).toBeEnabled()
+  expect(screen.getByTestId('button-nav-mostrecent')).toBeEnabled()
+
+  await userEvent.click(screen.getByTestId('button-nav-mostrecent'))
+
+  // 4 hours ending at the hour following the most recent datum (18:40 UTC)
+  await checkDailyViewCenterDate(router, '2022-08-08T17:00:00.000Z')
+  checkDailyViewAtMostRecentData()
 }
 
 export const checkDailyViewChartsDblg1 = () => {

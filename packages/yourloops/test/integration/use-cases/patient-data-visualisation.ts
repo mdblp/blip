@@ -27,6 +27,7 @@
 
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getTranslation } from '../../utils/i18n'
 import {
   checkBolusAndGlucoseChartGuidelinesRecomputedAfterNewDayData,
   checkBolusChartYAxisForSmallBoluses,
@@ -37,8 +38,12 @@ import {
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
   checkDailyTimeInRangeStatsWidgetsMmolL,
+  checkDailyViewAtMostRecentData,
+  checkDailyViewChartMobileLayout,
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
+  checkDailyViewMobileNavigation,
+  checkDailyViewXAxisMobile,
   checkEventsSuperposition,
   checkGlucoseChartYAxis,
   checkTotalCarbsStatContent
@@ -76,6 +81,7 @@ import {
   checkPatientStatisticsTrendsViewNoMonday,
   checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
+import { checkShowParametersButtonIsNotDisplayed } from '../assert/show-parameters.assert'
 import {
   checkAverageGlucoseStatWidget,
   checkStandardDeviationStatWidget,
@@ -83,7 +89,7 @@ import {
   checkTotalInsulinStatWidget
 } from '../assert/stats.assert'
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
-import { getTranslation } from '../../utils/i18n'
+import { type Router } from '../models/router.model'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -157,6 +163,14 @@ export const testDailyViewTooltipsAndValuesMgdl = async (nowDate: Date) => {
 
 export const testDailyViewChartsDblg1 = () => {
   checkDailyViewChartsDblg1()
+}
+
+export const testDailyViewChartMobile = async (router: Router) => {
+  await checkDailyViewChartMobileLayout()
+  checkShowParametersButtonIsNotDisplayed()
+  checkDailyViewXAxisMobile()
+  checkDailyViewAtMostRecentData()
+  await checkDailyViewMobileNavigation(router)
 }
 
 export const testDailyViewChartsDblg2 = () => {

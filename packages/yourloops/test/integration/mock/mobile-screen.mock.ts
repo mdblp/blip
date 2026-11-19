@@ -13,4 +13,6 @@ export const mockMobileScreen = () => {
     removeEventListener: () => {},
     dispatchEvent: () => true
   })
+  // jsdom does not compute the layout: give the elements the screen width (e.g. the daily chart)
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(DEFAULT_MOBILE_WIDTH_PX)
 }
