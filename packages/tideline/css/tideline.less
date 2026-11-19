@@ -15,7 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-@import "tideline-breakpoints.less";
 @import "tideline-colors.less";
 // typography
 // @font-family-base shared with blip, but sizes are specific to tideline
@@ -52,8 +51,9 @@ svg {
       fill: var(--stat--default, @text);
     }
 
-    @media (max-width: @screen-sm-max) {
-      font-size: 10px;
+    // On mobile, same size as the guideline chips (see .d3-line-guide-chip-label)
+    .d3-daily-mobile & {
+      font-size: @font-size-medium;
     }
   }
 }
@@ -85,8 +85,8 @@ svg {
       font-weight: 300;
     }
 
-    @media (max-width: @screen-sm-max) {
-      font-size: 10px;
+    .d3-daily-mobile & {
+      font-size: @font-size-large;
     }
   }
 }
@@ -97,8 +97,8 @@ svg {
   text-anchor: end;
   fill: var(--stat--default, @text);
 
-  @media (max-width: @screen-sm-max) {
-    font-size: 10px;
+  .d3-daily-mobile & {
+    font-size: @font-size-small;
   }
   &.d3-pool-legend-space {
     white-space: pre;

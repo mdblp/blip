@@ -132,6 +132,8 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   chart.id(parentElement.id).width(width).height(height)
   d3.select(parentElement).call(chart)
+  // Mobile specific styles (see tideline.less)
+  chart.mainSVG.classed('d3-daily-mobile', isMobile)
 
   const medicalData = tidelineData.medicalData
 
