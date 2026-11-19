@@ -39,7 +39,6 @@ import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time
 const MGDL_PER_MMOLL = 18.01577
 
 /**
- * extracted from packages/tideline/js/data/util/format.js
  * convertBG is a common util function to convert bg values
  * to/from "mg/dL" and "mmol/L"
  * @param {number} value The value to convert

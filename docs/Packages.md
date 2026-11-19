@@ -247,7 +247,6 @@ graph LR
 #### Dependencies
 
 - [D3.js](https://d3js.org/) - Data visualization library
-- [Crossfilter](https://crossfilter.github.io/crossfilter/) - Fast multidimensional filtering
 - [Moment.js](https://momentjs.com/) - Date/time manipulation
 - [Lodash](https://lodash.com/) - Utility library
 

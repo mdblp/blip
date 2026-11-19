@@ -18,17 +18,8 @@
 @import "tideline-breakpoints.less";
 @import "tideline-colors.less";
 // typography
-// @font-family-base shared with blip, but sizes are specific to tideline
-@font-family-base: "Roboto", "Helvetica", "Arial", sans-serif;
-@font-size-xlarge: 16px;
 @font-size-large: 14px;
 @font-size-medium: 12px;
-@font-size-small: 11px;
-
-@font-size-labels: @font-size-large;
-@font-size-axes-linear: @font-size-medium;
-@font-size-axes: @font-size-large;
-@font-size-small: @font-size-medium;
 
 svg {
   display: block;
@@ -45,7 +36,7 @@ svg {
     stroke: @ticks;
   }
   text {
-    font-size: @font-size-axes;
+    font-size: @font-size-large;
     fill: @text;
     &.d3-day-label {
       dominant-baseline: hanging;
@@ -73,7 +64,7 @@ svg {
 // pool labels
 .d3-pool-label {
   tspan {
-    font-size: @font-size-labels;
+    font-size: @font-size-large;
     fill: @text;
     &.label-main {
       font-weight: 600;
@@ -90,7 +81,7 @@ svg {
 
 // pool legends
 .d3-pool-legend {
-  font-size: @font-size-axes;
+  font-size: @font-size-large;
   text-anchor: end;
   fill: var(--stat--default, @text);
 
@@ -177,16 +168,10 @@ svg {
 }
 
 // carbs
-.d3-rect-carbs {
-  fill: @carbs;
-}
 .d3-circle-carbs-legend {
   fill: @carbs;
   stroke: @carbs;
   stroke-width: 1.5;
-}
-.d3-rect-rescuecarbs {
-  fill: @rescuecarbs;
 }
 .d3-circle-rescuecarbs-legend {
   fill: @rescuecarbs;
@@ -198,7 +183,7 @@ svg {
 }
 .d3-zen-text {
   fill: #FFFFFF;
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   dominant-baseline: central;
   text-anchor: middle;
 }
@@ -216,7 +201,7 @@ svg {
 }
 .d3-superposition-text {
   fill: #FFFFFF;
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   font-weight: bold;
   dominant-baseline: central;
   text-anchor: middle;
@@ -224,7 +209,7 @@ svg {
 }
 .d3-confidential-text {
   fill: @confidentialtext;
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   dominant-baseline: central;
   text-anchor: middle;
   text-align: center;
@@ -234,7 +219,7 @@ svg {
 }
 .d3-carbs-text {
   fill: var(--carbs-text, @text);
-  font-size: @font-size-small;
+  font-size: @font-size-medium;
   dominant-baseline: central;
   text-anchor: middle;
   font-weight: bold;
@@ -251,10 +236,6 @@ svg {
 }
 
 .d3-pa {
-  &.d3-rect-picto {
-    fill: @physicalactivity;
-    opacity: 0.20;
-  }
   &.d3-rect-pa {
     fill: @physicalactivity;
     opacity: 0.25;
@@ -278,9 +259,6 @@ svg {
     opacity: 1;
     stroke: @confidentialtext;
     stroke-width: 1;
-  }
-  &.d3-confidential-text {
-    font-size: @font-size-medium;
   }
 }
 
