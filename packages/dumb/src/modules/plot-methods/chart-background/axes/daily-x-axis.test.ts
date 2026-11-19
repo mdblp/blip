@@ -185,6 +185,8 @@ describe('splitFillsByHour', () => {
     ])
     expect(hourlyFills.map((fill) => fill.startsAtMidnight)).toEqual([true, false, false, true, false, false])
     expect(hourlyFills[1].epoch).toBe(new Date('2023-01-01T01:00:00.000Z').valueOf())
+    expect(hourlyFills[0].epochEnd).toBe(new Date('2023-01-01T01:00:00.000Z').valueOf())
+    expect(hourlyFills[2].epochEnd).toBe(new Date('2023-01-01T03:00:00.000Z').valueOf())
   })
 
   it('should follow the real duration of a time slot affected by a daylight saving time change', () => {

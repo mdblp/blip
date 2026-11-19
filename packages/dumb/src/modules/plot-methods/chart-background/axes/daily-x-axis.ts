@@ -58,15 +58,16 @@ interface DailyXAxisOptions {
  */
 export const splitFillsByHour = (fills: Fill[]): Fill[] => {
   return fills.flatMap((fill: Fill): Fill[] => {
-    const hourlyFills = [fill]
     if (typeof fill.epochEnd !== 'number') {
-      return hourlyFills
+      return [fill]
     }
+    const hourlyFills = [{ ...fill, epochEnd: Math.min(fill.epoch + TimeService.MS_IN_HOUR, fill.epochEnd) }]
     for (let epoch = fill.epoch + TimeService.MS_IN_HOUR; epoch < fill.epochEnd; epoch += TimeService.MS_IN_HOUR) {
       hourlyFills.push({
         ...fill,
         id: `${fill.id}-h${hourlyFills.length}`,
         epoch,
+        epochEnd: Math.min(epoch + TimeService.MS_IN_HOUR, fill.epochEnd),
         startsAtMidnight: false
       })
     }

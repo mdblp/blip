@@ -43,6 +43,7 @@ import {
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
   checkDailyViewMobileNavigation,
+  checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
   checkEventsSuperposition,
   checkGlucoseChartYAxis,
@@ -169,6 +170,7 @@ export const testDailyViewChartMobile = async (router: Router) => {
   await checkDailyViewChartMobileLayout()
   checkShowParametersButtonIsNotDisplayed()
   checkDailyViewXAxisMobile()
+  checkDailyViewPoolBackgroundMobile()
   checkDailyViewAtMostRecentData()
   await checkDailyViewMobileNavigation(router)
 }

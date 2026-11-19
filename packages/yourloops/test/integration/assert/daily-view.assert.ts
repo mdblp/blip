@@ -365,6 +365,15 @@ export const checkDailyViewXAxisMobile = () => {
   expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm12:00 amMonday, August 81:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm')
 }
 
+export const checkDailyViewPoolBackgroundMobile = () => {
+  // A full vertical line below each hourly tick
+  const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
+  timeSlots.forEach((timeSlot) => {
+    const poolBackgroundSlotId = timeSlot.dataset.testid.replace('poolXAxis_dailyXAxis_', 'poolBG_poolBackground_')
+    expect(screen.getByTestId(poolBackgroundSlotId).querySelectorAll('rect.d3-fill-hour')).toHaveLength(1)
+  })
+}
+
 export const checkDailyViewAtMostRecentData = () => {
   // The chart ends at the hour following the most recent datum: we can't go further
   expect(screen.getByTestId('button-nav-next')).toBeDisabled()
