@@ -172,8 +172,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient])
 
-  const isEatingShortlyEnabled = ConfigService.getIsEatingShortlyEnabled()
-
   const pumpSettings = medicalData?.medicalData?.pumpSettings?.at(-1)
 
   return (
@@ -247,7 +245,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           onCreateMessage={showCreateNoteDialog}
                           onShowNoteThread={showViewNoteDialog}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
-                          isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
                         />
                         {createMessageDatetime &&

@@ -93,8 +93,7 @@ class DailyChart extends React.Component {
     onTooltipOut: PropTypes.func.isRequired,
     onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired,
-    isEatingShortlyEnabled: PropTypes.bool.isRequired
+    trackMetric: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -124,8 +123,7 @@ class DailyChart extends React.Component {
       'onZenModeHover',
       'onTooltipOut',
       'onEventSuperpositionClick',
-      'trackMetric',
-      'isEatingShortlyEnabled'
+      'trackMetric'
     ]
 
     this.log = bows('DailyChart')
@@ -299,8 +297,7 @@ class Daily extends React.Component {
     onCreateMessage: PropTypes.func.isRequired,
     onShowNoteThread: PropTypes.func.isRequired,
     // navigation handlers
-    onDatetimeLocationChange: PropTypes.func.isRequired,
-    isEatingShortlyEnabled: PropTypes.bool.isRequired
+    onDatetimeLocationChange: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -452,7 +449,6 @@ class Daily extends React.Component {
                   onEventSuperpositionClick={this.handleEventSuperpositionClick}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
-                  isEatingShortlyEnabled={this.props.isEatingShortlyEnabled}
                   ref={this.chartRef}
                 />
               </div>

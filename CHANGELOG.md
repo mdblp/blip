@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.12.0-beta - 2026-10-23
 ### Changed
 - YLP-4155 Update Daily Y axis to use guidelines + chips
+- YLP-4207 ESM is configured by default
 
 ### Engineering
 - YLP-3466 Remove unused env variables

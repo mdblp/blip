@@ -217,7 +217,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18 })
   plotBolusLegend(poolBolus, axisGutter, {
     baseline,
-    shouldDisplayEatingShortly: isDblg2Patient && options.isEatingShortlyEnabled
+    shouldDisplayEatingShortly: isDblg2Patient
   })
   plotBasalLabel(poolBasal, axisGutter, { baseline })
   plotBasalLegend(poolBasal, axisGutter, { baseline })

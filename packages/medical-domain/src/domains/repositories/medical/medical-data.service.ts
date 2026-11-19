@@ -73,8 +73,6 @@ import {
   PumpSettingsParameter
 } from '../../models/medical/datum/pump-settings.model'
 import { Datum } from '../../models/medical/datum.model'
-import Bolus from '../../models/medical/datum/bolus.model'
-import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 import { DblParameter } from '../../models/medical/datum/enums/dbl-parameter.enum'
 import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 
@@ -263,7 +261,6 @@ class MedicalDataService {
     this.join()
     this.setTimeZones()
     this.group()
-    this.checkEatingShortlyData()
     this.setEndPoints()
     this.generateFillData()
     this.generateBasicsData()
@@ -398,16 +395,6 @@ class MedicalDataService {
   private group(): void {
     this.medicalData.deviceParametersChanges = DeviceParameterChangeService.groupData(this.medicalData.deviceParametersChanges)
     this.medicalData.alarmEvents = AlarmEventService.groupData(this.medicalData.alarmEvents)
-  }
-
-  private checkEatingShortlyData(): void {
-    if (this._datumOpts.isEatingShortlyEnabled) {
-      return
-    }
-
-    // Remove all eating shortly data if the toggle is disabled
-    this.medicalData.eatingShortlyEvents = []
-    this.medicalData.bolus = this.medicalData.bolus.filter((bolus: Bolus) => bolus.prescriptor !== Prescriptor.EatingShortlyManagement)
   }
 
   private getAllData(excludeKeys: string[] = []): Datum[] {
