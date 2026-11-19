@@ -1525,7 +1525,6 @@ describe('MedicalDataService', () => {
       start: new Date().valueOf(),
       end: new Date().valueOf()
     }
-    medicalData.opts.isEatingShortlyEnabled = true
 
     beforeAll(() => {
       DatumService.normalize = datumNormalizeMock
