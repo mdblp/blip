@@ -32,10 +32,6 @@ export class ConfigService {
     return appConfig.IDLE_TIMEOUT_MS
   }
 
-  static getIsEatingShortlyEnabled(): boolean {
-    return appConfig.EATING_SHORTLY_ENABLED
-  }
-
   static getDateOfBirthHidden(): boolean {
     return appConfig.DATE_OF_BIRTH_HIDDEN
   }

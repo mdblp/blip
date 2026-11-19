@@ -35,7 +35,6 @@ import { when } from 'jest-when'
 import { DeviceSystem } from 'medical-domain'
 import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
 import { User } from '../../../../../lib/auth'
-import { ConfigService } from '../../../../../lib/config/config.service'
 import DataApi from '../../../../../lib/data/data.api'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
 import { t } from '../../../../../lib/language'
@@ -128,7 +127,6 @@ describe('Daily view for anyone', () => {
   describe('with DBLG2 device', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI(getCompleteDailyViewDataDblg2(DeviceSystem.Dblg2, "1.1.0"))
-      jest.spyOn(ConfigService, 'getIsEatingShortlyEnabled').mockReturnValue(true)
 
       await act(async () => {
         renderPage(dailyRoute)

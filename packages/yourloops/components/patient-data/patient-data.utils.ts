@@ -40,7 +40,6 @@ import MedicalDataService, {
 import moment, { type Moment } from 'moment-timezone'
 import { PatientView } from '../../enum/patient-view.enum'
 import config from '../../lib/config/config'
-import { ConfigService } from '../../lib/config/config.service'
 import DataApi from '../../lib/data/data.api'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -134,8 +133,7 @@ export class PatientDataUtils {
         end: this.partialDataLoad.range.end.valueOf()
       },
       bgUnits: this.bgUnits,
-      defaultPumpManufacturer: 'default',
-      isEatingShortlyEnabled: ConfigService.getIsEatingShortlyEnabled()
+      defaultPumpManufacturer: 'default'
     }
     medicalData.add(data)
     return medicalData
