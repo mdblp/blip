@@ -515,7 +515,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** Jump the daily view to the most recent date, with a smooth pan */
   container.setToMostRecent = function setToMostRecent() {
     const domain = container.getCurrentDomain()
-    const newDateMS = container.mostRecentEnd.valueOf() - MS_IN_DAY / 2
+    const newDateMS = container.mostRecentEnd.valueOf() - visibleDuration / 2
     const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
     container.panToDate(new Date(newDateMS), transitionDelay)
   }

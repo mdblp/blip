@@ -15,12 +15,12 @@
  * == BSD2 LICENSE ==
  */
 
-import chartDailyFactory, { MOBILE_DAILY_VISIBLE_DURATION, DEFAULT_DAILY_VISIBLE_DURATION } from '../plugins/blip/chartdailyfactory'
+import chartDailyFactory from '../plugins/blip/chartdailyfactory'
 
 window.d3 = require('d3')
 
 export {
-  chartDailyFactory,
-  DEFAULT_DAILY_VISIBLE_DURATION,
-  MOBILE_DAILY_VISIBLE_DURATION
+  chartDailyFactory
 }
+
+export { DEFAULT_DAILY_VISIBLE_DURATION, MOBILE_DAILY_VISIBLE_DURATION } from '../plugins/blip/chartdailyfactory'

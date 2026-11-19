@@ -147,10 +147,8 @@ class DailyChart extends React.Component {
     // Prevent the scroll drag while loading
     const { loading, isMobile } = this.props
     const { chart, needRecreate } = this.state
-    if (!this.viewHasBeenInitialized) {
-      this.handleWindowResize()
-    } else if (isMobile !== prevProps.isMobile) {
-      // The displayed duration depends on the device: the chart must be re-created
+    if (!this.viewHasBeenInitialized || isMobile !== prevProps.isMobile) {
+      // Mobile condition: The displayed duration depends on the device so the chart must be re-created
       this.handleWindowResize()
     }
     if (chart) {
