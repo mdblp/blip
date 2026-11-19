@@ -269,7 +269,7 @@ class DailyChart extends React.Component {
   }
 
   goToMostRecent() {
-    this.state.chart.setAtDate(null, true)
+    this.state.chart.setToMostRecent()
   }
 
   panBack() {

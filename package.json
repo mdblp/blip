@@ -39,8 +39,6 @@
     "test-lambda": "bash test-lambda.sh",
     "test-locales": "mocha --recursive test/locales",
     "test-medical-domain": "npm run test -w medical-domain",
-    "test-tideline": "npm run test -w tideline",
-    "test-tideline-debug": "npm run test-debug -w tideline",
     "test-yourloops": "npm run test-yourloops-integration && npm run test-yourloops-unit",
     "test-yourloops-integration": "bash -c 'source config/.env.sh && npm run integration-test -w yourloops'",
     "test-yourloops-integration-hcp": "bash -c 'source config/.env.sh && npm run integration-test-hcp -w yourloops'",

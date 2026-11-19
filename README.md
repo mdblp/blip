@@ -169,7 +169,7 @@ To run the unit tests, use:
 ```bash
 // run all test
 $ npm run test
-// run a specific package, either sundiaal, viz, tideline, blip or yourloops
+// run a specific package, either sundiaal, viz, blip or yourloops
 $ npm run test-<the targeted package>
 ```
 

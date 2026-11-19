@@ -28,6 +28,7 @@ import moment from 'moment-timezone'
 import * as d3 from 'd3'
 
 import { MS_IN_DAY } from 'medical-domain'
+import { plotScrollBar } from 'dumb'
 
 /**
  * @param {import('events').EventEmitter} emitter
@@ -45,17 +46,11 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     /** Display the scroll bar below the daily graph */
     scrollNav: options.scrollNav,
     scrollNavHeight: 50,
-    scrollGutterHeight: 20,
-    scrollThumbRadius: 24,
     currentTranslation: 0,
     latestTranslation: 0,
     maxTranslation: 0,
-    /** @type {d3.AxisScale<Date>} */
-    scrollScale: null,
     /** @type {d3.ZoomBehavior} */
-    pan: null,
-    /** @type {d3.DragBehavior} */
-    drag: null
+    pan: null
   }
   /** How much time a click on pan back/forward takes (in ms): For 1 day */
   const transitionDelayFast = 500
@@ -91,7 +86,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   let poolScaleHeight = 0
   let gutter = 40
   let id = 'tidelineSVGOneDay'
-  let scrollHandleTrigger = true
+  /** Renders the scroll bar at a date, set by setScrollNav() */
+  let renderScrollBar = null
 
   function container(selection) {
     container.mainSVG = selection.append('svg')
@@ -144,7 +140,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.options = options
   container.type = 'daily'
   // container.axisGutter = axisGutter;
-  /** @type {SVGElement} */
+  /** @type {SVGElement | null} */
   container.mainSVG = null
   /** @type {SVGGElement} */
   container.mainGroup = null
@@ -354,11 +350,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.xScale.range([axisGutter, width])
 
     nav.maxTranslation = -container.xScale(container.endpoints[0]) + axisGutter
-    if (nav.scrollNav) {
-      nav.scrollScale = d3.scaleUtc()
-        .domain([container.endpoints[0], container.initialEndpoints[0]])
-        .range([axisGutter + nav.scrollThumbRadius, width - nav.scrollThumbRadius])
-    }
 
     container.pools.forEach((pool) => {
       pool.xScale(container.xScale.copy())
@@ -387,7 +378,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
   }
 
-  container.onZoom = (event) => {
+  container.onPan = (event) => {
     const { initialXScale, pools, mainGroup, loadingInProgress } = container
 
     if (loadingInProgress) {
@@ -422,41 +413,26 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const domain = container.xScale.domain()
 
     mainGroup.select('#tidelineAnnotations').attr('transform', `translate(${translateX},0)`)
-    if (scrollHandleTrigger) {
-      mainGroup.select('.scrollThumb').transition().ease(d3.easeLinear).attr('x', (d) => {
-        d.x = nav.scrollScale(domain[0])
-        return d.x - nav.scrollThumbRadius
-      })
-    } else {
-      mainGroup.select('.scrollThumb').attr('x', (d) => {
-        d.x = nav.scrollScale(domain[0])
-        return d.x - nav.scrollThumbRadius
-      })
+    if (renderScrollBar !== null) {
+      container.scrollNav.datum(domain[0]).call(renderScrollBar)
     }
 
     container.renderPoolsData()
   }
 
-  container.onZoomEnd = () => {
-    const { xScale } = container
+  container.onPanEnd = () => {
     nav.currentTranslation = nav.latestTranslation
 
     container.navString()
-
-    if (!scrollHandleTrigger) {
-      container.mainGroup.select('.scrollThumb').attr('x', (/* d */) => {
-        return nav.scrollScale(xScale.domain()[0]) - nav.scrollThumbRadius
-      })
-    }
-    scrollHandleTrigger = true
   }
 
   container.setNav = function() {
     const { xScale } = container
 
+    // The d3 zoom behaviour is only used to pan: the scale is locked at 1
     nav.pan = d3.zoom().scaleExtent([1, 1])
-    nav.pan.on('zoom', (event) => container.onZoom(event))
-    nav.pan.on('end', container.onZoomEnd)
+    nav.pan.on('zoom', (event) => container.onPan(event))
+    nav.pan.on('end', container.onPanEnd)
 
     container.initialXScale = xScale.copy()
 
@@ -465,38 +441,22 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     return container
   }
 
-  /** Drag on the scrollbar below the daily graph */
-  container.onDragStart = (event) => {
-    // silence the click-and-drag listener
-    event.sourceEvent.stopPropagation()
+  /** Drag of the scroll bar thumb below the daily graph */
+  container.onScrollBarDragStart = () => {
     container.inTransition(true)
   }
-  container.onDrag = function(event, /** @type {{x: Number, y: number}} */ dragValues) {
-    if (container.loadingInProgress) {
-      return
-    }
 
-    // Must be kept as a function(): 'this' is use here
-    const dxLeftest = nav.scrollScale.range()[0]
-    const dxRightest = nav.scrollScale.range()[1]
-
-    dragValues.x += event.dx
-    if (dragValues.x > dxRightest) {
-      dragValues.x = dxRightest
-    } else if (dragValues.x < dxLeftest) {
-      dragValues.x = dxLeftest
-    }
-    // Here 'this' is the scrollThumb (<rect class="scrollThumb" />)
-    // The drag 'line' on the scrollbar
-    d3.select(this).attr('x', (d) => d.x - nav.scrollThumbRadius)
-    const date = nav.scrollScale.invert(dragValues.x)
+  /** @param {Date} date The date at the thumb position: the new left edge of the view */
+  container.onScrollBarDrag = (date) => {
     nav.currentTranslation += -container.xScale(date) + axisGutter
-    scrollHandleTrigger = false
-
     container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
   }
 
-  container.onDragEnd = () => {
+  container.onScrollBarDragEnd = () => {
+    if (container.mainSVG === null) {
+      // Drag ended after destroy
+      return
+    }
     container.navString(true)
     container.inTransition(false)
     container.throttleTrackMetric('data_visualization', 'daily_drag_view')
@@ -507,7 +467,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       return container
     }
     container.scrollNav.selectAll('line').remove()
-    container.scrollNav.attr('transform', 'translate(0,' + (height - (nav.scrollNavHeight * 2/5)) + ')')
+    container.scrollNav.attr('transform', `translate(0,${height - (nav.scrollNavHeight * 2 / 5)})`)
       .insert('line', '.scrollThumb')
       .attr('stroke-width', nav.scrollGutterHeight)
       .attr('x1', axisGutter + nav.scrollGutterHeight/2)
@@ -515,65 +475,49 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       .attr('y1', 0)
       .attr('y2', 0)
 
-    nav.drag = d3
-      .drag()
-      .subject((d) => d)
-      .on('start', (event) => container.onDragStart(event))
-      .on('drag', container.onDrag)
-      .on('end', container.onDragEnd)
-
-    container.scrollNav.selectAll('rect')
-      .data([{x: nav.scrollScale(container.initialEndpoints[0]), y: 0}])
-      .enter()
-      .append('rect')
-      .attr('x', (d) => d.x - nav.scrollThumbRadius)
-      .attr('y', -nav.scrollThumbRadius/3)
-      .attr('rx', nav.scrollThumbRadius/3)
-      .attr('width', nav.scrollThumbRadius * 2)
-      .attr('height', nav.scrollThumbRadius/3 * 2)
-      .classed('scrollThumb', true)
-      .call(nav.drag)
+    renderScrollBar = plotScrollBar({
+      start: container.endpoints[0],
+      end: container.initialEndpoints[0],
+      width,
+      axisGutter,
+      canDrag: () => nav.pan !== null && !container.loadingInProgress,
+      onDragStart: container.onScrollBarDragStart,
+      onDrag: container.onScrollBarDrag,
+      onDragEnd: container.onScrollBarDragEnd
+    })
+    container.scrollNav.datum(container.xScale.domain()[0]).call(renderScrollBar)
 
     return container
   }
 
   /**
-   *
-   * @param {number | null} epochLocation The date to display (center of view)
-   * @param {boolean} toMostRecent true if we want to jump to the most recent date
+   * Scroll the daily view to a specific date
+   * @param {number} epochLocation The date to display (center of view)
    */
-  container.setAtDate = function setAtDate(epochLocation, toMostRecent = false) {
-    scrollHandleTrigger = toMostRecent
-    if (toMostRecent) {
-      if (epochLocation === null) {
-        // Click on the most recent button
-        // do a smooth
-        const domain = container.getCurrentDomain()
-        const newDateMS = container.mostRecentEnd.valueOf() - visibleDuration / 2
-        const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
-        container.panToDate(new Date(newDateMS), transitionDelay)
-      } else {
-        nav.pan
-          .translateExtent([0,0])
-          .call(nav.pan.transform, d3.zoomIdentity)
-      }
-    } else if (typeof epochLocation === 'number') {
-      // This may look counter intuitive at first
-      // But it is needed in the following case:
-      // We have scroll far enough in the past
-      // to require a renderPoolsData(), then we switch
-      // to another view (basics, trends whatever)
-      // and come back.
-      // Almost nothing is render.
-      // We need to perform a pre-rendering, to be sure
-      // everything is in place
-      container.renderPoolsData()
+  container.setAtDate = function setAtDate(epochLocation) {
+    // This may look counter intuitive at first
+    // But it is needed in the following case:
+    // We have scroll far enough in the past
+    // to require a renderPoolsData(), then we switch
+    // to another view (basics, trends whatever)
+    // and come back.
+    // Almost nothing is render.
+    // We need to perform a pre-rendering, to be sure
+    // everything is in place
+    container.renderPoolsData()
 
-      const start = new Date(epochLocation - visibleDuration / 2)
+    const start = new Date(epochLocation - visibleDuration / 2)
 
-      nav.currentTranslation = -container.xScale(start) + axisGutter
-      container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
-    }
+    nav.currentTranslation = -container.xScale(start) + axisGutter
+    container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
+  }
+
+  /** Jump the daily view to the most recent date, with a smooth pan */
+  container.setToMostRecent = function setToMostRecent() {
+    const domain = container.getCurrentDomain()
+    const newDateMS = container.mostRecentEnd.valueOf() - MS_IN_DAY / 2
+    const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
+    container.panToDate(new Date(newDateMS), transitionDelay)
   }
 
   container.destroy = function() {
@@ -591,11 +535,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       nav.pan.on('zoom', _.noop)
       nav.pan.on('end', _.noop)
     }
-    if (nav.drag !== null) {
-      nav.drag.on('start', _.noop)
-      nav.drag.on('drag', _.noop)
-      nav.drag.on('end', _.noop)
-    }
     container.emitter.removeAllListeners()
     container.mainSVG.remove()
     container.pools.forEach(pool => pool.destroy())
@@ -605,13 +544,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     options = null
     renderedData = null
     nav.pan = null
-    nav.scrollScale = null
-    nav.drag = null
     container.xScale = null
     container.mainSVG = null
     container.mainGroup = null
     container.poolGroup = null
     container.scrollNav = null
+    renderScrollBar = null
     container.dataFill = null
     container.endpoints = null
     container.initialEndpoints = null

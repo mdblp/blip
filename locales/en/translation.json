@@ -1,5 +1,4 @@
 {
-  "%-I:%M %p": "%-I:%M %p",
   "%b %-d, %Y": "%b %-d, %Y",
   "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.": "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.",
   "**Daily Insulin:** All basal and bolus insulin delivery (in Units) added together.": "**Daily Insulin:** All basal and bolus insulin delivery (in Units) added together.",
@@ -88,7 +87,6 @@
   "MMM D, YYYY": "MMM D, YYYY",
   "MMM D, YYYY h:mm a": "MMM D, YYYY h:mm a",
   "MMM D, h:mm a": "MMM D, h:mm a",
-  "MMMM D": "MMMM D",
   "M_Label": "OFF",
   "M_Monday": "M",
   "Manual": "Manual",

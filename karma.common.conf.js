@@ -88,7 +88,7 @@ const defaultConfig = {
 let updatedConfig = null
 
 /**
- * @param {string} projectName "yourloops" | "blip" | "viz" | "tideline"
+ * @param {string} projectName "yourloops" | "blip" | "viz"
  * @param {object} karmaConfig To override the default config
  * @param {object} webpackConfig Project webpack config
  * @param {boolean} typescriptProject true for typescript project

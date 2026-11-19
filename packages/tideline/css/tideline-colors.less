@@ -20,28 +20,17 @@
 
 // e.g., pool labels
 @text: var(--text);
-@text-light: #CCCCCC;
-@text-medium: #979797;
 
 // header and footer, etc.
 @background: #989897;
 @background-daily: var(--bkgrnd-white);
 
-// stats
-@stats-head: #4E4E4F;
-@stats-lead: #676767;
-@stats-insufficient-data: @text-light;
-
 // axes
 @ticks: #B9C8D0;
-@two-week-weekend: #BAC9D1;
 
 // one-day view tideline background rectangle fill colors
 @fill-darker: #DCE4E7;
 @fill-light: #F2F4F6;
-
-// message color
-@message: #FBF39E;
 
 // global colors
 @chart-chip-background: var(--chart-chip-background);
@@ -68,13 +57,9 @@
 @bg-target-focus: #006c95;
 @bg-high-focus: #a9611f;
 
-// basics
-@fingerstick: #6480FB;
-
 // carbs color
 @carbs: var(--carbs, #FFD382);
 @rescuecarbs: var(--rescuecarbs, #fa9494);
-@parameter: #d1d0cf;
 
 // physical activity colors
 @physicalactivity: #00D3E6;
@@ -96,9 +81,7 @@
 @event-superposition-grey: var(--gray-medium);
 
 // bolus color
-@bolus: var(--bolus, #178A7F);
 @bolus-meal: var(--bolus-meal, #178A7F);
-@bolus-umm: var(--bolus-umm, #21C6B6);
 @bolus-eating-shortly: var(--bolus-eating-shortly);
 @bolus-correction: var(--bolus-correction, #9A78BD);
 @bolus-manual: var(--bolus-manual, #8C65D6);
@@ -108,38 +91,7 @@
 
 // basal colors
 @basal: var(--basal, rgb(168, 200, 212));
-@basal-ratio-label: var(--text-medium-contrast);
-@automated-ratio-label: var(--text-medium-contrast);
-@manual-ratio-label: var(--text-medium-contrast);
 @basal-automated: var(--basal-automated, #19A0D7);
-
-// basal tabular colors
-@cell-dividers: #E6E6E5;
-@unmatched: #F7F7F8;
-@matched: #0B9EB3;
-@matched-text: #727375;
 
 // IOB colors
 @iob: var(--basal-automated);
-@iob-hover: var(--bg-tight-range);
-
-// settings
-@settings-table-fill: #F7F7F8;
-@settings-table-value: #1B6C9E;
-@settings-label-fill-basal-schedule: #9DD8E1;
-@settings-label-fill-carb-ratio: #0B9EB3;
-@settings-label-fill-insulin-sensitivity: #27707D;
-@settings-label-fill-bg-target: #5CB947;
-// this is inherited from some other text color setting in blip
-// but incorrect in tideline example
-@settings-table-head-text: @text;
-
-// tooltips
-@title-background: #EAEAEE;
-
-// modal day
-@trends-mean: #291A45;
-@trends-smbg: #617CFC;
-@trends-range: #B6C1E3;
-
-@error: #ff3631;

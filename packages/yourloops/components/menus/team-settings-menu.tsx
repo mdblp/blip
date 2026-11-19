@@ -143,9 +143,9 @@ function TeamSettingsMenu(): JSX.Element {
     return t('modal-patient-add-team-failure', { errorMessage })
   }
 
-  const onJoinTeam = async (teamId: string): Promise<void> => {
+  const onJoinTeam = async (teamId: string, teamCode: string): Promise<void> => {
     try {
-      await joinTeam(teamId)
+      await joinTeam(teamId, teamCode)
       alert.success(t('modal-patient-add-team-success'))
       setShowJoinTeamDialog(false)
     } catch (reason: unknown) {

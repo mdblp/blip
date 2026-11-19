@@ -19,7 +19,6 @@ graph TB
     subgraph "Webpack Configurations"
         YL_CONFIG[yourloops/webpack.config.js<br/>Main App Build]
         BLIP_CONFIG[blip/webpack.config.js<br/>Legacy Components]
-        TL_CONFIG[tideline/webpack.config.js<br/>Timeline Library]
     end
 
     subgraph "Build Process"
@@ -60,7 +59,6 @@ graph TB
 |----------------------------------------|---------------------------------|---------------|
 | `packages/yourloops/webpack.config.js` | Main application build          | YourLoops app |
 | `packages/blip/webpack.config.js`      | Legacy components and utilities | Blip core     |
-| `packages/tideline/webpack.config.js`  | Timeline visualization library  | Tideline      |
 | `webpack.locales-loader.js`            | Custom locale bundle loader     | Root          |
 
 ### Build Modes
