@@ -62,8 +62,8 @@ YourLoops is a medical application for diabetes management developed by Diabeloo
 - This naming is required for the `integration-test-hcp`, `integration-test-caregiver`, `integration-test-patient`, and `integration-test-common` npm scripts to correctly select tests by role
 - Integration tests are split in 3 layers (in `packages/yourloops/test/integration/`):
   - **Spec files** (`pages/**/*.spec.tsx`): mock the APIs, render the page, then call `testXXX` use cases. Keep as few `it()` as possible: each `it()` renders the page again, so group as many checks as possible in one `it()` to keep the tests fast
-  - **Use cases** (`use-cases/*.ts`, `testXXX` functions): only perform the user actions (clicks, typing...) and call `checkXXX` functions. A use case must never contain an assert (`expect`, `waitFor` on an expectation) or the expected values of an assert
-  - **Asserts** (`assert/*.assert.ts`, `checkXXX` functions): contain all the asserts and their expected values
+  - **Use cases** (`use-cases/*.ts`, `testXXX` functions): call `checkXXX` functions. A use case must never contain an assert (`expect`, `waitFor` on an expectation) or the expected values of an assert
+  - **Asserts** (`assert/*.assert.ts`, `checkXXX` functions): contain all the user actions and all the asserts and their expected values
 
 ## Development Practices
 - Use feature branches: `feature/YLP-XXXX-description`

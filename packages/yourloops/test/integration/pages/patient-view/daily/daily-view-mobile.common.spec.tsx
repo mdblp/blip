@@ -31,7 +31,7 @@ import { patient2Info } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockErrorApi } from '../../../mock/error.api.mock'
-import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { mockMobileElementWidth, mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import { mockNotesApi } from '../../../mock/notes.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
@@ -49,6 +49,7 @@ describe('Daily view on mobile for anyone', () => {
     mockAnalyticsApi()
     mockNotesApi()
     mockMobileScreen()
+    mockMobileElementWidth()
   })
 
   afterEach(() => {

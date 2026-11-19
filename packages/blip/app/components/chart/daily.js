@@ -44,7 +44,7 @@ import moment from 'moment-timezone'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactResizeDetector from 'react-resize-detector'
-import { chartDailyFactory, DEFAULT_DAILY_VISIBLE_DURATION, MOBILE_DAILY_VISIBLE_DURATION } from 'tideline'
+import { chartDailyFactory, getDailyVisibleDuration } from 'tideline'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
@@ -516,7 +516,7 @@ class Daily extends React.Component {
    * @returns {number} The duration (in ms) displayed in the chart
    */
   getVisibleDuration() {
-    return this.props.isMobile ? MOBILE_DAILY_VISIBLE_DURATION : DEFAULT_DAILY_VISIBLE_DURATION
+    return getDailyVisibleDuration(this.props.isMobile)
   }
 
   getEndpoints() {

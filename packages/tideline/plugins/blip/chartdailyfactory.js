@@ -73,9 +73,15 @@ import oneDay from '../../js/oneday'
 import Pool from '../../js/pool'
 
 /** The duration (in ms) displayed in the daily chart on mobile devices */
-export const MOBILE_DAILY_VISIBLE_DURATION = 4 * TimeService.MS_IN_HOUR
+const MOBILE_DAILY_VISIBLE_DURATION = 4 * TimeService.MS_IN_HOUR
 /** The duration (in ms) displayed in the daily chart on larger screens */
-export const DEFAULT_DAILY_VISIBLE_DURATION = MS_IN_DAY
+const DEFAULT_DAILY_VISIBLE_DURATION = MS_IN_DAY
+
+/**
+ * @param {boolean} isMobile
+ * @returns {number} The duration (in ms) displayed in the daily chart
+ */
+export const getDailyVisibleDuration = (isMobile) => isMobile ? MOBILE_DAILY_VISIBLE_DURATION : DEFAULT_DAILY_VISIBLE_DURATION
 /** No minimum width on mobile devices: the chart takes the whole screen width */
 const MOBILE_MIN_WIDTH = 0
 const DEFAULT_MIN_WIDTH = 640
@@ -123,7 +129,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     ...options,
     minWidth,
     scrollNav: !isMobile,
-    visibleDuration: isMobile ? MOBILE_DAILY_VISIBLE_DURATION : DEFAULT_DAILY_VISIBLE_DURATION
+    visibleDuration: getDailyVisibleDuration(isMobile)
   })
 
   // ***

@@ -59,7 +59,7 @@ import { useDailyNotes } from './daily-notes.hook'
 import { usePatientData } from './patient-data.hook'
 import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
-import { DEFAULT_DAILY_VISIBLE_DURATION, MOBILE_DAILY_VISIBLE_DURATION } from 'tideline'
+import { getDailyVisibleDuration } from 'tideline'
 import 'blip/app/style.less'
 import { getPageTitleByPatientView } from './patient-data.utils'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -145,7 +145,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     updateChartPrefs
   } = usePatientData({
     patient,
-    dailyVisibleDuration: isMobile ? MOBILE_DAILY_VISIBLE_DURATION : DEFAULT_DAILY_VISIBLE_DURATION
+    dailyVisibleDuration: getDailyVisibleDuration(isMobile)
   })
   const {
     showCreateNoteDialog,

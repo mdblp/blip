@@ -23,4 +23,4 @@ export {
   chartDailyFactory
 }
 
-export { DEFAULT_DAILY_VISIBLE_DURATION, MOBILE_DAILY_VISIBLE_DURATION } from '../plugins/blip/chartdailyfactory'
+export { getDailyVisibleDuration } from '../plugins/blip/chartdailyfactory'
