@@ -122,6 +122,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const chart = oneDay(emitter, {
     ...options,
     minWidth,
+    scrollNav: !isMobile,
     visibleDuration: isMobile ? MOBILE_DAILY_VISIBLE_DURATION : DEFAULT_DAILY_VISIBLE_DURATION
   })
 

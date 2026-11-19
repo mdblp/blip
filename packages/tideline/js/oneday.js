@@ -17,7 +17,7 @@
 
 /**
  * @typedef {import('./tidelinedata').Datum} Datum
- * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void; visibleDuration?: number; minWidth?: number }} OneDayOptions
+ * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void; visibleDuration?: number; minWidth?: number; scrollNav?: boolean }} OneDayOptions
  * @typedef {import('./pool').default} Pool
  * @typedef {{poolGroup:SVGGElement;id:(v?:string)=>string|OneDay;options:OneDayOptions;tidelineData:MedicalDataService;pools:Pool[];width:(v?:number)=>number|OneDay;axisGutter:()=>number;data:(td?:MedicalDataService)=>Datum[]|OneDay;setAxes:()=>OneDay;filterDataForRender:(d:Datum[])=>Datum[]}} OneDay
  */
@@ -38,11 +38,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Console} */
   const log = bows('OneDay')
 
-  _.defaults(options, { trackMetric: _.noop, visibleDuration: MS_IN_DAY, minWidth: 300 })
+  _.defaults(options, { trackMetric: _.noop, visibleDuration: MS_IN_DAY, minWidth: 300, scrollNav: true })
 
   // basic attributes
   const nav = {
-    scrollNav: true,
+    /** Display the scroll bar below the daily graph */
+    scrollNav: options.scrollNav,
     scrollNavHeight: 50,
     scrollGutterHeight: 20,
     scrollThumbRadius: 24,
@@ -267,7 +268,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       cumGutterWeight += pool.gutterWeight()
     })
     gutter = 0.25 * (container.height() / cumHeightRatio)
-    const totalPoolsHeight = container.height() - nav.scrollNavHeight - (cumGutterWeight * gutter)
+    const scrollNavHeight = nav.scrollNav ? nav.scrollNavHeight : 0
+    const totalPoolsHeight = container.height() - scrollNavHeight - (cumGutterWeight * gutter)
     poolScaleHeight = totalPoolsHeight / cumHeightRatio
     return container
   }
@@ -499,6 +501,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.setScrollNav = function() {
+    if (!nav.scrollNav) {
+      return container
+    }
     container.scrollNav.selectAll('line').remove()
     container.scrollNav.attr('transform', 'translate(0,' + (height - (nav.scrollNavHeight * 2/5)) + ')')
       .insert('line', '.scrollThumb')
