@@ -117,18 +117,37 @@ describe('Patient data utils', () => {
     })
 
     describe('getInitialDate', () => {
+      const createMedicalData = (endpoints: [string, string], lastDatumEpoch: number | null = null): MedicalDataService => {
+        const medicalData = new MedicalDataService()
+        medicalData.endpoints = endpoints
+        medicalData.lastDatumEpoch = lastDatumEpoch
+        medicalData.timezoneList = [{ time: 0, timezone: 'UTC' }]
+        return medicalData
+      }
+
       it('should return the latest data date if it is before today\'s date', () => {
         const patientDataUtils = createNewPatientDataUtils()
-        const medicalData = { endpoints: ['2022-01-01', '2022-01-10'] }
+        const medicalData = createMedicalData(['2022-01-01T00:00:00.000Z', '2022-01-10T00:00:00.000Z'])
         const latestDataTimestamp = 1641729600000
-        expect(patientDataUtils.getInitialDate(medicalData as MedicalDataService)).toEqual(latestDataTimestamp)
+        expect(patientDataUtils.getInitialDate(medicalData)).toEqual(latestDataTimestamp)
       })
 
       it('should return today\'s date if the latest data date is in the future', () => {
         const patientDataUtils = createNewPatientDataUtils()
-        const medicalData = { endpoints: ['2072-01-01', '2072-01-10'] }
+        const medicalData = createMedicalData(['2072-01-01T00:00:00.000Z', '2072-01-10T00:00:00.000Z'])
         const latestDataTimestamp = 3219566400000
-        expect(patientDataUtils.getInitialDate(medicalData as MedicalDataService)).not.toEqual(latestDataTimestamp)
+        expect(patientDataUtils.getInitialDate(medicalData)).not.toEqual(latestDataTimestamp)
+      })
+
+      it('should return the center of the range ending at the hour following the latest data when displaying less than a day', () => {
+        const patientDataUtils = createNewPatientDataUtils()
+        const medicalData = createMedicalData(
+          ['2022-01-01T00:00:00.000Z', '2022-01-10T00:00:00.000Z'],
+          Date.parse('2022-01-09T15:20:00.000Z')
+        )
+        const visibleDuration = 4 * TimeService.MS_IN_HOUR
+        // Range from 12:00 to 16:00
+        expect(patientDataUtils.getInitialDate(medicalData, visibleDuration)).toEqual(Date.parse('2022-01-09T14:00:00.000Z'))
       })
     })
 

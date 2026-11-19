@@ -136,6 +136,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.endpoints = []
   /** @type {Date[]} */
   container.initialEndpoints = []
+  /** @type {Date | null} End of the displayed range when going to the most recent data */
+  container.mostRecentEnd = null
   /** @type {{[x: string]: boolean}} For each pool, what type of data it accept */
   container.dataFill = {}
   container.emitter = emitter
@@ -547,7 +549,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
         // Click on the most recent button
         // do a smooth
         const domain = container.getCurrentDomain()
-        const newDateMS = container.initialEndpoints[1].valueOf() - visibleDuration / 2
+        const newDateMS = container.mostRecentEnd.valueOf() - visibleDuration / 2
         const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
         container.panToDate(new Date(newDateMS), transitionDelay)
       } else {
@@ -613,6 +615,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.dataFill = null
     container.endpoints = null
     container.initialEndpoints = null
+    container.mostRecentEnd = null
     container.emitter = null
     container.options = null
     container.pools = null
@@ -706,6 +709,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     // initialEndpoints ~= set the zoom (time axis) value of the displayed chart
     container.initialEndpoints = [visibleStart.toDate(), last.toDate()]
     container.endpoints = [first.toDate(), last.toDate()]
+    container.mostRecentEnd = new Date(td.getMostRecentVisibleEnd(visibleDuration))
 
     return container
   }

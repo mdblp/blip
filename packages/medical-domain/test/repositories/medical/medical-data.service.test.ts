@@ -1829,4 +1829,53 @@ describe('MedicalDataService', () => {
       expect(twoWeeksAgoMock).toHaveBeenCalledWith(end - 1, tz)
     })
   })
+
+  describe('getMostRecentVisibleEnd', () => {
+    const timezone = 'Europe/Paris'
+    const endOfDay = Date.parse('2024-01-10T23:00:00.000Z') // 2024-01-11 00:00 in Paris
+    const fourHours = 4 * TimeService.MS_IN_HOUR
+
+    const createMedicalData = (lastDatumEpoch: number | null): MedicalDataService => {
+      const medicalDataService = new MedicalDataService()
+      medicalDataService.timezoneList = [{ time: 0, timezone }]
+      medicalDataService.endpoints = ['2024-01-08T23:00:00.000Z', new Date(endOfDay).toISOString()]
+      medicalDataService.lastDatumEpoch = lastDatumEpoch
+      return medicalDataService
+    }
+
+    it('should return the end of the last day when displaying a whole day', () => {
+      const medicalDataService = createMedicalData(Date.parse('2024-01-10T14:20:00.000Z'))
+      expect(medicalDataService.getMostRecentVisibleEnd(TimeService.MS_IN_DAY)).toBe(endOfDay)
+    })
+
+    it('should return the end of the last day when there is no data', () => {
+      const medicalDataService = createMedicalData(null)
+      expect(medicalDataService.getMostRecentVisibleEnd(fourHours)).toBe(endOfDay)
+    })
+
+    it('should return the hour following the most recent datum', () => {
+      // 15:20 in Paris
+      const medicalDataService = createMedicalData(Date.parse('2024-01-10T14:20:00.000Z'))
+      expect(medicalDataService.getMostRecentVisibleEnd(fourHours)).toBe(Date.parse('2024-01-10T15:00:00.000Z'))
+    })
+
+    it('should keep the most recent datum time when it is a full hour', () => {
+      const lastDatumEpoch = Date.parse('2024-01-10T14:00:00.000Z')
+      const medicalDataService = createMedicalData(lastDatumEpoch)
+      expect(medicalDataService.getMostRecentVisibleEnd(fourHours)).toBe(lastDatumEpoch)
+    })
+
+    it('should not go after the end of the last day', () => {
+      // 23:40 in Paris
+      const medicalDataService = createMedicalData(Date.parse('2024-01-10T22:40:00.000Z'))
+      expect(medicalDataService.getMostRecentVisibleEnd(fourHours)).toBe(endOfDay)
+    })
+
+    it('should round to the next hour in half-hour offset timezones', () => {
+      const medicalDataService = createMedicalData(Date.parse('2024-01-10T09:00:00.000Z')) // 14:30 in Kolkata
+      medicalDataService.timezoneList = [{ time: 0, timezone: 'Asia/Kolkata' }]
+      medicalDataService.endpoints[1] = '2024-01-10T18:30:00.000Z'
+      expect(medicalDataService.getMostRecentVisibleEnd(fourHours)).toBe(Date.parse('2024-01-10T09:30:00.000Z'))
+    })
+  })
 })

@@ -507,9 +507,10 @@ class Daily extends React.Component {
     if (epoch < 0) {
       epoch = epochLocation
     }
-    // Takes the last endpoint, substract half of the displayed duration, because "epoch" is the center
+    // Takes the most recent displayable end, substract half of the displayed duration, because "epoch" is the center
     // of the displayed duration, substract 1ms to be sure ">" work.
-    const endDate = moment.utc(tidelineData.endpoints[1]).valueOf() - 1 - this.getVisibleDuration() / 2
+    const visibleDuration = this.getVisibleDuration()
+    const endDate = tidelineData.getMostRecentVisibleEnd(visibleDuration) - 1 - visibleDuration / 2
     return epoch > endDate
   }
 
