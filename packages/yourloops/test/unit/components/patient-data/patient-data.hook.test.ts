@@ -68,7 +68,7 @@ describe('usePatientData hook', () => {
 
   describe('changePatientView', () => {
     it('should change currentPatientView to Daily', async () => {
-      const { result } = renderHook(() => usePatientData({ patient }))
+      const { result } = renderHook(() => usePatientData({ patient, dailyVisibleDuration: TimeService.MS_IN_DAY }))
       expect(result.current.currentPatientView).toEqual(PatientView.Dashboard)
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
@@ -81,7 +81,7 @@ describe('usePatientData hook', () => {
     })
 
     it('should change currentPatientView to Trends', async () => {
-      const { result } = renderHook(() => usePatientData({ patient }))
+      const { result } = renderHook(() => usePatientData({ patient, dailyVisibleDuration: TimeService.MS_IN_DAY }))
       expect(result.current.currentPatientView).toEqual(PatientView.Dashboard)
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
@@ -123,7 +123,7 @@ describe('usePatientData hook', () => {
         }
       }
 
-      const { result } = renderHook(() => usePatientData({ patient }))
+      const { result } = renderHook(() => usePatientData({ patient, dailyVisibleDuration: TimeService.MS_IN_DAY }))
       expect(result.current.chartPrefs).toEqual(defaultChartPrefs)
 
       act(() => {
@@ -136,7 +136,7 @@ describe('usePatientData hook', () => {
   describe('goToDailySpecificDate', () => {
     it('should go to a specific date in daily chart', () => {
       const currentDate = new Date().getTime()
-      const { result } = renderHook(() => usePatientData({ patient }))
+      const { result } = renderHook(() => usePatientData({ patient, dailyVisibleDuration: TimeService.MS_IN_DAY }))
       expect(result.current.dailyDate).toBeNull()
 
       act(() => {

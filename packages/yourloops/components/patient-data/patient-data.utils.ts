@@ -171,13 +171,18 @@ export class PatientDataUtils {
     return { start, end }
   }
 
-  getInitialDate(medicalData: MedicalDataService): number {
-    const latestDataDate = moment.utc(medicalData.endpoints[1])
+  /**
+   * @param medicalData The patient medical data
+   * @param visibleDuration The duration (in ms) displayed in the chart
+   * @returns The center of the most recent displayed range containing data
+   */
+  getInitialDate(medicalData: MedicalDataService, visibleDuration = TimeService.MS_IN_DAY): number {
+    const latestDataDate = moment.utc(medicalData.getMostRecentVisibleEnd(visibleDuration))
     // To mimic the behavior of the medical data endpoints, today's date is tomorrow at 12AM
     const todayDate = moment(new Date()).add(1, 'day').startOf('day')
 
     const dateToDisplay = todayDate.isBefore(latestDataDate) ? todayDate : latestDataDate
-    return dateToDisplay.valueOf() - TimeService.MS_IN_DAY / 2
+    return dateToDisplay.valueOf() - visibleDuration / 2
   }
 
   async loadDataRange({ start, end }: DateRange): Promise<MedicalData | null> {

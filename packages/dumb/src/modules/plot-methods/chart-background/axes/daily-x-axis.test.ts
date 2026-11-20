@@ -27,7 +27,7 @@
 
 import * as d3 from 'd3'
 import { DatumType, type Fill } from 'medical-domain'
-import { plotDailyXAxis } from './daily-x-axis'
+import { plotDailyXAxis, splitFillsByHour } from './daily-x-axis'
 import { type Pool } from '../../../../models/plot-methods/pool.model'
 import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
 
@@ -52,13 +52,13 @@ describe('plotDailyXAxis', () => {
     startsAtMidnight
   }) as Fill
 
-  const render = (fills: Fill[]): {
+  const render = (fills: Fill[], hourlyTicks = false): {
     plot: (selection: PlotSelection<Fill>) => void
     selection: PlotSelection<Fill>
   } => {
     const svg = d3.select(document.body).append('svg')
     const selection = svg.append('g').datum(fills) as unknown as PlotSelection<Fill>
-    const plot = plotDailyXAxis(buildPool())
+    const plot = plotDailyXAxis(buildPool(), { hourlyTicks })
     plot(selection)
     return { plot, selection }
   }
@@ -141,5 +141,64 @@ describe('plotDailyXAxis', () => {
     render([{ ...buildFill('2023-04-01T01:00:00.000Z'), timezone: 'US/Pacific' }])
 
     expect(getTick('fill-2023-04-01T01:00:00.000Z').querySelector('text.d3-hour-label')?.textContent).toBe('6:00 pm')
+  })
+
+  it('should draw a tick every hour when hourly ticks are requested', () => {
+    const fill = { ...buildFill('2023-01-01T00:00:00.000Z', true), epochEnd: new Date('2023-01-01T03:00:00.000Z').valueOf() }
+    render([fill], true)
+
+    expect(document.querySelectorAll('g.d3-dailyXAxis-group')).toHaveLength(3)
+    expect(getTick('fill-2023-01-01T00:00:00.000Z').querySelector('text.d3-day-label')?.textContent).toBe('Sunday, January 1')
+    const secondTick = getTick('fill-2023-01-01T00:00:00.000Z-h1')
+    expect(secondTick.querySelector('line')?.getAttribute('x1')).toBe('100')
+    expect(secondTick.querySelector('line')?.getAttribute('y2')).toBe('45')
+    expect(secondTick.querySelector('text.d3-hour-label')?.textContent).toBe('1:00 am')
+    expect(secondTick.querySelector('text.d3-day-label')).toBeNull()
+    expect(getTick('fill-2023-01-01T00:00:00.000Z-h2').querySelector('text.d3-hour-label')?.textContent).toBe('2:00 am')
+  })
+})
+
+describe('splitFillsByHour', () => {
+  const buildFill = (start: string, end?: string): Fill => ({
+    id: `fill-${start}`,
+    type: DatumType.Fill,
+    normalTime: start,
+    epoch: new Date(start).valueOf(),
+    epochEnd: end ? new Date(end).valueOf() : undefined,
+    timezone: 'UTC',
+    startsAtMidnight: true
+  }) as Fill
+
+  it('should split each time slot into one-hour slots, only the first one starting at midnight', () => {
+    const hourlyFills = splitFillsByHour([
+      buildFill('2023-01-01T00:00:00.000Z', '2023-01-01T03:00:00.000Z'),
+      buildFill('2023-01-01T03:00:00.000Z', '2023-01-01T06:00:00.000Z')
+    ])
+
+    expect(hourlyFills.map((fill) => fill.id)).toEqual([
+      'fill-2023-01-01T00:00:00.000Z',
+      'fill-2023-01-01T00:00:00.000Z-h1',
+      'fill-2023-01-01T00:00:00.000Z-h2',
+      'fill-2023-01-01T03:00:00.000Z',
+      'fill-2023-01-01T03:00:00.000Z-h1',
+      'fill-2023-01-01T03:00:00.000Z-h2'
+    ])
+    expect(hourlyFills.map((fill) => fill.startsAtMidnight)).toEqual([true, false, false, true, false, false])
+    expect(hourlyFills[1].epoch).toBe(new Date('2023-01-01T01:00:00.000Z').valueOf())
+    expect(hourlyFills[0].epochEnd).toBe(new Date('2023-01-01T01:00:00.000Z').valueOf())
+    expect(hourlyFills[2].epochEnd).toBe(new Date('2023-01-01T03:00:00.000Z').valueOf())
+  })
+
+  it('should follow the real duration of a time slot affected by a daylight saving time change', () => {
+    // 2 real hours in Europe/Paris on 2023-03-26, from 00:00 to 03:00 local time
+    const hourlyFills = splitFillsByHour([buildFill('2023-03-25T23:00:00.000Z', '2023-03-26T01:00:00.000Z')])
+
+    expect(hourlyFills).toHaveLength(2)
+  })
+
+  it('should keep a time slot without end as is', () => {
+    const fill = buildFill('2023-01-01T00:00:00.000Z')
+
+    expect(splitFillsByHour([fill])).toEqual([fill])
   })
 })

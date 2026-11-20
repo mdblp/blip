@@ -54,7 +54,7 @@ describe('plotPoolBackground', () => {
     startsAtMidnight
   }) as Fill
 
-  const render = (pool: Pool<Fill>, fills: Fill[], onBackgroundClick?: (date: Date) => void): {
+  const render = (pool: Pool<Fill>, fills: Fill[], onBackgroundClick?: (date: Date) => void, hourlyLines = false): {
     plot: (selection: PlotSelection<Fill>) => void
     selection: PlotSelection<Fill>
     tidelineData: { fills: Fill[] }
@@ -62,7 +62,7 @@ describe('plotPoolBackground', () => {
     const tidelineData = { fills }
     const svg = d3.select(document.body).append('svg')
     const selection = svg.append('g') as unknown as PlotSelection<Fill>
-    const plot = plotPoolBackground(pool, { tidelineData: tidelineData as unknown as MedicalDataService, onBackgroundClick })
+    const plot = plotPoolBackground(pool, { tidelineData: tidelineData as unknown as MedicalDataService, onBackgroundClick, hourlyLines })
     plot(selection)
     return { plot, selection, tidelineData }
   }
@@ -84,6 +84,21 @@ describe('plotPoolBackground', () => {
     expect(midnightSlot?.querySelectorAll('rect.d3-fill-midnight')).toHaveLength(1)
     expect(otherSlot?.querySelector('rect.d3-fill-background')?.getAttribute('x')).toBe('300')
     expect(otherSlot?.querySelectorAll('rect.d3-fill-midnight')).toHaveLength(0)
+  })
+
+  it('should draw a vertical line every hour when hourly lines are requested', () => {
+    render(buildPool(), [buildFill('2023-01-01T00:00:00.000Z', '2023-01-01T03:00:00.000Z', true)], undefined, true)
+
+    const slots = document.querySelectorAll('g.d3-poolBackground-group')
+    expect(slots).toHaveLength(3)
+    slots.forEach((slot) => {
+      expect(slot.querySelector('rect.d3-fill-background')?.getAttribute('width')).toBe('100')
+      expect(slot.querySelectorAll('rect.d3-fill-hour')).toHaveLength(1)
+    })
+    expect(document.getElementById('poolBG_poolBackground_group_2023-01-01T00:00:00.000Z')?.querySelectorAll('rect.d3-fill-midnight')).toHaveLength(1)
+    const secondSlot = document.getElementById('poolBG_poolBackground_group_2023-01-01T00:00:00.000Z-h1')
+    expect(secondSlot?.querySelector('rect.d3-fill-background')?.getAttribute('x')).toBe('100')
+    expect(secondSlot?.querySelectorAll('rect.d3-fill-midnight')).toHaveLength(0)
   })
 
   it('should add or remove the midnight line when the fill of an existing slot changes', () => {

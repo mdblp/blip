@@ -59,6 +59,7 @@ import { useDailyNotes } from './daily-notes.hook'
 import { usePatientData } from './patient-data.hook'
 import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
+import { getDailyVisibleDuration } from 'tideline'
 import 'blip/app/style.less'
 import { getPageTitleByPatientView } from './patient-data.utils'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -83,7 +84,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const theme = useTheme()
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  // noSsr: get the right value on first render, the initial daily date depends on it
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const { teamId } = useParams()
   const { getAndClearAppState, user } = useAuth()
   const [appState, setAppState] = useState<AppState | null>(null)
@@ -141,7 +143,10 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     trendsDate,
     timePrefs,
     updateChartPrefs
-  } = usePatientData({ patient })
+  } = usePatientData({
+    patient,
+    dailyVisibleDuration: getDailyVisibleDuration(isMobile)
+  })
   const {
     showCreateNoteDialog,
     showViewNoteDialog,
@@ -248,6 +253,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           onShowNoteThread={showViewNoteDialog}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
                           isEatingShortlyEnabled={isEatingShortlyEnabled}
+                          isMobile={isMobile}
                           ref={dailyChartRef}
                         />
                         {createMessageDatetime &&

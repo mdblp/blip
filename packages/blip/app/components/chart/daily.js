@@ -44,7 +44,7 @@ import moment from 'moment-timezone'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactResizeDetector from 'react-resize-detector'
-import { chartDailyFactory } from 'tideline'
+import { chartDailyFactory, getDailyVisibleDuration } from 'tideline'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
@@ -94,7 +94,8 @@ class DailyChart extends React.Component {
     onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
-    isEatingShortlyEnabled: PropTypes.bool.isRequired
+    isEatingShortlyEnabled: PropTypes.bool.isRequired,
+    isMobile: PropTypes.bool
   }
 
   constructor(props) {
@@ -125,7 +126,8 @@ class DailyChart extends React.Component {
       'onTooltipOut',
       'onEventSuperpositionClick',
       'trackMetric',
-      'isEatingShortlyEnabled'
+      'isEatingShortlyEnabled',
+      'isMobile'
     ]
 
     this.log = bows('DailyChart')
@@ -141,11 +143,12 @@ class DailyChart extends React.Component {
     this.unmountingInProgress = false
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // Prevent the scroll drag while loading
-    const { loading } = this.props
+    const { loading, isMobile } = this.props
     const { chart, needRecreate } = this.state
-    if (!this.viewHasBeenInitialized) {
+    if (!this.viewHasBeenInitialized || isMobile !== prevProps.isMobile) {
+      // Mobile condition: The displayed duration depends on the device so the chart must be re-created
       this.handleWindowResize()
     }
     if (chart) {
@@ -233,9 +236,15 @@ class DailyChart extends React.Component {
     const needRecreate = loading || chart?.isInTransition() === true
     if (!needRecreate) {
       this.viewHasBeenInitialized = true
+      if (this.state.needRecreate) {
+        this.setState({ needRecreate: false })
+      }
       this.reCreateChart()
     } else {
       this.log.info('Delaying chart re-creation: loading or transition in progress')
+      if (!this.state.needRecreate) {
+        this.setState({ needRecreate: true })
+      }
     }
   }
 
@@ -300,7 +309,8 @@ class Daily extends React.Component {
     onShowNoteThread: PropTypes.func.isRequired,
     // navigation handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
-    isEatingShortlyEnabled: PropTypes.bool.isRequired
+    isEatingShortlyEnabled: PropTypes.bool.isRequired,
+    isMobile: PropTypes.bool
   }
 
   constructor(props) {
@@ -329,10 +339,13 @@ class Daily extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { epochLocation, loading } = this.props
+    const { epochLocation, loading, isMobile } = this.props
     const { epochLocation: prevEpochLocation } = prevProps
     const { title } = this.state
 
+    if (isMobile !== prevProps.isMobile) {
+      this.setState({ atMostRecent: this.isAtMostRecent() })
+    }
     if (loading && !prevProps.loading) {
       this.setState({ title: i18next.t('Loading...') })
     } else if (epochLocation !== prevEpochLocation || (!loading && prevProps.loading)) {
@@ -348,7 +361,7 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, loading, timePrefs } = this.props
+    const { tidelineData, epochLocation, msRange, loading, timePrefs, isMobile } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
     const trackMetric = metrics.send
     const endpoints = this.getEndpoints()
@@ -359,11 +372,19 @@ class Daily extends React.Component {
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
         const timezone = tidelineData.getTimezoneAt(Date.parse(date).valueOf())
-        const mDate = moment.tz(date, timezone).add(TimeService.MS_IN_DAY / 2, 'milliseconds')
+        // The mobile view (4 hours) is centered on 9AM, the desktop one (24 hours) on noon
+        const mDate = isMobile
+          ? moment.tz(date, timezone).hours(9)
+          : moment.tz(date, timezone).add(TimeService.MS_IN_DAY / 2, 'milliseconds')
         this.log.debug('DatePicker', date, timezone, mDate.toISOString())
-        this.chartRef.current.goToDate(mDate.toDate())
+        // Don't go further than the most recent displayed range
+        const visibleDuration = this.getVisibleDuration()
+        const mostRecentCenter = tidelineData.getMostRecentVisibleEnd(visibleDuration) - visibleDuration / 2
+        this.chartRef.current.goToDate(new Date(Math.min(mDate.valueOf(), mostRecentCenter)))
       }
     }
+
+    const isDesktop = !isMobile
 
     return (
       <div id="tidelineMain" className="daily">
@@ -379,7 +400,7 @@ class Daily extends React.Component {
               data-testid="daily-header"
               sx={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: isMobile ? 'center' : 'space-between',
                 alignItems: 'center'
               }}
             >
@@ -401,18 +422,18 @@ class Daily extends React.Component {
                   startDate={this.startDate}
                 />
               </Box>
-              {tidelineData.basicsData?.data?.pumpSettings?.data?.[0]?.payload?.parameters?.length > 0 && (
+              {tidelineData.basicsData?.data?.pumpSettings?.data?.[0]?.payload?.parameters?.length > 0 && isDesktop &&
                 <ShowParametersAt
                   date={epochLocation}
                   parameters={tidelineData.basicsData.data.pumpSettings.data[0].payload.parameters}
                   history={tidelineData.basicsData.data.pumpSettings.data[0].payload.history?.parameters ?? []}
                 />
-              )
               }
             </Box>
           }
           <Box className="chart-with-stats-wrapper" ref={this.refToAttachResize}>
-            <div className="container-box-inner patient-data-content-inner light-rounded-border">
+            <div
+              className={`container-box-inner patient-data-content-inner light-rounded-border${isMobile ? ' patient-data-content-inner-mobile' : ''}`}>
               <div className="patient-data-content-daily">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
@@ -453,12 +474,15 @@ class Daily extends React.Component {
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
                   isEatingShortlyEnabled={this.props.isEatingShortlyEnabled}
+                  isMobile={this.props.isMobile}
                   ref={this.chartRef}
                 />
               </div>
-              <Box marginBlock={2}>
-                <ChartFooter onClickRefresh={this.props.onClickRefresh} />
-              </Box>
+              {isDesktop &&
+                <Box marginBlock={2}>
+                  <ChartFooter onClickRefresh={this.props.onClickRefresh} />
+                </Box>
+              }
             </div>
             <div className="container-box-inner patient-data-sidebar">
               <div className="patient-data-sidebar-inner">
@@ -483,14 +507,22 @@ class Daily extends React.Component {
    * @private
    */
   isAtMostRecent(epoch = -1) {
-    const { tidelineData, epochLocation, msRange } = this.props
+    const { tidelineData, epochLocation } = this.props
     if (epoch < 0) {
       epoch = epochLocation
     }
-    // Takes the last endpoint, substract half a day, because "epoch" is the center
-    // of the day, substract 1ms to be sure ">" work.
-    const endDate = moment.utc(tidelineData.endpoints[1]).valueOf() - 1 - msRange / 2
+    // Takes the most recent displayable end, substract half of the displayed duration, because "epoch" is the center
+    // of the displayed duration, substract 1ms to be sure ">" work.
+    const visibleDuration = this.getVisibleDuration()
+    const endDate = tidelineData.getMostRecentVisibleEnd(visibleDuration) - 1 - visibleDuration / 2
     return epoch > endDate
+  }
+
+  /**
+   * @returns {number} The duration (in ms) displayed in the chart
+   */
+  getVisibleDuration() {
+    return getDailyVisibleDuration(this.props.isMobile)
   }
 
   getEndpoints() {

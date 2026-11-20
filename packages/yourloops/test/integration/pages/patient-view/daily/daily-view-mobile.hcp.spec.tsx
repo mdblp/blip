@@ -42,7 +42,7 @@ import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { checkPatientNavBarAsHcpMobile } from '../../../assert/patient-nav-bar.assert'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { mockMobileElementWidth, mockMobileScreen } from '../../../mock/mobile-screen.mock'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -62,6 +62,7 @@ describe('Daily view for HCP', () => {
     mockDblCommunicationApi()
     mockAnalyticsApi()
     mockMobileScreen()
+    mockMobileElementWidth()
   })
 
   afterEach(() => {

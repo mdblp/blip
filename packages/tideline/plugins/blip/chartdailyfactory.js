@@ -67,10 +67,24 @@ import { EventEmitter } from 'events'
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import { MGDL_UNITS } from 'medical-domain'
+import { MGDL_UNITS, MS_IN_DAY, TimeService } from 'medical-domain'
 import oneDay from '../../js/oneday'
 
 import Pool from '../../js/pool'
+
+/** The duration (in ms) displayed in the daily chart on mobile devices */
+const MOBILE_DAILY_VISIBLE_DURATION = 4 * TimeService.MS_IN_HOUR
+/** The duration (in ms) displayed in the daily chart on larger screens */
+const DEFAULT_DAILY_VISIBLE_DURATION = MS_IN_DAY
+
+/**
+ * @param {boolean} isMobile
+ * @returns {number} The duration (in ms) displayed in the daily chart
+ */
+export const getDailyVisibleDuration = (isMobile) => isMobile ? MOBILE_DAILY_VISIBLE_DURATION : DEFAULT_DAILY_VISIBLE_DURATION
+/** No minimum width on mobile devices: the chart takes the whole screen width */
+const MOBILE_MIN_WIDTH = 0
+const DEFAULT_MIN_WIDTH = 640
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -93,7 +107,8 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
       timezoneAware: false,
       timezoneName: 'UTC'
     },
-    trackMetric: _.noop
+    trackMetric: _.noop,
+    isMobile: false
   }
   _.defaults(options, defaults)
 
@@ -101,14 +116,21 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     throw new Error('Sorry, you must provide a DOM element! :(')
   }
 
-  const width = Math.max(640, parentElement.offsetWidth)
+  const { isMobile } = options
+  const minWidth = isMobile ? MOBILE_MIN_WIDTH : DEFAULT_MIN_WIDTH
+  const width = Math.max(minWidth, parentElement.offsetWidth)
   const height = Math.max(480, parentElement.offsetHeight)
   const emitter = new EventEmitter()
   // set up bgClasses for current observed patient data
   // this assignment allows us to set the Y axis value for BG depending on patient data (profile)
   tidelineData.opts.bgClasses = options.bgClasses
 
-  const chart = oneDay(emitter, options)
+  const chart = oneDay(emitter, {
+    ...options,
+    minWidth,
+    scrollNav: !isMobile,
+    visibleDuration: getDailyVisibleDuration(isMobile)
+  })
 
   // ***
   // Basic chart set up
@@ -116,6 +138,8 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   chart.id(parentElement.id).width(width).height(height)
   d3.select(parentElement).call(chart)
+  // Mobile specific styles (see tideline.less)
+  chart.mainSVG.classed('d3-daily-mobile', isMobile)
 
   const medicalData = tidelineData.medicalData
 
@@ -232,7 +256,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // x-axis pools
   // add ticks to top x-axis pool
-  poolXAxis.addPlotType({ type: 'fill' }, plotDailyXAxis(poolXAxis))
+  poolXAxis.addPlotType({ type: 'fill' }, plotDailyXAxis(poolXAxis, { hourlyTicks: isMobile }))
 
   const targetDate = new Date(epochLocation)
   const currentParameters = pumpSettingsPayload?.parameters
@@ -245,11 +269,11 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBG.axisScaleFn(createYAxisBG)
   poolBG.guidelinesFn((axisScale) => getBgGuidelines(targetValue, chart, axisScale.extent))
 
-  poolBG.addPlotType({ type: 'fill' }, plotPoolBackground(poolBG, { tidelineData }))
+  poolBG.addPlotType({ type: 'fill' }, plotPoolBackground(poolBG, { tidelineData, hourlyLines: isMobile }))
 
   poolBG.addGuidelinesPlotType(plotGuidelines(poolBG))
 
-  poolEvents.addPlotType({ type: 'fill' }, plotPoolBackground(poolEvents, { tidelineData }))
+  poolEvents.addPlotType({ type: 'fill' }, plotPoolBackground(poolEvents, { tidelineData, hourlyLines: isMobile }))
 
   poolEvents.addPlotType({ type: 'zenMode' }, plotZenMode(poolEvents, {
     tidelineData,
@@ -340,7 +364,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBolus.axisScaleFn(createYAxisBolus)
   poolBolus.guidelinesFn((axisScale) => getBolusGuidelines(axisScale.maxBolusValue))
   // add background fill rectangles and guidelines to bolus pool
-  poolBolus.addPlotType({ type: 'fill' }, plotPoolBackground(poolBolus, { tidelineData }))
+  poolBolus.addPlotType({ type: 'fill' }, plotPoolBackground(poolBolus, { tidelineData, hourlyLines: isMobile }))
   poolBolus.addGuidelinesPlotType(plotGuidelines(poolBolus))
 
   // quick bolus data to wizard pool
@@ -379,7 +403,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBasal.axisScaleFn(createYAxisBasal)
   poolBasal.guidelinesFn((axisScale) => getBasalGuidelines(axisScale.extent))
   // add background fill rectangles and guidelines to basal pool
-  poolBasal.addPlotType({ type: 'fill' }, plotPoolBackground(poolBasal, { tidelineData }))
+  poolBasal.addPlotType({ type: 'fill' }, plotPoolBackground(poolBasal, { tidelineData, hourlyLines: isMobile }))
   poolBasal.addGuidelinesPlotType(plotGuidelines(poolBasal))
 
   // add basal data to basal pool
@@ -404,7 +428,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     poolIob?.guidelinesFn((axisScale) => getIobGuidelines(axisScale.maxIobValue))
 
     // add background fill rectangles and guidelines to IOB pool
-    poolIob?.addPlotType({ type: 'fill' }, plotPoolBackground(poolIob, { tidelineData }))
+    poolIob?.addPlotType({ type: 'fill' }, plotPoolBackground(poolIob, { tidelineData, hourlyLines: isMobile }))
     poolIob?.addGuidelinesPlotType(plotGuidelines(poolIob))
 
     // add IOB curve to IOB pool
@@ -427,6 +451,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // clicking the background at a given date starts the note creation flow at that date
   poolMessages.addPlotType({ type: 'fill' }, plotPoolBackground(poolMessages, {
     tidelineData,
+    hourlyLines: isMobile,
     onBackgroundClick: (date) => emitter.emit('createNote', moment.utc(date))
   }))
 
