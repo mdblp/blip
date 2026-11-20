@@ -106,6 +106,8 @@ const ignoredTransKeyForYourLoops = [
   'hcp-profession-diabeto',
   'hcp-profession-other',
   'hcp-profession-dietitian',
+  // Keys passed as props (errorTranslationKey)
+  'profession-dialog-title',
   // <Trans /> keys
   'hyperglycemia-threshold',
   'hyperglycemia-tooltip2',
