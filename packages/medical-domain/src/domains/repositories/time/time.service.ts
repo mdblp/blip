@@ -149,17 +149,6 @@ export function getEndOfDay(epoch: number, timezone: string): number {
   return mTime.valueOf()
 }
 
-/**
- * @returns The epoch rounded up to the next full hour at the given timezone (unchanged if already on a full hour)
- */
-export function getCeilHour(epoch: number, timezone: string): number {
-  const mTime = moment.tz(epoch, timezone).startOf('hour')
-  if (mTime.valueOf() < epoch) {
-    mTime.add(1, 'hour')
-  }
-  return mTime.valueOf()
-}
-
 export function getEpoch(time: string): number {
   const mTime = moment.parseZone(time)
   return mTime.valueOf()

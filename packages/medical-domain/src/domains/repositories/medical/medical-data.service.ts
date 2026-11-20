@@ -51,7 +51,6 @@ import {
   addMilliseconds,
   epochAtTimezone,
   format,
-  getCeilHour,
   getEndOfDay,
   getEpoch,
   getHours,
@@ -59,6 +58,7 @@ import {
   getStartOfDay,
   isValidTimeZone,
   MS_IN_DAY,
+  MS_IN_MIN,
   substractAtTimezone,
   toISOString,
   twoWeeksAgo
@@ -214,8 +214,8 @@ class MedicalDataService {
     if (visibleDuration >= MS_IN_DAY || this.lastDatumEpoch === null) {
       return end
     }
-    // Smaller ranges end at the hour following the most recent datum, to be sure to display data
-    return Math.min(end, getCeilHour(this.lastDatumEpoch, this.getLastTimezone()))
+    // Smaller ranges end 30 minutes after the most recent datum, to be sure to display data
+    return Math.min(end, this.lastDatumEpoch + 30 * MS_IN_MIN)
   }
 
   add(data: MedicalData): void {

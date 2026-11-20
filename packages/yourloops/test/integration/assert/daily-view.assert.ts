@@ -375,7 +375,7 @@ export const checkDailyViewPoolBackgroundMobile = () => {
 }
 
 export const checkDailyViewAtMostRecentData = () => {
-  // The chart ends at the hour following the most recent datum: we can't go further
+  // The chart ends 30 minutes after the most recent datum: we can't go further
   expect(screen.getByTestId('button-nav-next')).toBeDisabled()
   expect(screen.getByTestId('button-nav-mostrecent')).toBeDisabled()
 }
@@ -392,9 +392,9 @@ const checkDailyViewCenterDate = async (router: Router, expectedDate: string) =>
 }
 
 export const checkDailyViewMobileNavigation = async (router: Router) => {
-  // The arrows navigate by 24 hours, from the most recent hours (centered on 17:00 UTC)
+  // The arrows navigate by 24 hours, from the most recent hours (centered on 17:30 UTC)
   await userEvent.click(screen.getByTestId('button-nav-back'))
-  await checkDailyViewCenterDate(router, '2022-08-07T17:00:00.000Z')
+  await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
   expect(screen.getByTestId('button-nav-next')).toBeEnabled()
   expect(screen.getByTestId('button-nav-mostrecent')).toBeEnabled()
 
@@ -408,15 +408,15 @@ export const checkDailyViewMobileNavigation = async (router: Router) => {
 
   // We can't go after the most recent hours
   await userEvent.click(screen.getByTestId('button-nav-next'))
-  await checkDailyViewCenterDate(router, '2022-08-08T17:00:00.000Z')
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
   checkDailyViewAtMostRecentData()
 
   await userEvent.click(screen.getByTestId('button-nav-back'))
-  await checkDailyViewCenterDate(router, '2022-08-07T17:00:00.000Z')
+  await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
   await userEvent.click(screen.getByTestId('button-nav-mostrecent'))
 
-  // 4 hours ending at the hour following the most recent datum (18:40 UTC)
-  await checkDailyViewCenterDate(router, '2022-08-08T17:00:00.000Z')
+  // 4 hours ending 30 minutes after the most recent datum (19:00 UTC)
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
   checkDailyViewAtMostRecentData()
 }
 
