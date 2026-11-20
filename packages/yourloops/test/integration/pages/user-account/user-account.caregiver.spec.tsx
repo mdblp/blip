@@ -27,7 +27,6 @@
 
 import { renderPage } from '../../utils/render'
 import {
-  getAccessTokenWithPopupMock,
   loggedInUserEmail,
   loggedInUserId,
   mockAuth0Hook
@@ -54,10 +53,6 @@ import {
   testPasswordChangeRequest,
   testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
-import {
-  testCaregiverSwitchRoleDialogsClosing,
-  testCaregiverSwitchRoleToHcp
-} from '../../use-cases/caregiver-switch-role-hcp'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
@@ -81,7 +76,6 @@ describe('User account page for caregiver', () => {
     units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCode.Fr }
-  const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
   beforeAll(() => {
     mockAuth0Hook(UserRole.Caregiver)
@@ -97,7 +91,7 @@ describe('User account page for caregiver', () => {
     mockAnalyticsApi()
   })
 
-  it('should render user account page for a caregiver and be able to change his password and change his role to HCP', async () => {
+  it('should render user account page for a caregiver and be able to change his password', async () => {
     const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: LanguageCode.En }
     const expectedSettings: Settings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
@@ -118,12 +112,6 @@ describe('User account page for caregiver', () => {
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     await testPasswordChangeRequest(loggedInUserEmail)
-
-    await testCaregiverSwitchRoleDialogsClosing()
-    await testCaregiverSwitchRoleToHcp()
-
-    expect(changeUserRoleToHcpMock).toHaveBeenCalled()
-    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
   })
 
   it('should render user account page for a caregiver and display error if change password failed', async () => {
