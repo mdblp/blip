@@ -25,11 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
 import { act } from 'react'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { patient2Info } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
+// Imported after data.api.mock because of a circular dependency between the two files
+import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockMobileElementWidth, mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import { mockNotesApi } from '../../../mock/notes.api.mock'
@@ -58,7 +61,18 @@ describe('Daily view on mobile for anyone', () => {
   })
 
   it('should render the chart adapted to mobile screens', async () => {
-    mockDataAPI()
+    const data = getCompleteDailyViewData()
+    // Data on the previous day, to be able to navigate by 24 hours
+    data.data.cbg.push({
+      ...data.data.cbg[0],
+      id: 'previousDayCbgId',
+      epoch: 1659873600000,
+      normalTime: '2022-08-07T12:00:00.000Z',
+      localDate: '2022-08-07',
+      isoWeekday: WeekDays.Sunday,
+      msPer24: 50400000
+    })
+    mockDataAPI(data)
 
     let router: Router
     await act(async () => {

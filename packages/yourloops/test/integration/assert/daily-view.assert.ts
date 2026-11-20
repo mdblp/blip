@@ -362,7 +362,7 @@ export const checkDailyViewChartMobileLayout = async () => {
 export const checkDailyViewXAxisMobile = () => {
   // One tick every hour, and the day label at midnight (Europe/Paris)
   const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
-  expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm12:00 amMonday, August 81:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm')
+  expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm12:00 amSunday, August 71:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm12:00 amMonday, August 81:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm')
 }
 
 export const checkDailyViewPoolBackgroundMobile = () => {
@@ -392,13 +392,27 @@ const checkDailyViewCenterDate = async (router: Router, expectedDate: string) =>
 }
 
 export const checkDailyViewMobileNavigation = async (router: Router) => {
+  // The arrows navigate by 24 hours, from the most recent hours (centered on 17:00 UTC)
   await userEvent.click(screen.getByTestId('button-nav-back'))
-
-  // The 4 hours before the most recent ones (centered on 17:00 UTC)
-  await checkDailyViewCenterDate(router, '2022-08-08T13:00:00.000Z')
+  await checkDailyViewCenterDate(router, '2022-08-07T17:00:00.000Z')
   expect(screen.getByTestId('button-nav-next')).toBeEnabled()
   expect(screen.getByTestId('button-nav-mostrecent')).toBeEnabled()
 
+  // We can't go before the start of the data (centered on 00:00 UTC)
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T00:00:00.000Z')
+
+  await userEvent.click(screen.getByTestId('button-nav-next'))
+  await checkDailyViewCenterDate(router, '2022-08-08T00:00:00.000Z')
+  expect(screen.getByTestId('button-nav-next')).toBeEnabled()
+
+  // We can't go after the most recent hours
+  await userEvent.click(screen.getByTestId('button-nav-next'))
+  await checkDailyViewCenterDate(router, '2022-08-08T17:00:00.000Z')
+  checkDailyViewAtMostRecentData()
+
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T17:00:00.000Z')
   await userEvent.click(screen.getByTestId('button-nav-mostrecent'))
 
   // 4 hours ending at the hour following the most recent datum (18:40 UTC)

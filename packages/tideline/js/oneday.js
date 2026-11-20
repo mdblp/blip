@@ -235,14 +235,20 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.mainGroup.transition(zoomTransition)
   }
 
+  /** @returns {number} The center (epoch in ms) of the most recent displayed range */
+  function getMostRecentCenter() {
+    return container.mostRecentEnd.valueOf() - visibleDuration / 2
+  }
+
   container.panForward = function() {
     const domain = container.getCurrentDomain()
-    container.panToDate(new Date(domain.center.valueOf() + visibleDuration))
+    // Don't go further than the most recent displayed range (see setToMostRecent)
+    container.panToDate(new Date(Math.min(domain.center.valueOf() + MS_IN_DAY, getMostRecentCenter())))
   }
 
   container.panBack = function() {
     const domain = container.getCurrentDomain()
-    container.panToDate(new Date(domain.center.valueOf() - visibleDuration))
+    container.panToDate(new Date(domain.center.valueOf() - MS_IN_DAY))
   }
 
   /**
@@ -515,7 +521,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** Jump the daily view to the most recent date, with a smooth pan */
   container.setToMostRecent = function setToMostRecent() {
     const domain = container.getCurrentDomain()
-    const newDateMS = container.mostRecentEnd.valueOf() - visibleDuration / 2
+    const newDateMS = getMostRecentCenter()
     const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
     container.panToDate(new Date(newDateMS), transitionDelay)
   }
