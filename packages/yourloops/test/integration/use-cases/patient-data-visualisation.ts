@@ -42,6 +42,7 @@ import {
   checkDailyViewChartMobileLayout,
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
+  checkDailyViewMobileCalendarSelection,
   checkDailyViewMobileNavigation,
   checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
@@ -173,6 +174,7 @@ export const testDailyViewChartMobile = async (router: Router) => {
   checkDailyViewPoolBackgroundMobile()
   checkDailyViewAtMostRecentData()
   await checkDailyViewMobileNavigation(router)
+  await checkDailyViewMobileCalendarSelection(router)
 }
 
 export const testDailyViewChartsDblg2 = () => {

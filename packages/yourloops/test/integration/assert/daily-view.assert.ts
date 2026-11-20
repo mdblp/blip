@@ -420,6 +420,20 @@ export const checkDailyViewMobileNavigation = async (router: Router) => {
   checkDailyViewAtMostRecentData()
 }
 
+export const checkDailyViewMobileCalendarSelection = async (router: Router) => {
+  // The calendar can't be opened during the chart transition
+  await waitFor(() => {
+    expect(screen.getByTestId('daily-chart-title-date')).toBeEnabled()
+  })
+  await userEvent.click(screen.getByTestId('daily-chart-title-date'))
+  const calendarDialog = within(screen.getByRole('dialog'))
+  await userEvent.click(calendarDialog.getByTestId('button-calendar-day-2022-08-07'))
+  await userEvent.click(calendarDialog.getByRole('button', { name: 'Ok' }))
+
+  // The 4 hours from 7AM to 11AM (Europe/Paris) of the selected day
+  await checkDailyViewCenterDate(router, '2022-08-07T07:00:00.000Z')
+}
+
 const getScrollBarThumb = (): HTMLElement => screen.getByTestId('scrollBar_thumb')
 
 const getScrollBarThumbX = (): number => Number(getScrollBarThumb().getAttribute('x'))

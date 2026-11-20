@@ -372,9 +372,15 @@ class Daily extends React.Component {
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
         const timezone = tidelineData.getTimezoneAt(Date.parse(date).valueOf())
-        const mDate = moment.tz(date, timezone).add(TimeService.MS_IN_DAY / 2, 'milliseconds')
+        // The mobile view (4 hours) is centered on 9AM, the desktop one (24 hours) on noon
+        const mDate = isMobile
+          ? moment.tz(date, timezone).hours(9)
+          : moment.tz(date, timezone).add(TimeService.MS_IN_DAY / 2, 'milliseconds')
         this.log.debug('DatePicker', date, timezone, mDate.toISOString())
-        this.chartRef.current.goToDate(mDate.toDate())
+        // Don't go further than the most recent displayed range
+        const visibleDuration = this.getVisibleDuration()
+        const mostRecentCenter = tidelineData.getMostRecentVisibleEnd(visibleDuration) - visibleDuration / 2
+        this.chartRef.current.goToDate(new Date(Math.min(mDate.valueOf(), mostRecentCenter)))
       }
     }
 

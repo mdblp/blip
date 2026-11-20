@@ -25,8 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import dayjs from 'dayjs'
 import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
 import { act } from 'react'
+import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { patient2Info } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
@@ -73,6 +75,8 @@ describe('Daily view on mobile for anyone', () => {
       msPer24: 50400000
     })
     mockDataAPI(data)
+    dayjs.extend(weekArrayPlugin)
+    dayjs.extend(weekdaysPlugin)
 
     let router: Router
     await act(async () => {
