@@ -28,9 +28,10 @@
 import * as d3 from 'd3'
 import moment from 'moment-timezone'
 
-import { type Fill, TimeService } from 'medical-domain'
+import { type Fill } from 'medical-domain'
 import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
 import { type PlotFunction } from '../../../../models/plot-methods/plot-function.model'
+import { type PlotOptions } from '../../../../models/plot-methods/plot-options.model'
 import { type PlotSelection } from '../../../../models/plot-methods/plot-selection.model'
 import { type Pool } from '../../../../models/plot-methods/pool.model'
 import { getDayFormat, getHourMinuteFormat } from '../../../../utils/datetime/datetime.util'
@@ -43,36 +44,9 @@ const TEXT_SHIFT = { x: 5, y: 5 }
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.DailyXAxis)
 
-interface DailyXAxisOptions {
-  /** Draw a tick every hour instead of one per time slot */
+type DailyXAxisOptions = Partial<Pick<PlotOptions<Fill>, 'tidelineData'>> & {
+  /** Draw a tick every hour instead of one per time slot, `tidelineData` is required */
   hourlyTicks?: boolean
-}
-
-/**
- * Split each time slot into one-hour slots, so the axis gets a tick every hour
- *
- * Only the first hour of a slot can start at midnight.
- *
- * @param fills - The time slots (see `MedicalDataService.fills`)
- * @returns The one-hour slots, in chronological order
- */
-export const splitFillsByHour = (fills: Fill[]): Fill[] => {
-  return fills.flatMap((fill: Fill): Fill[] => {
-    if (typeof fill.epochEnd !== 'number') {
-      return [fill]
-    }
-    const hourlyFills = [{ ...fill, epochEnd: Math.min(fill.epoch + TimeService.MS_IN_HOUR, fill.epochEnd) }]
-    for (let epoch = fill.epoch + TimeService.MS_IN_HOUR; epoch < fill.epochEnd; epoch += TimeService.MS_IN_HOUR) {
-      hourlyFills.push({
-        ...fill,
-        id: `${fill.id}-h${hourlyFills.length}`,
-        epoch,
-        epochEnd: Math.min(epoch + TimeService.MS_IN_HOUR, fill.epochEnd),
-        startsAtMidnight: false
-      })
-    }
-    return hourlyFills
-  })
 }
 
 /**
@@ -82,7 +56,7 @@ export const splitFillsByHour = (fills: Fill[]): Fill[] => {
  * A slot starting at midnight gets a longer tick and the day label.
  *
  * @param pool - The rendering pool containing scale and dimensions
- * @param options - Set `hourlyTicks` to draw a tick every hour (used when a few hours are displayed)
+ * @param options - Set `hourlyTicks` to draw a tick every hour (see `MedicalDataService.hourlyFills`)
  * @returns A function that renders the axis when called with a D3 selection
  *
  * @example
@@ -90,7 +64,7 @@ export const splitFillsByHour = (fills: Fill[]): Fill[] => {
  * pool.addPlotType({ type: 'fill' }, plotDailyXAxis(pool))
  * ```
  */
-export const plotDailyXAxis = (pool: Pool<Fill>, { hourlyTicks = false }: DailyXAxisOptions = {}): PlotFunction<Fill> => {
+export const plotDailyXAxis = (pool: Pool<Fill>, { tidelineData, hourlyTicks = false }: DailyXAxisOptions = {}): PlotFunction<Fill> => {
   const ids = idGen.scoped(pool.id())
 
   return (selection: PlotSelection<Fill>): void => {
@@ -146,8 +120,9 @@ export const plotDailyXAxis = (pool: Pool<Fill>, { hourlyTicks = false }: DailyX
 
     selection.each(function (this: SVGGElement) {
       const container = d3.select(this)
-      const slots = container.datum() as Fill[]
-      const fills = hourlyTicks ? splitFillsByHour(slots) : slots
+      const fills = hourlyTicks
+        ? pool.filterDataForRender(tidelineData!.hourlyFills)
+        : container.datum() as Fill[]
 
       // Data join, the DOM follows the chronological order of the data
       const tickGroups = container

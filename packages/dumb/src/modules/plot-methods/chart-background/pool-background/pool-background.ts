@@ -35,7 +35,6 @@ import { type PlotSelection } from '../../../../models/plot-methods/plot-selecti
 import { type Pool } from '../../../../models/plot-methods/pool.model'
 import { drawVerticalRectangle } from '../../../../utils/daily-chart/daily-chart.util'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
-import { splitFillsByHour } from '../axes/daily-x-axis'
 
 const HOUR_LINE_WIDTH = 0.5
 const MIDNIGHT_LINE_WIDTH = 1
@@ -59,7 +58,7 @@ const defaults: Partial<PoolBackgroundOptions> = {
  *
  * The background is made of one rectangle per time slot (see `MedicalDataService.fills`),
  * a thin vertical line at the start of each slot and a thicker one at midnight.
- * With `hourlyLines`, each slot is split into one-hour slots (used when a few hours are displayed).
+ * With `hourlyLines`, the one-hour slots are used instead (see `MedicalDataService.hourlyFills`).
  * When `onBackgroundClick` is provided, the background becomes clickable and the callback
  * receives the date matching the clicked position.
  *
@@ -163,8 +162,8 @@ export const plotPoolBackground = (
 
       // Step 1: Get filtered data from pool. Unlike the data bound by the pool, it includes
       // the slot overlapping the start of the rendered range
-      const slots = pool.filterDataForRender(options.tidelineData.fills)
-      const fills = hourlyLines ? splitFillsByHour(slots) : slots
+      const { fills: slots, hourlyFills } = options.tidelineData
+      const fills = pool.filterDataForRender(hourlyLines ? hourlyFills : slots)
 
       // Step 2: Early exit if no data
       if (fills.length < 1) {

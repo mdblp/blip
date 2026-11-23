@@ -36,7 +36,7 @@ import { generateBasicData } from './basics-data.service'
 import BasalService from './datum/basal.service'
 import BolusService from './datum/bolus.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
-import FillService from './datum/fill.service'
+import FillService, { splitFillsByHour } from './datum/fill.service'
 import NoteService from './datum/note.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
@@ -113,6 +113,9 @@ class MedicalDataService {
   lastDatumEpoch: number | null = null
 
   fills: Fill[] = []
+
+  /** The fills split into one-hour slots (see `splitFillsByHour`) */
+  hourlyFills: Fill[] = []
 
   // for compatibility with tidelineData interface only... see generateBasicsData
   basicsData: BasicData | null = null
@@ -578,6 +581,7 @@ class MedicalDataService {
     }
 
     this.fills = fillData
+    this.hourlyFills = splitFillsByHour(fillData)
   }
 
   private removeUmmBolus() {

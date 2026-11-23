@@ -256,7 +256,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   // x-axis pools
   // add ticks to top x-axis pool
-  poolXAxis.addPlotType({ type: 'fill' }, plotDailyXAxis(poolXAxis, { hourlyTicks: isMobile }))
+  poolXAxis.addPlotType({ type: 'fill' }, plotDailyXAxis(poolXAxis, { tidelineData, hourlyTicks: isMobile }))
 
   const targetDate = new Date(epochLocation)
   const currentParameters = pumpSettingsPayload?.parameters

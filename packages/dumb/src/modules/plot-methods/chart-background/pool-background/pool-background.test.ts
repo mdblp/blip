@@ -57,9 +57,9 @@ describe('plotPoolBackground', () => {
   const render = (pool: Pool<Fill>, fills: Fill[], onBackgroundClick?: (date: Date) => void, hourlyLines = false): {
     plot: (selection: PlotSelection<Fill>) => void
     selection: PlotSelection<Fill>
-    tidelineData: { fills: Fill[] }
+    tidelineData: { fills?: Fill[], hourlyFills?: Fill[] }
   } => {
-    const tidelineData = { fills }
+    const tidelineData = hourlyLines ? { hourlyFills: fills } : { fills }
     const svg = d3.select(document.body).append('svg')
     const selection = svg.append('g') as unknown as PlotSelection<Fill>
     const plot = plotPoolBackground(pool, { tidelineData: tidelineData as unknown as MedicalDataService, onBackgroundClick, hourlyLines })
@@ -87,7 +87,11 @@ describe('plotPoolBackground', () => {
   })
 
   it('should draw a vertical line every hour when hourly lines are requested', () => {
-    render(buildPool(), [buildFill('2023-01-01T00:00:00.000Z', '2023-01-01T03:00:00.000Z', true)], undefined, true)
+    render(buildPool(), [
+      buildFill('2023-01-01T00:00:00.000Z', '2023-01-01T01:00:00.000Z', true),
+      { ...buildFill('2023-01-01T01:00:00.000Z', '2023-01-01T02:00:00.000Z'), id: '2023-01-01T00:00:00.000Z-h1' },
+      { ...buildFill('2023-01-01T02:00:00.000Z', '2023-01-01T03:00:00.000Z'), id: '2023-01-01T00:00:00.000Z-h2' }
+    ], undefined, true)
 
     const slots = document.querySelectorAll('g.d3-poolBackground-group')
     expect(slots).toHaveLength(3)
