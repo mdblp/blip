@@ -32,19 +32,10 @@ import { UserAccount } from './models/user-account.model'
 import { type Preferences } from './models/preferences.model'
 import { type Settings } from './models/settings.model'
 import { type CompleteSignupPayload } from './models/complete-signup-payload.model'
-import { UserRole } from './models/enums/user-role.enum'
-import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 
 const log = bows('User API')
 
 export default class UserApi {
-  static async changeUserRoleToHcp(userId: string, payload: ChangeUserRoleToHcpPayload): Promise<void> {
-    await HttpService.post({
-      url: `/bff/v1/accounts/${userId}`,
-      payload: { ...payload, role: UserRole.Hcp }
-    })
-  }
-
   static async completeUserSignup(userId: string, payload: CompleteSignupPayload): Promise<CompleteSignupPayload> {
     const { data } = await HttpService.post<CompleteSignupPayload, CompleteSignupPayload>({
       url: `/bff/v1/accounts/${userId}`,

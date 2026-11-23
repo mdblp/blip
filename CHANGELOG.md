@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.12.0-beta - 2026-10-23
 ### Changed
 - YLP-4155 Update Daily Y axis to use guidelines + chips
+- YLP-4221 Remove the ability for a caregiver to create an HCP account
 
 ### Engineering
 - YLP-3466 Remove unused env variables
@@ -19,7 +20,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-4168 Minor dependencies version update
 - YLP-4189 Disable yourloops maintenance page for allowed IPs
 - YLP-4197 GitHub workflows dependencies update
-- YLP-4221 Remove the ability for a caregiver to create an HCP account
 - YLP-4225 Remove dead code from `tideline` package
 
 ## 3.11.0 - 2026-10-19
