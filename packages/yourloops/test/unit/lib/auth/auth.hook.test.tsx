@@ -29,7 +29,7 @@ import React, { act } from 'react'
 import { render, waitFor } from '@testing-library/react'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
-import { type AuthContext, AuthContextProvider, type SignupForm, useAuth, type User } from '../../../../lib/auth'
+import { type AuthContext, AuthContextProvider, type SignupForm, useAuth } from '../../../../lib/auth'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
@@ -169,33 +169,6 @@ describe('Auth hook', () => {
       })
       expect(UserApi.updateSettings).toHaveBeenCalledWith(auth.user.id, updatedSettings)
       expect(auth.user.settings).toEqual(updatedSettings)
-    })
-  })
-
-  describe('Change role from Caregiver to Hcp', () => {
-    it('should change the user role', async () => {
-      jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
-      jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
-        profile: { ...account, hcpProfession: undefined },
-        preferences,
-        settings
-      })
-
-      const now = Date.now()
-      await initAuthContext()
-      await act(async () => {
-        await auth.switchRoleToHCP(false, HcpProfession.diabeto)
-      })
-      const updatedUser: User = auth.user
-
-      expect(UserApi.changeUserRoleToHcp).toHaveBeenCalledTimes(1)
-      expect(updatedUser.account.termsOfUse.isAccepted).toBe(true)
-      expect(updatedUser.account.privacyPolicy.isAccepted).toBe(true)
-      expect(Date.parse(updatedUser.account.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
-      expect(Date.parse(updatedUser.account.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
-      expect(updatedUser.role).toBe(UserRole.Hcp)
-      expect(updatedUser.account.hcpProfession).toEqual(HcpProfession.diabeto)
-      expect(updatedUser.account.contactConsent.isAccepted).toBeFalsy()
     })
   })
 

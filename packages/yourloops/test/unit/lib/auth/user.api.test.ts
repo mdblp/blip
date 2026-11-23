@@ -35,8 +35,6 @@ import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.mod
 import { type CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCode } from '../../../../lib/auth/models/country.model'
-import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
-import { type ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/change-user-role-to-hcp-payload.model'
 
 describe('User API', () => {
   const userId = 'userId'
@@ -124,24 +122,6 @@ describe('User API', () => {
       expect(HttpService.post).toHaveBeenCalledWith({
         url: `/bff/v1/accounts/${userId}`,
         payload
-      })
-    })
-  })
-
-  describe('changeUserRoleToHcp', () => {
-    it('should return the change user role payload on success', async () => {
-      const now = new Date().toISOString()
-      const payload: ChangeUserRoleToHcpPayload = {
-        termsOfUse: { acceptanceTimestamp: now, isAccepted: true },
-        privacyPolicy: { acceptanceTimestamp: now, isAccepted: true },
-        contactConsent: { acceptanceTimestamp: now, isAccepted: true },
-        hcpProfession: HcpProfession.diabeto
-      }
-      jest.spyOn(HttpService, 'post').mockResolvedValue({ data: payload } as AxiosResponse)
-      await UserApi.changeUserRoleToHcp(userId, payload)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: `/bff/v1/accounts/${userId}`,
-        payload: { ...payload, role: UserRole.Hcp }
       })
     })
   })

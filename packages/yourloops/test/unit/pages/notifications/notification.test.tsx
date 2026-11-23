@@ -27,14 +27,12 @@
 
 import React from 'react'
 import moment from 'moment-timezone'
-import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
 import { Notification } from '../../../../pages/notifications/notification'
 import { type InAppNotification } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { InAppNotificationStatus } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
@@ -81,15 +79,9 @@ describe('Notification', () => {
   }
 
   const fakeNotification = (
-    notification: InAppNotification = notif,
-    role: UserRole = UserRole.Hcp,
-    onHelp = () => _.noop
+    notification: InAppNotification = notif
   ): JSX.Element => (
-    <Notification
-      notification={notification}
-      userRole={role}
-      onHelp={onHelp}
-    />
+    <Notification notification={notification} />
   )
 
   describe('wrapped notification', () => {
@@ -107,22 +99,6 @@ describe('Notification', () => {
         })
       )
       expect(getByText(container, 'Jeanne Dubois invites you to join', { exact: false })).not.toBeNull()
-      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).toBeNull()
-    })
-
-    it('should display medical team join invitation with more info button for a member having a caregiver role', () => {
-      const { container } = render(
-        fakeNotification({
-          ...notif,
-          type: INotificationType.CareTeamProInvitation,
-          payload: { ...notif.payload, careTeamId: '0', careTeamName: 'target' }
-        },
-        UserRole.Caregiver
-        )
-      )
-
-      expect(getByText(container, 'Jeanne Dubois invites you to join', { exact: false })).not.toBeNull()
-      expect(container.querySelector('[data-testid="notification-button-accept"]')).not.toBeNull()
     })
 
     it('should display medical team join invitation for a patient', () => {
@@ -131,14 +107,11 @@ describe('Notification', () => {
           ...notif,
           type: INotificationType.CareTeamPatientInvitation,
           payload: { ...notif.payload, careTeamId: '0', careTeamName: 'grenoble DIAB service' }
-        },
-        UserRole.Patient
-        )
+        })
       )
 
       expect(getByText(container, "You're invited to share your diabetes data with", { exact: false })).not.toBeNull()
       expect(getByText(container, 'grenoble DIAB service', { exact: false })).not.toBeNull()
-      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).toBeNull()
     })
 
     describe('getIconToDisplay', () => {
@@ -196,11 +169,7 @@ describe('Notification', () => {
 
     const NotificationComponent = (props: { notif: InAppNotification }): JSX.Element => {
       return (
-        <Notification
-          notification={props.notif}
-          userRole={UserRole.Hcp}
-          onHelp={_.noop}
-        />
+        <Notification notification={props.notif} />
       )
     }
 

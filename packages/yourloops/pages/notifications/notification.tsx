@@ -41,7 +41,6 @@ import { useAlert } from '../../components/utils/snackbar'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { useTeam } from '../../lib/team'
 import { type InAppNotification } from '../../lib/notifications/models/notification.model'
-import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationMetricType } from '../../lib/notifications/models/enums/notification-type.enum'
 import { JoinTeamDialog } from '../../components/dialogs/join-team/join-team-dialog'
@@ -55,8 +54,6 @@ export interface NotificationSpanProps {
 
 interface NotificationProps {
   notification: InAppNotification
-  userRole: UserRole
-  onHelp: () => void
 }
 
 interface NotificationIconPayload {
@@ -213,7 +210,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const patientsHook = usePatientsContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
-  const { notification, userRole, onHelp } = props
+  const { notification } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === INotificationType.CareTeamPatientInvitation
@@ -285,9 +282,6 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
   }
-  const handleAcceptButtonClick = (): void => {
-    userRole === UserRole.Caregiver && notification.type === INotificationType.CareTeamProInvitation ? onHelp() : onOpenInvitationDialog()
-  }
 
   return (
     <div id={`notification-line-${id}`} data-testid="notification-line"
@@ -310,7 +304,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
           disableElevation
           className={`${classes.buttonAccept} notification-button-accept`}
           disabled={inProgress}
-          onClick={handleAcceptButtonClick}
+          onClick={onOpenInvitationDialog}
         >
           {t('button-accept')}
         </Button>
