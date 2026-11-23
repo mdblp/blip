@@ -132,8 +132,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.endpoints = []
   /** @type {Date[]} */
   container.initialEndpoints = []
-  /** @type {Date | null} End of the displayed range when going to the most recent data */
-  container.mostRecentEnd = null
   /** @type {{[x: string]: boolean}} For each pool, what type of data it accept */
   container.dataFill = {}
   container.emitter = emitter
@@ -235,15 +233,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.mainGroup.transition(zoomTransition)
   }
 
-  /** @returns {number} The center (epoch in ms) of the most recent displayed range */
-  function getMostRecentCenter() {
-    return container.mostRecentEnd.valueOf() - visibleDuration / 2
-  }
-
   container.panForward = function() {
     const domain = container.getCurrentDomain()
-    // Don't go further than the most recent displayed range (see setToMostRecent)
-    container.panToDate(new Date(Math.min(domain.center.valueOf() + MS_IN_DAY, getMostRecentCenter())))
+    container.panToDate(new Date(domain.center.valueOf() + MS_IN_DAY))
   }
 
   container.panBack = function() {
@@ -472,14 +464,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     if (!nav.scrollNav) {
       return container
     }
-    container.scrollNav.selectAll('line').remove()
     container.scrollNav.attr('transform', `translate(0,${height - (nav.scrollNavHeight * 2 / 5)})`)
-      .insert('line', '.scrollThumb')
-      .attr('stroke-width', nav.scrollGutterHeight)
-      .attr('x1', axisGutter + nav.scrollGutterHeight/2)
-      .attr('x2', width - nav.scrollGutterHeight/2)
-      .attr('y1', 0)
-      .attr('y2', 0)
 
     renderScrollBar = plotScrollBar({
       start: container.endpoints[0],
@@ -521,7 +506,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** Jump the daily view to the most recent date, with a smooth pan */
   container.setToMostRecent = function setToMostRecent() {
     const domain = container.getCurrentDomain()
-    const newDateMS = getMostRecentCenter()
+    const newDateMS = container.initialEndpoints[1].valueOf() - visibleDuration / 2
     const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
     container.panToDate(new Date(newDateMS), transitionDelay)
   }
@@ -559,7 +544,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.dataFill = null
     container.endpoints = null
     container.initialEndpoints = null
-    container.mostRecentEnd = null
     container.emitter = null
     container.options = null
     container.pools = null
@@ -643,7 +627,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       log.error('The endpoints of your data are less than 24 hours apart.')
     }
 
-    const visibleStart = moment.utc(last).tz(lastTimezone)
+    // The chart can't be panned further than the most recent displayed range
+    const visibleEnd = moment.utc(td.getMostRecentVisibleEnd(visibleDuration))
+    const visibleStart = moment.utc(visibleEnd).tz(lastTimezone)
     if (visibleDuration === MS_IN_DAY) {
       // Keep the calendar day subtraction (DST aware)
       visibleStart.subtract(1, 'day')
@@ -651,9 +637,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       visibleStart.subtract(visibleDuration, 'milliseconds')
     }
     // initialEndpoints ~= set the zoom (time axis) value of the displayed chart
-    container.initialEndpoints = [visibleStart.toDate(), last.toDate()]
+    container.initialEndpoints = [visibleStart.toDate(), visibleEnd.toDate()]
     container.endpoints = [first.toDate(), last.toDate()]
-    container.mostRecentEnd = new Date(td.getMostRecentVisibleEnd(visibleDuration))
 
     return container
   }

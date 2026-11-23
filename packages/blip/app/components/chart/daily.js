@@ -378,13 +378,11 @@ class Daily extends React.Component {
           : moment.tz(date, timezone).add(TimeService.MS_IN_DAY / 2, 'milliseconds')
         this.log.debug('DatePicker', date, timezone, mDate.toISOString())
         // Don't go further than the most recent displayed range
-        const visibleDuration = this.getVisibleDuration()
+        const visibleDuration = getDailyVisibleDuration(isMobile)
         const mostRecentCenter = tidelineData.getMostRecentVisibleEnd(visibleDuration) - visibleDuration / 2
         this.chartRef.current.goToDate(new Date(Math.min(mDate.valueOf(), mostRecentCenter)))
       }
     }
-
-    const isDesktop = !isMobile
 
     return (
       <div id="tidelineMain" className="daily">
@@ -422,7 +420,7 @@ class Daily extends React.Component {
                   startDate={this.startDate}
                 />
               </Box>
-              {tidelineData.basicsData?.data?.pumpSettings?.data?.[0]?.payload?.parameters?.length > 0 && isDesktop &&
+              {tidelineData.basicsData?.data?.pumpSettings?.data?.[0]?.payload?.parameters?.length > 0 && !isMobile &&
                 <ShowParametersAt
                   date={epochLocation}
                   parameters={tidelineData.basicsData.data.pumpSettings.data[0].payload.parameters}
@@ -478,7 +476,7 @@ class Daily extends React.Component {
                   ref={this.chartRef}
                 />
               </div>
-              {isDesktop &&
+              {!isMobile &&
                 <Box marginBlock={2}>
                   <ChartFooter onClickRefresh={this.props.onClickRefresh} />
                 </Box>
@@ -507,22 +505,15 @@ class Daily extends React.Component {
    * @private
    */
   isAtMostRecent(epoch = -1) {
-    const { tidelineData, epochLocation } = this.props
+    const { tidelineData, epochLocation, isMobile } = this.props
     if (epoch < 0) {
       epoch = epochLocation
     }
     // Takes the most recent displayable end, substract half of the displayed duration, because "epoch" is the center
     // of the displayed duration, substract 1ms to be sure ">" work.
-    const visibleDuration = this.getVisibleDuration()
+    const visibleDuration = getDailyVisibleDuration(isMobile)
     const endDate = tidelineData.getMostRecentVisibleEnd(visibleDuration) - 1 - visibleDuration / 2
     return epoch > endDate
-  }
-
-  /**
-   * @returns {number} The duration (in ms) displayed in the chart
-   */
-  getVisibleDuration() {
-    return getDailyVisibleDuration(this.props.isMobile)
   }
 
   getEndpoints() {
