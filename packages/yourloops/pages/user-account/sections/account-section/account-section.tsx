@@ -31,7 +31,6 @@ import CardContent from '@mui/material/CardContent'
 import { UserAccountPageContextProvider } from '../../user-account-page-context'
 import { UserAccountForm } from '../../forms/user-account-form'
 import { SecurityForm } from '../../forms/security-form'
-import { ProfessionalAccountForm } from '../../forms/professional-account-form'
 import { useAuth } from '../../../../lib/auth'
 import { useTranslation } from 'react-i18next'
 
@@ -50,10 +49,6 @@ export const AccountSection: FC = () => {
 
         {!user.isUserPatient() &&
           <SecurityForm />
-        }
-
-        {user.isUserCaregiver() &&
-          <ProfessionalAccountForm />
         }
       </CardContent>
     </>

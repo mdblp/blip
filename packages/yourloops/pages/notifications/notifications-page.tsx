@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import Container from '@mui/material/Container'
@@ -33,11 +33,9 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 
-import metrics from '../../lib/metrics'
 import { setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
-import SwitchRoleDialogs from '../../components/switch-role'
 
 import { type InAppNotification } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
@@ -68,22 +66,12 @@ export const NotificationsPage: FunctionComponent = () => {
   const { classes } = useStyles()
   const { user } = useAuth()
   const notificationsHook = useNotification()
-  const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
   const notifications = notificationsHook.receivedInvitations
 
   setPageTitle(t('breadcrumb-notifications'))
 
   if (user === null) {
     throw new Error('Notification require a logged-in user')
-  }
-
-  const handleSwitchRoleOpen = (): void => {
-    metrics.send('switch_account', 'display_switch_notification')
-    setSwitchRoleOpen(true)
-  }
-
-  const handleSwitchRoleCancel = (): void => {
-    setSwitchRoleOpen(false)
   }
 
   return (
@@ -98,11 +86,7 @@ export const NotificationsPage: FunctionComponent = () => {
                   disableGutters
                   divider={index !== notifications.length - 1}
                 >
-                  <Notification
-                    notification={notification}
-                    userRole={user.role}
-                    onHelp={handleSwitchRoleOpen}
-                  />
+                  <Notification notification={notification} />
                 </ListItem>
               ))
             ) : (
@@ -116,7 +100,6 @@ export const NotificationsPage: FunctionComponent = () => {
               </Typography>
             )}
           </List>
-          {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
         </Container>
         : <SpinningLoader className="centered-spinning-loader" />
       }

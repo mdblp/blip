@@ -39,7 +39,6 @@ import bows from 'bows'
 import _ from 'lodash'
 
 import { AppState, useAuth0 } from '@auth0/auth0-react'
-import { type HcpProfession } from './models/enums/hcp-profession.enum'
 import User from './models/user.model'
 import HttpService from '../http/http.service'
 import UserApi from './user.api'
@@ -52,7 +51,6 @@ import { type Settings } from './models/settings.model'
 import { UserRole } from './models/enums/user-role.enum'
 import { type AuthenticatedUser } from './models/authenticated-user.model'
 import { type SignupForm } from './models/signup-form.model'
-import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
 import { sanitizeBgUnit } from './user.util'
 import DblCommunicationApi from '../dbl-communication/dbl-communication.api'
@@ -138,24 +136,6 @@ export function AuthContextImpl(): AuthContext {
 
   const getFlagPatients = (): string[] => {
     return user?.preferences?.patientsStarred ?? []
-  }
-
-  const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
-    const user = getUser()
-    const now = new Date().toISOString()
-    const payload: ChangeUserRoleToHcpPayload = {
-      termsOfUse: { acceptanceTimestamp: now, isAccepted: true },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: true },
-      contactConsent: { acceptanceTimestamp: now, isAccepted: feedbackConsent },
-      hcpProfession
-    }
-
-    await UserApi.changeUserRoleToHcp(user.id, payload)
-    await refreshToken() // Refreshing access token to get the new role in it
-
-    user.role = UserRole.Hcp
-    user.account = { ...user.account, ...payload }
-    refreshUser()
   }
 
   const updateUserLanguage = (user: User): void => {
@@ -301,7 +281,6 @@ export function AuthContextImpl(): AuthContext {
     flagPatient,
     setFlagPatients,
     getFlagPatients,
-    switchRoleToHCP,
     setAppStateJson
   }
 }
