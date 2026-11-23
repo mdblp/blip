@@ -30,6 +30,7 @@ import HttpService from '../../../../lib/http/http.service'
 import { type InformationPage } from '../../../../lib/dbl-communication/models/page.model'
 import { type BannerContent } from '../../../../lib/dbl-communication/models/banner.model'
 import { type AxiosResponse } from 'axios'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 
 jest.mock('../../../../lib/http/http.service')
 const mockedHttpService = HttpService as jest.Mocked<typeof HttpService>
@@ -58,14 +59,14 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockResolvedValue({ data: mockApiResponse } as AxiosResponse)
 
       // When
-      const result = await DblCommunicationApi.getInfoPage()
+      const result = await DblCommunicationApi.getInfoPage(UserRole.Patient)
 
       // Then
       expect(mockedHttpService.get).toHaveBeenCalledWith({
         config: {
           headers: { "Accept-Language": "en" }
         },
-        url: "bff/communications/ylp-info-page?lang=en"
+        url: "bff/communications/ylp-info-page?lang=en&role=patient"
       })
       expect(result).toEqual({
         ...mockApiResponse
@@ -78,14 +79,14 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockRejectedValue(mockError)
 
       // When
-      const result = await DblCommunicationApi.getInfoPage()
+      const result = await DblCommunicationApi.getInfoPage(UserRole.Patient)
 
       // Then
       expect(mockedHttpService.get).toHaveBeenCalledWith({
         config: {
           headers: { "Accept-Language": "en" }
         },
-        url: "bff/communications/ylp-info-page?lang=en"
+        url: "bff/communications/ylp-info-page?lang=en&role=patient"
       })
       expect(result).toBeNull()
     })
@@ -95,7 +96,7 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockResolvedValue({ data: null } as AxiosResponse)
 
       // When
-      const result = await DblCommunicationApi.getInfoPage()
+      const result = await DblCommunicationApi.getInfoPage(UserRole.Patient)
 
       // Then
       expect(result).toEqual(null)
@@ -114,14 +115,14 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockResolvedValue({ data: mockBannerData } as AxiosResponse)
 
       // When
-      const result = await DblCommunicationApi.getDblBanner()
+      const result = await DblCommunicationApi.getDblBanner(UserRole.Patient)
 
       // Then
       expect(mockedHttpService.get).toHaveBeenCalledWith({
         config: {
           headers: { "Accept-Language": "en" }
         },
-        url: "bff/communications/ylp-banner?lang=en"
+        url: "bff/communications/ylp-banner?lang=en&role=patient"
       })
       expect(result).toEqual(mockBannerData)
     })
@@ -132,14 +133,14 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockRejectedValue(mockError)
 
       // When
-      const result = await DblCommunicationApi.getDblBanner()
+      const result = await DblCommunicationApi.getDblBanner(UserRole.Patient)
 
       // Then
       expect(mockedHttpService.get).toHaveBeenCalledWith({
         config: {
           headers: { "Accept-Language": "en" }
         },
-        url: "bff/communications/ylp-banner?lang=en"
+        url: "bff/communications/ylp-banner?lang=en&role=patient"
       })
       expect(result).toBeNull()
     })
@@ -155,7 +156,7 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockResolvedValue({ data: infoBanner } as AxiosResponse)
 
       // When
-      const result = await DblCommunicationApi.getDblBanner()
+      const result = await DblCommunicationApi.getDblBanner(UserRole.Patient)
 
       // Then
       expect(result).toEqual(infoBanner)
@@ -172,7 +173,7 @@ describe('DblCommunicationApi', () => {
       mockedHttpService.get.mockResolvedValue({ data: errorBanner } as AxiosResponse)
 
       // When
-      const result = await DblCommunicationApi.getDblBanner()
+      const result = await DblCommunicationApi.getDblBanner(UserRole.Patient)
 
       // Then
       expect(result).toEqual(errorBanner)
