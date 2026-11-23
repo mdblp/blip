@@ -355,8 +355,12 @@ export const checkDailyViewChartMobileLayout = async () => {
   expect(screen.getByTestId('daily-header')).toHaveStyle({ justifyContent: 'center' })
 
   // No scroll bar below the chart
-  expect(document.getElementById('tidelineScrollNav')).toBeNull()
-  expect(document.querySelector('.scrollThumb')).toBeNull()
+  expect(document.getElementById('tidelineScrollNav')).not.toBeInTheDocument()
+  expect(document.querySelector('.scrollThumb')).not.toBeInTheDocument()
+}
+
+export const checkDailyViewChartFooterIsNotDisplayed = () => {
+  expect(screen.queryByRole('button', { name: getTranslation('Refresh') })).not.toBeInTheDocument()
 }
 
 export const checkDailyViewXAxisMobile = () => {
@@ -418,6 +422,56 @@ export const checkDailyViewMobileNavigation = async (router: Router) => {
   // 4 hours ending 30 minutes after the most recent datum (19:00 UTC)
   await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
   checkDailyViewAtMostRecentData()
+}
+
+/**
+ * @param expectedStats The expected text content of each stat widget, by test id
+ */
+const checkDailyStats = async (expectedStats: Record<string, string>) => {
+  // The stats are updated after the end of the chart transition
+  await waitFor(() => {
+    const patientStatistics = within(screen.getByTestId('patient-statistics'))
+    Object.entries(expectedStats).forEach(([testId, expectedTextContent]) => {
+      expect(patientStatistics.getByTestId(testId)).toHaveTextContent(expectedTextContent)
+    })
+  }, { timeout: 3000 })
+}
+
+// All the data of August 8, same stats as on desktop
+const MOST_RECENT_DAILY_STATS = {
+  'time-in-range-chart': 'Time In Range10m13%5m7%15m20%20m27%25m33%<5454-7070-180180-250>250mg/dL',
+  'time-in-tight-range-chart': 'Time In Tight Range15m20%70-140mg/dL',
+  'total-carbs-stat': 'Total of declared carbs360gMeal carbs345gRescue carbs15g',
+  'container-insulin-stats': 'Total Delivered Insulin71.2UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1U',
+  'loop-mode-stat': 'Time In Loop ModeONOFF0%1s100%6m',
+  'average-glucose-stat': 'Avg. Glucose (CGM)mg/dL101',
+  'cbg-standard-deviation-stat': 'Standard Deviation (22-180)mg/dL79',
+  'coefficient-of-variation-stat': 'CV (CGM)78%'
+}
+
+export const checkDailyViewMobileStats = async (router: Router) => {
+  // Most recent hours (15:30-19:30 UTC displayed): the stats cover 05:30 UTC to 05:30 UTC the next day,
+  // so they include all the data of August 8
+  await checkDailyStats(MOST_RECENT_DAILY_STATS)
+
+  // 24 hours before (15:30-19:30 UTC displayed): no data is displayed, but the stats still include
+  // the only data of August 7, a CGM value (189 mg/dL) at 12:00 UTC, within 12 hours of the center of the view
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
+  await checkDailyStats({
+    'time-in-range-chart': 'Time In Range0m0%5m100%0m0%0m0%0m0%<5454-7070-180180-250>250mg/dL',
+    'time-in-tight-range-chart': 'Time In Tight Range0m0%70-140mg/dL',
+    'total-carbs-stat': 'Total of declared carbs--Meal carbs--Rescue carbs--',
+    'container-insulin-stats': 'Total Delivered Insulin--Meal bolus-- %0UBasal & correction bolus-- %0U',
+    'loop-mode-stat': 'Time In Loop ModeONOFFN/AN/A',
+    'average-glucose-stat': 'Avg. Glucose (CGM)mg/dL189',
+    'cbg-standard-deviation-stat': 'Standard Deviationmg/dL--',
+    'coefficient-of-variation-stat': 'CV (CGM)--'
+  })
+
+  await userEvent.click(screen.getByTestId('button-nav-mostrecent'))
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
+  await checkDailyStats(MOST_RECENT_DAILY_STATS)
 }
 
 export const checkDailyViewMobileCalendarSelection = async (router: Router) => {

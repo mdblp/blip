@@ -39,11 +39,13 @@ import {
   checkDailyTimeInRangeStatsWidgetsMgdl,
   checkDailyTimeInRangeStatsWidgetsMmolL,
   checkDailyViewAtMostRecentData,
+  checkDailyViewChartFooterIsNotDisplayed,
   checkDailyViewChartMobileLayout,
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
   checkDailyViewMobileCalendarSelection,
   checkDailyViewMobileNavigation,
+  checkDailyViewMobileStats,
   checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
   checkEventsSuperposition,
@@ -170,9 +172,11 @@ export const testDailyViewChartsDblg1 = () => {
 export const testDailyViewChartMobile = async (router: Router) => {
   await checkDailyViewChartMobileLayout()
   checkShowParametersButtonIsNotDisplayed()
+  checkDailyViewChartFooterIsNotDisplayed()
   checkDailyViewXAxisMobile()
   checkDailyViewPoolBackgroundMobile()
   checkDailyViewAtMostRecentData()
+  await checkDailyViewMobileStats(router)
   await checkDailyViewMobileNavigation(router)
   await checkDailyViewMobileCalendarSelection(router)
 }
