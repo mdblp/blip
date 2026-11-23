@@ -146,7 +146,7 @@ export function AuthContextImpl(): AuthContext {
   }
 
   const getDblCommunicationMessages = async (user: User): Promise<void> => {
-    user.newDblCommunication = await DblCommunicationApi.getInfoPage()
+    user.newDblCommunication = await DblCommunicationApi.getInfoPage(user.role)
   }
 
   async function getProfile(user: User) {
