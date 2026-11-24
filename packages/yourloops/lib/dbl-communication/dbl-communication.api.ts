@@ -30,15 +30,16 @@ import { InformationPage } from './models/page.model'
 import { BannerContent } from './models/banner.model'
 import bows from 'bows'
 import { getCurrentLang } from '../language'
+import { type UserRole } from '../auth/models/enums/user-role.enum'
 
 const log = bows('DblCommunication API')
 
 export default class DblCommunicationApi {
-  static async getInfoPage(): Promise<InformationPage | null> {
+  static async getInfoPage(role: UserRole): Promise<InformationPage | null> {
     const lang = getCurrentLang()
     try {
       const { data } = await HttpService.get<InformationPage>({
-        url: 'bff/communications/ylp-info-page?lang=' + lang,
+        url: `bff/communications/ylp-info-page?lang=${lang}&role=${role}`,
         config: {
           headers: { 'Accept-Language': lang }
         }
@@ -50,11 +51,11 @@ export default class DblCommunicationApi {
     }
   }
 
-  static async getDblBanner(): Promise<BannerContent | null> {
+  static async getDblBanner(role: UserRole): Promise<BannerContent | null> {
     const lang = getCurrentLang()
     try {
       const { data } = await HttpService.get<BannerContent>({
-        url: 'bff/communications/ylp-banner?lang=' + lang,
+        url: `bff/communications/ylp-banner?lang=${lang}&role=${role}`,
         config: {
           headers: { 'Accept-Language': lang }
         }

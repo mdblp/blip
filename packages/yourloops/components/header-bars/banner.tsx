@@ -35,9 +35,11 @@ import {
   isBannerInfoAcknowledged,
   registerBannerAck,
 } from '../../lib/dbl-communication/storage'
+import { useAuth } from '../../lib/auth'
 
 
 export const Banner = (): JSX.Element => {
+  const { user } = useAuth()
   const [closed, setClosed] = React.useState<boolean>(false)
   const [newBannerAvailable, setNewBannerAvailable] = React.useState<boolean>(false)
   const [banner, setBanner] = React.useState<BannerContent>()
@@ -50,7 +52,7 @@ export const Banner = (): JSX.Element => {
 
   useEffect(() => {
     const fetchBanner = async (): Promise<void> => {
-      const dblInfo = await DblCommunicationApi.getDblBanner()
+      const dblInfo = await DblCommunicationApi.getDblBanner(user.role)
       if (!dblInfo || isBannerInfoAcknowledged(dblInfo)) {
         setNewBannerAvailable(false)
         return
@@ -58,8 +60,10 @@ export const Banner = (): JSX.Element => {
       setNewBannerAvailable(true)
       setBanner(dblInfo)
     }
-    fetchBanner()
-  }, [])
+    if (user?.role) {
+      fetchBanner()
+    }
+  }, [user?.role])
 
   return (
     <Snackbar
