@@ -369,6 +369,30 @@ export const checkDailyViewXAxisMobile = () => {
   expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm12:00 amSunday, August 71:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm12:00 amMonday, August 81:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm')
 }
 
+/**
+ * @param expectedTicks The expected text content of the ticks displayed on screen (not hidden by the chart clip path)
+ */
+const checkDailyViewXAxisVisibleTicks = (expectedTicks: string) => {
+  // jsdom does not compute the layout: compare the tick positions, panned, to the displayed area
+  const clipRect = document.querySelector('#mainClipPath rect')
+  const visibleStartX = Number(clipRect.getAttribute('x'))
+  const visibleEndX = visibleStartX + Number(clipRect.getAttribute('width'))
+  const translateX = Number(/translate\(([^,]+),/.exec(document.getElementById('poolXAxis_fill').getAttribute('transform'))[1])
+
+  const visibleTimeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/).filter((timeSlot) => {
+    const x = Number(timeSlot.querySelector('line').getAttribute('x1')) + translateX
+    return x >= visibleStartX && x < visibleEndX
+  })
+  // 4 hours displayed: one tick every hour
+  expect(visibleTimeSlots).toHaveLength(4)
+  expect(visibleTimeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe(expectedTicks)
+}
+
+export const checkDailyViewXAxisMobileVisibleTicks = () => {
+  // Most recent hours, 15:30-19:30 UTC displayed (Europe/Paris)
+  checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
+}
+
 export const checkDailyViewPoolBackgroundMobile = () => {
   // A full vertical line below each hourly tick
   const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
@@ -401,6 +425,8 @@ export const checkDailyViewMobileNavigation = async (router: Router) => {
   await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
   expect(screen.getByTestId('button-nav-next')).toBeEnabled()
   expect(screen.getByTestId('button-nav-mostrecent')).toBeEnabled()
+  // Still only 4 hours displayed after panning
+  checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
 
   // We can't go before the start of the data (centered on 00:00 UTC)
   await userEvent.click(screen.getByTestId('button-nav-back'))

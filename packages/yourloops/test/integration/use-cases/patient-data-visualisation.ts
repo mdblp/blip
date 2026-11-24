@@ -48,6 +48,7 @@ import {
   checkDailyViewMobileStats,
   checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
+  checkDailyViewXAxisMobileVisibleTicks,
   checkEventsSuperposition,
   checkGlucoseChartYAxis,
   checkTotalCarbsStatContent
@@ -174,6 +175,7 @@ export const testDailyViewChartMobile = async (router: Router) => {
   checkShowParametersButtonIsNotDisplayed()
   checkDailyViewChartFooterIsNotDisplayed()
   checkDailyViewXAxisMobile()
+  checkDailyViewXAxisMobileVisibleTicks()
   checkDailyViewPoolBackgroundMobile()
   checkDailyViewAtMostRecentData()
   await checkDailyViewMobileStats(router)
