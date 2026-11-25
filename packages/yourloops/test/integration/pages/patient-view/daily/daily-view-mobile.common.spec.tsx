@@ -34,14 +34,14 @@ import { patient2Info } from '../../../data/patient.api.data'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 // Imported after data.api.mock because of a circular dependency between the two files
-import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
+import { getCompleteDailyViewData, getTimezoneChangeData } from '../../../mock/complete-daily-view-data'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockMobileElementWidth, mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import { mockNotesApi } from '../../../mock/notes.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { type Router } from '../../../models/router.model'
-import { testDailyViewChartMobile } from '../../../use-cases/patient-data-visualisation'
+import { testDailyViewChartMobile, testDailyViewXAxisMobileTimezoneChange } from '../../../use-cases/patient-data-visualisation'
 import { renderPage } from '../../../utils/render'
 
 describe('Daily view on mobile for anyone', () => {
@@ -84,5 +84,14 @@ describe('Daily view on mobile for anyone', () => {
     })
 
     await testDailyViewChartMobile(router)
+  })
+
+  it('should label each hourly tick in the timezone in effect at its time', async () => {
+    mockDataAPI(getTimezoneChangeData())
+    await act(async () => {
+      renderPage(dailyRoute)
+    })
+
+    await testDailyViewXAxisMobileTimezoneChange()
   })
 })

@@ -393,6 +393,13 @@ export const checkDailyViewXAxisMobileVisibleTicks = () => {
   checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
 }
 
+export const checkDailyViewXAxisMobileTimezoneChange = () => {
+  // Change from Europe/Paris to Europe/Dublin at 22:30 UTC, within the last slot of the chart (20:00-24:00 UTC):
+  // the hourly tick at 23:00 UTC is labeled in Europe/Dublin time (11 PM), not in Europe/Paris time (12 AM)
+  const lastSlotTicks = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/).slice(-4)
+  expect(lastSlotTicks.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm11:00 pm')
+}
+
 export const checkDailyViewPoolBackgroundMobile = () => {
   // A full vertical line below each hourly tick
   const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)

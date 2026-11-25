@@ -581,7 +581,7 @@ class MedicalDataService {
     }
 
     this.fills = fillData
-    this.hourlyFills = splitFillsByHour(fillData)
+    this.hourlyFills = splitFillsByHour(fillData, (epoch: number) => this.getTimezoneAt(epoch))
   }
 
   private removeUmmBolus() {

@@ -48,6 +48,7 @@ import {
   checkDailyViewMobileStats,
   checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
+  checkDailyViewXAxisMobileTimezoneChange,
   checkDailyViewXAxisMobileVisibleTicks,
   checkEventsSuperposition,
   checkGlucoseChartYAxis,
@@ -181,6 +182,11 @@ export const testDailyViewChartMobile = async (router: Router) => {
   await checkDailyViewMobileStats(router)
   await checkDailyViewMobileNavigation(router)
   await checkDailyViewMobileCalendarSelection(router)
+}
+
+export const testDailyViewXAxisMobileTimezoneChange = async () => {
+  await checkDailyViewChartMobileLayout()
+  checkDailyViewXAxisMobileTimezoneChange()
 }
 
 export const testDailyViewChartsDblg2 = () => {

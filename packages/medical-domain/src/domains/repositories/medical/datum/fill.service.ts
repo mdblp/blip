@@ -58,12 +58,14 @@ const filterOnDate = (data: Fill[], start: number, end: number, weekDaysFilter: 
 /**
  * Split each time slot into one-hour slots, used when a few hours are displayed
  *
- * Only the first hour of a slot can start at midnight.
+ * Each one-hour slot takes the timezone in effect at its start, as the patient timezone can change during a slot.
+ * Only the first hour of a slot can start at midnight: a new slot always starts at midnight (see `MedicalDataService.generateFillData`).
  *
  * @param fills - The time slots (see `MedicalDataService.fills`)
+ * @param getTimezoneAt - Returns the timezone in effect at an epoch (see `MedicalDataService.getTimezoneAt`)
  * @returns The one-hour slots, in chronological order
  */
-export const splitFillsByHour = (fills: Fill[]): Fill[] => {
+export const splitFillsByHour = (fills: Fill[], getTimezoneAt: (epoch: number) => string): Fill[] => {
   return fills.flatMap((fill: Fill): Fill[] => {
     if (typeof fill.epochEnd !== 'number') {
       return [fill]
@@ -75,6 +77,7 @@ export const splitFillsByHour = (fills: Fill[]): Fill[] => {
         id: `${fill.id}-h${hourlyFills.length}`,
         epoch,
         epochEnd: Math.min(epoch + MS_IN_HOUR, fill.epochEnd),
+        timezone: getTimezoneAt(epoch),
         startsAtMidnight: false
       })
     }
