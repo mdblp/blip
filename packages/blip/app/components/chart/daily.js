@@ -94,7 +94,6 @@ class DailyChart extends React.Component {
     onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
-    isEatingShortlyEnabled: PropTypes.bool.isRequired,
     isMobile: PropTypes.bool
   }
 
@@ -126,7 +125,6 @@ class DailyChart extends React.Component {
       'onTooltipOut',
       'onEventSuperpositionClick',
       'trackMetric',
-      'isEatingShortlyEnabled',
       'isMobile'
     ]
 
@@ -311,7 +309,6 @@ class Daily extends React.Component {
     onShowNoteThread: PropTypes.func.isRequired,
     // navigation handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
-    isEatingShortlyEnabled: PropTypes.bool.isRequired,
     isMobile: PropTypes.bool
   }
 
@@ -473,7 +470,6 @@ class Daily extends React.Component {
                   onEventSuperpositionClick={this.handleEventSuperpositionClick}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
-                  isEatingShortlyEnabled={this.props.isEatingShortlyEnabled}
                   isMobile={this.props.isMobile}
                   ref={this.chartRef}
                 />
