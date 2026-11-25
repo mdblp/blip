@@ -22,6 +22,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-4197 GitHub workflows dependencies update
 - YLP-4225 Remove dead code from `tideline` package
 - YLP-4268 Add query param role for communications
+- YLP-4269 Filter notification based on current role for the user
 - YLP-4270 Handle preferred role from Auth0 token
 
 ## 3.11.0 - 2026-10-19
