@@ -15,7 +15,6 @@ export YLPZ_RA_LAD_IT='intended-use.it'
 export YLPZ_RA_LAD_ES='intended-use.es'
 export YLPZ_RA_LAD_DE='intended-use.de'
 export IDLE_TIMEOUT_MS=1800000
-export EATING_SHORTLY_ENABLED=true
 export METRICS_CLICKODROME_ENABLED=true
 export DATE_OF_BIRTH_HIDDEN=false
 export CONTACT_SUPPORT_WEB_URL='https://example.com/'
