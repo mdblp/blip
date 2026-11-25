@@ -134,8 +134,8 @@ class DailyChart extends React.Component {
     this.state = {
       /** @type {function | null} */
       chart: null,
-      /** Avoid recreate the chart on loading: This leads to a crash */
-      needRecreate: false
+      /** A re-creation was requested while the chart could not be re-created (see `canRecreateChart`): it is done later */
+      isRecreatePending: false
     }
     /** @type {React.RefObject} */
     this.refNode = React.createRef()
@@ -146,15 +146,15 @@ class DailyChart extends React.Component {
   componentDidUpdate(prevProps) {
     // Prevent the scroll drag while loading
     const { loading, isMobile } = this.props
-    const { chart, needRecreate } = this.state
+    const { chart, isRecreatePending } = this.state
     if (!this.viewHasBeenInitialized || isMobile !== prevProps.isMobile) {
       // Mobile condition: The displayed duration depends on the device so the chart must be re-created
       this.handleWindowResize()
     }
     if (chart) {
       chart.loadingInProgress = loading
-      if (needRecreate && !loading && !chart.isInTransition()) {
-        this.setState({ needRecreate: false })
+      if (isRecreatePending && this.canRecreateChart()) {
+        this.setState({ isRecreatePending: false })
         this.reCreateChart()
       }
     }
@@ -230,20 +230,22 @@ class DailyChart extends React.Component {
     )
   }
 
+  /** The chart can't be re-created while the data is loading (this leads to a crash) or during a pan transition */
+  canRecreateChart() {
+    return !this.props.loading && this.state.chart?.isInTransition() !== true
+  }
+
   handleWindowResize = () => {
-    const { loading } = this.props
-    const { chart } = this.state
-    const needRecreate = loading || chart?.isInTransition() === true
-    if (!needRecreate) {
+    if (this.canRecreateChart()) {
       this.viewHasBeenInitialized = true
-      if (this.state.needRecreate) {
-        this.setState({ needRecreate: false })
+      if (this.state.isRecreatePending) {
+        this.setState({ isRecreatePending: false })
       }
       this.reCreateChart()
     } else {
       this.log.info('Delaying chart re-creation: loading or transition in progress')
-      if (!this.state.needRecreate) {
-        this.setState({ needRecreate: true })
+      if (!this.state.isRecreatePending) {
+        this.setState({ isRecreatePending: true })
       }
     }
   }
