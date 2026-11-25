@@ -15,11 +15,11 @@
  * == BSD2 LICENSE ==
  */
 
-@import "tideline-breakpoints.less";
 @import "tideline-colors.less";
 // typography
 @font-size-large: 14px;
 @font-size-medium: 12px;
+@font-size-small: 11px;
 
 svg {
   display: block;
@@ -43,8 +43,9 @@ svg {
       fill: var(--stat--default, @text);
     }
 
-    @media (max-width: @screen-sm-max) {
-      font-size: 10px;
+    // On mobile, same size as the guideline chips (see .d3-line-guide-chip-label)
+    .d3-daily-mobile & {
+      font-size: @font-size-medium;
     }
   }
 }
@@ -72,10 +73,6 @@ svg {
     &.label-light {
       font-weight: 300;
     }
-
-    @media (max-width: @screen-sm-max) {
-      font-size: 10px;
-    }
   }
 }
 
@@ -85,8 +82,8 @@ svg {
   text-anchor: end;
   fill: var(--stat--default, @text);
 
-  @media (max-width: @screen-sm-max) {
-    font-size: 10px;
+  .d3-daily-mobile & {
+    font-size: @font-size-small;
   }
   &.d3-pool-legend-space {
     white-space: pre;

@@ -32,6 +32,7 @@ import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { MS_IN_HOUR } from '../../time/time.service'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Fill => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -52,6 +53,36 @@ const deduplicate = (data: Fill[], opts: MedicalDataOptions): Fill[] => {
 
 const filterOnDate = (data: Fill[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Fill[] => {
   return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Fill[]
+}
+
+/**
+ * Split each time slot into one-hour slots, used when a few hours are displayed
+ *
+ * Each one-hour slot takes the timezone in effect at its start, as the patient timezone can change during a slot.
+ * Only the first hour of a slot can start at midnight: a new slot always starts at midnight (see `MedicalDataService.generateFillData`).
+ *
+ * @param fills - The time slots (see `MedicalDataService.fills`)
+ * @param getTimezoneAt - Returns the timezone in effect at an epoch (see `MedicalDataService.getTimezoneAt`)
+ * @returns The one-hour slots, in chronological order
+ */
+export const splitFillsByHour = (fills: Fill[], getTimezoneAt: (epoch: number) => string): Fill[] => {
+  return fills.flatMap((fill: Fill): Fill[] => {
+    if (typeof fill.epochEnd !== 'number') {
+      return [fill]
+    }
+    const hourlyFills = [{ ...fill, epochEnd: Math.min(fill.epoch + MS_IN_HOUR, fill.epochEnd) }]
+    for (let epoch = fill.epoch + MS_IN_HOUR; epoch < fill.epochEnd; epoch += MS_IN_HOUR) {
+      hourlyFills.push({
+        ...fill,
+        id: `${fill.id}-h${hourlyFills.length}`,
+        epoch,
+        epochEnd: Math.min(epoch + MS_IN_HOUR, fill.epochEnd),
+        timezone: getTimezoneAt(epoch),
+        startsAtMidnight: false
+      })
+    }
+    return hourlyFills
+  })
 }
 
 const FillService: DatumProcessor<Fill> = {

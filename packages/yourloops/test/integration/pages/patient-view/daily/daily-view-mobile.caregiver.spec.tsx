@@ -40,7 +40,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkHCPAndCaregiverHeaderPatientViewMobile } from '../../../assert/header-mobile.assert'
-import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { mockMobileElementWidth, mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import { checkPatientNavBarAsCaregiverMobile } from '../../../assert/patient-nav-bar.assert'
 
 describe('Daily view for caregiver', () => {
@@ -56,6 +56,7 @@ describe('Daily view for caregiver', () => {
     mockPatientApiForCaregivers()
     mockDblCommunicationApi()
     mockMobileScreen()
+    mockMobileElementWidth()
   })
 
   afterEach(() => {

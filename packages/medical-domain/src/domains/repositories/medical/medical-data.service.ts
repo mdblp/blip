@@ -36,7 +36,7 @@ import { generateBasicData } from './basics-data.service'
 import BasalService from './datum/basal.service'
 import BolusService from './datum/bolus.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
-import FillService from './datum/fill.service'
+import FillService, { splitFillsByHour } from './datum/fill.service'
 import NoteService from './datum/note.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
@@ -58,6 +58,7 @@ import {
   getStartOfDay,
   isValidTimeZone,
   MS_IN_DAY,
+  MS_IN_MIN,
   substractAtTimezone,
   toISOString,
   twoWeeksAgo
@@ -108,7 +109,13 @@ class MedicalDataService {
 
   endpoints: [string, string] = ['', '']
 
+  /** Epoch (in ms) of the most recent datum, null if there is no data */
+  lastDatumEpoch: number | null = null
+
   fills: Fill[] = []
+
+  /** The fills split into one-hour slots (see `splitFillsByHour`) */
+  hourlyFills: Fill[] = []
 
   // for compatibility with tidelineData interface only... see generateBasicsData
   basicsData: BasicData | null = null
@@ -199,6 +206,19 @@ class MedicalDataService {
       return defaultTimezone
     }
     return this._datumOpts.timezoneName
+  }
+
+  /**
+   * @param visibleDuration The duration (in ms) displayed in the chart
+   * @returns The end (epoch in ms) of the most recent displayed range containing data
+   */
+  getMostRecentVisibleEnd(visibleDuration: number): number {
+    const end = Date.parse(this.endpoints[1])
+    if (visibleDuration >= MS_IN_DAY || this.lastDatumEpoch === null) {
+      return end
+    }
+    // Smaller ranges end 30 minutes after the most recent datum, to be sure to display data
+    return Math.min(end, this.lastDatumEpoch + 30 * MS_IN_MIN)
   }
 
   add(data: MedicalData): void {
@@ -491,12 +511,14 @@ class MedicalDataService {
     const epochEnd = today.valueOf() + MS_IN_DAY
     let start = getStartOfDay(epochStart, this._datumOpts.timePrefs.timezoneName)
     let end = getEndOfDay(epochEnd, this._datumOpts.timePrefs.timezoneName)
+    this.lastDatumEpoch = null
     if (chartData.length > 0) {
       const first = chartData[0]
       const last = chartData[chartData.length - 1]
       const lastTime = this.getDatumEpoch(last)
       start = getStartOfDay(first.epoch, first.timezone)
       end = getEndOfDay(lastTime, last.timezone)
+      this.lastDatumEpoch = lastTime
       this._datumOpts.timePrefs.timezoneName = last.timezone
     }
 
@@ -559,6 +581,7 @@ class MedicalDataService {
     }
 
     this.fills = fillData
+    this.hourlyFills = splitFillsByHour(fillData, (epoch: number) => this.getTimezoneAt(epoch))
   }
 
   private removeUmmBolus() {

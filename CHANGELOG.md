@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-4155 Update Daily Y axis to use guidelines + chips
 - YLP-4221 Remove the ability for a caregiver to create an HCP account
+- YLP-4245 Daily view shows 4 hours on mobile screens
 
 ### Engineering
 - YLP-3466 Remove unused env variables
