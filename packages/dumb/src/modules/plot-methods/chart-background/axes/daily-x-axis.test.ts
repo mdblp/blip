@@ -26,6 +26,7 @@
  */
 
 import * as d3 from 'd3'
+import type MedicalDataService from 'medical-domain'
 import { DatumType, type Fill } from 'medical-domain'
 import { plotDailyXAxis } from './daily-x-axis'
 import { type Pool } from '../../../../models/plot-methods/pool.model'
@@ -52,13 +53,15 @@ describe('plotDailyXAxis', () => {
     startsAtMidnight
   }) as Fill
 
-  const render = (fills: Fill[]): {
+  const render = (fills: Fill[], hourlyTicks = false): {
     plot: (selection: PlotSelection<Fill>) => void
     selection: PlotSelection<Fill>
   } => {
     const svg = d3.select(document.body).append('svg')
     const selection = svg.append('g').datum(fills) as unknown as PlotSelection<Fill>
-    const plot = plotDailyXAxis(buildPool())
+    // The hourly ticks come from the one-hour slots of the medical data, not from the pool
+    const tidelineData = { hourlyFills: fills } as unknown as MedicalDataService
+    const plot = plotDailyXAxis(buildPool(), { tidelineData, hourlyTicks })
     plot(selection)
     return { plot, selection }
   }
@@ -142,4 +145,22 @@ describe('plotDailyXAxis', () => {
 
     expect(getTick('fill-2023-04-01T01:00:00.000Z').querySelector('text.d3-hour-label')?.textContent).toBe('6:00 pm')
   })
+
+  it('should draw a tick every hour when hourly ticks are requested', () => {
+    render([
+      buildFill('2023-01-01T00:00:00.000Z', true),
+      { ...buildFill('2023-01-01T01:00:00.000Z'), id: 'fill-2023-01-01T00:00:00.000Z-h1' },
+      { ...buildFill('2023-01-01T02:00:00.000Z'), id: 'fill-2023-01-01T00:00:00.000Z-h2' }
+    ], true)
+
+    expect(document.querySelectorAll('g.d3-dailyXAxis-group')).toHaveLength(3)
+    expect(getTick('fill-2023-01-01T00:00:00.000Z').querySelector('text.d3-day-label')?.textContent).toBe('Sunday, January 1')
+    const secondTick = getTick('fill-2023-01-01T00:00:00.000Z-h1')
+    expect(secondTick.querySelector('line')?.getAttribute('x1')).toBe('100')
+    expect(secondTick.querySelector('line')?.getAttribute('y2')).toBe('45')
+    expect(secondTick.querySelector('text.d3-hour-label')?.textContent).toBe('1:00 am')
+    expect(secondTick.querySelector('text.d3-day-label')).toBeNull()
+    expect(getTick('fill-2023-01-01T00:00:00.000Z-h2').querySelector('text.d3-hour-label')?.textContent).toBe('2:00 am')
+  })
 })
+

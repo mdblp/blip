@@ -44,10 +44,13 @@ const idGen = createIdGenerator(DailyPlotElement.PoolBackground)
 
 type PoolBackgroundOptions = Pick<PlotOptions<Fill>, 'xScale' | 'tidelineData'> & {
   onBackgroundClick?: (date: Date) => void
+  /** Draw a vertical line every hour instead of one per time slot */
+  hourlyLines?: boolean
 }
 
 const defaults: Partial<PoolBackgroundOptions> = {
-  xScale: null
+  xScale: null,
+  hourlyLines: false
 }
 
 /**
@@ -55,6 +58,7 @@ const defaults: Partial<PoolBackgroundOptions> = {
  *
  * The background is made of one rectangle per time slot (see `MedicalDataService.fills`),
  * a thin vertical line at the start of each slot and a thicker one at midnight.
+ * With `hourlyLines`, the one-hour slots are used instead (see `MedicalDataService.hourlyFills`).
  * When `onBackgroundClick` is provided, the background becomes clickable and the callback
  * receives the date matching the clicked position.
  *
@@ -89,7 +93,7 @@ export const plotPoolBackground = (
 
     const xScale = options.xScale
     const height = pool.height()
-    const { onBackgroundClick } = options
+    const { onBackgroundClick, hourlyLines } = options
 
     // Helper functions using closure variables
     const getXPos = (d: Fill): number => xScale(d.epoch)
@@ -158,7 +162,8 @@ export const plotPoolBackground = (
 
       // Step 1: Get filtered data from pool. Unlike the data bound by the pool, it includes
       // the slot overlapping the start of the rendered range
-      const fills = pool.filterDataForRender(options.tidelineData.fills)
+      const { fills: slots, hourlyFills } = options.tidelineData
+      const fills = pool.filterDataForRender(hourlyLines ? hourlyFills : slots)
 
       // Step 2: Early exit if no data
       if (fills.length < 1) {

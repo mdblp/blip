@@ -22,3 +22,5 @@ window.d3 = require('d3')
 export {
   chartDailyFactory
 }
+
+export { getDailyVisibleDuration } from '../plugins/blip/chartdailyfactory'

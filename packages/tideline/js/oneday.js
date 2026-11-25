@@ -17,7 +17,7 @@
 
 /**
  * @typedef {import('./tidelinedata').Datum} Datum
- * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void }} OneDayOptions
+ * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void; visibleDuration?: number; minWidth?: number; scrollNav?: boolean }} OneDayOptions
  * @typedef {import('./pool').default} Pool
  * @typedef {{poolGroup:SVGGElement;id:(v?:string)=>string|OneDay;options:OneDayOptions;tidelineData:MedicalDataService;pools:Pool[];width:(v?:number)=>number|OneDay;axisGutter:()=>number;data:(td?:MedicalDataService)=>Datum[]|OneDay;setAxes:()=>OneDay;filterDataForRender:(d:Datum[])=>Datum[]}} OneDay
  */
@@ -39,11 +39,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Console} */
   const log = bows('OneDay')
 
-  _.defaults(options, { trackMetric: _.noop })
+  _.defaults(options, { trackMetric: _.noop, visibleDuration: MS_IN_DAY, minWidth: 300, scrollNav: true })
 
   // basic attributes
   const nav = {
-    scrollNav: true,
+    /** Display the scroll bar below the daily graph */
+    scrollNav: options.scrollNav,
     scrollNavHeight: 50,
     currentTranslation: 0,
     latestTranslation: 0,
@@ -58,7 +59,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** How much time we delay the update of the date title + viz widgets (in ms) */
   const navigatedDelay = 200
   const minHeight = 400
-  const minWidth = 300
+  const minWidth = options.minWidth
+  /** The duration (in ms) displayed in the chart */
+  const visibleDuration = options.visibleDuration
   /** Left gutter, wide enough to host the guideline chips */
   const axisGutter = 35
   /** The number of days we pre-render the SVG */
@@ -261,7 +264,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       cumGutterWeight += pool.gutterWeight()
     })
     gutter = 0.25 * (container.height() / cumHeightRatio)
-    const totalPoolsHeight = container.height() - nav.scrollNavHeight - (cumGutterWeight * gutter)
+    const scrollNavHeight = nav.scrollNav ? nav.scrollNavHeight : 0
+    const totalPoolsHeight = container.height() - scrollNavHeight - (cumGutterWeight * gutter)
     poolScaleHeight = totalPoolsHeight / cumHeightRatio
     return container
   }
@@ -289,7 +293,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const currentDomain = container.xScale.domain()
     const start = currentDomain[0]
     const end = currentDomain[1]
-    const center = new Date(start.valueOf() + MS_IN_DAY / 2)
+    const center = new Date(start.valueOf() + visibleDuration / 2)
     return { start, end, center }
   }
 
@@ -457,6 +461,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.setScrollNav = function() {
+    if (!nav.scrollNav) {
+      return container
+    }
     container.scrollNav.attr('transform', `translate(0,${height - (nav.scrollNavHeight * 2 / 5)})`)
 
     renderScrollBar = plotScrollBar({
@@ -490,16 +497,17 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     // everything is in place
     container.renderPoolsData()
 
-    const start = new Date(epochLocation - MS_IN_DAY/2)
+    const start = new Date(epochLocation - visibleDuration / 2)
 
-    nav.currentTranslation = -container.xScale(start) + axisGutter
+    // A date beyond the navigation limits (saved URL, mobile/desktop switch) is moved to the nearest limit
+    nav.currentTranslation = Math.min(Math.max(-container.xScale(start) + axisGutter, 0), nav.maxTranslation)
     container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
   }
 
   /** Jump the daily view to the most recent date, with a smooth pan */
   container.setToMostRecent = function setToMostRecent() {
     const domain = container.getCurrentDomain()
-    const newDateMS = container.initialEndpoints[1].valueOf() - MS_IN_DAY / 2
+    const newDateMS = container.initialEndpoints[1].valueOf() - visibleDuration / 2
     const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
     container.panToDate(new Date(newDateMS), transitionDelay)
   }
@@ -620,10 +628,17 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       log.error('The endpoints of your data are less than 24 hours apart.')
     }
 
-    const minusOne = moment.utc(last).tz(lastTimezone)
-    minusOne.subtract(1, 'day')
+    // The chart can't be panned further than the most recent displayed range
+    const visibleEnd = moment.utc(td.getMostRecentVisibleEnd(visibleDuration))
+    const visibleStart = moment.utc(visibleEnd).tz(lastTimezone)
+    if (visibleDuration === MS_IN_DAY) {
+      // Keep the calendar day subtraction (DST aware)
+      visibleStart.subtract(1, 'day')
+    } else {
+      visibleStart.subtract(visibleDuration, 'milliseconds')
+    }
     // initialEndpoints ~= set the zoom (time axis) value of the displayed chart
-    container.initialEndpoints = [minusOne.toDate(), last.toDate()]
+    container.initialEndpoints = [visibleStart.toDate(), visibleEnd.toDate()]
     container.endpoints = [first.toDate(), last.toDate()]
 
     return container

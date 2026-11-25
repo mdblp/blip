@@ -64,12 +64,14 @@ export interface usePatientDataResult {
 
 interface UsePatientDataProps {
   patient: Patient
+  /** The duration (in ms) displayed in the daily chart */
+  dailyVisibleDuration: number
 }
 
 const DATE_QUERY_PARAM_KEY = 'date'
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
-export const usePatientData = ({ patient }: UsePatientDataProps): usePatientDataResult => {
+export const usePatientData = ({ patient, dailyVisibleDuration }: UsePatientDataProps): usePatientDataResult => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { pathname } = useLocation()
@@ -317,11 +319,12 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         endpoints: medicalData.endpoints
       })
       const initialDate = patientDataUtils.current.getInitialDate(medicalData)
+      const initialDailyDate = patientDataUtils.current.getInitialDate(medicalData, dailyVisibleDuration)
       const msRangeByPatientView = getMsRangeByPatientView(currentPatientView, medicalData)
       setMsRange(msRangeByPatientView)
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
-      setDailyDate(dateQueryParam && isValidDateQueryParam(dateQueryParam) ? new Date(dateQueryParam).valueOf() : initialDate)
+      setDailyDate(dateQueryParam && isValidDateQueryParam(dateQueryParam) ? new Date(dateQueryParam).valueOf() : initialDailyDate)
       setTrendsDate(initialDate)
       setTimePrefs(medicalData.opts.timePrefs)
     } finally {

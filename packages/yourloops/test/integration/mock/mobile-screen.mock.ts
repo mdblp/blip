@@ -14,3 +14,9 @@ export const mockMobileScreen = () => {
     dispatchEvent: () => true
   })
 }
+
+// jsdom does not compute the layout: give the elements the screen width (e.g. the daily chart)
+// Call jest.restoreAllMocks() after the test, as it mocks every HTMLElement
+export const mockMobileElementWidth = () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(DEFAULT_MOBILE_WIDTH_PX)
+}

@@ -33,7 +33,7 @@ import { checkPatientLayoutMobile } from '../../../assert/layout.assert'
 import { patient2Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { mockMobileScreen } from '../../../mock/mobile-screen.mock'
+import { mockMobileElementWidth, mockMobileScreen } from '../../../mock/mobile-screen.mock'
 import { checkPatientNavBarAsPatientMobile } from '../../../assert/patient-nav-bar.assert'
 
 describe('Daily view for patient', () => {
@@ -41,6 +41,7 @@ describe('Daily view for patient', () => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
     mockMobileScreen()
+    mockMobileElementWidth()
   })
 
   afterEach(() => {

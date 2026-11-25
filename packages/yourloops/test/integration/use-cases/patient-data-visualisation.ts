@@ -27,6 +27,7 @@
 
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { getTranslation } from '../../utils/i18n'
 import {
   checkBolusAndGlucoseChartGuidelinesRecomputedAfterNewDayData,
   checkBolusChartYAxisForSmallBoluses,
@@ -37,8 +38,19 @@ import {
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
   checkDailyTimeInRangeStatsWidgetsMmolL,
+  checkDailyViewAtMostRecentData,
+  checkDailyViewChartFooterIsNotDisplayed,
+  checkDailyViewChartMobileLayout,
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
+  checkDailyViewMobileCalendarSelection,
+  checkDailyViewMobileDateBeyondMostRecent,
+  checkDailyViewMobileNavigation,
+  checkDailyViewMobileStats,
+  checkDailyViewPoolBackgroundMobile,
+  checkDailyViewXAxisMobile,
+  checkDailyViewXAxisMobileTimezoneChange,
+  checkDailyViewXAxisMobileVisibleTicks,
   checkEventsSuperposition,
   checkGlucoseChartYAxis,
   checkTotalCarbsStatContent
@@ -76,6 +88,7 @@ import {
   checkPatientStatisticsTrendsViewNoMonday,
   checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
+import { checkShowParametersButtonIsNotDisplayed } from '../assert/show-parameters.assert'
 import {
   checkAverageGlucoseStatWidget,
   checkStandardDeviationStatWidget,
@@ -83,7 +96,7 @@ import {
   checkTotalInsulinStatWidget
 } from '../assert/stats.assert'
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
-import { getTranslation } from '../../utils/i18n'
+import { type Router } from '../models/router.model'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -157,6 +170,29 @@ export const testDailyViewTooltipsAndValuesMgdl = async (nowDate: Date) => {
 
 export const testDailyViewChartsDblg1 = () => {
   checkDailyViewChartsDblg1()
+}
+
+export const testDailyViewChartMobile = async (router: Router) => {
+  await checkDailyViewChartMobileLayout()
+  checkShowParametersButtonIsNotDisplayed()
+  checkDailyViewChartFooterIsNotDisplayed()
+  checkDailyViewXAxisMobile()
+  checkDailyViewXAxisMobileVisibleTicks()
+  checkDailyViewPoolBackgroundMobile()
+  checkDailyViewAtMostRecentData()
+  await checkDailyViewMobileStats(router)
+  await checkDailyViewMobileNavigation(router)
+  await checkDailyViewMobileCalendarSelection(router)
+}
+
+export const testDailyViewMobileDateBeyondMostRecent = async (router: Router) => {
+  await checkDailyViewChartMobileLayout()
+  await checkDailyViewMobileDateBeyondMostRecent(router)
+}
+
+export const testDailyViewXAxisMobileTimezoneChange = async () => {
+  await checkDailyViewChartMobileLayout()
+  checkDailyViewXAxisMobileTimezoneChange()
 }
 
 export const testDailyViewChartsDblg2 = () => {

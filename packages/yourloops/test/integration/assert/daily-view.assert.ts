@@ -29,6 +29,7 @@ import { BoundFunctions, fireEvent, queries, screen, waitFor, within } from '@te
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import { getTranslation } from '../../utils/i18n'
+import { type Router } from '../models/router.model'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
@@ -340,6 +341,191 @@ const checkDailyViewXAxis = () => {
   // Hour labels of each time slot, and the day label at midnight (Europe/Paris)
   const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
   expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm12:00 amMonday, August 83:00 am6:00 am9:00 am12:00 pm3:00 pm6:00 pm9:00 pm')
+}
+
+export const checkDailyViewChartMobileLayout = async () => {
+  const chartContainer = await screen.findByTestId('tidelineContainer', {}, { timeout: 3000 })
+  // The chart may first be rendered before the mobile screen is detected, then re-created
+  await waitFor(() => {
+    expect(chartContainer.querySelector('svg')).toHaveClass('d3-daily-mobile')
+  }, { timeout: 3000 })
+
+  // The chart takes the whole screen width, without the surrounding card
+  expect(chartContainer.closest('.patient-data-content-inner')).toHaveClass('patient-data-content-inner-mobile')
+  expect(screen.getByTestId('daily-header')).toHaveStyle({ justifyContent: 'center' })
+
+  // No scroll bar below the chart
+  expect(document.getElementById('tidelineScrollNav')).not.toBeInTheDocument()
+  expect(document.querySelector('.scrollThumb')).not.toBeInTheDocument()
+}
+
+export const checkDailyViewChartFooterIsNotDisplayed = () => {
+  expect(screen.queryByRole('button', { name: getTranslation('Refresh') })).not.toBeInTheDocument()
+}
+
+export const checkDailyViewXAxisMobile = () => {
+  // One tick every hour, and the day label at midnight (Europe/Paris)
+  const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
+  expect(timeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm12:00 amSunday, August 71:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm12:00 amMonday, August 81:00 am2:00 am3:00 am4:00 am5:00 am6:00 am7:00 am8:00 am9:00 am10:00 am11:00 am12:00 pm1:00 pm2:00 pm3:00 pm4:00 pm5:00 pm6:00 pm7:00 pm8:00 pm9:00 pm10:00 pm11:00 pm')
+}
+
+/**
+ * @param expectedTicks The expected text content of the ticks displayed on screen (not hidden by the chart clip path)
+ */
+const checkDailyViewXAxisVisibleTicks = (expectedTicks: string) => {
+  // jsdom does not compute the layout: compare the tick positions, panned, to the displayed area
+  const clipRect = document.querySelector('#mainClipPath rect')
+  const visibleStartX = Number(clipRect.getAttribute('x'))
+  const visibleEndX = visibleStartX + Number(clipRect.getAttribute('width'))
+  const translateX = Number(/translate\(([^,]+),/.exec(document.getElementById('poolXAxis_fill').getAttribute('transform'))[1])
+
+  const visibleTimeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/).filter((timeSlot) => {
+    const x = Number(timeSlot.querySelector('line').getAttribute('x1')) + translateX
+    return x >= visibleStartX && x < visibleEndX
+  })
+  // 4 hours displayed: one tick every hour
+  expect(visibleTimeSlots).toHaveLength(4)
+  expect(visibleTimeSlots.map((timeSlot) => timeSlot.textContent).join('')).toBe(expectedTicks)
+}
+
+export const checkDailyViewXAxisMobileVisibleTicks = () => {
+  // Most recent hours, 15:30-19:30 UTC displayed (Europe/Paris)
+  checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
+}
+
+export const checkDailyViewXAxisMobileTimezoneChange = () => {
+  // Change from Europe/Paris to Europe/Dublin at 22:30 UTC, within the last slot of the chart (20:00-24:00 UTC):
+  // the hourly tick at 23:00 UTC is labeled in Europe/Dublin time (11 PM), not in Europe/Paris time (12 AM)
+  const lastSlotTicks = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/).slice(-4)
+  expect(lastSlotTicks.map((timeSlot) => timeSlot.textContent).join('')).toBe('9:00 pm10:00 pm11:00 pm11:00 pm')
+}
+
+export const checkDailyViewPoolBackgroundMobile = () => {
+  // A full vertical line below each hourly tick
+  const timeSlots = screen.getAllByTestId(/^poolXAxis_dailyXAxis_group_/)
+  timeSlots.forEach((timeSlot) => {
+    const poolBackgroundSlotId = timeSlot.dataset.testid.replace('poolXAxis_dailyXAxis_', 'poolBG_poolBackground_')
+    expect(screen.getByTestId(poolBackgroundSlotId).querySelectorAll('rect.d3-fill-hour')).toHaveLength(1)
+  })
+}
+
+export const checkDailyViewAtMostRecentData = () => {
+  // The chart ends 30 minutes after the most recent datum: we can't go further
+  expect(screen.getByTestId('button-nav-next')).toBeDisabled()
+  expect(screen.getByTestId('button-nav-mostrecent')).toBeDisabled()
+}
+
+/**
+ * @param router The application router, holding the displayed date in the URL
+ * @param expectedDate The date (ISO string) at the center of the chart
+ */
+const checkDailyViewCenterDate = async (router: Router, expectedDate: string) => {
+  // Wait for the end of the chart transition
+  await waitFor(() => {
+    expect(new URLSearchParams(router.state.location.search).get('date')).toBe(expectedDate)
+  }, { timeout: 3000 })
+}
+
+export const checkDailyViewMobileDateBeyondMostRecent = async (router: Router) => {
+  // The date of the URL is after the most recent hours: the chart, the date and the URL are moved to the most recent hours
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
+  checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
+  checkDailyViewAtMostRecentData()
+}
+
+export const checkDailyViewMobileNavigation = async (router: Router) => {
+  // The arrows navigate by 24 hours, from the most recent hours (centered on 17:30 UTC)
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
+  expect(screen.getByTestId('button-nav-next')).toBeEnabled()
+  expect(screen.getByTestId('button-nav-mostrecent')).toBeEnabled()
+  // Still only 4 hours displayed after panning
+  checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
+
+  // We can't go before the start of the data (centered on 00:00 UTC)
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T00:00:00.000Z')
+
+  await userEvent.click(screen.getByTestId('button-nav-next'))
+  await checkDailyViewCenterDate(router, '2022-08-08T00:00:00.000Z')
+  expect(screen.getByTestId('button-nav-next')).toBeEnabled()
+
+  // We can't go after the most recent hours
+  await userEvent.click(screen.getByTestId('button-nav-next'))
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
+  checkDailyViewAtMostRecentData()
+
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
+  await userEvent.click(screen.getByTestId('button-nav-mostrecent'))
+
+  // 4 hours ending 30 minutes after the most recent datum (19:00 UTC)
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
+  checkDailyViewAtMostRecentData()
+}
+
+/**
+ * @param expectedStats The expected text content of each stat widget, by test id
+ */
+const checkDailyStats = async (expectedStats: Record<string, string>) => {
+  // The stats are updated after the end of the chart transition
+  await waitFor(() => {
+    const patientStatistics = within(screen.getByTestId('patient-statistics'))
+    Object.entries(expectedStats).forEach(([testId, expectedTextContent]) => {
+      expect(patientStatistics.getByTestId(testId)).toHaveTextContent(expectedTextContent)
+    })
+  }, { timeout: 3000 })
+}
+
+// All the data of August 8, same stats as on desktop
+const MOST_RECENT_DAILY_STATS = {
+  'time-in-range-chart': 'Time In Range10m13%5m7%15m20%20m27%25m33%<5454-7070-180180-250>250mg/dL',
+  'time-in-tight-range-chart': 'Time In Tight Range15m20%70-140mg/dL',
+  'total-carbs-stat': 'Total of declared carbs360gMeal carbs345gRescue carbs15g',
+  'container-insulin-stats': 'Total Delivered Insulin71.2UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1U',
+  'loop-mode-stat': 'Time In Loop ModeONOFF0%1s100%6m',
+  'average-glucose-stat': 'Avg. Glucose (CGM)mg/dL101',
+  'cbg-standard-deviation-stat': 'Standard Deviation (22-180)mg/dL79',
+  'coefficient-of-variation-stat': 'CV (CGM)78%'
+}
+
+export const checkDailyViewMobileStats = async (router: Router) => {
+  // Most recent hours (15:30-19:30 UTC displayed): the stats cover 05:30 UTC to 05:30 UTC the next day,
+  // so they include all the data of August 8
+  await checkDailyStats(MOST_RECENT_DAILY_STATS)
+
+  // 24 hours before (15:30-19:30 UTC displayed): no data is displayed, but the stats still include
+  // the only data of August 7, a CGM value (189 mg/dL) at 12:00 UTC, within 12 hours of the center of the view
+  await userEvent.click(screen.getByTestId('button-nav-back'))
+  await checkDailyViewCenterDate(router, '2022-08-07T17:30:00.000Z')
+  await checkDailyStats({
+    'time-in-range-chart': 'Time In Range0m0%5m100%0m0%0m0%0m0%<5454-7070-180180-250>250mg/dL',
+    'time-in-tight-range-chart': 'Time In Tight Range0m0%70-140mg/dL',
+    'total-carbs-stat': 'Total of declared carbs--Meal carbs--Rescue carbs--',
+    'container-insulin-stats': 'Total Delivered Insulin--Meal bolus-- %0UBasal & correction bolus-- %0U',
+    'loop-mode-stat': 'Time In Loop ModeONOFFN/AN/A',
+    'average-glucose-stat': 'Avg. Glucose (CGM)mg/dL189',
+    'cbg-standard-deviation-stat': 'Standard Deviationmg/dL--',
+    'coefficient-of-variation-stat': 'CV (CGM)--'
+  })
+
+  await userEvent.click(screen.getByTestId('button-nav-mostrecent'))
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
+  await checkDailyStats(MOST_RECENT_DAILY_STATS)
+}
+
+export const checkDailyViewMobileCalendarSelection = async (router: Router) => {
+  // The calendar can't be opened during the chart transition
+  await waitFor(() => {
+    expect(screen.getByTestId('daily-chart-title-date')).toBeEnabled()
+  })
+  await userEvent.click(screen.getByTestId('daily-chart-title-date'))
+  const calendarDialog = within(screen.getByRole('dialog'))
+  await userEvent.click(calendarDialog.getByTestId('button-calendar-day-2022-08-07'))
+  await userEvent.click(calendarDialog.getByRole('button', { name: 'Ok' }))
+
+  // The 4 hours from 7AM to 11AM (Europe/Paris) of the selected day
+  await checkDailyViewCenterDate(router, '2022-08-07T07:00:00.000Z')
 }
 
 const getScrollBarThumb = (): HTMLElement => screen.getByTestId('scrollBar_thumb')
