@@ -34,7 +34,7 @@ module.exports = {
 
   displayName: 'yourloops integration',
 
-  maxWorkers: 4,
+  maxWorkers: 2,
 
   globalSetup: '<rootDir>/global-setup.js',
 
