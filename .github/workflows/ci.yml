@@ -212,6 +212,9 @@ jobs:
   test-yourloops-integration-hcp:
     runs-on: ubuntu-latest
     needs: setup
+    strategy:
+      matrix:
+        shard: [ 1, 2, 3 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -236,13 +239,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .jest-cache
-          key: jest-${{ github.job }}-${{ hashFiles('package-lock.json', 'babel.config.json') }}-${{ github.sha }}
+          key: jest-${{ github.job }}-${{ matrix.shard }}-${{ hashFiles('package-lock.json', 'babel.config.json') }}-${{ github.sha }}
           restore-keys: |
-            jest-${{ github.job }}-${{ hashFiles('package-lock.json', 'babel.config.json') }}-
-            jest-${{ github.job }}-
+            jest-${{ github.job }}-${{ matrix.shard }}-${{ hashFiles('package-lock.json', 'babel.config.json') }}-
+            jest-${{ github.job }}-${{ matrix.shard }}-
 
-      - name: Test yourloops integration hcp
-        run: npm run test-yourloops-integration-hcp
+      - name: Test yourloops integration hcp (shard ${{ matrix.shard }}/3)
+        run: |
+          source config/.env.sh
+          npm run integration-test-hcp -w yourloops -- --shard=${{ matrix.shard }}/3
 
   test-yourloops-integration-caregiver:
     runs-on: ubuntu-latest
