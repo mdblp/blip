@@ -91,6 +91,16 @@ export default class TeamApi {
     }
   }
 
+  /**
+   * Get the teams where the authenticated user has a pending invitation (matched on the user email,
+   * so it also works before the account is created).
+   * A 404 means "user not found" for the API: it is not an empty list and is thrown like any other error.
+   */
+  static async getTeamInvitations(): Promise<ITeam[]> {
+    const { data } = await HttpService.get<ITeam[]>({ url: '/crew/v1/teams/invites' })
+    return data
+  }
+
   static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<InviteMemberResult> {
     const { data } = await HttpService.post<InviteMemberResult, InviteMemberPayload>({
       config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },

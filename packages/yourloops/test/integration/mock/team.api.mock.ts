@@ -417,6 +417,10 @@ export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'createTeam').mockRejectedValue('Mocked error')
 }
 
+export const mockTeamInvitations = (invitations: ITeam[] = []) => {
+  return jest.spyOn(TeamAPI, 'getTeamInvitations').mockResolvedValue(invitations)
+}
+
 export const mockTeamApiForTeamCreation = () => {
   const newTeam = { id: NEW_TEAM_ID, name: '🦁', type: TeamType.medical, members: [], monitoringAlertsParameters }
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams().concat(newTeam as Team))

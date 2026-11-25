@@ -25,10 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
@@ -38,6 +40,13 @@ import SignUpConsent from './signup-consent'
 import { useAuth } from '../../lib/auth'
 import SignUpAccountSelector from './signup-account-selector'
 import { SignupCompleteMessage } from './signup-complete-message'
+import { useSignupInvitations } from './use-signup-invitations.hook'
+import { useSignUpFormState } from './signup-formstate-context'
+import { SignupInvitationsStatus } from './models/enums/signup-invitations-status.enum'
+import { SignupStep } from './models/enums/signup-step.enum'
+import { SignupFormKey } from './models/enums/signup-form-key.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
+import metrics from '../../lib/metrics'
 
 export interface SignUpFormProps {
   handleBack: () => void
@@ -57,8 +66,23 @@ export const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes: { stepper } } = useStyles()
   const { logout } = useAuth()
-  const steps = ['select-account-type', 'consent', 'create-profile']
+  const { signupForm, updateForm } = useSignUpFormState()
+  const { status, hasInvitations, retry } = useSignupInvitations()
   const [activeStep, setActiveStep] = useState(0)
+
+  // A user with pending team invitations can only be a HCP: the account type selection is skipped
+  const steps = hasInvitations
+    ? [SignupStep.Consent, SignupStep.Profile]
+    : [SignupStep.AccountType, SignupStep.Consent, SignupStep.Profile]
+  const mustForceHcpRole = status === SignupInvitationsStatus.Ready && hasInvitations
+  const isRoleForced = mustForceHcpRole && signupForm.accountRole === UserRole.Hcp
+
+  useEffect(() => {
+    if (mustForceHcpRole && signupForm.accountRole !== UserRole.Hcp) {
+      updateForm(SignupFormKey.AccountRole, UserRole.Hcp)
+      metrics.send('registration', 'select_account_type', UserRole.Hcp)
+    }
+  }, [mustForceHcpRole, signupForm.accountRole, updateForm])
 
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -70,6 +94,59 @@ export const SignUpStepper: FunctionComponent = () => {
     } else {
       logout()
     }
+  }
+
+  const renderStep = (): React.ReactNode => {
+    if (activeStep >= steps.length) {
+      return <SignupCompleteMessage />
+    }
+    switch (steps[activeStep]) {
+      case SignupStep.AccountType:
+        return <SignUpAccountSelector handleBack={handleBack} handleNext={handleNext} />
+      case SignupStep.Consent:
+        return <SignUpConsent handleBack={handleBack} handleNext={handleNext} />
+      case SignupStep.Profile:
+        return <SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />
+    }
+  }
+
+  const renderContent = (): React.ReactNode => {
+    if (status === SignupInvitationsStatus.Error) {
+      return (
+        <Box sx={{ textAlign: 'center', marginY: 3 }}>
+          <Typography id="signup-invitations-error" color="error" gutterBottom>
+            {t('signup-invitations-loading-error')}
+          </Typography>
+          <Button id="signup-invitations-retry" variant="contained" color="primary" onClick={retry}>
+            {t('button-retry')}
+          </Button>
+        </Box>
+      )
+    }
+    if (status === SignupInvitationsStatus.Loading || (hasInvitations && !isRoleForced)) {
+      return (
+        <Box sx={{ textAlign: 'center', marginY: 3 }}>
+          <CircularProgress data-testid="signup-invitations-loading" />
+        </Box>
+      )
+    }
+    return (
+      <React.Fragment>
+        <Stepper
+          aria-label={t('signup-stepper')}
+          activeStep={activeStep}
+          alternativeLabel
+          className={stepper}
+        >
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel aria-label={t(label)}>{t(label)}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        {renderStep()}
+      </React.Fragment>
+    )
   }
 
   return (
@@ -85,23 +162,7 @@ export const SignUpStepper: FunctionComponent = () => {
           {t('account-creation-finalization')}
         </Typography>
       </Box>
-      <Stepper
-        aria-label={t('signup-stepper')}
-        activeStep={activeStep}
-        alternativeLabel
-        className={stepper}
-      >
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel aria-label={t(label)}>{t(label)}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-
-      {activeStep === 0 && <SignUpAccountSelector handleBack={handleBack} handleNext={handleNext} />}
-      {activeStep === 1 && <SignUpConsent handleBack={handleBack} handleNext={handleNext} />}
-      {activeStep === 2 && <SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />}
-      {activeStep === 3 && <SignupCompleteMessage />}
+      {renderContent()}
     </React.Fragment>
   )
 }

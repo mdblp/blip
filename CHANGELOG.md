@@ -6,8 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-4155 Update Daily Y axis to use guidelines + chips
 - YLP-4207 ESM is configured by default
-- YLP-4221 Remove the ability for a caregiver to create an HCP account
+- YLP-4221 Remove the ability for a caregiver to switch to a HCP account
 - YLP-4245 Daily view shows 4 hours on mobile screens
+- YLP-4267 Force HCP role to new users pre-invited in a medical team
 
 ### Engineering
 - YLP-3466 Remove unused env variables
