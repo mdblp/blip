@@ -499,7 +499,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
     const start = new Date(epochLocation - visibleDuration / 2)
 
-    nav.currentTranslation = -container.xScale(start) + axisGutter
+    // A date beyond the navigation limits (saved URL, mobile/desktop switch) is moved to the nearest limit
+    nav.currentTranslation = Math.min(Math.max(-container.xScale(start) + axisGutter, 0), nav.maxTranslation)
     container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(nav.currentTranslation, 0))
   }
 

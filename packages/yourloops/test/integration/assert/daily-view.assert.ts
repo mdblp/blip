@@ -426,6 +426,13 @@ const checkDailyViewCenterDate = async (router: Router, expectedDate: string) =>
   }, { timeout: 3000 })
 }
 
+export const checkDailyViewMobileDateBeyondMostRecent = async (router: Router) => {
+  // The date of the URL is after the most recent hours: the chart, the date and the URL are moved to the most recent hours
+  await checkDailyViewCenterDate(router, '2022-08-08T17:30:00.000Z')
+  checkDailyViewXAxisVisibleTicks('6:00 pm7:00 pm8:00 pm9:00 pm')
+  checkDailyViewAtMostRecentData()
+}
+
 export const checkDailyViewMobileNavigation = async (router: Router) => {
   // The arrows navigate by 24 hours, from the most recent hours (centered on 17:30 UTC)
   await userEvent.click(screen.getByTestId('button-nav-back'))

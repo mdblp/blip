@@ -41,7 +41,11 @@ import { mockNotesApi } from '../../../mock/notes.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { type Router } from '../../../models/router.model'
-import { testDailyViewChartMobile, testDailyViewXAxisMobileTimezoneChange } from '../../../use-cases/patient-data-visualisation'
+import {
+  testDailyViewChartMobile,
+  testDailyViewMobileDateBeyondMostRecent,
+  testDailyViewXAxisMobileTimezoneChange
+} from '../../../use-cases/patient-data-visualisation'
 import { renderPage } from '../../../utils/render'
 
 describe('Daily view on mobile for anyone', () => {
@@ -84,6 +88,17 @@ describe('Daily view on mobile for anyone', () => {
     })
 
     await testDailyViewChartMobile(router)
+  })
+
+  it('should display the most recent hours when the date of the URL is after them', async () => {
+    mockDataAPI(getCompleteDailyViewData())
+
+    let router: Router
+    await act(async () => {
+      router = renderPage(`${dailyRoute}?date=2022-08-09T12:00:00.000Z`)
+    })
+
+    await testDailyViewMobileDateBeyondMostRecent(router)
   })
 
   it('should label each hourly tick in the timezone in effect at its time', async () => {
