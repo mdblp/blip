@@ -34,6 +34,7 @@ import { type NotificationContext } from './models/notification-context.model'
 import { type InAppNotification } from './models/notification.model'
 import { type NotificationProvider } from './models/notification-provider.model'
 import RealTimeNotificationManager from './notification-ws.api'
+import { isNotificationForRole } from './notification.util'
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
 const log = bows('NotificationHook')
@@ -83,13 +84,13 @@ function NotificationContextImpl(): NotificationContext {
   const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
       const rawInvitations = await NotificationApi.getReceivedInvitations(user.id)
-      const invitations = rawInvitations.filter((notification) => !!notification.payload)
+      const invitations = rawInvitations.filter((notification) => !!notification.payload && isNotificationForRole(notification, user.role))
 
       setReceivedInvitations(invitations)
     } catch (err) {
       log.error(err)
     }
-  }, [user.id])
+  }, [user.id, user.role])
 
   const initHook = (): void => {
     if (initialized || lock) {
@@ -116,12 +117,16 @@ function NotificationContextImpl(): NotificationContext {
     const disconnectFn = RealTimeNotificationManager.connectToRealTimeServer(
       user.id,
       getAccessTokenSilently,
-      (notif) => setReceivedInvitations(prev => addNotificationIfAbsent(prev, notif))
+      (notif) => {
+        if (isNotificationForRole(notif, user.role)) {
+          setReceivedInvitations(prev => addNotificationIfAbsent(prev, notif))
+        }
+      }
     )
 
     // used a React cleanup function to disconnect from the real time-server when the component unmounts
     return disconnectFn
-  }, [initialized, user.id, getAccessTokenSilently])
+  }, [initialized, user.id, user.role, getAccessTokenSilently])
 
   return {
     initialized,

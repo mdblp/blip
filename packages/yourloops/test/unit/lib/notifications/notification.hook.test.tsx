@@ -81,10 +81,21 @@ describe('Notification hook', () => {
 
   beforeAll(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { id: hcp.id } }
+      return { user: { id: hcp.id, role: hcp.role } }
     });
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       getAccessTokenSilently: jest.fn().mockResolvedValue('fake-token')
+    })
+  })
+
+  describe('Role filter', () => {
+    it('should keep only the notifications matching the user role', async () => {
+      const hcpNotification = buildNotification()
+      const patientNotification = { ...buildNotification(), id: 'patientId', type: INotificationType.CareTeamPatientInvitation }
+      jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValueOnce([hcpNotification, patientNotification])
+
+      await initNotificationContext()
+      expect(notifications.receivedInvitations).toEqual([hcpNotification])
     })
   })
 
