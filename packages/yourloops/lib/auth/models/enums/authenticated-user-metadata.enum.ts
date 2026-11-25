@@ -27,4 +27,5 @@
 
 export enum AuthenticatedUserMetadata {
   Roles = 'http://your-loops.com/roles',
+  PreferredRole = 'http://your-loops.com/preferred_ylp_role',
 }

@@ -29,6 +29,7 @@ import { type AuthenticatedUserMetadata } from './enums/authenticated-user-metad
 
 export interface AuthenticatedUser {
   [AuthenticatedUserMetadata.Roles]: string[]
+  [AuthenticatedUserMetadata.PreferredRole]?: string
   email: string
   email_verified: boolean
   sub: string

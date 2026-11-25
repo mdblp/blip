@@ -57,7 +57,9 @@ export default class User {
     this.email = authenticatedUser.email
     this.emailVerified = authenticatedUser.email_verified
     this.id = User.getId(authenticatedUser.sub)
-    this.role = authenticatedUser[AuthenticatedUserMetadata.Roles][0] as UserRole
+    const roles = authenticatedUser[AuthenticatedUserMetadata.Roles]
+    const preferredRole = authenticatedUser[AuthenticatedUserMetadata.PreferredRole]
+    this.role = (preferredRole && roles.includes(preferredRole) ? preferredRole : roles[0]) as UserRole
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = new Date(config.LATEST_TERMS ?? 0)
     this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)

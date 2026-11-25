@@ -60,6 +60,28 @@ describe('User', () => {
     expect(user.latestConsentChangeDate.toISOString()).toBe('2021-01-01T00:00:00.000Z')
   })
 
+  describe('role', () => {
+    const buildUser = (roles: string[], preferredRole?: string) => new User({
+      sub: 'auth0|abcd',
+      email,
+      email_verified: true,
+      [AuthenticatedUserMetadata.Roles]: roles,
+      [AuthenticatedUserMetadata.PreferredRole]: preferredRole
+    })
+
+    it('should use the preferred role when it is in the roles', () => {
+      expect(buildUser([UserRole.Hcp, UserRole.Patient], UserRole.Patient).role).toBe(UserRole.Patient)
+    })
+
+    it('should use the first role when there is no preferred role', () => {
+      expect(buildUser([UserRole.Hcp, UserRole.Patient]).role).toBe(UserRole.Hcp)
+    })
+
+    it('should use the first role when the preferred role is not in the roles', () => {
+      expect(buildUser([UserRole.Hcp], UserRole.Patient).role).toBe(UserRole.Hcp)
+    })
+  })
+
   it('getFirstName', () => {
     const user = createUser()
     expect(user.firstName).toBe('')
