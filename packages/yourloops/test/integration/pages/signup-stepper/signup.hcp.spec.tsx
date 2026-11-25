@@ -39,6 +39,7 @@ import {
   checkStepper
 } from '../../assert/signup-stepper.assert'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockTeamInvitations } from '../../mock/team.api.mock'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
@@ -49,6 +50,7 @@ import { type UserAccount } from '../../../../lib/auth/models/user-account.model
 
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
+  mockTeamInvitations([])
   const firstName = 'Lara'
   const lastName = 'Tatouille'
   const expectedUserAccount: UserAccount = {

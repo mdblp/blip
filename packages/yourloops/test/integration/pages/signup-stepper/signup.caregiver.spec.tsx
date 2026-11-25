@@ -39,6 +39,7 @@ import {
   checkStepper
 } from '../../assert/signup-stepper.assert'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockTeamInvitations } from '../../mock/team.api.mock'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
@@ -47,6 +48,7 @@ import { CountryCode } from '../../../../lib/auth/models/country.model'
 
 describe('Signup stepper as caregiver', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
+  mockTeamInvitations([])
   const firstName = 'Sandy'
   const lastName = 'Kilo'
   const expectedProfile = {
