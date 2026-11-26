@@ -442,21 +442,29 @@ export const checkDailyViewMobileDateBeyondMostRecent = async (router: Router) =
   checkDailyViewAtMostRecentData()
 }
 
-export const checkDailyViewMobileNightModeDrawer = async () => {
-  const nightMode = await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })
-  await userEvent.hover(nightMode)
+const checkDailyViewMobileDrawer = async (testId: string, expectedContent: string) => {
+  const element = await screen.findByTestId(testId, {}, { timeout: 3000 })
+  await userEvent.hover(element)
   expect(screen.queryByTestId('tooltip')).not.toBeInTheDocument()
-  const drawer = screen.getByTestId('daily-drawer')
-  expect(drawer).toHaveTextContent('Night mode11:00 pmDuration10 hours')
+  expect(screen.getByTestId('daily-drawer')).toHaveTextContent(expectedContent)
 
   // Tapping elsewhere does not close the drawer
-  await userEvent.unhover(nightMode)
+  await userEvent.unhover(element)
   expect(screen.getByTestId('daily-drawer')).toBeVisible()
 
   await userEvent.click(screen.getByTestId('daily-drawer-close-button'))
   await waitFor(() => {
     expect(screen.queryByTestId('daily-drawer')).not.toBeInTheDocument()
   })
+}
+
+export const checkDailyViewMobileNightModeDrawer = async () => {
+  await checkDailyViewMobileDrawer(`nightMode_group_${NIGHT_MODE_ID}`, 'Night mode11:00 pmDuration10 hours')
+}
+
+export const checkDailyViewMobileWarmUpDrawers = async () => {
+  await checkDailyViewMobileDrawer(`warmup_group_${WARMUP_01_ID}`, 'Sensor warmup6:30 pmSession end9:00 pm')
+  await checkDailyViewMobileDrawer(`warmup_group_${WARMUP_G7_ID}`, 'Sensor8:00 pmSensor warmup')
 }
 
 export const checkDailyViewMobileNavigation = async (router: Router) => {

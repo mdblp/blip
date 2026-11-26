@@ -31,7 +31,7 @@ import { formatNumberForLang } from '../stats/stats.util'
 
 interface DailyDrawerLineProps {
   label: string
-  value: number | string
+  value?: number | string
   units?: string
 }
 
@@ -41,7 +41,7 @@ export const DailyDrawerLine: FunctionComponent<DailyDrawerLineProps> = (props) 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>{label}</span>
-      <span>{formatNumberForLang(value)}{units && ` ${units}`}</span>
+      {value !== undefined && <span>{formatNumberForLang(value)}{units && ` ${units}`}</span>}
     </Box>
   )
 }

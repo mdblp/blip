@@ -35,6 +35,7 @@ import {
   RescueCarbsTooltip,
   ReservoirTooltip,
   TimeChangeTooltip,
+  WarmUpDrawer,
   WarmUpTooltip,
   ZenModeTooltip
 } from 'dumb'
@@ -795,6 +796,16 @@ class Daily extends React.Component {
 
   handleWarmUpHover = (datum) => {
     AnalyticsApi.trackHover('daily-warmup')
+    if (this.props.isMobile) {
+      const drawer = (
+        <WarmUpDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <WarmUpTooltip

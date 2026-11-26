@@ -65,6 +65,7 @@ export {
 
 // Drawers
 export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer'
+export { WarmUpDrawer } from './components/daily-drawers/warm-up-drawer'
 
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
