@@ -85,6 +85,11 @@ export const getDailyVisibleDuration = (isMobile) => isMobile ? MOBILE_DAILY_VIS
 /** No minimum width on mobile devices: the chart takes the whole screen width */
 const MOBILE_MIN_WIDTH = 0
 const DEFAULT_MIN_WIDTH = 640
+/** No left gutter on mobile devices: the guideline chips are drawn inside the chart */
+const MOBILE_AXIS_GUTTER = 0
+const DEFAULT_AXIS_GUTTER = 35
+/** Space between the chart titles/legends and the sides of the screen, on mobile devices */
+const MOBILE_LABELS_MARGIN = 8
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -128,6 +133,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const chart = oneDay(emitter, {
     ...options,
     minWidth,
+    axisGutter: isMobile ? MOBILE_AXIS_GUTTER : DEFAULT_AXIS_GUTTER,
     scrollNav: !isMobile,
     visibleDuration: getDailyVisibleDuration(isMobile)
   })
@@ -234,19 +240,21 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // Pool labels & legends, drawn once the pools are laid out
   const axisGutter = chart.axisGutter()
   const baseline = options.labelBaseline
-  plotEventsLabel(poolEvents, axisGutter, { baseline })
-  plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits })
-  plotBgLegend(poolBG, axisGutter, { baseline })
-  plotBolusLabel(poolBolus, axisGutter, { baseline })
-  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18 })
+  const horizontalMargin = isMobile ? MOBILE_LABELS_MARGIN : 0
+  plotEventsLabel(poolEvents, axisGutter, { baseline, horizontalMargin })
+  plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits, horizontalMargin })
+  plotBgLegend(poolBG, axisGutter, { baseline, horizontalMargin })
+  plotBolusLabel(poolBolus, axisGutter, { baseline, horizontalMargin })
+  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18, horizontalMargin })
   plotBolusLegend(poolBolus, axisGutter, {
     baseline,
-    shouldDisplayEatingShortly: isDblg2Patient
+    shouldDisplayEatingShortly: isDblg2Patient,
+    horizontalMargin
   })
-  plotBasalLabel(poolBasal, axisGutter, { baseline })
-  plotBasalLegend(poolBasal, axisGutter, { baseline })
+  plotBasalLabel(poolBasal, axisGutter, { baseline, horizontalMargin })
+  plotBasalLegend(poolBasal, axisGutter, { baseline, horizontalMargin })
   if (poolIob) {
-    plotIobLabel(poolIob, axisGutter, { baseline })
+    plotIobLabel(poolIob, axisGutter, { baseline, horizontalMargin })
   }
 
   // ***
@@ -271,7 +279,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   poolBG.addPlotType({ type: 'fill' }, plotPoolBackground(poolBG, { tidelineData, hourlyLines: isMobile }))
 
-  poolBG.addGuidelinesPlotType(plotGuidelines(poolBG))
+  poolBG.addGuidelinesPlotType(plotGuidelines(poolBG, { chipsInsideChart: isMobile }))
 
   poolEvents.addPlotType({ type: 'fill' }, plotPoolBackground(poolEvents, { tidelineData, hourlyLines: isMobile }))
 
@@ -365,7 +373,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBolus.guidelinesFn((axisScale) => getBolusGuidelines(axisScale.maxBolusValue))
   // add background fill rectangles and guidelines to bolus pool
   poolBolus.addPlotType({ type: 'fill' }, plotPoolBackground(poolBolus, { tidelineData, hourlyLines: isMobile }))
-  poolBolus.addGuidelinesPlotType(plotGuidelines(poolBolus))
+  poolBolus.addGuidelinesPlotType(plotGuidelines(poolBolus, { chipsInsideChart: isMobile }))
 
   // quick bolus data to wizard pool
   poolBolus.addPlotType({ type: 'bolus' }, plotBolus(poolBolus, {
@@ -404,7 +412,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   poolBasal.guidelinesFn((axisScale) => getBasalGuidelines(axisScale.extent))
   // add background fill rectangles and guidelines to basal pool
   poolBasal.addPlotType({ type: 'fill' }, plotPoolBackground(poolBasal, { tidelineData, hourlyLines: isMobile }))
-  poolBasal.addGuidelinesPlotType(plotGuidelines(poolBasal))
+  poolBasal.addGuidelinesPlotType(plotGuidelines(poolBasal, { chipsInsideChart: isMobile }))
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
@@ -429,7 +437,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
     // add background fill rectangles and guidelines to IOB pool
     poolIob?.addPlotType({ type: 'fill' }, plotPoolBackground(poolIob, { tidelineData, hourlyLines: isMobile }))
-    poolIob?.addGuidelinesPlotType(plotGuidelines(poolIob))
+    poolIob?.addGuidelinesPlotType(plotGuidelines(poolIob, { chipsInsideChart: isMobile }))
 
     // add IOB curve to IOB pool
     poolIob?.addPlotType({ type: 'iob' }, plotIob(poolIob, {
@@ -463,13 +471,15 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
     onNoteClick: ({ data }) => emitter.emit('viewNote', data.id)
   }))
 
-  // add the "New note" button to the chart's labels layer
-  plotNewNoteButton(d3.select(parentElement).select('#tidelineLabels'), {
-    isDblg2Patient,
-    onNewNoteHover: options.onNewNoteHover,
-    onElementOut: options.onTooltipOut,
-    onNewNoteClick: () => emitter.emit('createNote', null)
-  })
+  // add the "New note" button to the chart's labels layer, not on mobile devices
+  if (!isMobile) {
+    plotNewNoteButton(d3.select(parentElement).select('#tidelineLabels'), {
+      isDblg2Patient,
+      onNewNoteHover: options.onNewNoteHover,
+      onElementOut: options.onTooltipOut,
+      onNewNoteClick: () => emitter.emit('createNote', null)
+    })
+  }
 
   // add timechange images to messages pool
   poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeZoneChange(poolMessages, {

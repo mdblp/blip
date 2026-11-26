@@ -247,10 +247,17 @@ const drawLegendItems = (legendGroup: LegendGroup, items: LegendItem[]): void =>
  * Like the pool labels, a legend is static and drawn once, so this renders directly rather
  * than through a D3 enter/update/exit join.
  */
-const drawLegend = (pool: LabelsLayerPool, axisGutter: number, name: LegendName, baseline: number, items: LegendItem[]): void => {
+const drawLegend = (
+  pool: LabelsLayerPool,
+  axisGutter: number,
+  name: LegendName,
+  baseline: number,
+  items: LegendItem[],
+  horizontalMargin: number
+): void => {
   const container = pool.parent().select<SVGGElement>('#tidelineLabels')
   const legendId = `${pool.id()}_legend_${name}`
-  const x = pool.width() + axisGutter
+  const x = pool.width() + axisGutter - horizontalMargin
   const y = pool.yPosition() - baseline
 
   const legendGroup = container.append('g')
@@ -274,8 +281,8 @@ const drawLegend = (pool: LabelsLayerPool, axisGutter: number, name: LegendName,
  * plotBasalLegend(poolBasal, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotBasalLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline }: PoolLegendOptions): void => {
-  drawLegend(pool, axisGutter, LegendName.Basal, baseline, getBasalLegendItems())
+export const plotBasalLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLegendOptions): void => {
+  drawLegend(pool, axisGutter, LegendName.Basal, baseline, getBasalLegendItems(), horizontalMargin)
 }
 
 /**
@@ -291,8 +298,8 @@ export const plotBasalLegend = (pool: LabelsLayerPool, axisGutter: number, { bas
  * plotBgLegend(poolBG, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotBgLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline }: PoolLegendOptions): void => {
-  drawLegend(pool, axisGutter, LegendName.Bg, baseline, getBgLegendItems())
+export const plotBgLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLegendOptions): void => {
+  drawLegend(pool, axisGutter, LegendName.Bg, baseline, getBgLegendItems(), horizontalMargin)
 }
 
 /**
@@ -311,9 +318,9 @@ export const plotBgLegend = (pool: LabelsLayerPool, axisGutter: number, { baseli
 export const plotBolusLegend = (
   pool: LabelsLayerPool,
   axisGutter: number,
-  { baseline, shouldDisplayEatingShortly = false }: BolusPoolLegendOptions
+  { baseline, shouldDisplayEatingShortly = false, horizontalMargin = 0 }: BolusPoolLegendOptions
 ): void => {
-  drawLegend(pool, axisGutter, LegendName.Bolus, baseline, getBolusLegendItems(shouldDisplayEatingShortly))
+  drawLegend(pool, axisGutter, LegendName.Bolus, baseline, getBolusLegendItems(shouldDisplayEatingShortly), horizontalMargin)
 }
 
 /**
@@ -329,6 +336,6 @@ export const plotBolusLegend = (
  * plotCarbsLegend(poolBolus, chart.axisGutter(), { baseline: 22 })
  * ```
  */
-export const plotCarbsLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline }: PoolLegendOptions): void => {
-  drawLegend(pool, axisGutter, LegendName.Carbs, baseline, getCarbsLegendItems())
+export const plotCarbsLegend = (pool: LabelsLayerPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLegendOptions): void => {
+  drawLegend(pool, axisGutter, LegendName.Carbs, baseline, getCarbsLegendItems(), horizontalMargin)
 }

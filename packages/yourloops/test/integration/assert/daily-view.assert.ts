@@ -357,6 +357,13 @@ export const checkDailyViewChartMobileLayout = async () => {
   // No scroll bar below the chart
   expect(document.getElementById('tidelineScrollNav')).not.toBeInTheDocument()
   expect(document.querySelector('.scrollThumb')).not.toBeInTheDocument()
+
+  expect(screen.queryByTestId('new-note-button')).not.toBeInTheDocument()
+
+  // Titles and legends spaced from the sides of the screen
+  expect(screen.getByTestId('poolBG-chart-label').getAttribute('transform')).toMatch(/^translate\(8,/)
+  const chartWidth = Number(chartContainer.querySelector('svg').getAttribute('width'))
+  expect(screen.getByTestId('poolBG_legend_bg').getAttribute('transform')).toMatch(new RegExp(`^translate\\(${chartWidth - 8},`))
 }
 
 export const checkDailyViewChartFooterIsNotDisplayed = () => {

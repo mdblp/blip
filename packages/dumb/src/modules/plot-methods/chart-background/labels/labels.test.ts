@@ -71,6 +71,12 @@ describe('labels', () => {
     expect(spanIds).toEqual(['poolTest_label_span_0', 'poolTest_label_span_1', 'poolTest_label_span_2', 'poolTest_label_span_3'])
   })
 
+  it('should space the label from the left side of the chart by the horizontal margin', () => {
+    plotBolusLabel(setup(), AXIS_GUTTER, { baseline: 22, horizontalMargin: 8 })
+
+    expect(getLabel().getAttribute('transform')).toBe('translate(43,78)')
+  })
+
   it('should draw the events label', () => {
     plotEventsLabel(setup(), AXIS_GUTTER, { baseline: 4 })
 
