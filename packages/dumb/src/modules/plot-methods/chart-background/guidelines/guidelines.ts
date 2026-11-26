@@ -36,8 +36,10 @@ import { type Guideline } from '../../../../models/plot-methods/guideline.model'
 import { type Pool } from '../../../../models/plot-methods/pool.model'
 import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
 
-/** Space between a chip's right edge and the chart's left edge, in pixels */
+/** Space between a chip's right edge and the chart's left edge, in the axis gutter, in pixels */
 const CHIP_GAP = 4
+/** Space between the chart's left edge and a chip's left edge, inside the chart, in pixels */
+const CHIP_INSIDE_CHART_MARGIN = 16
 const CHIP_PADDING = { x: 6, y: 4 }
 const CHIP_BORDER_RADIUS = 8
 
@@ -50,10 +52,14 @@ type GuidelinesPool = Pool<Fill> & {
   guidelines: () => Guideline[]
 }
 
-type GuidelinesOptions = Pick<PlotOptions<Fill>, 'xScale'>
+type GuidelinesOptions = Pick<PlotOptions<Fill>, 'xScale'> & {
+  /** Draw the chips on their line, inside the chart at its left edge, instead of in the axis gutter */
+  chipsInsideChart: boolean
+}
 
 const defaults: Partial<GuidelinesOptions> = {
-  xScale: null
+  xScale: null,
+  chipsInsideChart: false
 }
 
 // Neither the class nor the height is unique on its own: neutral guidelines share a class,
@@ -64,7 +70,8 @@ const getGuidelineKey = (d: Guideline): string => `${d.class}_${d.height}`
  * Plot the horizontal guidelines of a daily chart pool, across the whole visible width
  *
  * Lines are drawn in the pool. Chips are drawn in the axis gutter, which is outside the
- * pools' clip path, so they go into `pool.chipGroup()`.
+ * pools' clip path, so they go into `pool.chipGroup()`. With `chipsInsideChart`, they are drawn
+ * in the pool after the lines, so they are hidden by the data and the confidential mode.
  * Guidelines are read from `pool.guidelines()` on each render, so they follow the pool's
  * Y scale when new data is loaded or when the target value changes.
  *
@@ -74,7 +81,7 @@ const getGuidelineKey = (d: Guideline): string => `${d.class}_${d.height}`
  *
  * @example
  * ```typescript
- * pool.addGuidelinesPlotType(plotGuidelines(pool))
+ * pool.addGuidelinesPlotType(plotGuidelines(pool, { chipsInsideChart: isMobile }))
  * ```
  */
 export const plotGuidelines = (
@@ -111,6 +118,7 @@ export const plotGuidelines = (
       const chip = enter
         .append('g')
         .attr('class', (d: Guideline) => `d3-line-guide-chip ${d.chip?.class ?? ''}`)
+        .classed('d3-line-guide-chip-inside', options.chipsInsideChart)
         .attr('data-testid', (d: Guideline) => getTestId(d, 'chip'))
 
       // Background first so it is drawn behind the label
@@ -123,7 +131,7 @@ export const plotGuidelines = (
         .attr('dy', '0.35em')
         .text((d: Guideline) => d.chip?.label ?? '')
 
-      // Size the background from the rendered label (right-anchored, see .d3-line-guide-chip-label)
+      // Size the background from the rendered label (anchored by CSS, see .d3-line-guide-chip-label)
       chip.each(function (this: SVGGElement) {
         const chipElement = d3.select(this)
         const bbox = chipElement.select<SVGTextElement>('text').node()!.getBBox()
@@ -151,13 +159,21 @@ export const plotGuidelines = (
         .attr('y2', getY)
     })
 
-    // The chip's right edge ends up CHIP_GAP left of the chart's left edge, in the axis gutter
-    const chipX = xStart - CHIP_GAP - CHIP_PADDING.x
+    // Inside the chart, the chip's left edge ends up CHIP_INSIDE_CHART_MARGIN right of the chart's left edge.
+    // Otherwise, its right edge ends up CHIP_GAP left of it, in the axis gutter
+    const chipX = options.chipsInsideChart ? xStart + CHIP_INSIDE_CHART_MARGIN + CHIP_PADDING.x : xStart - CHIP_GAP - CHIP_PADDING.x
+    // Inside the chart, the chips go in this pool group, after the lines: the data and the confidential
+    // mode, drawn after this group, hide them (SVG paints in DOM order).
+    // The join can insert a new line after the existing chips, so the chips are moved back to the end
+    const chipContainer: d3.Selection<SVGGElement, unknown, d3.BaseType, unknown> = options.chipsInsideChart
+      ? d3.select<SVGGElement, unknown>(selection.node()!)
+      : pool.chipGroup()
 
-    pool.chipGroup()
+    chipContainer
       .selectAll<SVGGElement, Guideline>('g.d3-line-guide-chip')
       .data(chipGuidelines, getGuidelineKey)
       .join(createChipElements)
       .attr('transform', (d: Guideline) => `translate(${chipX},${getY(d)})`)
+      .raise()
   }
 }

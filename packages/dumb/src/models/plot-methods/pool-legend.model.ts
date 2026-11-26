@@ -28,6 +28,8 @@
 export interface PoolLegendOptions {
   /** Vertical offset of the legend text baseline, above the top of the pool */
   baseline: number
+  /** Horizontal space between the legend and the right side of the chart */
+  horizontalMargin?: number
 }
 
 export interface BolusPoolLegendOptions extends PoolLegendOptions {

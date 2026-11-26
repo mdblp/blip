@@ -41,7 +41,7 @@ describe('plotGuidelines', () => {
     chip: { label: height.toString(), class: 'd3-line-neutral-chip' }
   })
 
-  const setup = (guidelines: Guideline[]): {
+  const setup = (guidelines: Guideline[], chipsInsideChart = false): {
     plot: (selection: PlotSelection<Fill>) => void
     selection: PlotSelection<Fill>
     setGuidelines: (newGuidelines: Guideline[]) => void
@@ -60,7 +60,7 @@ describe('plotGuidelines', () => {
       filterDataForRender: jest.fn((data: Fill[]) => data),
       highlight: jest.fn().mockReturnValue({ on: jest.fn(), off: jest.fn() })
     }
-    const plot = plotGuidelines(pool)
+    const plot = plotGuidelines(pool, { chipsInsideChart })
     plot(selection)
     return { plot, selection, setGuidelines: (newGuidelines) => { currentGuidelines = newGuidelines } }
   }
@@ -105,6 +105,22 @@ describe('plotGuidelines', () => {
     expect(background.getAttribute('x')).toBe('-16')
     expect(background.getAttribute('width')).toBe('22')
     expect(background.getAttribute('height')).toBe('20')
+  })
+
+  it('should draw the chips in the pool, after the lines, inside the chart at its left edge, when chipsInsideChart is set', () => {
+    const { selection } = setup([neutralGuideline(1)], true)
+
+    expect(document.querySelector('[data-testid="poolBolus_guideline_chips"]')!.childElementCount).toBe(0)
+    const elements = (selection.node() as SVGGElement).children
+    expect(elements).toHaveLength(2)
+    expect(elements[0].tagName).toBe('line')
+    const chip = elements[1]
+    expect(chip.textContent).toBe('1')
+    expect(chip.getAttribute('class')).toBe('d3-line-guide-chip d3-line-neutral-chip d3-line-guide-chip-inside')
+    // Left edge 16px right of the chart, plus the label padding
+    expect(chip.getAttribute('transform')).toBe(`translate(57,${yScale(1)})`)
+    // Background vertically centered on the line, as in the axis gutter
+    expect(chip.querySelector('rect.d3-line-guide-chip-bg')!.getAttribute('y')).toBe('-10')
   })
 
   it('should follow the guidelines of the pool on each render', () => {

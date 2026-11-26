@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-4221 Remove the ability for a caregiver to create an HCP account
 - YLP-4245 Daily view shows 4 hours on mobile screens
 - YLP-4246 Daily view shows drawers instead of tooltips on mobile screens
+- YLP-4247 Daily view guidelines for mobile screens
 
 ### Engineering
 - YLP-3466 Remove unused env variables
