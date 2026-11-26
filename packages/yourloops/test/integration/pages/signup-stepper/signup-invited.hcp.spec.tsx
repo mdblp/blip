@@ -117,6 +117,10 @@ describe('Signup stepper as an invited hcp', () => {
     expect(screen.queryByTestId('consents')).not.toBeInTheDocument()
     expect(screen.queryByTestId('create-caregiver-account')).not.toBeInTheDocument()
 
+    logoutMock.mockClear()
+    await userEvent.click(screen.getByRole('button', { name: 'Back' }))
+    expect(logoutMock).toHaveBeenCalledTimes(1)
+
     await userEvent.click(retryButton)
 
     expect(await screen.findByTestId('consents')).toBeVisible()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,6 @@ import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
@@ -40,6 +39,7 @@ import SignUpConsent from './signup-consent'
 import { useAuth } from '../../lib/auth'
 import SignUpAccountSelector from './signup-account-selector'
 import { SignupCompleteMessage } from './signup-complete-message'
+import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { useSignupInvitations } from './use-signup-invitations.hook'
 import { useSignUpFormState } from './signup-formstate-context'
 import { SignupInvitationsStatus } from './models/enums/signup-invitations-status.enum'
@@ -113,20 +113,23 @@ export const SignUpStepper: FunctionComponent = () => {
   const renderContent = (): React.ReactNode => {
     if (status === SignupInvitationsStatus.Error) {
       return (
-        <Box sx={{ textAlign: 'center', marginY: 3 }}>
-          <Typography id="signup-invitations-error" color="error" gutterBottom>
+        <Box sx={{ marginY: 3 }}>
+          <Typography id="signup-invitations-error" color="error" align="center" gutterBottom>
             {t('signup-invitations-loading-error')}
           </Typography>
-          <Button id="signup-invitations-retry" variant="contained" color="primary" onClick={retry}>
-            {t('button-retry')}
-          </Button>
+          <SignupStepperActionButtons
+            nextButtonLabel={t('button-retry')}
+            disabled={false}
+            onClickBackButton={logout}
+            onClickNextButton={retry}
+          />
         </Box>
       )
     }
     if (status === SignupInvitationsStatus.Loading || (hasInvitations && !isRoleForced)) {
       return (
         <Box sx={{ textAlign: 'center', marginY: 3 }}>
-          <CircularProgress data-testid="signup-invitations-loading" />
+          <CircularProgress data-testid="signup-invitations-loading" aria-label={t('account-creation-finalization')} />
         </Box>
       )
     }
