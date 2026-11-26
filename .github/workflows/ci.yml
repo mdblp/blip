@@ -46,7 +46,6 @@ jobs:
 
   test-lambda:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -76,7 +75,6 @@ jobs:
 
   test-medical:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -103,7 +101,6 @@ jobs:
 
   test-dumb:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -131,7 +128,6 @@ jobs:
 
   test-yourloops-unit:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -158,7 +154,9 @@ jobs:
 
   test-yourloops-integration-hcp:
     runs-on: ubuntu-latest
-    needs: lint
+    strategy:
+      matrix:
+        shard: [ 1, 2, 3 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -181,12 +179,13 @@ jobs:
           npm ci
           npm run build-dependencies
 
-      - name: Test yourloops integration hcp
-        run: npm run test-yourloops-integration-hcp
+      - name: Test yourloops integration hcp (shard ${{ matrix.shard }}/3)
+        run: |
+          source config/.env.sh
+          npm run integration-test-hcp -w yourloops -- --shard=${{ matrix.shard }}/3
 
   test-yourloops-integration-caregiver:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -214,7 +213,6 @@ jobs:
 
   test-yourloops-integration-patient:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -242,7 +240,6 @@ jobs:
 
   test-yourloops-integration-common:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7

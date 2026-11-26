@@ -33,6 +33,7 @@ artifact_node.sh
 artifact_packaging.sh
 artifact_images.sh
 coverage/
+.jest-cache/
 reports/
 *.junit.xml
 
