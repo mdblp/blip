@@ -93,7 +93,7 @@ describe('TeamApi', () => {
 
       const invitations = await TeamApi.getTeamInvitations()
       expect(invitations).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: '/crew/v1/teams/invites' })
+      expect(HttpService.get).toHaveBeenCalledWith({ url: '/crew/v1/teams/invites', config: { timeout: 15000 } })
     })
 
     it('should return an empty array if the user has no pending invitation', async () => {

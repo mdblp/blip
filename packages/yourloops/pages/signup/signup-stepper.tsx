@@ -28,6 +28,7 @@
 import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stepper from '@mui/material/Stepper'
@@ -114,9 +115,9 @@ export const SignUpStepper: FunctionComponent = () => {
     if (status === SignupInvitationsStatus.Error) {
       return (
         <Box sx={{ marginY: 3 }}>
-          <Typography id="signup-invitations-error" color="error" align="center" gutterBottom>
+          <Alert id="signup-invitations-error" severity="error">
             {t('signup-invitations-loading-error')}
-          </Typography>
+          </Alert>
           <SignupStepperActionButtons
             nextButtonLabel={t('button-retry')}
             disabled={false}
