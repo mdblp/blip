@@ -245,12 +245,15 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits, horizontalMargin })
   plotBgLegend(poolBG, axisGutter, { baseline, horizontalMargin })
   plotBolusLabel(poolBolus, axisGutter, { baseline, horizontalMargin })
-  plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18, horizontalMargin })
-  plotBolusLegend(poolBolus, axisGutter, {
-    baseline,
-    shouldDisplayEatingShortly: isDblg2Patient,
-    horizontalMargin
-  })
+  // Not enough room on mobile devices for the bolus & carbs legends
+  if (!isMobile) {
+    plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18, horizontalMargin })
+    plotBolusLegend(poolBolus, axisGutter, {
+      baseline,
+      shouldDisplayEatingShortly: isDblg2Patient,
+      horizontalMargin
+    })
+  }
   plotBasalLabel(poolBasal, axisGutter, { baseline, horizontalMargin })
   plotBasalLegend(poolBasal, axisGutter, { baseline, horizontalMargin })
   if (poolIob) {

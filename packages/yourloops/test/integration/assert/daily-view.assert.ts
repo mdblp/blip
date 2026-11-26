@@ -359,6 +359,8 @@ export const checkDailyViewChartMobileLayout = async () => {
   expect(document.querySelector('.scrollThumb')).not.toBeInTheDocument()
 
   expect(screen.queryByTestId('new-note-button')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('poolBolus_legend_bolus')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('poolBolus_legend_carbs')).not.toBeInTheDocument()
 
   // Titles and legends spaced from the sides of the screen
   expect(screen.getByTestId('poolBG-chart-label').getAttribute('transform')).toMatch(/^translate\(8,/)
