@@ -27,32 +27,30 @@
 
 import { type NightMode } from 'medical-domain'
 import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { getDuration } from '../../../utils/datetime/datetime.util'
+import { getNightModeInfo } from '../../../utils/night-mode/night-mode.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
 export const NightModeTooltip: FC<DailyTooltipProps<NightMode>> = (props) => {
   const { datum: nightMode, position, side, timePrefs } = props
-  const { t } = useTranslation('main')
 
-  const duration = getDuration(nightMode)
+  const { title, lines } = getNightModeInfo(nightMode)
 
   return (
     <Tooltip
       position={position}
       backgroundColor={colors.darkBlueBackground}
-      title={t('night-mode')}
+      title={title}
       dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
       side={side}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
+          {lines.map((line) => <TooltipLine key={line.label} {...line} />)}
         </div>
       }
     />

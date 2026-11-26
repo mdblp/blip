@@ -63,6 +63,9 @@ export {
   TimeInRangeDT1Chart
 } from './components/stats/time-in-range/time-in-range-chart/time-in-range-dt1-chart'
 
+// Drawers
+export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer'
+
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 export { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'

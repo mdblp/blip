@@ -46,6 +46,7 @@ import {
   checkDailyViewMobileCalendarSelection,
   checkDailyViewMobileDateBeyondMostRecent,
   checkDailyViewMobileNavigation,
+  checkDailyViewMobileNightModeDrawer,
   checkDailyViewMobileStats,
   checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
@@ -188,6 +189,11 @@ export const testDailyViewChartMobile = async (router: Router) => {
 export const testDailyViewMobileDateBeyondMostRecent = async (router: Router) => {
   await checkDailyViewChartMobileLayout()
   await checkDailyViewMobileDateBeyondMostRecent(router)
+}
+
+export const testDailyViewMobileDrawers = async () => {
+  await checkDailyViewChartMobileLayout()
+  await checkDailyViewMobileNightModeDrawer()
 }
 
 export const testDailyViewXAxisMobileTimezoneChange = async () => {

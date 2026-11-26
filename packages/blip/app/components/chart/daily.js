@@ -27,6 +27,7 @@ import {
   EventsSuperpositionPopover,
   IobTooltip,
   NewNoteTooltip,
+  NightModeDrawer,
   NightModeTooltip,
   NoteTooltip,
   ParameterTooltip,
@@ -324,6 +325,7 @@ class Daily extends React.Component {
       inTransition: false,
       title: this.getTitle(props.epochLocation),
       tooltip: null,
+      drawer: null,
       chartMounted: false
     }
 
@@ -361,7 +363,7 @@ class Daily extends React.Component {
 
   render() {
     const { tidelineData, epochLocation, msRange, loading, timePrefs, isMobile } = this.props
-    const { inTransition, atMostRecent, tooltip, title } = this.state
+    const { inTransition, atMostRecent, tooltip, drawer, title } = this.state
     const trackMetric = metrics.send
     const endpoints = this.getEndpoints()
     const dateFilter = {
@@ -493,6 +495,7 @@ class Daily extends React.Component {
           </Box>
         </Box>
         {tooltip}
+        {drawer}
       </div>
     )
   }
@@ -618,6 +621,10 @@ class Daily extends React.Component {
     hoverTypes.forEach(type => AnalyticsApi.cancelHover(type))
 
     this.setState({ tooltip: null })
+  }
+
+  handleDrawerClose = () => {
+    this.setState({ drawer: null })
   }
 
   handleBasalHover = (datum) => {
@@ -821,6 +828,16 @@ class Daily extends React.Component {
 
   handleNightModeHover = (datum) => {
     AnalyticsApi.trackHover('daily-night-mode')
+    if (this.props.isMobile) {
+      const drawer = (
+        <NightModeDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <NightModeTooltip

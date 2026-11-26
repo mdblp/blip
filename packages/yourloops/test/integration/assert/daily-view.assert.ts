@@ -433,6 +433,23 @@ export const checkDailyViewMobileDateBeyondMostRecent = async (router: Router) =
   checkDailyViewAtMostRecentData()
 }
 
+export const checkDailyViewMobileNightModeDrawer = async () => {
+  const nightMode = await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })
+  await userEvent.hover(nightMode)
+  expect(screen.queryByTestId('tooltip')).not.toBeInTheDocument()
+  const drawer = screen.getByTestId('daily-drawer')
+  expect(drawer).toHaveTextContent('Night mode11:00 pmDuration10 hours')
+
+  // Tapping elsewhere does not close the drawer
+  await userEvent.unhover(nightMode)
+  expect(screen.getByTestId('daily-drawer')).toBeVisible()
+
+  await userEvent.click(screen.getByTestId('daily-drawer-close-button'))
+  await waitFor(() => {
+    expect(screen.queryByTestId('daily-drawer')).not.toBeInTheDocument()
+  })
+}
+
 export const checkDailyViewMobileNavigation = async (router: Router) => {
   // The arrows navigate by 24 hours, from the most recent hours (centered on 17:30 UTC)
   await userEvent.click(screen.getByTestId('button-nav-back'))
