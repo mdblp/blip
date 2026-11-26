@@ -17,6 +17,7 @@
 import Box from '@mui/material/Box'
 import bows from 'bows'
 import {
+  AlarmEventDrawer,
   AlarmEventTooltip,
   BasalTooltip,
   BloodGlucoseTooltip,
@@ -821,6 +822,18 @@ class Daily extends React.Component {
 
   handleAlarmEventHover = (datum) => {
     AnalyticsApi.trackHover('daily-alarm-event')
+    if (this.props.isMobile) {
+      const drawer = (
+        <AlarmEventDrawer
+          datum={datum.data}
+          bgPrefs={this.props.bgPrefs}
+          device={this.props.device}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <AlarmEventTooltip
