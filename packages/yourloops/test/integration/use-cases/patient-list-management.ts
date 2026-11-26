@@ -78,9 +78,12 @@ export const testPatientListForHcp = async () => {
   await checkPatientListFilters()
   await checkPatientColumnsFiltersContent()
   await checkPendingPatientColumnsSettingsMedicalTeam()
-  await checkPatientListHideShowColumns()
   await checkPatientListPendingTab()
   await checkPatientListCurrentTab()
+}
+
+export const testPatientListColumnsForHcp = async () => {
+  await checkPatientListHideShowColumns()
 }
 
 export const testPatientListForHcpMobile = async () => {
