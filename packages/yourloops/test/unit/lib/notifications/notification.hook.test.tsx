@@ -80,7 +80,7 @@ describe('Notification hook', () => {
     expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
   }
 
-  beforeAll(() => {
+  beforeEach(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { id: hcp.id, role: hcp.role } }
     });
@@ -90,13 +90,11 @@ describe('Notification hook', () => {
   })
 
   describe('Role filter', () => {
-    beforeAll(() => {
+    it('should keep only the notifications matching the user role', async () => {
+      // Act as a caregiver, so that the notification for the patient is filtered out
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
         return { user: { id: caregiver.id, role: caregiver.role } }
       });
-    })
-
-    it('should keep only the notifications matching the user role', async () => {
       const caregiverNotification = { ...buildNotification(), id: 'caregiverId', type: INotificationType.DirectInvitation }
       const patientNotification = { ...buildNotification(), id: 'patientId', type: INotificationType.CareTeamPatientInvitation }
       jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValueOnce([caregiverNotification, patientNotification])
