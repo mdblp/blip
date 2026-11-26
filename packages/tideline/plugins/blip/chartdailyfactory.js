@@ -87,7 +87,6 @@ const MOBILE_MIN_WIDTH = 0
 const DEFAULT_MIN_WIDTH = 640
 /** No left gutter on mobile devices: the guideline chips are drawn inside the chart */
 const MOBILE_AXIS_GUTTER = 0
-const DEFAULT_AXIS_GUTTER = 35
 /** Space between the chart titles/legends and the sides of the screen, on mobile devices */
 const MOBILE_LABELS_MARGIN = 8
 
@@ -133,7 +132,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   const chart = oneDay(emitter, {
     ...options,
     minWidth,
-    axisGutter: isMobile ? MOBILE_AXIS_GUTTER : DEFAULT_AXIS_GUTTER,
+    axisGutter: isMobile ? MOBILE_AXIS_GUTTER : undefined,
     scrollNav: !isMobile,
     visibleDuration: getDailyVisibleDuration(isMobile)
   })
@@ -240,24 +239,20 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   // Pool labels & legends, drawn once the pools are laid out
   const axisGutter = chart.axisGutter()
   const baseline = options.labelBaseline
-  const horizontalMargin = isMobile ? MOBILE_LABELS_MARGIN : 0
-  plotEventsLabel(poolEvents, axisGutter, { baseline, horizontalMargin })
-  plotBgLabel(poolBG, axisGutter, { baseline, bgUnits: chart.options.bgUnits, horizontalMargin })
-  plotBgLegend(poolBG, axisGutter, { baseline, horizontalMargin })
-  plotBolusLabel(poolBolus, axisGutter, { baseline, horizontalMargin })
+  const labelOptions = { baseline, horizontalMargin: isMobile ? MOBILE_LABELS_MARGIN : 0 }
+  plotEventsLabel(poolEvents, axisGutter, labelOptions)
+  plotBgLabel(poolBG, axisGutter, { ...labelOptions, bgUnits: chart.options.bgUnits })
+  plotBgLegend(poolBG, axisGutter, labelOptions)
+  plotBolusLabel(poolBolus, axisGutter, labelOptions)
   // Not enough room on mobile devices for the bolus & carbs legends
   if (!isMobile) {
-    plotCarbsLegend(poolBolus, axisGutter, { baseline: baseline + 18, horizontalMargin })
-    plotBolusLegend(poolBolus, axisGutter, {
-      baseline,
-      shouldDisplayEatingShortly: isDblg2Patient,
-      horizontalMargin
-    })
+    plotCarbsLegend(poolBolus, axisGutter, { ...labelOptions, baseline: baseline + 18 })
+    plotBolusLegend(poolBolus, axisGutter, { ...labelOptions, shouldDisplayEatingShortly: isDblg2Patient })
   }
-  plotBasalLabel(poolBasal, axisGutter, { baseline, horizontalMargin })
-  plotBasalLegend(poolBasal, axisGutter, { baseline, horizontalMargin })
+  plotBasalLabel(poolBasal, axisGutter, labelOptions)
+  plotBasalLegend(poolBasal, axisGutter, labelOptions)
   if (poolIob) {
-    plotIobLabel(poolIob, axisGutter, { baseline, horizontalMargin })
+    plotIobLabel(poolIob, axisGutter, labelOptions)
   }
 
   // ***

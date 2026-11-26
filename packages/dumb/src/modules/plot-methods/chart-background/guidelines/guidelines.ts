@@ -163,7 +163,8 @@ export const plotGuidelines = (
     // Otherwise, its right edge ends up CHIP_GAP left of it, in the axis gutter
     const chipX = options.chipsInsideChart ? xStart + CHIP_INSIDE_CHART_MARGIN + CHIP_PADDING.x : xStart - CHIP_GAP - CHIP_PADDING.x
     // Inside the chart, the chips go in this pool group, after the lines: the data and the confidential
-    // mode, drawn after this group, hide them (SVG paints in DOM order)
+    // mode, drawn after this group, hide them (SVG paints in DOM order).
+    // The join can insert a new line after the existing chips, so the chips are moved back to the end
     const chipContainer: d3.Selection<SVGGElement, unknown, d3.BaseType, unknown> = options.chipsInsideChart
       ? d3.select<SVGGElement, unknown>(selection.node()!)
       : pool.chipGroup()
@@ -173,5 +174,6 @@ export const plotGuidelines = (
       .data(chipGuidelines, getGuidelineKey)
       .join(createChipElements)
       .attr('transform', (d: Guideline) => `translate(${chipX},${getY(d)})`)
+      .raise()
   }
 }
