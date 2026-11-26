@@ -56,6 +56,7 @@ function NotificationContextImpl(): NotificationContext {
   const { getAccessTokenSilently } = useAuth0()
   const [receivedInvitations, setReceivedInvitations] = React.useState<InAppNotification[]>([])
   const [initialized, setInitialized] = React.useState(false)
+  const userRole = user.role
 
   if (!user) {
     throw new Error('User must be logged-in to use the Notification hook')
@@ -84,13 +85,13 @@ function NotificationContextImpl(): NotificationContext {
   const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
       const rawInvitations = await NotificationApi.getReceivedInvitations(user.id)
-      const invitations = rawInvitations.filter((notification) => !!notification.payload && isNotificationForRole(notification, user.role))
+      const invitations = rawInvitations.filter((notification) => !!notification.payload && isNotificationForRole(notification, userRole))
 
       setReceivedInvitations(invitations)
     } catch (err) {
       log.error(err)
     }
-  }, [user.id, user.role])
+  }, [user.id, userRole])
 
   const initHook = (): void => {
     if (initialized || lock) {
@@ -118,7 +119,7 @@ function NotificationContextImpl(): NotificationContext {
       user.id,
       getAccessTokenSilently,
       (notif) => {
-        if (isNotificationForRole(notif, user.role)) {
+        if (isNotificationForRole(notif, userRole)) {
           setReceivedInvitations(prev => addNotificationIfAbsent(prev, notif))
         }
       }
@@ -126,7 +127,7 @@ function NotificationContextImpl(): NotificationContext {
 
     // used a React cleanup function to disconnect from the real time-server when the component unmounts
     return disconnectFn
-  }, [initialized, user.id, user.role, getAccessTokenSilently])
+  }, [initialized, user.id, userRole, getAccessTokenSilently])
 
   return {
     initialized,

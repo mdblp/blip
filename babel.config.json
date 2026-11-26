@@ -15,12 +15,5 @@
   ],
   "compact": false,
   "minified": false,
-  "sourceType": "unambiguous",
-  "env": {
-    "test": {
-      "presets": [
-        ["@babel/preset-env", { "targets": { "node": "current" } }]
-      ]
-    }
-  }
+  "sourceType": "unambiguous"
 }
