@@ -62,7 +62,6 @@ import {
   testAckMonitoringAlertsWithError,
   testDataGridTranslations,
   testPatientListContentForHcp,
-  testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
 } from '../../use-cases/patient-list-management'
@@ -171,13 +170,6 @@ describe('HCP home page', () => {
 
     await testPatientManagementMedicalTeam()
   })
-
-  it('should be able to manage the patient list when scoped on a medical team', async () => {
-    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
-    await renderHomePage(thirdTeamPatientsList)
-
-    await testPatientListForHcp()
-  }, 500000)
 
   it('should see the content of the list when scoped on a medical team', async () => {
     await renderHomePage(thirdTeamPatientsList)

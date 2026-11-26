@@ -31,5 +31,4 @@ export enum INotificationType {
   CareTeamPatientInvitation = 'medicalteam_patient_invitation',
   CareTeamDoAdmin = 'medicalteam_do_admin',
   CareTeamRemoveMember = 'medicalteam_remove',
-  MedicalTeamMonitoringInvitation = 'medicalteam_monitoring_invitation',
 }
