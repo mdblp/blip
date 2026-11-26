@@ -79,6 +79,12 @@ describe('legends', () => {
     expect(bolusLegend.getAttribute('transform')).toBe('translate(835,96)')
   })
 
+  it('should space the legend from the right side of the chart by the horizontal margin', () => {
+    plotCarbsLegend(setup(), AXIS_GUTTER, { baseline: 22, horizontalMargin: 8 })
+
+    expect(getLegend('carbs').getAttribute('transform')).toBe('translate(827,78)')
+  })
+
   it('should draw the glucose legend with one circle per range', () => {
     plotBgLegend(setup(), AXIS_GUTTER, { baseline: 4 })
 

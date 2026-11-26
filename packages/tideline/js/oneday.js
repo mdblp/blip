@@ -17,7 +17,7 @@
 
 /**
  * @typedef {import('./tidelinedata').Datum} Datum
- * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void; visibleDuration?: number; minWidth?: number; scrollNav?: boolean }} OneDayOptions
+ * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void; visibleDuration?: number; minWidth?: number; scrollNav?: boolean; axisGutter?: number }} OneDayOptions
  * @typedef {import('./pool').default} Pool
  * @typedef {{poolGroup:SVGGElement;id:(v?:string)=>string|OneDay;options:OneDayOptions;tidelineData:MedicalDataService;pools:Pool[];width:(v?:number)=>number|OneDay;axisGutter:()=>number;data:(td?:MedicalDataService)=>Datum[]|OneDay;setAxes:()=>OneDay;filterDataForRender:(d:Datum[])=>Datum[]}} OneDay
  */
@@ -39,7 +39,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Console} */
   const log = bows('OneDay')
 
-  _.defaults(options, { trackMetric: _.noop, visibleDuration: MS_IN_DAY, minWidth: 300, scrollNav: true })
+  _.defaults(options, { trackMetric: _.noop, visibleDuration: MS_IN_DAY, minWidth: 300, scrollNav: true, axisGutter: 35 })
 
   // basic attributes
   const nav = {
@@ -62,8 +62,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   const minWidth = options.minWidth
   /** The duration (in ms) displayed in the chart */
   const visibleDuration = options.visibleDuration
-  /** Left gutter, wide enough to host the guideline chips */
-  const axisGutter = 35
+  /** Left gutter, wide enough to host the guideline chips when they are drawn outside the chart */
+  const axisGutter = options.axisGutter
   /** The number of days we pre-render the SVG */
   const renderDaysBuffer = 2
 

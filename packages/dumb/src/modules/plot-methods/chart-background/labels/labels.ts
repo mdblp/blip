@@ -75,7 +75,7 @@ const getIobLabelSpans = (): PoolLabelSpan[] => [
  * A label is static and drawn once, so this renders directly rather than through a
  * D3 enter/update/exit join.
  */
-const drawLabel = (pool: LabelPool, axisGutter: number, baseline: number, spans: PoolLabelSpan[]): void => {
+const drawLabel = (pool: LabelPool, axisGutter: number, baseline: number, spans: PoolLabelSpan[], horizontalMargin: number): void => {
   const container = pool.parent().select<SVGGElement>('#tidelineLabels')
   const poolId = pool.id()
   const labelId = `${poolId}_label`
@@ -85,7 +85,7 @@ const drawLabel = (pool: LabelPool, axisGutter: number, baseline: number, spans:
     .classed(CSS_CLASSES.POOL_LABEL, true)
     .attr('id', labelId)
     .attr('data-testid', `${poolId}-chart-label`)
-    .attr('transform', `translate(${axisGutter},${y})`)
+    .attr('transform', `translate(${axisGutter + horizontalMargin},${y})`)
 
   spans.forEach((span, spanIndex) => {
     textGroup.append('tspan')
@@ -108,8 +108,8 @@ const drawLabel = (pool: LabelPool, axisGutter: number, baseline: number, spans:
  * plotEventsLabel(poolEvents, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotEventsLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
-  drawLabel(pool, axisGutter, baseline, getEventsLabelSpans())
+export const plotEventsLabel = (pool: LabelPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getEventsLabelSpans(), horizontalMargin)
 }
 
 /**
@@ -125,8 +125,8 @@ export const plotEventsLabel = (pool: LabelPool, axisGutter: number, { baseline 
  * plotBgLabel(poolBG, chart.axisGutter(), { baseline: 4, bgUnits: MGDL_UNITS })
  * ```
  */
-export const plotBgLabel = (pool: LabelPool, axisGutter: number, { baseline, bgUnits }: BgPoolLabelOptions): void => {
-  drawLabel(pool, axisGutter, baseline, getBgLabelSpans(bgUnits))
+export const plotBgLabel = (pool: LabelPool, axisGutter: number, { baseline, bgUnits, horizontalMargin = 0 }: BgPoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getBgLabelSpans(bgUnits), horizontalMargin)
 }
 
 /**
@@ -142,8 +142,8 @@ export const plotBgLabel = (pool: LabelPool, axisGutter: number, { baseline, bgU
  * plotBolusLabel(poolBolus, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotBolusLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
-  drawLabel(pool, axisGutter, baseline, getBolusLabelSpans())
+export const plotBolusLabel = (pool: LabelPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getBolusLabelSpans(), horizontalMargin)
 }
 
 /**
@@ -159,8 +159,8 @@ export const plotBolusLabel = (pool: LabelPool, axisGutter: number, { baseline }
  * plotBasalLabel(poolBasal, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotBasalLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
-  drawLabel(pool, axisGutter, baseline, getBasalLabelSpans())
+export const plotBasalLabel = (pool: LabelPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getBasalLabelSpans(), horizontalMargin)
 }
 
 /**
@@ -176,6 +176,6 @@ export const plotBasalLabel = (pool: LabelPool, axisGutter: number, { baseline }
  * plotIobLabel(poolIob, chart.axisGutter(), { baseline: 4 })
  * ```
  */
-export const plotIobLabel = (pool: LabelPool, axisGutter: number, { baseline }: PoolLabelOptions): void => {
-  drawLabel(pool, axisGutter, baseline, getIobLabelSpans())
+export const plotIobLabel = (pool: LabelPool, axisGutter: number, { baseline, horizontalMargin = 0 }: PoolLabelOptions): void => {
+  drawLabel(pool, axisGutter, baseline, getIobLabelSpans(), horizontalMargin)
 }

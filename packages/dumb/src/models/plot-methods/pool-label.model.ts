@@ -30,6 +30,8 @@ import { type BgUnit } from 'medical-domain'
 export interface PoolLabelOptions {
   /** Vertical offset of the label text baseline, above the top of the pool */
   baseline: number
+  /** Horizontal space between the label and the left side of the chart */
+  horizontalMargin?: number
 }
 
 export interface BgPoolLabelOptions extends PoolLabelOptions {
