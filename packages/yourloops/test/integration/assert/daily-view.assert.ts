@@ -363,7 +363,7 @@ export const checkDailyViewChartMobileLayout = async () => {
   // Titles and legends spaced from the sides of the screen
   expect(screen.getByTestId('poolBG-chart-label').getAttribute('transform')).toMatch(/^translate\(8,/)
   const chartWidth = Number(chartContainer.querySelector('svg').getAttribute('width'))
-  expect(screen.getByTestId('poolBG_legend_bg').getAttribute('transform')).toMatch(new RegExp(`^translate\\(${chartWidth - 8},`))
+  expect(screen.getByTestId('poolBG_legend_bg').getAttribute('transform')).toMatch(new RegExp(String.raw`^translate\(${chartWidth - 8},`))
 }
 
 export const checkDailyViewChartFooterIsNotDisplayed = () => {
