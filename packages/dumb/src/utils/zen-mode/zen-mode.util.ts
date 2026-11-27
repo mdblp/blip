@@ -42,9 +42,11 @@ export const getZenModeInfo = (zenMode: ZenMode): DailyDatumInfo => {
 
   if (zenMode.glycemiaTarget) {
     const units = zenMode.glycemiaTarget.units
-    lines.push({ label: t('target-glucose-level'), value: zenMode.glycemiaTarget.value, units, isBold: true })
-    lines.push({ label: t('set-target'), value: zenMode.glycemiaTarget.initialValue, units })
-    lines.push({ label: t('difference'), value: getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset), units })
+    lines.push(
+      { label: t('target-glucose-level'), value: zenMode.glycemiaTarget.value, units, isBold: true },
+      { label: t('set-target'), value: zenMode.glycemiaTarget.initialValue, units },
+      { label: t('difference'), value: getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset), units }
+    )
   }
   lines.push({ label: t('Duration'), value: duration.value, units: t(duration.units) })
 

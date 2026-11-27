@@ -65,8 +65,10 @@ export const getPhysicalActivityInfo = (physicalActivity: PhysicalActivity, time
   if (physicalActivity.name && physicalActivity.name !== "") {
     lines.push({ label: t('Name'), value: getPhysicalActivityDisplayName(physicalActivity.name) })
   }
-  lines.push({ label: t('Intensity'), value: t(`${physicalActivity.reportedIntensity}-pa`) })
-  lines.push({ label: t('Duration'), value: `${duration.value} ${t(duration.units)}` })
+  lines.push(
+    { label: t('Intensity'), value: t(`${physicalActivity.reportedIntensity}-pa`) },
+    { label: t('Duration'), value: `${duration.value} ${t(duration.units)}` }
+  )
   if (physicalActivity.inputTime) {
     lines.push({ label: t('Entered at'), value: formatInputTime(physicalActivity.inputTime, timePrefs) })
   }
