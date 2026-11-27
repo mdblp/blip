@@ -25,6 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const getFormattedGlycemiaOffset = (offset: number): string => {
+import i18next from 'i18next'
+import { type ZenMode } from 'medical-domain'
+import { type DailyDatumInfo, type DailyDatumLine } from '../../models/daily-datum-info.model'
+import { getDuration } from '../datetime/datetime.util'
+
+const t = i18next.t.bind(i18next)
+
+const getFormattedGlycemiaOffset = (offset: number): string => {
   return offset > 0 ? `+${offset}` : offset.toString()
+}
+
+export const getZenModeInfo = (zenMode: ZenMode): DailyDatumInfo => {
+  const duration = getDuration(zenMode)
+  const lines: DailyDatumLine[] = []
+
+  if (zenMode.glycemiaTarget) {
+    const units = zenMode.glycemiaTarget.units
+    lines.push({ label: t('target-glucose-level'), value: zenMode.glycemiaTarget.value, units, isBold: true })
+    lines.push({ label: t('set-target'), value: zenMode.glycemiaTarget.initialValue, units })
+    lines.push({ label: t('difference'), value: getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset), units })
+  }
+  lines.push({ label: t('Duration'), value: duration.value, units: t(duration.units) })
+
+  return {
+    title: t('zen-mode'),
+    lines
+  }
 }

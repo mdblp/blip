@@ -28,11 +28,9 @@
 import Avatar from '@mui/material/Avatar'
 import { type TimePrefs, type ZenMode } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
-import { getDuration } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { getFormattedGlycemiaOffset } from '../../../utils/zen-mode/zen-mode.util'
+import { getZenModeInfo } from '../../../utils/zen-mode/zen-mode.util'
 import { DailyDrawer } from '../common/daily-drawer'
 import { DailyDrawerLine } from '../common/daily-drawer-line'
 
@@ -46,26 +44,14 @@ const ZEN_MODE_TEXT = 'ZEN'
 
 export const ZenModeDrawer: FunctionComponent<ZenModeDrawerProps> = (props) => {
   const { datum: zenMode, timePrefs, onClose } = props
-  const { t } = useTranslation('main')
-  const duration = getDuration(zenMode)
+  const { title, lines } = getZenModeInfo(zenMode)
 
   return (
     <DailyDrawer
       icon={<Avatar sx={{ bgcolor: colors.zenMode, width: 48, height: 48, fontSize: 'inherit' }}>{ZEN_MODE_TEXT}</Avatar>}
-      title={t('zen-mode')}
+      title={title}
       dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
-      content={
-        <>
-          {zenMode.glycemiaTarget &&
-            <>
-              <DailyDrawerLine label={t('target-glucose-level')} value={zenMode.glycemiaTarget.value} units={zenMode.glycemiaTarget.units} isBold />
-              <DailyDrawerLine label={t('set-target')} value={zenMode.glycemiaTarget.initialValue} units={zenMode.glycemiaTarget.units} />
-              <DailyDrawerLine label={t('difference')} value={getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset)} units={zenMode.glycemiaTarget.units} />
-            </>
-          }
-          <DailyDrawerLine label={t('Duration')} value={duration.value} units={t(duration.units)} />
-        </>
-      }
+      content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
       onClose={onClose}
     />
   )

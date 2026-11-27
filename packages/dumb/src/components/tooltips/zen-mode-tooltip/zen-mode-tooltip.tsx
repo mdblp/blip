@@ -27,41 +27,29 @@
 
 import { ZenMode } from 'medical-domain'
 import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 import { DailyTooltipProps } from '../../../models/daily-tooltip-props.model'
 import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { getDuration } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { getFormattedGlycemiaOffset } from '../../../utils/zen-mode/zen-mode.util'
+import { getZenModeInfo } from '../../../utils/zen-mode/zen-mode.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
 
 export const ZenModeTooltip: FC<DailyTooltipProps<ZenMode>> = (props) => {
   const { datum: zenMode, position, side, timePrefs } = props
-  const { t } = useTranslation('main')
-  const duration = getDuration(zenMode)
+  const { title, lines } = getZenModeInfo(zenMode)
 
   return (
     <Tooltip
       position={position}
       backgroundColor={colors.greenBackground}
-      title={t('zen-mode')}
+      title={title}
       dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
       side={side}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={zenMode.glycemiaTarget ? commonStyles.containerFlexLarge : commonStyles.containerFlex}>
-          {zenMode.glycemiaTarget && <>
-            <TooltipLine label={t('target-glucose-level')} value={zenMode.glycemiaTarget.value}
-                         units={zenMode.glycemiaTarget.units} isBold={true} />
-            <TooltipLine label={t('set-target')} value={zenMode.glycemiaTarget.initialValue}
-                         units={zenMode.glycemiaTarget.units} />
-            <TooltipLine label={t('difference')} value={getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset)}
-                         units={zenMode.glycemiaTarget.units} />
-            </>
-          }
-          <TooltipLine label={t('Duration')} value={duration.value} units={t(duration.units)} />
+          {lines.map((line) => <TooltipLine key={line.label} {...line} />)}
         </div>
       }
     />

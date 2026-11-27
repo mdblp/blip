@@ -29,6 +29,7 @@ export interface DailyDatumLine {
   label: string
   value: number | string
   units?: string
+  isBold?: boolean
 }
 
 export interface DailyDatumInfo {
