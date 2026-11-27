@@ -33,13 +33,14 @@ interface DailyDrawerLineProps {
   label: string
   value?: number | string
   units?: string
+  isBold?: boolean
 }
 
 export const DailyDrawerLine: FunctionComponent<DailyDrawerLineProps> = (props) => {
-  const { label, value, units } = props
+  const { label, value, units, isBold } = props
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: isBold ? 'bold' : undefined }}>
       <span>{label}</span>
       {value !== undefined && <span>{formatNumberForLang(value)}{units && ` ${units}`}</span>}
     </Box>

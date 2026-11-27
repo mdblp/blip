@@ -471,6 +471,11 @@ export const checkDailyViewMobileReservoirChangeDrawer = async () => {
   await checkDailyViewMobileDrawer(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
 }
 
+export const checkDailyViewMobileZenModeDrawers = async () => {
+  await checkDailyViewMobileDrawer(`event_group_${ZEN_MODE_ID}`, 'Zen mode11:00 pmDuration2 hours')
+  await checkDailyViewMobileDrawer(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level130 mg/dLSet target110 mg/dLDifference+20 mg/dLDuration2 hours')
+}
+
 export const checkDailyViewMobileAlarmEventDrawers = async () => {
   await checkDailyViewMobileDrawer(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amYour glucose is highG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
   await checkDailyViewMobileDrawer(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amUrgent LowYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')

@@ -39,6 +39,7 @@ import {
   TimeChangeTooltip,
   WarmUpDrawer,
   WarmUpTooltip,
+  ZenModeDrawer,
   ZenModeTooltip
 } from 'dumb'
 import i18next from 'i18next'
@@ -931,6 +932,16 @@ class Daily extends React.Component {
 
   handleZenModeHover = (datum) => {
     AnalyticsApi.trackHover('daily-zen-mode')
+    if (this.props.isMobile) {
+      const drawer = (
+        <ZenModeDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ZenModeTooltip

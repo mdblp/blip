@@ -33,12 +33,9 @@ import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { getDuration } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { getFormattedGlycemiaOffset } from '../../../utils/zen-mode/zen-mode.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { DEFAULT_TOOLTIP_OFFSET, Tooltip } from '../common/tooltip/tooltip'
-
-const getFormattedGlycemiaOffset = (offset: number): string => {
-  return offset > 0 ? `+${offset}` : offset.toString()
-}
 
 export const ZenModeTooltip: FC<DailyTooltipProps<ZenMode>> = (props) => {
   const { datum: zenMode, position, side, timePrefs } = props
