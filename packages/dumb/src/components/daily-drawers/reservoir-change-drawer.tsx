@@ -32,6 +32,7 @@ import { useTranslation } from 'react-i18next'
 import { getReservoirChangeIcon, getReservoirChangeTitle } from '../../utils/reservoir-change/reservoir-change.util'
 import { getDateTitleForBaseDatum } from '../../utils/tooltip/tooltip.util'
 import { DailyDrawer } from './daily-drawer'
+import { DailyDrawerIcon } from './daily-drawer-icon'
 
 interface ReservoirChangeDrawerProps {
   datum: ReservoirChange
@@ -45,7 +46,7 @@ export const ReservoirChangeDrawer: FunctionComponent<ReservoirChangeDrawerProps
 
   return (
     <DailyDrawer
-      icon={<img src={getReservoirChangeIcon(reservoirChange.pump.manufacturer)} alt="" width={48} height={48} />}
+      icon={<DailyDrawerIcon src={getReservoirChangeIcon(reservoirChange.pump.manufacturer)} />}
       title={t('Pump')}
       dateTitle={getDateTitleForBaseDatum(reservoirChange, timePrefs)}
       content={<Box sx={{ fontWeight: 'bold' }}>{getReservoirChangeTitle(reservoirChange)}</Box>}

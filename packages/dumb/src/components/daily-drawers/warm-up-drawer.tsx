@@ -31,6 +31,7 @@ import warmupIcon from 'warmup-icon.svg'
 import { getDateTitleForBaseDatum } from '../../utils/tooltip/tooltip.util'
 import { getWarmUpTooltipContent } from '../../utils/warm-up/warm-up.util'
 import { DailyDrawer } from './daily-drawer'
+import { DailyDrawerIcon } from './daily-drawer-icon'
 import { DailyDrawerLine } from './daily-drawer-line'
 
 interface WarmUpDrawerProps {
@@ -46,7 +47,7 @@ export const WarmUpDrawer: FunctionComponent<WarmUpDrawerProps> = (props) => {
 
   return (
     <DailyDrawer
-      icon={<img src={warmupIcon} alt="" width={48} height={48} />}
+      icon={<DailyDrawerIcon src={warmupIcon} />}
       title={title}
       dateTitle={getDateTitleForBaseDatum(warmUp, timePrefs)}
       content={<DailyDrawerLine label={description} value={endTime} />}

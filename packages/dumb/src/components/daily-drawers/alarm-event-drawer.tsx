@@ -40,6 +40,7 @@ import {
 import { getDateTitleForBaseDatum } from '../../utils/tooltip/tooltip.util'
 import { AlarmMultipleOccurrences } from '../tooltips/alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
 import { DailyDrawer } from './daily-drawer'
+import { DailyDrawerIcon } from './daily-drawer-icon'
 
 interface AlarmEventDrawerProps {
   datum: AlarmEvent
@@ -58,7 +59,7 @@ export const AlarmEventDrawer: FunctionComponent<AlarmEventDrawerProps> = (props
 
   return (
     <DailyDrawer
-      icon={<img src={getAlarmEventIcon(alarmEvent.alarmEventType)} alt="" width={48} height={48} />}
+      icon={<DailyDrawerIcon src={getAlarmEventIcon(alarmEvent.alarmEventType)} />}
       title={getAlarmEventTitle(alarmEvent)}
       dateTitle={getDateTitleForBaseDatum(alarmEvent, timePrefs)}
       content={
