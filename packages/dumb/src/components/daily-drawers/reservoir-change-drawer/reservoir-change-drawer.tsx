@@ -25,37 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Avatar from '@mui/material/Avatar'
-import { type NightMode, type TimePrefs } from 'medical-domain'
-import nightModeIcon from 'night-mode.svg'
+import Box from '@mui/material/Box'
+import { type ReservoirChange, type TimePrefs } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import { getNightModeInfo } from '../../utils/night-mode/night-mode.util'
-import { getDateTitleForBaseDatum } from '../../utils/tooltip/tooltip.util'
-import { DailyDrawer } from './daily-drawer'
-import { DailyDrawerLine } from './daily-drawer-line'
+import { useTranslation } from 'react-i18next'
+import { getReservoirChangeIcon, getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerIcon } from '../common/daily-drawer-icon'
 
-interface NightModeDrawerProps {
-  datum: NightMode
+interface ReservoirChangeDrawerProps {
+  datum: ReservoirChange
   timePrefs: TimePrefs
   onClose: () => void
 }
 
-export const NightModeDrawer: FunctionComponent<NightModeDrawerProps> = (props) => {
-  const { datum: nightMode, timePrefs, onClose } = props
-
-  const { title, lines } = getNightModeInfo(nightMode)
+export const ReservoirChangeDrawer: FunctionComponent<ReservoirChangeDrawerProps> = (props) => {
+  const { datum: reservoirChange, timePrefs, onClose } = props
+  const { t } = useTranslation()
 
   return (
     <DailyDrawer
-      icon={
-        <Avatar sx={{ bgcolor: 'var(--dark-blue-main)', width: 48, height: 48 }}>
-          {/* Getting the night mode icon and converting it to white */}
-          <img src={nightModeIcon} alt="" height={24} style={{ filter: 'brightness(0) invert(1)' }} />
-        </Avatar>
-      }
-      title={title}
-      dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
-      content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
+      icon={<DailyDrawerIcon src={getReservoirChangeIcon(reservoirChange.pump.manufacturer)} />}
+      title={t('Pump')}
+      dateTitle={getDateTitleForBaseDatum(reservoirChange, timePrefs)}
+      content={<Box sx={{ fontWeight: 'bold' }}>{getReservoirChangeTitle(reservoirChange)}</Box>}
       onClose={onClose}
     />
   )

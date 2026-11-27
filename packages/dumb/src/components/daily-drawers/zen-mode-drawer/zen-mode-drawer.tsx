@@ -29,12 +29,12 @@ import Avatar from '@mui/material/Avatar'
 import { type TimePrefs, type ZenMode } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import colors from '../../styles/colors.css'
-import { getDuration } from '../../utils/datetime/datetime.util'
-import { getDateTitleForBaseDatum } from '../../utils/tooltip/tooltip.util'
-import { getFormattedGlycemiaOffset } from '../../utils/zen-mode/zen-mode.util'
-import { DailyDrawer } from './daily-drawer'
-import { DailyDrawerLine } from './daily-drawer-line'
+import colors from '../../../styles/colors.css'
+import { getDuration } from '../../../utils/datetime/datetime.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { getFormattedGlycemiaOffset } from '../../../utils/zen-mode/zen-mode.util'
+import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerLine } from '../common/daily-drawer-line'
 
 interface ZenModeDrawerProps {
   datum: ZenMode

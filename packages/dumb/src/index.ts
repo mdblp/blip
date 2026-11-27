@@ -64,11 +64,11 @@ export {
 } from './components/stats/time-in-range/time-in-range-chart/time-in-range-dt1-chart'
 
 // Drawers
-export { AlarmEventDrawer } from './components/daily-drawers/alarm-event-drawer'
-export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer'
-export { ReservoirChangeDrawer } from './components/daily-drawers/reservoir-change-drawer'
-export { WarmUpDrawer } from './components/daily-drawers/warm-up-drawer'
-export { ZenModeDrawer } from './components/daily-drawers/zen-mode-drawer'
+export { AlarmEventDrawer } from './components/daily-drawers/alarm-event-drawer/alarm-event-drawer'
+export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer/night-mode-drawer'
+export { ReservoirChangeDrawer } from './components/daily-drawers/reservoir-change-drawer/reservoir-change-drawer'
+export { WarmUpDrawer } from './components/daily-drawers/warm-up-drawer/warm-up-drawer'
+export { ZenModeDrawer } from './components/daily-drawers/zen-mode-drawer/zen-mode-drawer'
 
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'

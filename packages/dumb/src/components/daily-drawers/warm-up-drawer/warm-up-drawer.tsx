@@ -25,24 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type TimePrefs, type WarmUp } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import Box from '@mui/material/Box'
-import { formatNumberForLang } from '../stats/stats.util'
+import warmupIcon from 'warmup-icon.svg'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { getWarmUpTooltipContent } from '../../../utils/warm-up/warm-up.util'
+import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerIcon } from '../common/daily-drawer-icon'
+import { DailyDrawerLine } from '../common/daily-drawer-line'
 
-interface DailyDrawerLineProps {
-  label: string
-  value?: number | string
-  units?: string
-  isBold?: boolean
+interface WarmUpDrawerProps {
+  datum: WarmUp
+  timePrefs: TimePrefs
+  onClose: () => void
 }
 
-export const DailyDrawerLine: FunctionComponent<DailyDrawerLineProps> = (props) => {
-  const { label, value, units, isBold } = props
+export const WarmUpDrawer: FunctionComponent<WarmUpDrawerProps> = (props) => {
+  const { datum: warmUp, timePrefs, onClose } = props
+
+  const { title, description, endTime } = getWarmUpTooltipContent(warmUp)
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: isBold ? 'bold' : undefined }}>
-      <span>{label}</span>
-      {value !== undefined && <span>{formatNumberForLang(value)}{units && ` ${units}`}</span>}
-    </Box>
+    <DailyDrawer
+      icon={<DailyDrawerIcon src={warmupIcon} />}
+      title={title}
+      dateTitle={getDateTitleForBaseDatum(warmUp, timePrefs)}
+      content={<DailyDrawerLine label={description} value={endTime} />}
+      onClose={onClose}
+    />
   )
 }

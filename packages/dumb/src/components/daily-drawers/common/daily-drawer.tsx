@@ -31,8 +31,8 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import React, { type FunctionComponent, useMemo } from 'react'
-import { computeDateValue } from '../../utils/tooltip/tooltip.util'
-import { type DateTitle } from '../tooltips/common/tooltip/tooltip'
+import { computeDateValue } from '../../../utils/tooltip/tooltip.util'
+import { type DateTitle } from '../../tooltips/common/tooltip/tooltip'
 
 interface DailyDrawerProps {
   icon: JSX.Element

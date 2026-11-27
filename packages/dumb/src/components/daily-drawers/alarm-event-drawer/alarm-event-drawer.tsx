@@ -29,18 +29,18 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { type AlarmEvent, type TimePrefs } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import { type BgPrefs } from '../../models/blood-glucose.model'
-import { type Device } from '../../models/device.model'
+import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { type Device } from '../../../models/device.model'
 import {
   getAlarmEventDescription,
   getAlarmEventIcon,
   getAlarmEventTitle,
   getContentTitleByCode
-} from '../../utils/alarm-event/alarm-event.util'
-import { getDateTitleForBaseDatum } from '../../utils/tooltip/tooltip.util'
-import { AlarmMultipleOccurrences } from '../tooltips/alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
-import { DailyDrawer } from './daily-drawer'
-import { DailyDrawerIcon } from './daily-drawer-icon'
+} from '../../../utils/alarm-event/alarm-event.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import { AlarmMultipleOccurrences } from '../../tooltips/alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
+import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerIcon } from '../common/daily-drawer-icon'
 
 interface AlarmEventDrawerProps {
   datum: AlarmEvent

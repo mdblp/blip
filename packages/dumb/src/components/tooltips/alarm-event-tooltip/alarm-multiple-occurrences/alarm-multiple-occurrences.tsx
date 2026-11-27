@@ -33,7 +33,7 @@ import { computeDateValue, getDateTitle } from '../../../../utils/tooltip/toolti
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { getBackgroundColor } from '../../../../utils/alarm-event/alarm-event.util'
-import { DailyDrawerLine } from '../../../daily-drawers/daily-drawer-line'
+import { DailyDrawerLine } from '../../../daily-drawers/common/daily-drawer-line'
 
 interface AlarmMultipleOccurrencesProps {
   alarmEvent: AlarmEvent
