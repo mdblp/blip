@@ -34,6 +34,7 @@ import {
   ParameterTooltip,
   PhysicalTooltip,
   RescueCarbsTooltip,
+  ReservoirChangeDrawer,
   ReservoirTooltip,
   TimeChangeTooltip,
   WarmUpDrawer,
@@ -748,6 +749,16 @@ class Daily extends React.Component {
 
   handleReservoirHover = (datum) => {
     AnalyticsApi.trackHover('daily-reservoir-change')
+    if (this.props.isMobile) {
+      const drawer = (
+        <ReservoirChangeDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ReservoirTooltip
