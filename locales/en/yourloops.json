@@ -213,6 +213,7 @@
   "button-post": "Post",
   "button-register": "Register",
   "button-remove-clinician": "Remove clinician",
+  "button-retry": "Retry",
   "button-remove-clinician-named": "Remove clinician {{clinicianName}}",
   "button-remove-patient": "Remove patient",
   "button-resend-invite": "Resend invite",

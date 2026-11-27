@@ -86,6 +86,32 @@ describe('TeamApi', () => {
     })
   })
 
+  describe('getTeamInvitations', () => {
+    it('should get the pending team invitations of the user', async () => {
+      const data = [{ id: 'team1', name: 'Team 1' } as ITeam, { id: 'team2', name: 'Team 2' } as ITeam]
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
+
+      const invitations = await TeamApi.getTeamInvitations()
+      expect(invitations).toEqual(data)
+      expect(HttpService.get).toHaveBeenCalledWith({ url: '/crew/v1/teams/invites', config: { timeout: 15000 } })
+    })
+
+    it('should return an empty array if the user has no pending invitation', async () => {
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: [] } as AxiosResponse)
+      await expect(TeamApi.getTeamInvitations()).resolves.toEqual([])
+    })
+
+    it('should throw if the user is not found', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
+      await expect(TeamApi.getTeamInvitations()).rejects.toThrow(ErrorMessageStatus.NotFound)
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(TeamApi.getTeamInvitations()).rejects.toThrow('This error was thrown by a mock on purpose')
+    })
+  })
+
   describe('inviteMember', () => {
     it('should invite a new member in a team and get the invitation and updated teams list if success', async () => {
       const teams: Team[] = [{ name: 'team1' } as Team]

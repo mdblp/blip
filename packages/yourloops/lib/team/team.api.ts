@@ -74,6 +74,7 @@ const PATIENTS_ROUTE = 'patients'
 
 export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE = 'patient-already-invited-in-team'
 export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
+export const TEAM_INVITATIONS_TIMEOUT_MS = 15000
 
 export default class TeamApi {
   static async getTeams(user: User): Promise<Team[]> {
@@ -89,6 +90,20 @@ export default class TeamApi {
       }
       throw err
     }
+  }
+
+  /**
+   * Get the teams where the authenticated user has a pending invitation (matched on the user email,
+   * so it also works before the account is created).
+   * A 404 means "user not found" for the API: it is not an empty list and is thrown like any other error.
+   * The signup is blocked while this call is pending, so it has a timeout to let the user retry or log out.
+   */
+  static async getTeamInvitations(): Promise<ITeam[]> {
+    const { data } = await HttpService.get<ITeam[]>({
+      url: '/crew/v1/teams/invites',
+      config: { timeout: TEAM_INVITATIONS_TIMEOUT_MS }
+    })
+    return data
   }
 
   static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<InviteMemberResult> {
