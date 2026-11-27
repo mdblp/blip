@@ -674,7 +674,6 @@
   "signup-information-message-1": "You are about to create a healthcare professional or caregiver account.",
   "signup-information-message-2": "<strong>If you are a patient</strong>, your account will be created when you initialize your DBL. <strong>You must not create an account here.</strong>",
   "signup-information-message-3": "Please contact your DBL supplier for further information.",
-  "signup-invitations-loading-error": "We could not check your account status. Please try again. If the problem persists, contact support for assistance.",
   "signup-radiolabel-caregiver-body": "View patients diabetes data as an individual caregiver or family member.",
   "signup-radiolabel-hcp-body": "View all your patients diabetes data in one place. Join and create a care team for your clinic or practice.",
   "signup-radiolabel-patient-body": "If you use a DBL System, you have to create your account from your handset. You can’t create several accounts with the same email address.",

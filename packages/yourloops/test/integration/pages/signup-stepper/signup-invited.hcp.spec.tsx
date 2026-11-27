@@ -113,7 +113,7 @@ describe('Signup stepper as an invited hcp', () => {
     await renderSignup()
 
     const retryButton = await screen.findByRole('button', { name: 'Retry' })
-    expect(screen.getByText(/We could not check your account status/)).toBeVisible()
+    expect(screen.getByText(/Something went wrong. Please try again in a few moments./)).toBeVisible()
     expect(screen.queryByTestId('consents')).not.toBeInTheDocument()
     expect(screen.queryByTestId('create-caregiver-account')).not.toBeInTheDocument()
 

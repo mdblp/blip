@@ -116,7 +116,7 @@ export const SignUpStepper: FunctionComponent = () => {
       return (
         <Box sx={{ marginY: 3 }}>
           <Alert id="signup-invitations-error" severity="error">
-            {t('signup-invitations-loading-error')}
+            {t('error-http-500')}
           </Alert>
           <SignupStepperActionButtons
             nextButtonLabel={t('button-retry')}
