@@ -471,6 +471,10 @@ export const checkDailyViewMobileReservoirChangeDrawer = async () => {
   await checkDailyViewMobileDrawer(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
 }
 
+export const checkDailyViewMobileParameterDrawer = async () => {
+  await checkDailyViewMobileDrawer(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
+}
+
 export const checkDailyViewMobileZenModeDrawers = async () => {
   await checkDailyViewMobileDrawer(`event_group_${ZEN_MODE_ID}`, 'Zen mode11:00 pmDuration2 hours')
   await checkDailyViewMobileDrawer(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level130 mg/dLSet target110 mg/dLDifference+20 mg/dLDuration2 hours')

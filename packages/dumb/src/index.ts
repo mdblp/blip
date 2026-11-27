@@ -66,6 +66,7 @@ export {
 // Drawers
 export { AlarmEventDrawer } from './components/daily-drawers/alarm-event-drawer/alarm-event-drawer'
 export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer/night-mode-drawer'
+export { ParameterDrawer } from './components/daily-drawers/parameter-drawer/parameter-drawer'
 export { ReservoirChangeDrawer } from './components/daily-drawers/reservoir-change-drawer/reservoir-change-drawer'
 export { WarmUpDrawer } from './components/daily-drawers/warm-up-drawer/warm-up-drawer'
 export { ZenModeDrawer } from './components/daily-drawers/zen-mode-drawer/zen-mode-drawer'

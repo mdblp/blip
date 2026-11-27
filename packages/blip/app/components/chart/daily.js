@@ -31,6 +31,7 @@ import {
   NightModeDrawer,
   NightModeTooltip,
   NoteTooltip,
+  ParameterDrawer,
   ParameterTooltip,
   PhysicalTooltip,
   RescueCarbsTooltip,
@@ -793,6 +794,16 @@ class Daily extends React.Component {
 
   handleParameterHover = (datum) => {
     AnalyticsApi.trackHover('daily-parameter')
+    if (this.props.isMobile) {
+      const drawer = (
+        <ParameterDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ParameterTooltip
