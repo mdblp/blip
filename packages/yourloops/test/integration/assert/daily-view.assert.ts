@@ -485,6 +485,24 @@ export const checkDailyViewMobileZenModeDrawers = async () => {
   await checkDailyViewMobileDrawer(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level130 mg/dLSet target110 mg/dLDifference+20 mg/dLDuration2 hours')
 }
 
+export const checkDailyViewMobileEventsSuperpositionDrawer = async () => {
+  fireEvent.click(screen.getByTestId(`eventSuperposition_group_${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`))
+  expect(screen.queryByTestId(`events-superposition-popover-${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`)).not.toBeInTheDocument()
+
+  const alarmEventMedisafeOcclusionContent = 'Alarm 910043:00 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.Occurred multiple times with a frequency of 30 minutes or less:at 3:02 pm'
+  const warmupContent = 'Sensor warmup3:05 pmSession end9:00 pm'
+  const alarmEventUrgentLowSoonContent = 'Alert 101123:10 pmUrgent low soonThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.'
+  const reservoirChangeContent = 'Pump3:15 pmCartridge change'
+  const alarmEventSuddenRiseInGlycemiaContent = 'Alert 201023:20 pmRapid rise in glycemiaA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.'
+  const parameterChangeContent = 'Settings change3:25 pmAggressiveness for lunch110→100%'
+  expect(screen.getByTestId('daily-drawer')).toHaveTextContent(`${alarmEventMedisafeOcclusionContent}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}${parameterChangeContent}`)
+
+  await userEvent.click(screen.getByTestId('daily-drawer-close-button'))
+  await waitFor(() => {
+    expect(screen.queryByTestId('daily-drawer')).not.toBeInTheDocument()
+  })
+}
+
 export const checkDailyViewMobileAlarmEventDrawers = async () => {
   await checkDailyViewMobileDrawer(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amYour glucose is highG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
   await checkDailyViewMobileDrawer(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amUrgent LowYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')

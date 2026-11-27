@@ -32,6 +32,7 @@ import React, { type FunctionComponent } from 'react'
 import { getNightModeInfo } from '../../../utils/night-mode/night-mode.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerSection } from '../common/daily-drawer-section'
 import { DailyDrawerLine } from '../common/daily-drawer-line'
 
 interface NightModeDrawerProps {
@@ -46,17 +47,19 @@ export const NightModeDrawer: FunctionComponent<NightModeDrawerProps> = (props) 
   const { title, lines } = getNightModeInfo(nightMode)
 
   return (
-    <DailyDrawer
-      icon={
-        <Avatar sx={{ bgcolor: 'var(--dark-blue-main)', width: 48, height: 48 }}>
-          {/* Getting the night mode icon and converting it to white */}
-          <img src={nightModeIcon} alt="" height={24} style={{ filter: 'brightness(0) invert(1)' }} />
-        </Avatar>
-      }
-      title={title}
-      dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
-      content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <DailyDrawerSection
+        icon={
+          <Avatar sx={{ bgcolor: 'var(--dark-blue-main)', width: 48, height: 48 }}>
+            {/* Getting the night mode icon and converting it to white */}
+            <img src={nightModeIcon} alt="" height={24} style={{ filter: 'brightness(0) invert(1)' }} />
+          </Avatar>
+        }
+        title={title}
+        dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
+        content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
+        hasHeaderDivider
+      />
+    </DailyDrawer>
   )
 }

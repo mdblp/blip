@@ -27,25 +27,16 @@
 
 import CloseIcon from '@mui/icons-material/Close'
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import React, { type FunctionComponent, useMemo } from 'react'
-import { computeDateValue } from '../../../utils/tooltip/tooltip.util'
-import { type DateTitle } from '../../tooltips/common/tooltip/tooltip'
+import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 
 interface DailyDrawerProps {
-  icon: JSX.Element
-  title: string
-  dateTitle: DateTitle
-  content: JSX.Element
   onClose: () => void
 }
 
-export const DailyDrawer: FunctionComponent<DailyDrawerProps> = (props) => {
-  const { icon, title, dateTitle, content, onClose } = props
-
-  const dateValue = useMemo(() => computeDateValue(dateTitle), [dateTitle])
+export const DailyDrawer: FunctionComponent<PropsWithChildren<DailyDrawerProps>> = (props) => {
+  const { onClose, children } = props
 
   return (
     <SwipeableDrawer
@@ -65,15 +56,7 @@ export const DailyDrawer: FunctionComponent<DailyDrawerProps> = (props) => {
           <CloseIcon />
         </IconButton>
       </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, paddingX: 3, paddingBottom: 2 }}>
-        {icon}
-        <Box component="span" sx={{ fontWeight: 'bold', flexGrow: 1 }}>{title}</Box>
-        <span data-testid="daily-drawer-date">{dateValue}</span>
-      </Box>
-      <Divider />
-      <Box sx={{ paddingX: 3, paddingY: 2 }}>
-        {content}
-      </Box>
+      {children}
     </SwipeableDrawer>
   )
 }

@@ -25,14 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
-import parameterIcon from 'parameter-change.png'
+import { type DeviceParameterChange, type TimePrefs } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { ParameterChangeLine } from '../../tooltips/parameter-tooltip/parameter-change-line'
 import { DailyDrawer } from '../common/daily-drawer'
-import { DailyDrawerIcon } from '../common/daily-drawer-icon'
+import { ParameterDrawerContent } from './parameter-drawer-content'
 
 interface ParameterDrawerProps {
   datum: DeviceParameterChange
@@ -42,21 +38,10 @@ interface ParameterDrawerProps {
 
 export const ParameterDrawer: FunctionComponent<ParameterDrawerProps> = (props) => {
   const { datum: parameterChange, timePrefs, onClose } = props
-  const { t } = useTranslation()
 
   return (
-    <DailyDrawer
-      icon={<DailyDrawerIcon src={parameterIcon} />}
-      title={t('settings-change')}
-      dateTitle={getDateTitleForBaseDatum(parameterChange, timePrefs)}
-      content={
-        <>
-          {parameterChange.params.map((parameter: Parameter) =>
-            <ParameterChangeLine key={parameter.id} parameter={parameter} />
-          )}
-        </>
-      }
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <ParameterDrawerContent parameterChange={parameterChange} timePrefs={timePrefs} hasHeaderDivider />
+    </DailyDrawer>
   )
 }

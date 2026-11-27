@@ -25,22 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import { type AlarmEvent, type TimePrefs } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
 import { type Device } from '../../../models/device.model'
-import {
-  getAlarmEventDescription,
-  getAlarmEventIcon,
-  getAlarmEventTitle,
-  getContentTitleByCode
-} from '../../../utils/alarm-event/alarm-event.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { AlarmMultipleOccurrences } from '../../tooltips/alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
 import { DailyDrawer } from '../common/daily-drawer'
-import { DailyDrawerIcon } from '../common/daily-drawer-icon'
+import { AlarmEventDrawerContent } from './alarm-event-drawer-content'
 
 interface AlarmEventDrawerProps {
   datum: AlarmEvent
@@ -53,28 +43,9 @@ interface AlarmEventDrawerProps {
 export const AlarmEventDrawer: FunctionComponent<AlarmEventDrawerProps> = (props) => {
   const { datum: alarmEvent, bgPrefs, device, timePrefs, onClose } = props
 
-  const alarmCode = alarmEvent.alarm.alarmCode
-  const contentTitle = getContentTitleByCode(alarmCode, device)
-  const contentTextArray = getAlarmEventDescription(alarmCode, device, bgPrefs)
-
   return (
-    <DailyDrawer
-      icon={<DailyDrawerIcon src={getAlarmEventIcon(alarmEvent.alarmEventType)} />}
-      title={getAlarmEventTitle(alarmEvent)}
-      dateTitle={getDateTitleForBaseDatum(alarmEvent, timePrefs)}
-      content={
-        <>
-          <Box sx={{ fontWeight: 'bold' }}>{contentTitle}</Box>
-          {contentTextArray.map((textLine) => <Box key={textLine}>{textLine}</Box>)}
-          {alarmEvent.otherOccurrencesDate &&
-            <>
-              <Divider sx={{ marginY: 2 }} />
-              <AlarmMultipleOccurrences alarmEvent={alarmEvent} timePrefs={timePrefs} isDrawer />
-            </>
-          }
-        </>
-      }
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <AlarmEventDrawerContent alarmEvent={alarmEvent} bgPrefs={bgPrefs} device={device} timePrefs={timePrefs} hasHeaderDivider />
+    </DailyDrawer>
   )
 }

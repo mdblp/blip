@@ -32,6 +32,7 @@ import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { getZenModeInfo } from '../../../utils/zen-mode/zen-mode.util'
 import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerSection } from '../common/daily-drawer-section'
 import { DailyDrawerLine } from '../common/daily-drawer-line'
 
 interface ZenModeDrawerProps {
@@ -47,12 +48,14 @@ export const ZenModeDrawer: FunctionComponent<ZenModeDrawerProps> = (props) => {
   const { title, lines } = getZenModeInfo(zenMode)
 
   return (
-    <DailyDrawer
-      icon={<Avatar sx={{ bgcolor: colors.zenMode, width: 48, height: 48, fontSize: 'inherit' }}>{ZEN_MODE_TEXT}</Avatar>}
-      title={title}
-      dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
-      content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <DailyDrawerSection
+        icon={<Avatar sx={{ bgcolor: colors.zenMode, width: 48, height: 48, fontSize: 'inherit' }}>{ZEN_MODE_TEXT}</Avatar>}
+        title={title}
+        dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
+        content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
+        hasHeaderDivider
+      />
+    </DailyDrawer>
   )
 }

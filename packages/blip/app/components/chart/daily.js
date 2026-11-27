@@ -25,6 +25,7 @@ import {
   ChartFooter,
   ConfidentialTooltip,
   EatingShortlyTooltip,
+  EventsSuperpositionDrawer,
   EventsSuperpositionPopover,
   IobTooltip,
   NewNoteTooltip,
@@ -994,6 +995,18 @@ class Daily extends React.Component {
 
   handleEventSuperpositionClick = (datum) => {
     AnalyticsApi.trackClick('daily-event-superposition', ElementType.Button)
+    if (this.props.isMobile) {
+      const drawer = (
+        <EventsSuperpositionDrawer
+          superpositionEvent={datum.data}
+          bgPrefs={this.props.bgPrefs}
+          device={this.props.device}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EventsSuperpositionPopover

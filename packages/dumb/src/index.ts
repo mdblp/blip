@@ -65,6 +65,7 @@ export {
 
 // Drawers
 export { AlarmEventDrawer } from './components/daily-drawers/alarm-event-drawer/alarm-event-drawer'
+export { EventsSuperpositionDrawer } from './components/daily-drawers/events-superposition-drawer/events-superposition-drawer'
 export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer/night-mode-drawer'
 export { ParameterDrawer } from './components/daily-drawers/parameter-drawer/parameter-drawer'
 export { PhysicalActivityDrawer } from './components/daily-drawers/physical-activity-drawer/physical-activity-drawer'

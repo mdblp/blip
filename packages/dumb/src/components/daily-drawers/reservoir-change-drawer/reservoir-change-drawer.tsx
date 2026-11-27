@@ -25,14 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Box from '@mui/material/Box'
 import { type ReservoirChange, type TimePrefs } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import { getReservoirChangeIcon, getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { DailyDrawer } from '../common/daily-drawer'
-import { DailyDrawerIcon } from '../common/daily-drawer-icon'
+import { ReservoirChangeDrawerContent } from './reservoir-change-drawer-content'
 
 interface ReservoirChangeDrawerProps {
   datum: ReservoirChange
@@ -42,15 +38,10 @@ interface ReservoirChangeDrawerProps {
 
 export const ReservoirChangeDrawer: FunctionComponent<ReservoirChangeDrawerProps> = (props) => {
   const { datum: reservoirChange, timePrefs, onClose } = props
-  const { t } = useTranslation()
 
   return (
-    <DailyDrawer
-      icon={<DailyDrawerIcon src={getReservoirChangeIcon(reservoirChange.pump.manufacturer)} />}
-      title={t('Pump')}
-      dateTitle={getDateTitleForBaseDatum(reservoirChange, timePrefs)}
-      content={<Box sx={{ fontWeight: 'bold' }}>{getReservoirChangeTitle(reservoirChange)}</Box>}
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <ReservoirChangeDrawerContent reservoirChange={reservoirChange} timePrefs={timePrefs} hasHeaderDivider />
+    </DailyDrawer>
   )
 }

@@ -27,12 +27,8 @@
 
 import { type TimePrefs, type WarmUp } from 'medical-domain'
 import React, { type FunctionComponent } from 'react'
-import warmupIcon from 'warmup-icon.svg'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { getWarmUpTooltipContent } from '../../../utils/warm-up/warm-up.util'
 import { DailyDrawer } from '../common/daily-drawer'
-import { DailyDrawerIcon } from '../common/daily-drawer-icon'
-import { DailyDrawerLine } from '../common/daily-drawer-line'
+import { WarmUpDrawerContent } from './warm-up-drawer-content'
 
 interface WarmUpDrawerProps {
   datum: WarmUp
@@ -43,15 +39,9 @@ interface WarmUpDrawerProps {
 export const WarmUpDrawer: FunctionComponent<WarmUpDrawerProps> = (props) => {
   const { datum: warmUp, timePrefs, onClose } = props
 
-  const { title, description, endTime } = getWarmUpTooltipContent(warmUp)
-
   return (
-    <DailyDrawer
-      icon={<DailyDrawerIcon src={warmupIcon} />}
-      title={title}
-      dateTitle={getDateTitleForBaseDatum(warmUp, timePrefs)}
-      content={<DailyDrawerLine label={description} value={endTime} />}
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <WarmUpDrawerContent warmUp={warmUp} timePrefs={timePrefs} hasHeaderDivider />
+    </DailyDrawer>
   )
 }

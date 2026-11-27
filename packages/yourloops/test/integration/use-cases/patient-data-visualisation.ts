@@ -46,6 +46,7 @@ import {
   checkDailyViewMobileAlarmEventDrawers,
   checkDailyViewMobileCalendarSelection,
   checkDailyViewMobileDateBeyondMostRecent,
+  checkDailyViewMobileEventsSuperpositionDrawer,
   checkDailyViewMobileNavigation,
   checkDailyViewMobileNightModeDrawer,
   checkDailyViewMobileParameterDrawer,
@@ -206,6 +207,7 @@ export const testDailyViewMobileDrawers = async () => {
   await checkDailyViewMobileParameterDrawer()
   await checkDailyViewMobilePhysicalActivityDrawers()
   await checkDailyViewMobileAlarmEventDrawers()
+  await checkDailyViewMobileEventsSuperpositionDrawer()
 }
 
 export const testDailyViewXAxisMobileTimezoneChange = async () => {

@@ -33,6 +33,7 @@ import colors from '../../../styles/colors.css'
 import { getPhysicalActivityInfo } from '../../../utils/physical-activity/physical-activity.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { DailyDrawer } from '../common/daily-drawer'
+import { DailyDrawerSection } from '../common/daily-drawer-section'
 import { DailyDrawerLine } from '../common/daily-drawer-line'
 
 interface PhysicalActivityDrawerProps {
@@ -47,16 +48,18 @@ export const PhysicalActivityDrawer: FunctionComponent<PhysicalActivityDrawerPro
   const { title, lines } = getPhysicalActivityInfo(physicalActivity, timePrefs)
 
   return (
-    <DailyDrawer
-      icon={
-        <Avatar sx={{ bgcolor: colors.physicalActivityBackground, color: 'var(--dark-blue-main)', width: 48, height: 48 }}>
-          <DirectionsRunIcon sx={{ fontSize: 32 }} />
-        </Avatar>
-      }
-      title={title}
-      dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
-      content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
-      onClose={onClose}
-    />
+    <DailyDrawer onClose={onClose}>
+      <DailyDrawerSection
+        icon={
+          <Avatar sx={{ bgcolor: colors.physicalActivityBackground, color: 'var(--dark-blue-main)', width: 48, height: 48 }}>
+            <DirectionsRunIcon sx={{ fontSize: 32 }} />
+          </Avatar>
+        }
+        title={title}
+        dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
+        content={<>{lines.map((line) => <DailyDrawerLine key={line.label} {...line} />)}</>}
+        hasHeaderDivider
+      />
+    </DailyDrawer>
   )
 }
