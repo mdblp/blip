@@ -49,6 +49,7 @@ import {
   checkDailyViewMobileNavigation,
   checkDailyViewMobileNightModeDrawer,
   checkDailyViewMobileParameterDrawer,
+  checkDailyViewMobilePhysicalActivityDrawers,
   checkDailyViewMobileReservoirChangeDrawer,
   checkDailyViewMobileWarmUpDrawers,
   checkDailyViewMobileZenModeDrawers,
@@ -203,6 +204,7 @@ export const testDailyViewMobileDrawers = async () => {
   await checkDailyViewMobileReservoirChangeDrawer()
   await checkDailyViewMobileZenModeDrawers()
   await checkDailyViewMobileParameterDrawer()
+  await checkDailyViewMobilePhysicalActivityDrawers()
   await checkDailyViewMobileAlarmEventDrawers()
 }
 

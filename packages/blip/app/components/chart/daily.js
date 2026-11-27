@@ -33,6 +33,7 @@ import {
   NoteTooltip,
   ParameterDrawer,
   ParameterTooltip,
+  PhysicalActivityDrawer,
   PhysicalTooltip,
   RescueCarbsTooltip,
   ReservoirChangeDrawer,
@@ -777,6 +778,16 @@ class Daily extends React.Component {
 
   handlePhysicalHover = (datum) => {
     AnalyticsApi.trackHover('daily-physical-activity')
+    if (this.props.isMobile) {
+      const drawer = (
+        <PhysicalActivityDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <PhysicalTooltip

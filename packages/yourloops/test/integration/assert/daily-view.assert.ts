@@ -471,6 +471,11 @@ export const checkDailyViewMobileReservoirChangeDrawer = async () => {
   await checkDailyViewMobileDrawer(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
 }
 
+export const checkDailyViewMobilePhysicalActivityDrawers = async () => {
+  await checkDailyViewMobileDrawer(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_CREATE_TIME).format('h')}:00 pmUpdated at${moment(PHYSICAL_ACTIVITY_UPDATE_TIME).format('h')}:10 pm`)
+  await checkDailyViewMobileDrawer(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`, `Physical Activity4:00 pmIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME).format('h')}:00 pm`)
+}
+
 export const checkDailyViewMobileParameterDrawer = async () => {
   await checkDailyViewMobileDrawer(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
 }
