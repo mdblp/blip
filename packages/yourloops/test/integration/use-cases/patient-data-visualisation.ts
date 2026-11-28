@@ -43,9 +43,17 @@ import {
   checkDailyViewChartMobileLayout,
   checkDailyViewChartsDblg1,
   checkDailyViewChartsDblg2,
+  checkDailyViewMobileAlarmEventDrawers,
   checkDailyViewMobileCalendarSelection,
   checkDailyViewMobileDateBeyondMostRecent,
+  checkDailyViewMobileEventsSuperpositionDrawer,
   checkDailyViewMobileNavigation,
+  checkDailyViewMobileNightModeDrawer,
+  checkDailyViewMobileParameterDrawer,
+  checkDailyViewMobilePhysicalActivityDrawers,
+  checkDailyViewMobileReservoirChangeDrawer,
+  checkDailyViewMobileWarmUpDrawers,
+  checkDailyViewMobileZenModeDrawers,
   checkDailyViewMobileStats,
   checkDailyViewPoolBackgroundMobile,
   checkDailyViewXAxisMobile,
@@ -188,6 +196,18 @@ export const testDailyViewChartMobile = async (router: Router) => {
 export const testDailyViewMobileDateBeyondMostRecent = async (router: Router) => {
   await checkDailyViewChartMobileLayout()
   await checkDailyViewMobileDateBeyondMostRecent(router)
+}
+
+export const testDailyViewMobileDrawers = async () => {
+  await checkDailyViewChartMobileLayout()
+  await checkDailyViewMobileNightModeDrawer()
+  await checkDailyViewMobileWarmUpDrawers()
+  await checkDailyViewMobileReservoirChangeDrawer()
+  await checkDailyViewMobileZenModeDrawers()
+  await checkDailyViewMobileParameterDrawer()
+  await checkDailyViewMobilePhysicalActivityDrawers()
+  await checkDailyViewMobileAlarmEventDrawers()
+  await checkDailyViewMobileEventsSuperpositionDrawer()
 }
 
 export const testDailyViewXAxisMobileTimezoneChange = async () => {

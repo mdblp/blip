@@ -33,18 +33,21 @@ import { computeDateValue, getDateTitle } from '../../../../utils/tooltip/toolti
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { getBackgroundColor } from '../../../../utils/alarm-event/alarm-event.util'
+import { DailyDrawerLine } from '../../../daily-drawers/common/daily-drawer-line'
 
 interface AlarmMultipleOccurrencesProps {
   alarmEvent: AlarmEvent
   timePrefs: TimePrefs
+  isDrawer?: boolean
 }
 
 export const AlarmMultipleOccurrences: FC<AlarmMultipleOccurrencesProps> = (props) => {
-  const { alarmEvent, timePrefs } = props
+  const { alarmEvent, timePrefs, isDrawer } = props
   const theme = useTheme()
   const { t } = useTranslation('main')
 
   const borderColor = getBackgroundColor(alarmEvent.alarmEventType)
+  const Line = isDrawer ? DailyDrawerLine : TooltipLine
 
   return (
     <>
@@ -55,14 +58,14 @@ export const AlarmMultipleOccurrences: FC<AlarmMultipleOccurrencesProps> = (prop
           paddingLeft: theme.spacing(1),
           borderLeft: `2px solid ${borderColor}`
         }}>
-        <TooltipLine
+        <Line
           label={t('alarm-multiple-occurrences', { maxFrequency: GROUP_ALARMS_THRESHOLD_MINUTES })} />
       </Box>
       {alarmEvent.otherOccurrencesDate?.map((dateTime: string) => {
         const occurrenceDateTitle = getDateTitle(dateTime, alarmEvent, timePrefs)
         const formattedDateTime = computeDateValue(occurrenceDateTitle)
         const occurrenceLine = t('alarm-at-time', { alarmTime: formattedDateTime })
-        return <TooltipLine label={occurrenceLine} key={dateTime} />
+        return <Line label={occurrenceLine} key={dateTime} />
       })}
     </>
   )

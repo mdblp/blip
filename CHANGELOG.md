@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-4207 ESM is configured by default
 - YLP-4221 Remove the ability for a caregiver to switch to a HCP account
 - YLP-4245 Daily view shows 4 hours on mobile screens
+- YLP-4246 Daily view shows drawers instead of tooltips on mobile screens (events chart)
 - YLP-4247 Daily view guidelines for mobile screens
 - YLP-4267 Force HCP role to new users pre-invited in a medical team
 

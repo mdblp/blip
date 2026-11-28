@@ -17,6 +17,7 @@
 import Box from '@mui/material/Box'
 import bows from 'bows'
 import {
+  AlarmEventDrawer,
   AlarmEventTooltip,
   BasalTooltip,
   BloodGlucoseTooltip,
@@ -24,17 +25,24 @@ import {
   ChartFooter,
   ConfidentialTooltip,
   EatingShortlyTooltip,
+  EventsSuperpositionDrawer,
   EventsSuperpositionPopover,
   IobTooltip,
   NewNoteTooltip,
+  NightModeDrawer,
   NightModeTooltip,
   NoteTooltip,
+  ParameterDrawer,
   ParameterTooltip,
+  PhysicalActivityDrawer,
   PhysicalTooltip,
   RescueCarbsTooltip,
+  ReservoirChangeDrawer,
   ReservoirTooltip,
   TimeChangeTooltip,
+  WarmUpDrawer,
   WarmUpTooltip,
+  ZenModeDrawer,
   ZenModeTooltip
 } from 'dumb'
 import i18next from 'i18next'
@@ -324,6 +332,7 @@ class Daily extends React.Component {
       inTransition: false,
       title: this.getTitle(props.epochLocation),
       tooltip: null,
+      drawer: null,
       chartMounted: false
     }
 
@@ -361,7 +370,7 @@ class Daily extends React.Component {
 
   render() {
     const { tidelineData, epochLocation, msRange, loading, timePrefs, isMobile } = this.props
-    const { inTransition, atMostRecent, tooltip, title } = this.state
+    const { inTransition, atMostRecent, tooltip, drawer, title } = this.state
     const trackMetric = metrics.send
     const endpoints = this.getEndpoints()
     const dateFilter = {
@@ -493,6 +502,7 @@ class Daily extends React.Component {
           </Box>
         </Box>
         {tooltip}
+        {drawer}
       </div>
     )
   }
@@ -620,6 +630,10 @@ class Daily extends React.Component {
     this.setState({ tooltip: null })
   }
 
+  handleDrawerClose = () => {
+    this.setState({ drawer: null })
+  }
+
   handleBasalHover = (datum) => {
     AnalyticsApi.trackHover('daily-basal')
     this.updateDatumHoverForTooltip(datum)
@@ -739,6 +753,16 @@ class Daily extends React.Component {
 
   handleReservoirHover = (datum) => {
     AnalyticsApi.trackHover('daily-reservoir-change')
+    if (this.props.isMobile) {
+      const drawer = (
+        <ReservoirChangeDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ReservoirTooltip
@@ -755,6 +779,16 @@ class Daily extends React.Component {
 
   handlePhysicalHover = (datum) => {
     AnalyticsApi.trackHover('daily-physical-activity')
+    if (this.props.isMobile) {
+      const drawer = (
+        <PhysicalActivityDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <PhysicalTooltip
@@ -772,6 +806,16 @@ class Daily extends React.Component {
 
   handleParameterHover = (datum) => {
     AnalyticsApi.trackHover('daily-parameter')
+    if (this.props.isMobile) {
+      const drawer = (
+        <ParameterDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ParameterTooltip
@@ -788,6 +832,16 @@ class Daily extends React.Component {
 
   handleWarmUpHover = (datum) => {
     AnalyticsApi.trackHover('daily-warmup')
+    if (this.props.isMobile) {
+      const drawer = (
+        <WarmUpDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <WarmUpTooltip
@@ -803,6 +857,18 @@ class Daily extends React.Component {
 
   handleAlarmEventHover = (datum) => {
     AnalyticsApi.trackHover('daily-alarm-event')
+    if (this.props.isMobile) {
+      const drawer = (
+        <AlarmEventDrawer
+          datum={datum.data}
+          bgPrefs={this.props.bgPrefs}
+          device={this.props.device}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <AlarmEventTooltip
@@ -821,6 +887,16 @@ class Daily extends React.Component {
 
   handleNightModeHover = (datum) => {
     AnalyticsApi.trackHover('daily-night-mode')
+    if (this.props.isMobile) {
+      const drawer = (
+        <NightModeDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <NightModeTooltip
@@ -879,6 +955,16 @@ class Daily extends React.Component {
 
   handleZenModeHover = (datum) => {
     AnalyticsApi.trackHover('daily-zen-mode')
+    if (this.props.isMobile) {
+      const drawer = (
+        <ZenModeDrawer
+          datum={datum.data}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ZenModeTooltip
@@ -909,6 +995,18 @@ class Daily extends React.Component {
 
   handleEventSuperpositionClick = (datum) => {
     AnalyticsApi.trackClick('daily-event-superposition', ElementType.Button)
+    if (this.props.isMobile) {
+      const drawer = (
+        <EventsSuperpositionDrawer
+          superpositionEvent={datum.data}
+          bgPrefs={this.props.bgPrefs}
+          device={this.props.device}
+          timePrefs={{ timezoneAware: true, timezoneName: datum.timezone }}
+          onClose={this.handleDrawerClose}
+        />)
+      this.setState({ drawer })
+      return
+    }
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EventsSuperpositionPopover

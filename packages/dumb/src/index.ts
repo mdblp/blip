@@ -63,6 +63,16 @@ export {
   TimeInRangeDT1Chart
 } from './components/stats/time-in-range/time-in-range-chart/time-in-range-dt1-chart'
 
+// Drawers
+export { AlarmEventDrawer } from './components/daily-drawers/alarm-event-drawer/alarm-event-drawer'
+export { EventsSuperpositionDrawer } from './components/daily-drawers/events-superposition-drawer/events-superposition-drawer'
+export { NightModeDrawer } from './components/daily-drawers/night-mode-drawer/night-mode-drawer'
+export { ParameterDrawer } from './components/daily-drawers/parameter-drawer/parameter-drawer'
+export { PhysicalActivityDrawer } from './components/daily-drawers/physical-activity-drawer/physical-activity-drawer'
+export { ReservoirChangeDrawer } from './components/daily-drawers/reservoir-change-drawer/reservoir-change-drawer'
+export { WarmUpDrawer } from './components/daily-drawers/warm-up-drawer/warm-up-drawer'
+export { ZenModeDrawer } from './components/daily-drawers/zen-mode-drawer/zen-mode-drawer'
+
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 export { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'
